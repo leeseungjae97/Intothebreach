@@ -11,6 +11,7 @@ namespace ya
 	}
 	Scene::~Scene()
 	{
+
 	}
 	void Scene::Initialize()
 	{
@@ -36,10 +37,7 @@ namespace ya
 	}
 	void Scene::Release()
 	{
-		for (Layer& layer : mLayers)
-		{
-			layer.Release();
-		}
+
 	}
 	void Scene::AddGameObeject(GameObject* obj, eLayerType layer)
 	{

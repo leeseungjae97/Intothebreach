@@ -2,7 +2,8 @@
 #include "yaTime.h"
 #include "yaSceneManager.h"
 #include "yaInput.h"
-
+#include "yaResources.h"
+#include "yImage.h"
 namespace ya
 {
 	Cuphead::Cuphead()
@@ -13,6 +14,8 @@ namespace ya
 	}
 	void Cuphead::Initialize()
 	{
+		Image* cupheadImg = Resources::Load<Image>(L"cupheadImage", L"...\\Resource\\cupheadImage.bmp");
+
 		GameObject::Initialize();
 	}
 	void Cuphead::Update()
@@ -49,25 +52,9 @@ namespace ya
 	void Cuphead::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
-		// stock 오브젝트
-		HBRUSH brush = CreateSolidBrush(RGB(0, 0, 0));
-		HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
-		//Rectangle(mHdc, -1, -1, 1601, 901);
-
-		HPEN pen = CreatePen(PS_SOLID, 2, RGB(255, 0, 255));
-		HPEN oldPen = (HPEN)SelectObject(hdc, pen);
 		Vector2 mPos = GetPos();
+		//BitBlt(hdc, mPos.x, mPos.y, mImage->GetWidth());
 
-		Rectangle(hdc
-			, (int)mPos.x
-			, (int)mPos.y
-			, (int)(mPos.x + 100.f)
-			, (int)(mPos.y + 100.f));
-
-		SelectObject(hdc, oldPen);
-		DeleteObject(pen);
-		SelectObject(hdc, oldBrush);
-		DeleteObject(brush);
 	}
 	void Cuphead::Release()
 	{

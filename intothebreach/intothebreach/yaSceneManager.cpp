@@ -56,13 +56,13 @@ namespace ya
 	{
 		for (Scene* scene : mScenes)
 		{
-			if (scene == nullptr)
+			if (nullptr == scene)
 				continue;
 
-			scene->Release();
+			delete scene;
+			scene = nullptr;
+			//scene->Release();
 		}
-
-		//delete[] mScene;
 	}
 
 }

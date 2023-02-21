@@ -6,7 +6,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+using namespace std;
+#include <assert.h>
 #include <string>
 #include <vector>
 #include <list>

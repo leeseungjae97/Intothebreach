@@ -16,7 +16,7 @@ namespace ya
 		void Render();
 
 		HWND GetHwnd() { return mHwnd; }
-
+		HDC GetHdc() { return mHdc; }
 	private:
 		HWND mHwnd;
 		HDC mHdc;

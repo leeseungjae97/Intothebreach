@@ -4,7 +4,7 @@
 #include "framework.h"
 #include "intothebreach.h"
 #include "yaApplication.h"
-
+#include "yaSceneManager.h"
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    
     
     // 1. 윈도우의 정보를 담고있는 클래스를 정의(메모리에 등록)해주어야한다.
     // 2. CreateWindow함수를 통해서 메모리상에 윈도우를 할당해준다.
@@ -36,8 +36,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // 4. 윈도우 클래스를 정의할떄 등록된 메서지 처리함수를
     //    순회하면서 들어오는 메세지를 처리해준다.
 
-
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    //_CrtSetBreakAlloc(229);
     // 전역 문자열을 초기화합니다.
+    //229
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_CLIENT, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
@@ -78,7 +80,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
 
     }
-
+    ya::SceneManager::Release();
     return (int) msg.wParam;
 }
 

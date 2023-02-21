@@ -11,6 +11,10 @@ namespace ya
 
 	GameObject::~GameObject()
 	{
+		for (Component* comp : mComponents) {
+			delete comp;
+			comp = nullptr;
+		}
 	}
 
 	void GameObject::Initialize()
@@ -48,13 +52,7 @@ namespace ya
 
 	void GameObject::Release()
 	{
-		for (Component* comp : mComponents)
-		{
-			if (comp == nullptr)
-				continue;
 
-			comp->Release();
-		}
 	}
 
 }

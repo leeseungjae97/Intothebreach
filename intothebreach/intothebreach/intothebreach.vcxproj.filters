@@ -47,6 +47,9 @@
     <Filter Include="Engine\Input">
       <UniqueIdentifier>{b83d2245-1653-45b1-a441-0cbeba1623c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Resource">
+      <UniqueIdentifier>{f374e26e-6f86-469f-832d-6345a9deaed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -106,6 +109,11 @@
     <ClInclude Include="yaInput.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
+    <ClInclude Include="yaResource.h">
+      <Filter>Engine\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="yaResources.h" />
+    <ClInclude Include="yImage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -160,5 +168,10 @@
     <ClCompile Include="yaInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
+    <ClCompile Include="yaResource.cpp">
+      <Filter>Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="yaResources.cpp" />
+    <ClCompile Include="yImage.cpp" />
   </ItemGroup>
 </Project>
