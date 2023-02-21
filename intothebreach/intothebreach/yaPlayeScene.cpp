@@ -17,7 +17,7 @@ namespace ya
 			
 		}*/
 		Cuphead* cuphead = new Cuphead();
-		//cuphead->SetPos(Vector2{ 0.0f, 0.0f } );
+		cuphead->SetPos(Vector2( 0.0f, 0.0f ) );
 		cuphead->SetName(L"Player");
 		AddGameObeject(cuphead, eLayerType::Player);
 		Scene::Initialize();

@@ -13,8 +13,8 @@ struct Vector2
 
 	}
 	Vector2(int x, int y)
-		: x(x)
-		, y(y)
+		: x((float)x)
+		, y((float)y)
 	{
 
 	}
@@ -23,10 +23,10 @@ struct Vector2
 		, y(y) {
 
 	}
-	Vector2(Vector2& other)
-		: x(other.x)
-		, y(other.y)
-	{
+	//Vector2(Vector2& other)
+	//	: x(other.x)
+	//	, y(other.y)
+	//{
 
-	}
+	//}
 };

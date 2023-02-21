@@ -11,6 +11,7 @@ namespace ya
 		static void Render(HDC hdc);
 
 		__forceinline static double DeltaTime() { return mDeltaTime; }
+		__forceinline static float fDeltaTime() { return (float)mDeltaTime; }
 
 	private:
 		static double mDeltaTime;

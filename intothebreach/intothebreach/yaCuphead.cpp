@@ -17,15 +17,16 @@ namespace ya
 	}
 	void Cuphead::Update()
 	{
+		Vector2 mPos = GetPos();
 		GameObject::Update();
 		if (Input::GetKeyState(eKeyCode::A) == eKeyState::Pressed)
 		{
-			mPos.x -= 100.0f * Time::DeltaTime();
+			mPos.x -= 100.0f * Time::fDeltaTime();
 		}
 
 		if (Input::GetKeyState(eKeyCode::D) == eKeyState::Pressed)
 		{
-			mPos.x += 100.0f * Time::DeltaTime();
+			mPos.x += 100.0f * Time::fDeltaTime();
 		}
 
 		//if (Input::GetKeyState(eKeyCode::D) == eKeyState::Up)
@@ -36,13 +37,14 @@ namespace ya
 
 		if (Input::GetKeyState(eKeyCode::W) == eKeyState::Pressed)
 		{
-			mPos.y -= 100.0f * Time::DeltaTime();
+			mPos.y -= 100.0f * Time::fDeltaTime();
 		}
 
 		if (Input::GetKeyState(eKeyCode::S) == eKeyState::Pressed)
 		{
-			mPos.y += 100.0f * Time::DeltaTime();
+			mPos.y += 100.0f * Time::fDeltaTime();
 		}
+		SetPos(mPos);
 	}
 	void Cuphead::Render(HDC hdc)
 	{
@@ -54,8 +56,13 @@ namespace ya
 
 		HPEN pen = CreatePen(PS_SOLID, 2, RGB(255, 0, 255));
 		HPEN oldPen = (HPEN)SelectObject(hdc, pen);
+		Vector2 mPos = GetPos();
 
-		Rectangle(hdc, mPos.x, mPos.y, mPos.x + 100, mPos.y + 100);
+		Rectangle(hdc
+			, (int)mPos.x
+			, (int)mPos.y
+			, (int)(mPos.x + 100.f)
+			, (int)(mPos.y + 100.f));
 
 		SelectObject(hdc, oldPen);
 		DeleteObject(pen);

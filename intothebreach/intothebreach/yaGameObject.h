@@ -6,6 +6,10 @@ namespace ya
 {
 	class GameObject : public Entity
 	{
+	private:
+		Vector2 mPos;
+		std::vector<Component*> mComponents;
+
 	public:
 		GameObject();
 		virtual ~GameObject();
@@ -14,11 +18,7 @@ namespace ya
 		virtual void Update();
 		virtual void Render(HDC hdc);
 		virtual void Release();
+		Vector2 GetPos() { return mPos; }
 		void SetPos(Vector2 pos) { mPos = pos; }
-	protected:
-		Vector2 mPos;
-
-	private:
-		std::vector<Component*> mComponents;
 	};
 }

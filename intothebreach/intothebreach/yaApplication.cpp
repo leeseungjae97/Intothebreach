@@ -24,7 +24,7 @@ namespace ya
 		mWidth = 1600;
 		mHeight = 900;
 
-		RECT rect = { 0, 0, mWidth, mHeight };
+		RECT rect = { 0, 0, (LONG)mWidth, (LONG)mHeight };
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);
 
 		SetWindowPos(mHwnd
