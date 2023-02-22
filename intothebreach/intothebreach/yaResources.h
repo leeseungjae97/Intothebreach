@@ -1,5 +1,6 @@
 #pragma once
 #include "yaResource.h"
+#include "yImage.h"
 namespace ya {
 	class Resources {
 	public:
@@ -20,18 +21,21 @@ namespace ya {
 			}
 			// 리소스가 없다면
 			resource = new T();
-			if (FAILED(resource->Resource::Load(path))) {
+			if (FAILED(resource->Load(path))) {
 				assert(false);
 				return nullptr;
 			}
 			resource->SetKey(key);
 			resource->SetPath(path);
 
-			mResources.insert(make_pair(key, resource));
+			mResources.insert(make_pair(key, dynamic_cast<Resource*>(resource) ) );
 
 			return dynamic_cast<T*>(resource);
 		};
-
+		static void Release();
+	private:
+		Resources() = delete;
+		~Resources() = delete;
 	private:
 		static map<wstring, Resource*> mResources;
 	};

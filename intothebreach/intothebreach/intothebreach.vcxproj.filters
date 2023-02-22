@@ -112,8 +112,12 @@
     <ClInclude Include="yaResource.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaResources.h" />
-    <ClInclude Include="yImage.h" />
+    <ClInclude Include="yaResources.h">
+      <Filter>Engine\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="yImage.h">
+      <Filter>Engine\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -171,7 +175,11 @@
     <ClCompile Include="yaResource.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaResources.cpp" />
-    <ClCompile Include="yImage.cpp" />
+    <ClCompile Include="yaResources.cpp">
+      <Filter>Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="yImage.cpp">
+      <Filter>Engine\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

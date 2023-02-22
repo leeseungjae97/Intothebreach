@@ -2,18 +2,23 @@
 #include "yaSceneManager.h"
 #include "yaTime.h"
 #include "yaInput.h"
-
+#include "yaResources.h"
 namespace ya
 {
 	Application::Application()
 		: mHwnd(NULL)
 		, mHdc(NULL)
+		, mBackBuffer(NULL)
+		, mBackHdc(NULL)
+		, mHeight(0)
+		, mWidth(0)
 	{
 	}
 
 	Application::~Application()
 	{
 		SceneManager::Release();
+		Resources::Release();
 		//Time::Release();
 	}
 

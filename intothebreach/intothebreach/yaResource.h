@@ -1,12 +1,13 @@
 #pragma once
 #include "yaEntity.h"
 namespace ya {
-	class Resource{
+	class Resource : public Entity{
 	public:
 		Resource();
-		~Resource();
+		virtual ~Resource();
 
 		virtual HRESULT Load(const std::wstring& path) = 0;
+
 		const wstring& GetKey() { return mKey; }
 		const wstring& GetPath() { return mPath; }
 		void SetKey(const wstring& key) { mKey = key; }

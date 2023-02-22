@@ -15,12 +15,12 @@ namespace ya {
 	}
 	HRESULT Image::Load(const wstring& path) {
 		mBitmap = (HBITMAP)LoadImageW(nullptr
-				, path.c_str()
+			, path.c_str()
 			, IMAGE_BITMAP
 			, 0, 0
 			, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 
-		if (nullptr != mBitmap) {
+		if (nullptr == mBitmap) {
 			return E_FAIL;
 		}
 		BITMAP bitInfo = {};

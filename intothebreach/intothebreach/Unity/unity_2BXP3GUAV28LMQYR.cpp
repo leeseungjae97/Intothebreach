@@ -29,6 +29,12 @@
 #include "E:\intothebreach\intothebreach\intothebreach\yaPlayeScene.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\yaResource.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\yaResources.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\yaScene.cpp"
 
 
@@ -36,4 +42,7 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\yaTime.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\yImage.cpp"
 

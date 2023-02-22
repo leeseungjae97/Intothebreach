@@ -4,9 +4,11 @@
 #include "yaInput.h"
 #include "yaResources.h"
 #include "yImage.h"
+
 namespace ya
 {
 	Cuphead::Cuphead()
+		: mImage(nullptr)
 	{
 	}
 	Cuphead::~Cuphead()
@@ -14,8 +16,8 @@ namespace ya
 	}
 	void Cuphead::Initialize()
 	{
-		Image* cupheadImg = Resources::Load<Image>(L"cupheadImage", L"...\\Resource\\cupheadImage.bmp");
-
+		mImage = Resources::Load<Image>(L"cupheadImage", L"..\\Resources\\cupheadImage.bmp");
+		
 		GameObject::Initialize();
 	}
 	void Cuphead::Update()
@@ -53,8 +55,19 @@ namespace ya
 	{
 		GameObject::Render(hdc);
 		Vector2 mPos = GetPos();
-		//BitBlt(hdc, mPos.x, mPos.y, mImage->GetWidth());
-
+		TransparentBlt(
+			hdc
+			, (int)(mPos.x)
+			, (int)(mPos.y)
+			, (int)(mImage->GetWidth())
+			, (int)(mImage->GetHeight())
+			, mImage->GetHdc()
+			, 0
+			, 0
+			, (int)(mImage->GetWidth())
+			, (int)(mImage->GetHeight())
+			, RGB(255, 0, 255)
+		);
 	}
 	void Cuphead::Release()
 	{

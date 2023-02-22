@@ -7,6 +7,7 @@
 #include <memory.h>
 #include <tchar.h>
 using namespace std;
+#pragma comment(lib, "Msimg32.lib")
 #include <assert.h>
 #include <string>
 #include <vector>

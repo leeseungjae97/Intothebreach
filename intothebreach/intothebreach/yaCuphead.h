@@ -1,6 +1,6 @@
 #pragma once
 #include "yaGameObject.h"
-
+#include "yImage.h"
 namespace ya
 {
 	class Cuphead : public GameObject
@@ -16,5 +16,6 @@ namespace ya
 
 		
 	private:
+		Image* mImage;
 	};
 }
