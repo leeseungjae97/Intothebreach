@@ -153,6 +153,8 @@
     <ClInclude Include="yaScene.h" />
     <ClInclude Include="yaSceneManager.h" />
     <ClInclude Include="yaTime.h" />
+    <ClInclude Include="yaTitleScene.h" />
+    <ClInclude Include="yaTransform.h" />
     <ClInclude Include="yImage.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +173,8 @@
     <ClCompile Include="yaScene.cpp" />
     <ClCompile Include="yaSceneManager.cpp" />
     <ClCompile Include="yaTime.cpp" />
+    <ClCompile Include="yaTitleScene.cpp" />
+    <ClCompile Include="yaTransform.cpp" />
     <ClCompile Include="yImage.cpp" />
   </ItemGroup>
   <ItemGroup>

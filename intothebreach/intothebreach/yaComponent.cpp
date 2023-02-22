@@ -2,6 +2,13 @@
 
 namespace ya
 {
+    Component::Component(eComponentType type) 
+        : mType(type)
+    {
+
+    }
+    Component::~Component() {
+    }
     void Component::Initialize() {
     }
     void Component::Update() {

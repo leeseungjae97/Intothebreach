@@ -1,6 +1,6 @@
 #pragma once
 #include "yaScene.h"
-
+#include "yaCuphead.h"
 namespace ya
 {
 	class PlayeScene : public Scene
@@ -14,7 +14,10 @@ namespace ya
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
-	private:
+		virtual void OnEnter() override;
+		virtual void OnExit() override;
 
+	private:
+		Cuphead* mCuphead;
 	};
 }

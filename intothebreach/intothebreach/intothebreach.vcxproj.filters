@@ -50,6 +50,9 @@
     <Filter Include="Engine\Resource">
       <UniqueIdentifier>{f374e26e-6f86-469f-832d-6345a9deaed0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Component\Transform">
+      <UniqueIdentifier>{4bc29157-cbb1-4b8a-9eb3-99842ae8bb6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -118,6 +121,10 @@
     <ClInclude Include="yImage.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="yaTitleScene.h" />
+    <ClInclude Include="yaTransform.h">
+      <Filter>Engine\Component\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -180,6 +187,10 @@
     </ClCompile>
     <ClCompile Include="yImage.cpp">
       <Filter>Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="yaTitleScene.cpp" />
+    <ClCompile Include="yaTransform.cpp">
+      <Filter>Engine\Component\Transform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

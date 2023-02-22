@@ -1,12 +1,11 @@
 #include "yaGameObject.h"
-
-
-
+#include "yaTransform.h"
 namespace ya
 {
 	GameObject::GameObject()
 	{
-
+		mComponents.resize((UINT)eComponentType::End);
+		AddComponent<Transform>();
 	}
 
 	GameObject::~GameObject()

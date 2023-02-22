@@ -4,7 +4,7 @@
 #include "yaInput.h"
 #include "yaResources.h"
 #include "yImage.h"
-
+#include "yaTransform.h"
 namespace ya
 {
 	Cuphead::Cuphead()
@@ -22,7 +22,9 @@ namespace ya
 	}
 	void Cuphead::Update()
 	{
-		Vector2 mPos = GetPos();
+		Transform* tr = GetComponent<Transform>();
+		Vector2 mPos = tr->GetPos();
+
 		GameObject::Update();
 		if (Input::GetKeyState(eKeyCode::A) == eKeyState::Pressed)
 		{
@@ -49,12 +51,13 @@ namespace ya
 		{
 			mPos.y += 100.0f * Time::fDeltaTime();
 		}
-		SetPos(mPos);
+		tr->SetPos(mPos);
 	}
 	void Cuphead::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
-		Vector2 mPos = GetPos();
+		Transform* tr = GetComponent<Transform>();
+		Vector2 mPos = tr->GetPos();
 		TransparentBlt(
 			hdc
 			, (int)(mPos.x)

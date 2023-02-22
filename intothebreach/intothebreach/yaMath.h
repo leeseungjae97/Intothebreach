@@ -23,6 +23,13 @@ struct Vector2
 		, y(y) {
 
 	}
+	Vector2(Vector2& other) = default;
+	Vector2& operator = (const Vector2&) = default;
+
+	Vector2(Vector2&& other) = default;
+	Vector2& operator = (Vector2&&) = default;
+
+
 	//Vector2(Vector2& other)
 	//	: x(other.x)
 	//	, y(other.y)
