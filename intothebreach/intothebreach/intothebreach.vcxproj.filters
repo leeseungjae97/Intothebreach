@@ -38,9 +38,6 @@
     <Filter Include="Contents\Player">
       <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Scene">
-      <UniqueIdentifier>{b7670575-6de6-41bf-ad7e-34ad46002aa4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Time">
       <UniqueIdentifier>{7c9dd5dd-ff83-4569-8dd4-eadf4291d98c}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,9 @@
     </Filter>
     <Filter Include="Engine\Component\Transform">
       <UniqueIdentifier>{4bc29157-cbb1-4b8a-9eb3-99842ae8bb6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Scene\TitleScene">
+      <UniqueIdentifier>{54d8e30d-0e25-4b11-bbf1-a007b3cd23b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,9 +103,6 @@
     <ClInclude Include="yaCuphead.h">
       <Filter>Contents\Player</Filter>
     </ClInclude>
-    <ClInclude Include="yaPlayeScene.h">
-      <Filter>Contents\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="yaTime.h">
       <Filter>Engine\Time</Filter>
     </ClInclude>
@@ -121,9 +118,14 @@
     <ClInclude Include="yImage.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaTitleScene.h" />
     <ClInclude Include="yaTransform.h">
       <Filter>Engine\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="yaTitleScene.h">
+      <Filter>Engine\Scene\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaPlayeScene.h">
+      <Filter>Engine\Scene\PlayScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -170,9 +172,6 @@
     <ClCompile Include="yaCuphead.cpp">
       <Filter>Contents\Player</Filter>
     </ClCompile>
-    <ClCompile Include="yaPlayeScene.cpp">
-      <Filter>Contents\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="yaTime.cpp">
       <Filter>Engine\Time</Filter>
     </ClCompile>
@@ -188,9 +187,14 @@
     <ClCompile Include="yImage.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaTitleScene.cpp" />
     <ClCompile Include="yaTransform.cpp">
       <Filter>Engine\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="yaTitleScene.cpp">
+      <Filter>Engine\Scene\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaPlayeScene.cpp">
+      <Filter>Engine\Scene\PlayScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

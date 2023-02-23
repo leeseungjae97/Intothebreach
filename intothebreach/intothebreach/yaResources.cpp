@@ -10,8 +10,8 @@ namespace ya {
 		//	}
 		//}
 		//mResources.clear();
-		for (auto pair : mResources) {
-			delete pair.second;
+		for (auto &pair : mResources) {
+			delete &pair.second;
 			pair.second = nullptr;
 		}
 	}

@@ -58,6 +58,7 @@ namespace ya
 		GameObject::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
+
 		TransparentBlt(
 			hdc
 			, (int)(mPos.x)

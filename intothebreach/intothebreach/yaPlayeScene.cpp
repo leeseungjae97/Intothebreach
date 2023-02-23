@@ -16,8 +16,6 @@ namespace ya
 	void PlayeScene::Initialize()
 	{
 		mCuphead = new Cuphead();
-		Transform* tr = mCuphead->GetComponent<Transform>();
-		mCuphead->SetName(L"Player");
 		AddGameObeject(mCuphead, eLayerType::Player);
 		Scene::Initialize();
 	}

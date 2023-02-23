@@ -44,5 +44,11 @@
 #include "E:\intothebreach\intothebreach\intothebreach\yaTime.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\yaTitleScene.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\yaTransform.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\yImage.cpp"
 
