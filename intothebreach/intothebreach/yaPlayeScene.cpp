@@ -11,6 +11,7 @@ namespace ya
 
 	PlayeScene::~PlayeScene()
 	{
+
 	}
 
 	void PlayeScene::Initialize()

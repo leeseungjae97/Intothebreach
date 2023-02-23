@@ -138,6 +138,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="yaApplication.h" />
+    <ClInclude Include="yaCombatScene.h" />
     <ClInclude Include="yaComponent.h" />
     <ClInclude Include="yaCuphead.h" />
     <ClInclude Include="yaEntity.h" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="yaApplication.cpp" />
+    <ClCompile Include="yaCombatScene.cpp" />
     <ClCompile Include="yaComponent.cpp" />
     <ClCompile Include="yaCuphead.cpp" />
     <ClCompile Include="yaEntity.cpp" />
