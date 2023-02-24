@@ -1,6 +1,6 @@
 #pragma once
 #include "yaResource.h"
-#include "yImage.h"
+#include "yaImage.h"
 namespace ya {
 	class Resources {
 	public:

@@ -4,14 +4,16 @@
 enum class eSceneType
 {
 	Title,
-	Play,
+	SelectRobot,
+	SelectLand,
+	Combat,
 	Ending,
 	Max,
 };
 
 enum class eLayerType
 {
-	BG,
+	BackGround,
 	Monster,
 	Player,
 	Test,
@@ -26,4 +28,17 @@ enum class eComponentType {
 	Animator,
 	Audio,
 	End,
+};
+
+enum class BRUSH_TYPE {
+	HOLLOW,
+	BLACK,
+	CUSTOM_BLACK,
+	END,
+};
+enum class PEN_TYPE {
+	RED,
+	GREEN,
+	BLUE,
+	END
 };

@@ -32,9 +32,6 @@
     <Filter Include="Engine\Layer">
       <UniqueIdentifier>{cc2bc656-3033-4f20-abdb-49d4ed8d7491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Scene\PlayScene">
-      <UniqueIdentifier>{d6a1ddab-4fc8-4f3a-ab52-36def3516c98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents\Player">
       <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
     </Filter>
@@ -52,6 +49,30 @@
     </Filter>
     <Filter Include="Engine\Component\Transform">
       <UniqueIdentifier>{4bc29157-cbb1-4b8a-9eb3-99842ae8bb6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\CombatScene">
+      <UniqueIdentifier>{470aaaf8-f844-4e9e-885e-be86032ab8b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\TitleScene">
+      <UniqueIdentifier>{c609627a-5a13-4326-bc55-37cf89b16d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\SelectRobotScene">
+      <UniqueIdentifier>{35a9629b-fc63-4fa0-b088-4cffae271294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\SelectLandScene">
+      <UniqueIdentifier>{48f90816-34f9-4620-9c49-05f14a5acac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\EndingScene">
+      <UniqueIdentifier>{e0c2aaa9-89b3-4360-bbcb-f4092e1a71b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\IntroScene">
+      <UniqueIdentifier>{659f8fea-b2b1-49df-b120-63131ebbb39e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Background">
+      <UniqueIdentifier>{5c697d02-3d51-473b-930a-0bd8296d5b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Module">
+      <UniqueIdentifier>{615ef8ec-47b3-4764-b0d0-014f4863e2ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -100,11 +121,8 @@
     <ClInclude Include="yaLayer.h">
       <Filter>Engine\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="yaCuphead.h">
+    <ClInclude Include="MechArtillery.h">
       <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="yaPlayeScene.h">
-      <Filter>Contents\Scene</Filter>
     </ClInclude>
     <ClInclude Include="yaTime.h">
       <Filter>Engine\Time</Filter>
@@ -118,14 +136,30 @@
     <ClInclude Include="yaResources.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yImage.h">
+    <ClInclude Include="yaImage.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaTitleScene.h" />
     <ClInclude Include="yaTransform.h">
       <Filter>Engine\Component\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="yaCombatScene.h" />
+    <ClInclude Include="yaCombatScene.h">
+      <Filter>Contents\Scene\CombatScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaSelectRobotScene.h">
+      <Filter>Contents\Scene\SelectRobotScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaTitleScene.h">
+      <Filter>Contents\Scene\TitleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaSelectLandScene.h">
+      <Filter>Contents\Scene\SelectLandScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaBackground.h">
+      <Filter>Contents\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="yaSelectGDI.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -168,11 +202,8 @@
     <ClCompile Include="yaLayer.cpp">
       <Filter>Engine\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="yaCuphead.cpp">
+    <ClCompile Include="MechArtillery.cpp">
       <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="yaPlayeScene.cpp">
-      <Filter>Contents\Scene</Filter>
     </ClCompile>
     <ClCompile Include="yaTime.cpp">
       <Filter>Engine\Time</Filter>
@@ -186,13 +217,29 @@
     <ClCompile Include="yaResources.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yImage.cpp">
+    <ClCompile Include="yaImage.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaTitleScene.cpp" />
     <ClCompile Include="yaTransform.cpp">
       <Filter>Engine\Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="yaCombatScene.cpp" />
+    <ClCompile Include="yaCombatScene.cpp">
+      <Filter>Contents\Scene\CombatScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaSelectRobotScene.cpp">
+      <Filter>Contents\Scene\SelectRobotScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaTitleScene.cpp">
+      <Filter>Contents\Scene\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaSelectLandScene.cpp">
+      <Filter>Contents\Scene\SelectLandScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaBackground.cpp">
+      <Filter>Contents\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="yaSelectGDI.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

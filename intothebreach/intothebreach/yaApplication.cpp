@@ -47,6 +47,7 @@ namespace ya
 
 		HBITMAP hOldBit = (HBITMAP)SelectObject(mBackHdc, mBackBuffer);
 		DeleteObject(hOldBit);
+		CreateBrushPen();
 
 ;		Time::Initiailize();
 		Input::Initialize();
@@ -82,5 +83,18 @@ namespace ya
 		BitBlt(mHdc, 0, 0, mWidth, mHeight
 			, mBackHdc, 0, 0, SRCCOPY);
 
+	}
+	void Application::CreateBrushPen() {
+		//hollow brush
+		m_arrBrush[(UINT)BRUSH_TYPE::HOLLOW] = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+		m_arrBrush[(UINT)BRUSH_TYPE::BLACK] = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		m_arrBrush[(UINT)BRUSH_TYPE::CUSTOM_BLACK] = (HBRUSH)CreateSolidBrush(RGB(9,7,8));
+
+		//red pen
+		m_arrPen[(UINT)PEN_TYPE::RED] = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+		//green pen
+		m_arrPen[(UINT)PEN_TYPE::GREEN] = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+		//blud pen
+		m_arrPen[(UINT)PEN_TYPE::BLUE] = CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
 	}
 }

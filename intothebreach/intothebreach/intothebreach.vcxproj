@@ -138,9 +138,10 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="yaApplication.h" />
+    <ClInclude Include="yaBackground.h" />
     <ClInclude Include="yaCombatScene.h" />
     <ClInclude Include="yaComponent.h" />
-    <ClInclude Include="yaCuphead.h" />
+    <ClInclude Include="MechArtillery.h" />
     <ClInclude Include="yaEntity.h" />
     <ClInclude Include="yaEnums.h" />
     <ClInclude Include="yaGameObject.h" />
@@ -148,36 +149,41 @@
     <ClInclude Include="yaLayer.h" />
     <ClInclude Include="yaMath.h" />
     <ClInclude Include="YamYamEngine.h" />
-    <ClInclude Include="yaPlayeScene.h" />
+    <ClInclude Include="yaSelectGDI.h" />
+    <ClInclude Include="yaSelectRobotScene.h" />
     <ClInclude Include="yaResource.h" />
     <ClInclude Include="yaResources.h" />
     <ClInclude Include="yaScene.h" />
     <ClInclude Include="yaSceneManager.h" />
+    <ClInclude Include="yaSelectLandScene.h" />
     <ClInclude Include="yaTime.h" />
     <ClInclude Include="yaTitleScene.h" />
     <ClInclude Include="yaTransform.h" />
-    <ClInclude Include="yImage.h" />
+    <ClInclude Include="yaImage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="yaSelectGDI.cpp" />
     <ClCompile Include="yaApplication.cpp" />
+    <ClCompile Include="yaBackground.cpp" />
     <ClCompile Include="yaCombatScene.cpp" />
     <ClCompile Include="yaComponent.cpp" />
-    <ClCompile Include="yaCuphead.cpp" />
+    <ClCompile Include="MechArtillery.cpp" />
     <ClCompile Include="yaEntity.cpp" />
     <ClCompile Include="yaGameObject.cpp" />
     <ClCompile Include="yaInput.cpp" />
     <ClCompile Include="yaLayer.cpp" />
     <ClCompile Include="yaMath.cpp" />
-    <ClCompile Include="yaPlayeScene.cpp" />
+    <ClCompile Include="yaSelectRobotScene.cpp" />
     <ClCompile Include="yaResource.cpp" />
     <ClCompile Include="yaResources.cpp" />
     <ClCompile Include="yaScene.cpp" />
     <ClCompile Include="yaSceneManager.cpp" />
+    <ClCompile Include="yaSelectLandScene.cpp" />
     <ClCompile Include="yaTime.cpp" />
     <ClCompile Include="yaTitleScene.cpp" />
     <ClCompile Include="yaTransform.cpp" />
-    <ClCompile Include="yImage.cpp" />
+    <ClCompile Include="yaImage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc" />
