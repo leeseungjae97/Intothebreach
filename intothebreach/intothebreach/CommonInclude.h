@@ -6,11 +6,13 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+
 using namespace std;
-#pragma comment(lib, "Msimg32.lib")
+
 #include <assert.h>
 #include <string>
 #include <vector>
 #include <list>
 #include <map>
-
+#include <functional>
+#pragma comment(lib, "Msimg32.lib")

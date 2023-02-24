@@ -2,6 +2,51 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\main.cpp"
 
 
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\Skill.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaAnimation.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaAnimator.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaEndingScene.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaIntroScene.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechCharge.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechDstrike.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechElectric.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechFlame.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechGrav.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechGuard.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechIce.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechIgnite.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechJet.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechJudo.cpp"
+
+
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaSelectGDI.cpp"
 
 

@@ -26,6 +26,7 @@ namespace ya
 		HPEN GetPen(PEN_TYPE _eType) { return m_arrPen[(UINT)_eType]; }
 	private:
 		void CreateBrushPen();
+		void Clear();
 	private:
 		HWND mHwnd;
 		HDC mHdc;

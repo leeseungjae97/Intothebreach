@@ -3,6 +3,7 @@
 
 enum class eSceneType
 {
+	Intro,
 	Title,
 	SelectRobot,
 	SelectLand,
@@ -34,6 +35,7 @@ enum class BRUSH_TYPE {
 	HOLLOW,
 	BLACK,
 	CUSTOM_BLACK,
+	GRAY,
 	END,
 };
 enum class PEN_TYPE {

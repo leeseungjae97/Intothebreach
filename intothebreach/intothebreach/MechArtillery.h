@@ -17,5 +17,7 @@ namespace ya
 		void SetPos(Vector2 _pos);
 	private:
 		Image* mImage;
+		float mTime;
+		int mIndx;
 	};
 }

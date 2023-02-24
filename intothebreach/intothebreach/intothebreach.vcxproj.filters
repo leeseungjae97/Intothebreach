@@ -74,6 +74,12 @@
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{615ef8ec-47b3-4764-b0d0-014f4863e2ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contents\Alien">
+      <UniqueIdentifier>{e07f2cc3-accd-43da-a1ae-7785d646cccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Component\Skill">
+      <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -160,6 +166,47 @@
     <ClInclude Include="yaSelectGDI.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
+    <ClInclude Include="yaEndingScene.h">
+      <Filter>Contents\Scene\EndingScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaIntroScene.h">
+      <Filter>Contents\Scene\IntroScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechCharge.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechDstrike.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechElectric.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechFlame.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechGrav.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechGuard.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechIce.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechIgnite.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechJet.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="yaMechJudo.h">
+      <Filter>Contents\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
+      <Filter>Engine\Component\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="yaAnimation.h" />
+    <ClInclude Include="yaAnimator.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -241,5 +288,46 @@
     <ClCompile Include="yaSelectGDI.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
+    <ClCompile Include="yaEndingScene.cpp">
+      <Filter>Contents\Scene\EndingScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaIntroScene.cpp">
+      <Filter>Contents\Scene\IntroScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechCharge.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechDstrike.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechElectric.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechFlame.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechGrav.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechGuard.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechIce.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechIgnite.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechJet.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="yaMechJudo.cpp">
+      <Filter>Contents\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Engine\Component\Skill</Filter>
+    </ClCompile>
+    <ClCompile Include="yaAnimation.cpp" />
+    <ClCompile Include="yaAnimator.cpp" />
   </ItemGroup>
 </Project>

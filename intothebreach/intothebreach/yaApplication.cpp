@@ -3,6 +3,7 @@
 #include "yaTime.h"
 #include "yaInput.h"
 #include "yaResources.h"
+#include "yaSelectGDI.h"
 namespace ya
 {
 	Application::Application()
@@ -69,12 +70,8 @@ namespace ya
 
 	void Application::Render()
 	{
-		Rectangle(mBackHdc
-			, -1
-			, -1
-			, 1602
-			, 902
-		);
+
+		Clear();
 
 		Time::Render(mBackHdc);
 		Input::Render(mBackHdc);
@@ -84,11 +81,22 @@ namespace ya
 			, mBackHdc, 0, 0, SRCCOPY);
 
 	}
+	void Application::Clear() {
+		SelectGDI a(mHdc, BRUSH_TYPE::GRAY);
+
+		Rectangle(mBackHdc
+			, -1
+			, -1
+			, 1602
+			, 902
+		);
+	}
 	void Application::CreateBrushPen() {
 		//hollow brush
 		m_arrBrush[(UINT)BRUSH_TYPE::HOLLOW] = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
 		m_arrBrush[(UINT)BRUSH_TYPE::BLACK] = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		m_arrBrush[(UINT)BRUSH_TYPE::CUSTOM_BLACK] = (HBRUSH)CreateSolidBrush(RGB(9,7,8));
+		m_arrBrush[(UINT)BRUSH_TYPE::GRAY] = (HBRUSH)GetStockObject(GRAY_BRUSH);
 
 		//red pen
 		m_arrPen[(UINT)PEN_TYPE::RED] = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));

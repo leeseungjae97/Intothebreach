@@ -5,10 +5,13 @@
 #include "yaResources.h"
 #include "yaImage.h"
 #include "yaTransform.h"
+#include "yaTime.h"
 namespace ya
 {
 	MechArtillery::MechArtillery()
 		: mImage(nullptr)
+		, mTime(0.0f)
+		, mIndx(0)
 	{
 	}
 	MechArtillery::~MechArtillery()
@@ -16,8 +19,9 @@ namespace ya
 	}
 	void MechArtillery::Initialize()
 	{
+		
 		mImage = Resources::Load<Image>(L"mech_artillery"
-			, L"..\\Resources\\texture\\units\\player\\mech_artillery.bmp");
+			, L"..\\Resources\\texture\\units\\player\\mech_artillery_a.bmp");
 		
 		GameObject::Initialize();
 	}
@@ -37,12 +41,6 @@ namespace ya
 			mPos.x += 100.0f * Time::fDeltaTime();
 		}
 
-		//if (Input::GetKeyState(eKeyCode::D) == eKeyState::Up)
-		//{
-		//	mPos.x = 0.0f;
-		//	mPos.y = 0.0f;
-		//}
-
 		if (Input::GetKeyState(eKeyCode::W) == eKeyState::Pressed)
 		{
 			mPos.y -= 100.0f * Time::fDeltaTime();
@@ -59,18 +57,25 @@ namespace ya
 		GameObject::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
-
+		mTime += Time::fDeltaTime();
+		if (mIndx > 4) {
+			mIndx = 0;
+		}
+		if (mTime > 1.0) {
+			mIndx++;
+		}
+		//44 34
 		TransparentBlt(
 			hdc
 			, (int)(mPos.x)
 			, (int)(mPos.y)
-			, (int)(mImage->GetWidth() * 2)
-			, (int)(mImage->GetHeight() * 2)
+			, 44
+			, 34
 			, mImage->GetHdc()
 			, 0
 			, 0
-			, (int)(mImage->GetWidth())
-			, (int)(mImage->GetHeight())
+			, 34 * mIndx
+			, 44
 			, RGB(255, 0, 255)
 		);
 	}
