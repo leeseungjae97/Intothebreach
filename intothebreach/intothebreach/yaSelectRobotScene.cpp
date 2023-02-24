@@ -26,7 +26,8 @@ namespace ya
 
 		m_MechArtillery = new MechArtillery();
 		m_MechArtillery->SetPos(Vector2(200, 200));
-		Background* b1 = new Background(L"selectRobotBg1", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, true);
+		Background* b1 = new Background(L"selectRobotBg1"
+			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, true);
 
 		AddGameObeject(m_MechArtillery, eLayerType::Player);
 		AddGameObeject(b1, eLayerType::BackGround);

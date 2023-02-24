@@ -16,7 +16,8 @@ namespace ya
 	}
 	void MechArtillery::Initialize()
 	{
-		mImage = Resources::Load<Image>(L"mech_artillery", L"..\\Resources\\texture\\player\\mech_artillery.bmp");
+		mImage = Resources::Load<Image>(L"mech_artillery"
+			, L"..\\Resources\\texture\\units\\player\\mech_artillery.bmp");
 		
 		GameObject::Initialize();
 	}
