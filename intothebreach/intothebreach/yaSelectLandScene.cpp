@@ -38,7 +38,7 @@ namespace ya {
 	void SelectLandScene::Update() {
 		Scene::Update();
 		if (Input::GetKeyState(eKeyCode::N) == eKeyState::Down) {
-			SceneManager::LoadScene(eSceneType::Title);
+			SceneManager::LoadScene(eSceneType::Combat);
 		}
 	}
 	void SelectLandScene::Render(HDC hdc) {

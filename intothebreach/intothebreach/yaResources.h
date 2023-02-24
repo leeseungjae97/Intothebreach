@@ -32,7 +32,12 @@ namespace ya {
 
 			return dynamic_cast<T*>(resource);
 		};
-		static void Release();
+		static void Release() {
+			for (auto &pair : mResources) {
+				delete pair.second;
+				pair.second = nullptr;
+			}
+		}
 	private:
 		Resources() = delete;
 		~Resources() = delete;
