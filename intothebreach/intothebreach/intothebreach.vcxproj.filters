@@ -80,6 +80,9 @@
     <Filter Include="Contents\Ailen">
       <UniqueIdentifier>{e07f2cc3-accd-43da-a1ae-7785d646cccb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Component\Animator">
+      <UniqueIdentifier>{978f6b82-4112-4971-b35d-bccf269d7821}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -205,8 +208,12 @@
     <ClInclude Include="Skill.h">
       <Filter>Engine\Component\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="yaAnimation.h" />
-    <ClInclude Include="yaAnimator.h" />
+    <ClInclude Include="yaAnimation.h">
+      <Filter>Engine\Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="yaAnimator.h">
+      <Filter>Engine\Component\Animator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -327,7 +334,11 @@
     <ClCompile Include="Skill.cpp">
       <Filter>Engine\Component\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="yaAnimation.cpp" />
-    <ClCompile Include="yaAnimator.cpp" />
+    <ClCompile Include="yaAnimation.cpp">
+      <Filter>Engine\Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="yaAnimator.cpp">
+      <Filter>Engine\Component\Animator</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

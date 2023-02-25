@@ -3,6 +3,7 @@
 namespace ya {
 	class Transform : public Component{
 	public:
+		Transform(Transform& other);
 		Transform();
 		~Transform();
 
@@ -13,13 +14,13 @@ namespace ya {
 
 		Vector2 GetPos() { return mPos; }
 		void SetPos(Vector2 pos) { mPos = pos; }
-		void SetSize(Vector2 size) { mSize = size; }
-		Vector2 GetSize() { return mSize; }
+		void SetScale(Vector2 _scale) { mScale = _scale; }
+		Vector2 GetScale() { return mScale; }
 
 
 	private:
 		Vector2 mPos;
-		Vector2 mSize;
+		Vector2 mScale;
 	};
 }
 

@@ -38,6 +38,10 @@ namespace ya {
 				pair.second = nullptr;
 			}
 		}
+		template <typename T>
+		static void Insert(const std::wstring& key, T* resource) {
+			mResources.insert(make_pair(key, dynamic_cast<Resource*>(resource)));
+		}
 	private:
 		Resources() = delete;
 		~Resources() = delete;

@@ -1,7 +1,15 @@
 #include "yaTransform.h"
 namespace ya {
-	Transform::Transform() 
-		:Component(eComponentType::Transform)
+	Transform::Transform(Transform& other)
+		: Component(other)
+		, mPos{0.f,0.f}
+		, mScale{ 0.f,0.f }
+	{
+	}
+	Transform::Transform()
+		: Component(eComponentType::Transform)
+		, mPos{ 0.f,0.f }
+		, mScale{ 0.f,0.f }
 	{
 	}
 	Transform::~Transform() {

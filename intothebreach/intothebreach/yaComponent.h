@@ -3,19 +3,25 @@
 
 namespace ya
 {
+	class GameObject;
 	class Component : public Entity
 	{
 	public:
-		Component(const eComponentType type);
+		friend class GameObject;
+		Component(eComponentType type);
+		Component(Component& other);
 		~Component();
+
 		virtual void Initialize();
-		virtual void Update();
-		virtual void Render(HDC hdc);
+		virtual void Update() = 0;
+		virtual void Render(HDC hdc) {};
 		virtual void Release();
 
 		eComponentType GetType() { return mType; }
+		GameObject* GetOwner() { return mOwner; }
 
 	private:
-		eComponentType mType;
+		GameObject* mOwner;
+		const eComponentType mType;
 	};
 }

@@ -14,7 +14,6 @@ namespace ya
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
-		void SetPos(Vector2 _pos);
 	private:
 		Image* mImage;
 		float mTime;

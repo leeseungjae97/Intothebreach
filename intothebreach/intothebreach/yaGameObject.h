@@ -1,12 +1,13 @@
 #pragma once
 #include "yaEntity.h"
 #include "yaComponent.h"
-
+#include "yaTransform.h"
 namespace ya
 {
 	class GameObject : public Entity
 	{
 	public:
+		GameObject(GameObject& other);
 		GameObject();
 		virtual ~GameObject();
 
@@ -14,6 +15,10 @@ namespace ya
 		virtual void Update();
 		virtual void Render(HDC hdc);
 		virtual void Release();
+
+		void CreateComponent(eComponentType _type);
+		Component* CreateComponent(Component* component);
+		void AddComponent(Component* component);
 
 		template<typename T>
 		T* AddComponent()
@@ -26,18 +31,42 @@ namespace ya
 		}
 
 		template<typename T>
-		T* GetComponent() {
-			for (Component* comp : mComponents) {
+		__forceinline T* GetComponent() {
+			/*for (Component* comp : mComponents) {
 				if (dynamic_cast<T*>(comp)) {
 					return dynamic_cast<T*>(comp);
+				}
+			}*/
+			T* component;
+			for (auto c : mComponents) {
+				component = dynamic_cast<T*>(c);
+				if (nullptr != component) {
+					return component;
 				}
 			}
 
 			return nullptr;
 		}
-
+		__forceinline Component* GetComponentOfType(eComponentType type) {
+			Component* comp = nullptr;
+			for (Component* c : mComponents) {
+				if (c->GetType() == type) {
+					comp = c;
+					break;
+				}
+			}
+			return comp;
+		}
+		void SetPos(Vector2 _pos) {
+			GetComponent<Transform>()->SetPos(_pos);
+		}
+		Vector2 GetPos() {
+			return GetComponent<Transform>()->GetPos();
+		}
+		bool IsDead() { return mbDead; }
+		void Death() { mbDead = true; }
 	private:
-		Vector2 mPos;
+		bool mbDead;
 		std::vector<Component*> mComponents;
 	};
 

@@ -19,18 +19,17 @@ namespace ya {
 		, mIsFull(_full)
 		, mIsCenter(_isCenter)
 	{
+		AddComponent(new Transform());
+		if (mKey.empty() && mPath.empty()) return;
+		mImage = Resources::Load<Image>(mKey, mPath);
 	}
 	Background::~Background() {
 	}
 	void Background::Initialize() {
-		if (mKey.empty() && mPath.empty()) return;
-		mImage = Resources::Load<Image>(mKey, mPath);
+
+		
 	}
 	void Background::Update() {
-	}
-	void Background::SetPos(Vector2 _pos) {
-		Transform* tr = GetComponent<Transform>();
-		tr->SetPos(_pos);
 	}
 
 	void Background::Render(HDC hdc) {
@@ -60,8 +59,8 @@ namespace ya {
 			}
 
 			if (mIsCenter) {
-				_x = application.GetResolutionWidth() / 2;
-				_y = application.GetResolutionHeight() / 2;
+				_x = (float)application.GetResolutionWidth() / 2;
+				_y = (float)application.GetResolutionHeight() / 2;
 				_x -= iWidth / 2;
 				_y -= iHeight / 2;
 			}

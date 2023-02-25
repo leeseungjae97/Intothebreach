@@ -24,10 +24,10 @@ enum class eLayerType
 };
 enum class eComponentType {
 	Transform,
-	Collider,
-	SpriteRenderer,
+	//Collider,
+	//SpriteRenderer,
 	Animator,
-	Audio,
+	//Audio,
 	End,
 };
 

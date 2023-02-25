@@ -21,7 +21,7 @@ namespace ya
 		mScenes[(UINT)eSceneType::Ending] = new EndingScene();
 		mScenes[(UINT)eSceneType::Intro] = new IntroScene();
 
-		mActiveScene = mScenes[(UINT)eSceneType::Title];
+		mActiveScene = mScenes[(UINT)eSceneType::SelectRobot];
 
 		for ( Scene* scene : mScenes )
 		{

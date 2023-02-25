@@ -2,8 +2,15 @@
 
 namespace ya
 {
-    Component::Component(eComponentType type) 
+    Component::Component(eComponentType type)
         : mType(type)
+        , mOwner(nullptr)
+    {
+
+    }
+    Component::Component(Component& other)
+        : mType(other.GetType())
+        , mOwner(nullptr)
     {
 
     }
@@ -12,8 +19,6 @@ namespace ya
     void Component::Initialize() {
     }
     void Component::Update() {
-    }
-    void Component::Render(HDC hdc) {
     }
     void Component::Release() {
     }
