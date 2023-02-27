@@ -17,36 +17,6 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaIntroScene.cpp"
 
 
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechCharge.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechDstrike.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechElectric.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechFlame.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechGrav.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechGuard.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechIce.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechIgnite.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechJet.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaMechJudo.cpp"
-
-
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaSelectGDI.cpp"
 
 
@@ -62,7 +32,7 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaComponent.cpp"
 
 
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\MechArtillery.cpp"
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\Mech.cpp"
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaEntity.cpp"
@@ -96,6 +66,9 @@
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaSelectLandScene.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaTile.cpp"
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaTime.cpp"

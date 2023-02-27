@@ -260,7 +260,6 @@ static wstring& MAKE_MECH_KEY(MECHS _mech, CONDITION_T _cond) {
 	wstring* path = new wstring(L"");
 	int _type = MECHS_T_HT[(UINT)_mech];
 
-	//E:\intothebreach\intothebreach\Resources\texture\player\science
 	wstring path_1 = MECH_S_PATH[_type];
 	wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	wstring path_3 = MECH_CONDITION[(UINT)_cond];
@@ -274,7 +273,6 @@ static wstring& MAKE_MECH_PATH(MECHS _mech, CONDITION_T _cond) {
 	wstring* path = new wstring(L"..\\Resources\\texture\\player\\"); 
 	int _type = MECHS_T_HT[(UINT)_mech];
 
-	//E:\intothebreach\intothebreach\Resources\texture\player\science
 	wstring path_1 = MECH_S_PATH[_type];
 	wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	wstring path_3 = MECH_CONDITION[(UINT)_cond];

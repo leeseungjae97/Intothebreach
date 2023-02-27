@@ -10,10 +10,7 @@
 namespace ya
 {
 	Mech::Mech(MECHS _mech)
-		: mImage(nullptr)
-		, mTime(0.0f)
-		, mIndx(0)
-		, mMech(_mech)
+		: mMech(_mech)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());

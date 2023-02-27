@@ -10,13 +10,14 @@ namespace ya {
             Vector2 leftTop;
             Vector2 size;
             Vector2 offset;
+
             float duration;
 
         public:
             Sprite()
-                : leftTop(0.0f, 0.0f)
-                , size(0.0f, 0.0f)
-                , offset(0.0f, 0.0f)
+                : leftTop(Vector2::Zero)
+                , size(Vector2::Zero)
+                , offset(Vector2::Zero)
                 , duration(0.0f)
             {
 
@@ -27,7 +28,8 @@ namespace ya {
         Animation();
         ~Animation();
 
-        void update();
+        void Update();
+        void Initialize();
         void Render(HDC hdc);
         void Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset,
             float columnLegth, UINT spriteLength, float duration, UINT alphaCheck = 0, bool affactedCamera = false);

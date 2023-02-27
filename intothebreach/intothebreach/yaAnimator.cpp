@@ -29,9 +29,10 @@ namespace ya {
 	}
 	void Animator::Initialize() {
 	}
+
 	void Animator::Update() {
 		if (nullptr != mActiveAnimation) {
-			mActiveAnimation->update();
+			mActiveAnimation->Update();
 			if (mbLoop && mActiveAnimation->IsComplete()) {
 				Animator::Events* events = FindEvents(mActiveAnimation->GetName());
 
@@ -70,7 +71,7 @@ namespace ya {
 		std::filesystem::path fs(path);
 		std::vector<Image*> images;
 		for (auto& p : std::filesystem::recursive_directory_iterator(path)) {
-			std::wstring fileName = p.path().filename();;
+			std::wstring fileName = p.path().filename();
 			std::wstring fullName = path + L"\\" + fileName;
 			Image* image = Resources::Load<Image>(fileName, fullName);
 			images.push_back(image);

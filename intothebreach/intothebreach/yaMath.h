@@ -10,6 +10,9 @@ namespace ya {
 		static Vector2 Zero;
 		static Vector2 One;
 
+        static Vector2 Up;
+        static Vector2 Right;
+
 		float x;
 		float y;
 
@@ -117,6 +120,9 @@ namespace ya {
 
 	inline Vector2 Vector2::Zero = Vector2(0.0f, 0.0f);
 	inline Vector2 Vector2::One = Vector2(1.0f, 1.0f);
+
+    inline Vector2 Vector2::Up = Vector2(0.f, -1.f);
+    inline Vector2 Vector2::Right = Vector2(1.f, 0.f);
 };
 
 namespace ya::math {

@@ -17,7 +17,7 @@ namespace ya {
 	Animation::~Animation() {
 
 	}
-	void Animation::update() {
+	void Animation::Update() {
 		if (mbComplete) return;
 		mTime += Time::fDeltaTime();
 		if (mSpriteSheet[mSpriteIndex]->duration < mTime) {
@@ -30,6 +30,8 @@ namespace ya {
 			}
 		}
 		
+	}
+	void Animation::Initialize() {
 	}
 	void Animation::Render(HDC hdc) {
 		GameObject* gObject = mAnimator->GetOwner();
@@ -70,12 +72,16 @@ namespace ya {
 			, RGB(255,0,255));*/
 		int a = 0;
 	}
-	void Animation::Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset, float columnLegth, UINT spriteLength, float duration
+	void Animation::Create(
+		Image* image, Vector2 leftTop, Vector2 size
+		, Vector2 offset, float columnLegth
+		, UINT spriteLength, float duration
 		, UINT alphaCheck, bool affactedCamera) {
 		mImage = image;
 		mbAffectedCamera = affactedCamera;
 		mAlpha = alphaCheck;
 
+		size_t coln = mImage->GetWidth() / size.x;
 		for (size_t i = 0; i < spriteLength; i++) {
 			Sprite* sprite = new Sprite;
 
@@ -87,7 +93,6 @@ namespace ya {
 
 			mSpriteSheet.push_back(sprite);
 		}
-		int a = 0;
 	}
 	void Animation::Reset() {
 		mSpriteIndex = 0;
