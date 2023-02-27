@@ -1,4 +1,4 @@
-#include "MechArtillery.h"
+#include "Mech.h"
 #include "yaTime.h"
 #include "yaSceneManager.h"
 #include "yaInput.h"
@@ -9,38 +9,40 @@
 #include "yaAnimator.h"
 namespace ya
 {
-	MechArtillery::MechArtillery()
+	Mech::Mech(MECHS _mech)
 		: mImage(nullptr)
 		, mTime(0.0f)
 		, mIndx(0)
+		, mMech(_mech)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 
-		Image* image = Resources::Load<Image>(L"mech_artillery_a"
-			, L"..\\Resources\\texture\\player\\mech_artillery_a.bmp");
+		Image* image = Resources::Load<Image>(
+				MAKE_MECH_KEY(mMech, CONDITION_T::ANIM)
+			, MAKE_MECH_PATH(mMech, CONDITION_T::ANIM));
 
 		Animator* animator = GetComponent<Animator>();
 
 		animator->CreateAnimation(
-			L"mech_artillery_a"
+			MAKE_MECH_KEY(mMech, CONDITION_T::ANIM)
 			, image
 			, Vector2(0.f, 0.f)
 			, Vector2(44.f, 34.f)
 			, Vector2(44.f, 0.f)
 			, 44.f
 			, 4
-			, 0.1f);
-		animator->Play(L"mech_artillery_a", true);
+			, 0.1f
+			, 0x01
+		);
+		animator->Play(MAKE_MECH_KEY(mMech, CONDITION_T::ANIM), true);
 	}
-	MechArtillery::~MechArtillery()
+	Mech::~Mech()
 	{
 	}
-	void MechArtillery::Initialize()
-	{
-
+	void Mech::Initialize() {
 	}
-	void MechArtillery::Update()
+	void Mech::Update()
 	{
 		Vector2 mPos = GetComponent<Transform>()->GetPos();
 
@@ -66,7 +68,7 @@ namespace ya
 		}
 		GetComponent<Transform>()->SetPos(mPos);
 	}
-	void MechArtillery::Render(HDC hdc)
+	void Mech::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
 		//Transform* tr = GetComponent<Transform>();
@@ -93,7 +95,7 @@ namespace ya
 		//	, RGB(255, 0, 255)
 		//);
 	}
-	void MechArtillery::Release()
+	void Mech::Release()
 	{
 		GameObject::Release();
 

@@ -1,5 +1,5 @@
 #include "yaSelectRobotScene.h"
-#include "MechArtillery.h"
+#include "Mech.h"
 #include "yaSceneManager.h"
 #include "yaInput.h"
 #include "yaTransform.h"
@@ -10,7 +10,7 @@ extern ya::Application application;
 namespace ya
 {
 	SelectRobotScene::SelectRobotScene()
-		:m_MechArtillery(nullptr)
+		:mMech(nullptr)
 	{
 	}
 
@@ -28,9 +28,9 @@ namespace ya
 			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, true);
 		AddGameObeject(b1, eLayerType::BackGround);
 
-		m_MechArtillery = new MechArtillery();
-		m_MechArtillery->SetPos(Vector2(10.f, 10.f));
-		AddGameObeject(m_MechArtillery, eLayerType::Player);
+		mMech = new Mech(MECHS::artillery);
+		mMech->SetPos(Vector2(10.f, 10.f));
+		AddGameObeject(mMech, eLayerType::Player);
 
 		Scene::Initialize();
 	}

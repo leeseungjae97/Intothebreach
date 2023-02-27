@@ -3,11 +3,11 @@
 #include "yaImage.h"
 namespace ya
 {
-	class MechArtillery : public GameObject
+	class Mech : public GameObject
 	{
 	public:
-		MechArtillery();
-		~MechArtillery();
+		Mech(MECHS _mech);
+		~Mech();
 
 		virtual void Initialize() override;
 		virtual void Update() override;
@@ -18,5 +18,6 @@ namespace ya
 		Image* mImage;
 		float mTime;
 		int mIndx;
+		MECHS mMech;
 	};
 }

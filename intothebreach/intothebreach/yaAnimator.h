@@ -31,7 +31,7 @@ namespace ya {
 
         // 한 파일에 이어져있는 애니메이션
         void CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset
-            , float columnLegth, UINT spriteLength, float duration, bool bAffectedCamera = false);
+            , float columnLegth, UINT spriteLength, float duration, UINT alphaCheck = 0, bool bAffectedCamera = false);
         // 파일별로 있는 애니메이션
         void CreateAnimations(const wstring& path, const wstring& name, Vector2 offset = Vector2::Zero, float duration = 0.1f);
 

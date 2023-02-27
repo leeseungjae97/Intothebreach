@@ -41,7 +41,7 @@ namespace ya {
 		BLENDFUNCTION func = {};
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
-		func.AlphaFormat = AC_SRC_ALPHA;
+		func.AlphaFormat = mAlpha;
 		func.SourceConstantAlpha = 125;
 
 		pos += mSpriteSheet[mSpriteIndex]->offset;
@@ -70,9 +70,11 @@ namespace ya {
 			, RGB(255,0,255));*/
 		int a = 0;
 	}
-	void Animation::Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset, float columnLegth, UINT spriteLength, float duration, bool affactedCamera) {
+	void Animation::Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset, float columnLegth, UINT spriteLength, float duration
+		, UINT alphaCheck, bool affactedCamera) {
 		mImage = image;
 		mbAffectedCamera = affactedCamera;
+		mAlpha = alphaCheck;
 
 		for (size_t i = 0; i < spriteLength; i++) {
 			Sprite* sprite = new Sprite;

@@ -1,6 +1,6 @@
 #pragma once
 #include "yaScene.h"
-#include "MechArtillery.h"
+#include "Mech.h"
 namespace ya
 {
 	class SelectRobotScene : public Scene
@@ -18,6 +18,6 @@ namespace ya
 		virtual void OnExit() override;
 
 	private:
-		MechArtillery* m_MechArtillery;
+		Mech* mMech;
 	};
 }

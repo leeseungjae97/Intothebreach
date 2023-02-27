@@ -83,6 +83,9 @@
     <Filter Include="Engine\Component\Animator">
       <UniqueIdentifier>{978f6b82-4112-4971-b35d-bccf269d7821}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contents\Tile">
+      <UniqueIdentifier>{906ff5fe-bb77-402a-a344-f5dd484e64cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -130,7 +133,7 @@
     <ClInclude Include="yaLayer.h">
       <Filter>Engine\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="MechArtillery.h">
+    <ClInclude Include="Mech.h">
       <Filter>Contents\Player</Filter>
     </ClInclude>
     <ClInclude Include="yaTime.h">
@@ -175,36 +178,6 @@
     <ClInclude Include="yaIntroScene.h">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClInclude>
-    <ClInclude Include="MechCharge.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechDstrike.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechElectric.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechFlame.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechGrav.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechGuard.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechIce.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechIgnite.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechJet.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MechJudo.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Skill.h">
       <Filter>Engine\Component\Skill</Filter>
     </ClInclude>
@@ -213,6 +186,10 @@
     </ClInclude>
     <ClInclude Include="yaAnimator.h">
       <Filter>Engine\Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="yaTile.h" />
+    <ClInclude Include="def.h">
+      <Filter>Engine\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -256,7 +233,7 @@
     <ClCompile Include="yaLayer.cpp">
       <Filter>Engine\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="MechArtillery.cpp">
+    <ClCompile Include="Mech.cpp">
       <Filter>Contents\Player</Filter>
     </ClCompile>
     <ClCompile Include="yaTime.cpp">
@@ -301,36 +278,6 @@
     <ClCompile Include="yaIntroScene.cpp">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClCompile>
-    <ClCompile Include="MechCharge.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechDstrike.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechElectric.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechFlame.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechGrav.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechGuard.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechIce.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechIgnite.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechJet.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MechJudo.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Skill.cpp">
       <Filter>Engine\Component\Skill</Filter>
     </ClCompile>
@@ -340,5 +287,6 @@
     <ClCompile Include="yaAnimator.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
+    <ClCompile Include="yaTile.cpp" />
   </ItemGroup>
 </Project>

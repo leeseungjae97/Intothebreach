@@ -46,7 +46,8 @@ namespace ya {
 			mActiveAnimation->Render(hdc);
 		}
 	}
-	void Animator::CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset, float columnLegth, UINT spriteLength, float duration, bool bAffectedCamera) {
+	void Animator::CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset
+		, float columnLegth, UINT spriteLength, float duration, UINT alphaCheck, bool bAffectedCamera) {
 		Animation* animation = FindAnimation(name);
 		if (animation != nullptr) {
 			MessageBox(nullptr, L"Animation 이름 중복", L"Animation 생성 실패", MB_OK);
@@ -54,7 +55,7 @@ namespace ya {
 		}
 
 		animation = new Animation();
-		animation->Create(image, leftTop, size, offset, columnLegth, spriteLength, duration, bAffectedCamera);
+		animation->Create(image, leftTop, size, offset, columnLegth, spriteLength, duration, alphaCheck, bAffectedCamera);
 		animation->SetName(name);
 		animation->SetAnimator(this);
 

@@ -1,5 +1,5 @@
 #include "yaCombatScene.h"
-#include "MechArtillery.h"
+#include "Mech.h"
 #include "yaSceneManager.h"
 #include "yaInput.h"
 #include "yaTransform.h"

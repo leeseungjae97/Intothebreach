@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="def.h" />
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
@@ -144,7 +145,7 @@
     <ClInclude Include="yaBackground.h" />
     <ClInclude Include="yaCombatScene.h" />
     <ClInclude Include="yaComponent.h" />
-    <ClInclude Include="MechArtillery.h" />
+    <ClInclude Include="Mech.h" />
     <ClInclude Include="yaEndingScene.h" />
     <ClInclude Include="yaEntity.h" />
     <ClInclude Include="yaEnums.h" />
@@ -153,16 +154,6 @@
     <ClInclude Include="yaIntroScene.h" />
     <ClInclude Include="yaLayer.h" />
     <ClInclude Include="yaMath.h" />
-    <ClInclude Include="MechCharge.h" />
-    <ClInclude Include="MechDstrike.h" />
-    <ClInclude Include="MechElectric.h" />
-    <ClInclude Include="MechFlame.h" />
-    <ClInclude Include="MechGrav.h" />
-    <ClInclude Include="MechGuard.h" />
-    <ClInclude Include="MechIce.h" />
-    <ClInclude Include="MechIgnite.h" />
-    <ClInclude Include="MechJet.h" />
-    <ClInclude Include="MechJudo.h" />
     <ClInclude Include="YamYamEngine.h" />
     <ClInclude Include="yaSelectGDI.h" />
     <ClInclude Include="yaSelectRobotScene.h" />
@@ -171,6 +162,7 @@
     <ClInclude Include="yaScene.h" />
     <ClInclude Include="yaSceneManager.h" />
     <ClInclude Include="yaSelectLandScene.h" />
+    <ClInclude Include="yaTile.h" />
     <ClInclude Include="yaTime.h" />
     <ClInclude Include="yaTitleScene.h" />
     <ClInclude Include="yaTransform.h" />
@@ -183,22 +175,12 @@
     <ClCompile Include="yaAnimator.cpp" />
     <ClCompile Include="yaEndingScene.cpp" />
     <ClCompile Include="yaIntroScene.cpp" />
-    <ClCompile Include="MechCharge.cpp" />
-    <ClCompile Include="MechDstrike.cpp" />
-    <ClCompile Include="MechElectric.cpp" />
-    <ClCompile Include="MechFlame.cpp" />
-    <ClCompile Include="MechGrav.cpp" />
-    <ClCompile Include="MechGuard.cpp" />
-    <ClCompile Include="MechIce.cpp" />
-    <ClCompile Include="MechIgnite.cpp" />
-    <ClCompile Include="MechJet.cpp" />
-    <ClCompile Include="MechJudo.cpp" />
     <ClCompile Include="yaSelectGDI.cpp" />
     <ClCompile Include="yaApplication.cpp" />
     <ClCompile Include="yaBackground.cpp" />
     <ClCompile Include="yaCombatScene.cpp" />
     <ClCompile Include="yaComponent.cpp" />
-    <ClCompile Include="MechArtillery.cpp" />
+    <ClCompile Include="Mech.cpp" />
     <ClCompile Include="yaEntity.cpp" />
     <ClCompile Include="yaGameObject.cpp" />
     <ClCompile Include="yaInput.cpp" />
@@ -210,6 +192,7 @@
     <ClCompile Include="yaScene.cpp" />
     <ClCompile Include="yaSceneManager.cpp" />
     <ClCompile Include="yaSelectLandScene.cpp" />
+    <ClCompile Include="yaTile.cpp" />
     <ClCompile Include="yaTime.cpp" />
     <ClCompile Include="yaTitleScene.cpp" />
     <ClCompile Include="yaTransform.cpp" />

@@ -30,7 +30,7 @@ namespace ya {
         void update();
         void Render(HDC hdc);
         void Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset,
-            float columnLegth, UINT spriteLength, float duration, bool affactedCamera = false);
+            float columnLegth, UINT spriteLength, float duration, UINT alphaCheck = 0, bool affactedCamera = false);
 
         void Reset();
 
@@ -43,8 +43,10 @@ namespace ya {
         vector<Sprite*> mSpriteSheet;
 
         int mSpriteIndex;
+        int mAlpha;
         float mTime;
         bool mbComplete;
         bool mbAffectedCamera;
+
     };
 };
