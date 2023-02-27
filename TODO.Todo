@@ -1,0 +1,22 @@
+@critical @high @low @today, `highlight2`
+
+TotalDate - file:///E://기간.xlsx
+☐ ctrl + enter
+☐ @started(23-02-23 08:50) Alt + s
+✔ @done(23-02-23 08:51) Alt + d
+✘ @cancelled(23-02-23 17:22) Alt + c
+==============================================
+2023-02-25:
+    ✔ Animation 마무리 @done(23-02-26 04:06)
+    ✔ sound 추출 @done(23-02-25 12:23)
+2023-02-26:
+    ✘ Tile 구현 (isometric view) @cancelled(23-02-27 00:31)
+2023-02-27:
+    ✔ Mech Resources 정리 @done(23-02-27 18:01)
+
+2023-02-28:
+    ☐ Tile 구현
+    ☐ ranged_artillery 구현
+    :LEFT TIME:
+        ☐ prime_punch_mech 구현
+        ☐ brute_tankmech 구현
