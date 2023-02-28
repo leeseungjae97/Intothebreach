@@ -10,20 +10,23 @@
 namespace ya
 {
 	Mech::Mech(MECHS _mech)
-		: mMech(_mech)
+		: mMechType(_mech)
+		, mWeapon(nullptr)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 
-		Image* image = Resources::Load<Image>(
-				MAKE_MECH_KEY(mMech, CONDITION_T::ANIM)
-			, MAKE_MECH_PATH(mMech, CONDITION_T::ANIM));
+		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::End; i++) {
+			mImages[i] = Resources::Load<Image>(
+				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
+				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
+		}
 
-		Animator* animator = GetComponent<Animator>();
+		mAnimator = GetComponent<Animator>();
 
-		animator->CreateAnimation(
-			MAKE_MECH_KEY(mMech, CONDITION_T::ANIM)
-			, image
+		mAnimator->CreateAnimation(
+			MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
+			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]
 			, Vector2(0.f, 0.f)
 			, Vector2(44.f, 34.f)
 			, Vector2(44.f, 0.f)
@@ -32,7 +35,7 @@ namespace ya
 			, 0.1f
 			, 0x01
 		);
-		animator->Play(MAKE_MECH_KEY(mMech, CONDITION_T::ANIM), true);
+		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 	}
 	Mech::~Mech()
 	{
@@ -41,60 +44,49 @@ namespace ya
 	}
 	void Mech::Update()
 	{
-		Vector2 mPos = GetComponent<Transform>()->GetPos();
 
 		GameObject::Update();
-		if (Input::GetKeyState(eKeyCode::A) == eKeyState::Pressed)
-		{
-			mPos.x -= 100.0f * Time::fDeltaTime();
-		}
+		switch (mState) {
+		case ya::Mech::eMechState::Idle:
+			idle();
+			break;
+		case ya::Mech::eMechState::Broken:
+			broken();
+			break;
+		case ya::Mech::eMechState::Water:
+			water();
+			break;
+		case ya::Mech::eMechState::End:
 
-		if (Input::GetKeyState(eKeyCode::D) == eKeyState::Pressed)
-		{
-			mPos.x += 100.0f * Time::fDeltaTime();
+			break;
+		default:
+			break;
 		}
-
-		if (Input::GetKeyState(eKeyCode::W) == eKeyState::Pressed)
-		{
-			mPos.y -= 100.0f * Time::fDeltaTime();
-		}
-
-		if (Input::GetKeyState(eKeyCode::S) == eKeyState::Pressed)
-		{
-			mPos.y += 100.0f * Time::fDeltaTime();
-		}
-		GetComponent<Transform>()->SetPos(mPos);
+		
 	}
 	void Mech::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
-		//Transform* tr = GetComponent<Transform>();
-		//Vector2 mPos = tr->GetPos();
-		//mTime += Time::fDeltaTime();
-		//if (mIndx > 4) {
-		//	mIndx = 0;
-		//}
-		//if (mTime > 1.0) {
-		//	mIndx++;
-		//}
-		////44 34
-		//TransparentBlt(
-		//	hdc
-		//	, (int)(mPos.x)
-		//	, (int)(mPos.y)
-		//	, 44
-		//	, 34
-		//	, mImage->GetHdc()
-		//	, 0
-		//	, 0
-		//	, 34 * mIndx
-		//	, 44
-		//	, RGB(255, 0, 255)
-		//);
 	}
 	void Mech::Release()
 	{
 		GameObject::Release();
 
+	}
+	void Mech::SetSkill() {
+	}
+	void Mech::ChangePilotSlot() {
+	}
+	Weapon* Mech::ChangeWeaponSlot(int index) {
+		return nullptr;
+	}
+	void Mech::idle() {
+		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+	}
+	void Mech::broken() {
+		//mAnimator;
+	}
+	void Mech::water() {
+		
 	}
 }

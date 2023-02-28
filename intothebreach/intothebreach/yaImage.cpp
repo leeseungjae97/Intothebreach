@@ -4,10 +4,10 @@
 
 extern ya::Application application;
 namespace ya {
-	Image* Image::Create(const std::wstring& key, UINT width, UINT height) {
+	Image* Image::Create(const wstring& key, UINT width, UINT height) {
 
 		Image* image = Resources::Find<Image>(key);
-		if (image != nullptr) {
+		if (nullptr != image) {
 			MessageBox(nullptr, L"중복 키 발생", L"이미지 생성 실패", MB_OK);
 			return nullptr;
 		}

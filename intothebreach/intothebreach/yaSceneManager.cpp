@@ -5,6 +5,7 @@
 #include "yaSelectRobotScene.h"
 #include "yaEndingScene.h"
 #include "yaIntroScene.h"
+#include "yaInLandScene.h"
 namespace ya
 {	
 	std::vector<Scene*> SceneManager::mScenes = {};
@@ -20,6 +21,7 @@ namespace ya
 		mScenes[(UINT)eSceneType::SelectRobot] = new SelectRobotScene();
 		mScenes[(UINT)eSceneType::Ending] = new EndingScene();
 		mScenes[(UINT)eSceneType::Intro] = new IntroScene();
+		mScenes[(UINT)eSceneType::InLand] = new InLandScene();
 
 		mActiveScene = mScenes[(UINT)eSceneType::SelectRobot];
 

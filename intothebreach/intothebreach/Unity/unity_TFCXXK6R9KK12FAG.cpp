@@ -11,10 +11,22 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaAnimator.cpp"
 
 
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaCollider.cpp"
+
+
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaEndingScene.cpp"
 
 
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaInLandScene.cpp"
+
+
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaIntroScene.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaPilot.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaPlayerInfo.cpp"
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaSelectGDI.cpp"
@@ -81,4 +93,7 @@
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\yaImage.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\yaWeapon.cpp"
 

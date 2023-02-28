@@ -14,4 +14,13 @@ TotalDate - file:///E://기간.xlsx
 2023-02-27:
     ✔ Mech Resources 정리 @done(23-02-27 18:01)
 2023-02-28:
+    ☐ PlayerInfo static으로 전환
     ☐ 충돌체 진행 
+
+
+MEMO:
+    충돌체 기반으로 타일.
+    타일을 만들어 놔야 전투씬 진행이 가능
+    현재 남은 부분이 UI중점으로 남은것.
+
+    IN_LAND_SCENE

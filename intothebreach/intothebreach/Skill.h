@@ -1,7 +1,9 @@
 #pragma once
-#include "yaComponent.h"
+#include "yaGameObject.h"
 namespace ya {
-	class Skill :
-		public Component {
+	class Skill : public GameObject{
+	public:
+		Skill();
+		~Skill();
 	};
 }

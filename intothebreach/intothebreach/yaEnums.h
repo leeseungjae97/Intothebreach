@@ -7,6 +7,7 @@ enum class eSceneType
 	Title,
 	SelectRobot,
 	SelectLand,
+	InLand,
 	Combat,
 	Ending,
 	Max,
@@ -21,6 +22,11 @@ enum class eLayerType
 	Effect,
 	UI,
 	End,
+};
+enum class ePlayerInfos {
+	Skill,
+	Weapon,
+	Pilot,
 };
 enum class eComponentType {
 	Transform,
@@ -200,14 +206,18 @@ enum class SCIENCE_T {
 	tele,
 	End,
 };
-enum class CONDITION_T {
+enum class COMMON_CONDITION_T {
 	NONE,
-	ANIM,
-	BROKEN,
 	HOLO,
 	NO_S,
+	End
+};
+enum class COMBAT_CONDITION_T {
+	IDLE,
+	BROKEN,
 	WATER,
 	WATER_BROKEN,
+	End
 };
 static wstring RESOURCES_PATH[RESOURCES_1]{
 	L"alien",
@@ -266,14 +276,16 @@ static wstring WEAPONS_PATH[WEAPONS_]{
 	L"passives",
 	L"PlayerWeapons"
 };
-static wstring MECH_CONDITION[CONDITIONS]{
-	L"",
+static wstring MECH_CONDITION[(UINT)COMBAT_CONDITION_T::End]{
 	L"_a",
 	L"_broken",
-	L"_h",
-	L"_ns",
 	L"_w"
 	L"_w_broken"
+};
+static wstring COMMON_MECH_T[(UINT)COMMON_CONDITION_T::End]{
+	L"",
+	L"_ns",
+	L"_h"
 };
 static wstring GROUND_PATH[(UINT)TERRAIN_T::End]{
 	L"grass\\",
@@ -284,7 +296,7 @@ static wstring GROUND_PATH[(UINT)TERRAIN_T::End]{
 	L"cave\\",
 	L""
 };
-static wstring& MAKE_MECH_KEY(MECHS _mech, CONDITION_T _cond) {
+static wstring& MAKE_COMBAT_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring* path = new wstring(L"");
 	int _type = MECHS_T_HT[(UINT)_mech];
 
@@ -297,7 +309,7 @@ static wstring& MAKE_MECH_KEY(MECHS _mech, CONDITION_T _cond) {
 
 	return (*path);
 }
-static wstring& MAKE_MECH_PATH(MECHS _mech, CONDITION_T _cond) {
+static wstring& MAKE_COMBAT_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring* path = new wstring(L"..\\Resources\\texture\\player\\"); 
 	int _type = MECHS_T_HT[(UINT)_mech];
 

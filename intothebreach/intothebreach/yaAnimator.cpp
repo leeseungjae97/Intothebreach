@@ -76,6 +76,12 @@ namespace ya {
 			Image* image = Resources::Load<Image>(fileName, fullName);
 			images.push_back(image);
 
+
+			const wstring ext = p.path().extension();
+			if (ext == L".png") {
+
+			}
+			// 파일의 크기가 다른경우.
 			if (width < image->GetWidth())
 				width = image->GetWidth();
 

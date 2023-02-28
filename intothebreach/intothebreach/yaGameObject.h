@@ -63,6 +63,12 @@ namespace ya
 		Vector2 GetPos() {
 			return GetComponent<Transform>()->GetPos();
 		}
+		void SetScale(Vector2 _scale) {
+			GetComponent<Transform>()->SetScale(_scale);
+		}
+		Vector2 GetScale() {
+			return GetComponent<Transform>()->GetScale();
+		}
 		bool IsDead() { return mbDead; }
 		void Death() { mbDead = true; }
 	private:

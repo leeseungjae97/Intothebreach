@@ -74,9 +74,6 @@
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{615ef8ec-47b3-4764-b0d0-014f4863e2ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Component\Skill">
-      <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents\Ailen">
       <UniqueIdentifier>{e07f2cc3-accd-43da-a1ae-7785d646cccb}</UniqueIdentifier>
     </Filter>
@@ -85,6 +82,24 @@
     </Filter>
     <Filter Include="Contents\Tile">
       <UniqueIdentifier>{906ff5fe-bb77-402a-a344-f5dd484e64cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\InLandScene">
+      <UniqueIdentifier>{f715b4e0-ca4d-4294-a705-2dfc65abe022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Component\Collider">
+      <UniqueIdentifier>{a4fb988b-7ab1-4ae5-82fb-f34699a8f657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Manager">
+      <UniqueIdentifier>{26dafeb7-3def-4508-8966-864240a64195}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Weapon">
+      <UniqueIdentifier>{bb37c828-52b4-4b84-991b-3f2a1c7284c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Pilot">
+      <UniqueIdentifier>{3ef4e0b8-7c56-47a7-bf91-47e82cef58a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Skill">
+      <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -122,9 +137,6 @@
       <Filter>Engine\High Level Interface</Filter>
     </ClInclude>
     <ClInclude Include="yaScene.h">
-      <Filter>Engine\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="yaSceneManager.h">
       <Filter>Engine\Scene</Filter>
     </ClInclude>
     <ClInclude Include="yaComponent.h">
@@ -179,7 +191,7 @@
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClInclude>
     <ClInclude Include="Skill.h">
-      <Filter>Engine\Component\Skill</Filter>
+      <Filter>Contents\Skill</Filter>
     </ClInclude>
     <ClInclude Include="yaAnimation.h">
       <Filter>Engine\Component\Animator</Filter>
@@ -193,7 +205,22 @@
     <ClInclude Include="yaTile.h">
       <Filter>Contents\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="yaCollider.h" />
+    <ClInclude Include="yaInLandScene.h">
+      <Filter>Contents\Scene\InLandScene</Filter>
+    </ClInclude>
+    <ClInclude Include="yaCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="yaSceneManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="yaPlayerInfo.h" />
+    <ClInclude Include="yaWeapon.h">
+      <Filter>Contents\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="yaPilot.h">
+      <Filter>Contents\Pilot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -225,9 +252,6 @@
       <Filter>Engine\High Level Interface</Filter>
     </ClCompile>
     <ClCompile Include="yaScene.cpp">
-      <Filter>Engine\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="yaSceneManager.cpp">
       <Filter>Engine\Scene</Filter>
     </ClCompile>
     <ClCompile Include="yaComponent.cpp">
@@ -282,7 +306,7 @@
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClCompile>
     <ClCompile Include="Skill.cpp">
-      <Filter>Engine\Component\Skill</Filter>
+      <Filter>Contents\Skill</Filter>
     </ClCompile>
     <ClCompile Include="yaAnimation.cpp">
       <Filter>Engine\Component\Animator</Filter>
@@ -293,6 +317,21 @@
     <ClCompile Include="yaTile.cpp">
       <Filter>Contents\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="yaCollider.cpp" />
+    <ClCompile Include="yaInLandScene.cpp">
+      <Filter>Contents\Scene\InLandScene</Filter>
+    </ClCompile>
+    <ClCompile Include="yaCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="yaSceneManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="yaPlayerInfo.cpp" />
+    <ClCompile Include="yaWeapon.cpp">
+      <Filter>Contents\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="yaPilot.cpp">
+      <Filter>Contents\Pilot</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

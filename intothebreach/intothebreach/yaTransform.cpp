@@ -2,14 +2,14 @@
 namespace ya {
 	Transform::Transform(Transform& other)
 		: Component(other)
-		, mPos{0.f,0.f}
-		, mScale{ 0.f,0.f }
+		, mPos(Vector2::Zero)
+		, mScale(Vector2::One)
 	{
 	}
 	Transform::Transform()
 		: Component(eComponentType::Transform)
-		, mPos{ 0.f,0.f }
-		, mScale{ 0.f,0.f }
+		, mPos(Vector2::Zero)
+		, mScale(Vector2::One)
 	{
 	}
 	Transform::~Transform() {
