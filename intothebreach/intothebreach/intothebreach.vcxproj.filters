@@ -187,10 +187,13 @@
     <ClInclude Include="yaAnimator.h">
       <Filter>Engine\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="yaTile.h" />
     <ClInclude Include="def.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
+    <ClInclude Include="yaTile.h">
+      <Filter>Contents\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="yaCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -287,6 +290,9 @@
     <ClCompile Include="yaAnimator.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="yaTile.cpp" />
+    <ClCompile Include="yaTile.cpp">
+      <Filter>Contents\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="yaCollider.cpp" />
   </ItemGroup>
 </Project>

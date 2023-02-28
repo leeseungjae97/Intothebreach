@@ -14,8 +14,4 @@ TotalDate - file:///E://기간.xlsx
 2023-02-27:
     ✔ Mech Resources 정리 @done(23-02-27 18:01)
 2023-02-28:
-    ☐ Tile 구현
-    ☐ ranged_artillery 구현
-    :LEFT TIME:
-        ☐ prime_punch_mech 구현
-        ☐ brute_tankmech 구현
+    ☐ 충돌체 진행 

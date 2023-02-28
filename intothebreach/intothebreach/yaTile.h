@@ -21,4 +21,3 @@ namespace ya {
 		Vector2 mPos;
 	};
 }
-

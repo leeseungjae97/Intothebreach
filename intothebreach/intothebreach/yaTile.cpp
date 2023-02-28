@@ -18,13 +18,12 @@ namespace ya {
 
 		mImage = img;
 
-
-
 	}
 	void Tile::SetIndex(int index) {
 	}
 	void Tile::Update() {
 	}
 	void Tile::Render(HDC hdc) {
+		GameObject::Render(hdc);
 	}
 }

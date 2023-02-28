@@ -143,6 +143,7 @@
     <ClInclude Include="yaAnimator.h" />
     <ClInclude Include="yaApplication.h" />
     <ClInclude Include="yaBackground.h" />
+    <ClInclude Include="yaCollider.h" />
     <ClInclude Include="yaCombatScene.h" />
     <ClInclude Include="yaComponent.h" />
     <ClInclude Include="Mech.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="yaAnimation.cpp" />
     <ClCompile Include="yaAnimator.cpp" />
+    <ClCompile Include="yaCollider.cpp" />
     <ClCompile Include="yaEndingScene.cpp" />
     <ClCompile Include="yaIntroScene.cpp" />
     <ClCompile Include="yaSelectGDI.cpp" />

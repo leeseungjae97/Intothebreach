@@ -45,6 +45,25 @@ enum class PEN_TYPE {
 	END
 };
 
+enum class TERRAIN_T {
+	grass,
+	sand,
+	snow,
+	acid,
+	volcano,
+	cave,
+	common,
+	End
+};
+enum class GROUND_T {
+	ground,
+	forest,
+	building,
+	building_water,
+	building_collapse,
+	mountain,
+
+};
 enum class MECH_T {
 	Prime,
 	Brute,
@@ -255,6 +274,15 @@ static wstring MECH_CONDITION[CONDITIONS]{
 	L"_ns",
 	L"_w"
 	L"_w_broken"
+};
+static wstring GROUND_PATH[(UINT)TERRAIN_T::End]{
+	L"grass\\",
+	L"sand\\",
+	L"snow\\",
+	L"acid\\",
+	L"volcano\\",
+	L"cave\\",
+	L""
 };
 static wstring& MAKE_MECH_KEY(MECHS _mech, CONDITION_T _cond) {
 	wstring* path = new wstring(L"");
