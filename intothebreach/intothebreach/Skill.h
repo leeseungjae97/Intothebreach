@@ -1,6 +1,6 @@
 #pragma once
-#include "yaGameObject.h"
-namespace ya {
+#include "mGameObject.h"
+namespace m {
 	class Skill : public GameObject{
 	public:
 		Skill();

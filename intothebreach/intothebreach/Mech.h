@@ -1,7 +1,7 @@
 #pragma once
-#include "yaGameObject.h"
-#include "yaImage.h"
-namespace ya
+#include "mGameObject.h"
+#include "mImage.h"
+namespace m
 {
 	class Weapon;
 	class Pilot;
@@ -41,5 +41,6 @@ namespace ya
 		Pilot* mPilot;
 		vector<Skill*> mSkills;
 		vector<Image*> mImages;
+		Image* curImage;
 	};
 }

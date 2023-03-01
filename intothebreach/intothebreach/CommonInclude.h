@@ -12,6 +12,7 @@
 #include <bitset>
 #include <string>
 #include <vector>
+#include <queue>
 #include <list>
 #include <unordered_set>
 #include <unordered_map>
@@ -37,11 +38,12 @@ using std::pair;
 using std::make_pair;
 using std::move;
 using std::function;
+using std::queue;
 
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "dsound.lib")
 
-namespace ya {
+namespace m {
 	struct Pixel {
 		BYTE R;
 		BYTE G;

@@ -1,25 +1,31 @@
 #include "Mech.h"
-#include "yaTime.h"
-#include "yaSceneManager.h"
-#include "yaInput.h"
-#include "yaResources.h"
-#include "yaImage.h"
-#include "yaTransform.h"
-#include "yaTime.h"
-#include "yaAnimator.h"
-namespace ya
+#include "mTime.h"
+#include "mSceneManager.h"
+#include "mInput.h"
+#include "mResources.h"
+#include "mImage.h"
+#include "mTransform.h"
+#include "mTime.h"
+#include "mAnimator.h"
+namespace m
 {
 	Mech::Mech(MECHS _mech)
 		: mMechType(_mech)
+		, mPilot(nullptr)
 		, mWeapon(nullptr)
+		, curImage(nullptr)
+		, mAnimator(nullptr)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 
-		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::End; i++) {
+		mImages.resize((UINT)COMBAT_CONDITION_T::END);
+		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++) {
 			mImages[i] = Resources::Load<Image>(
 				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
+			if (nullptr == mImages[i]) continue;
+			mImages[i]->SetOffset(Vector2(0, 0));
 		}
 
 		mAnimator = GetComponent<Animator>();
@@ -27,15 +33,15 @@ namespace ya
 		mAnimator->CreateAnimation(
 			MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
 			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]
-			, Vector2(0.f, 0.f)
-			, Vector2(44.f, 34.f)
-			, Vector2(44.f, 0.f)
-			, 44.f
+			, Vector2(Vector2::Zero)
+			, Vector2(MECH_IDLE_SIZE_X, MECH_IDLE_SIZE_Y)
+			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
 			, 4
 			, 0.1f
-			, 0x01
+			, AC_SRC_ALPHA
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		mState = eMechState::Idle;
 	}
 	Mech::~Mech()
 	{
@@ -46,17 +52,23 @@ namespace ya
 	{
 
 		GameObject::Update();
+		if (KEY_PREESED(KEYCODE_TYPE::D)) {
+			mState = eMechState::Broken;
+		}
+		if (KEY_PREESED(KEYCODE_TYPE::A)) {
+			mState = eMechState::Idle;
+		}
 		switch (mState) {
-		case ya::Mech::eMechState::Idle:
+		case m::Mech::eMechState::Idle:
 			idle();
 			break;
-		case ya::Mech::eMechState::Broken:
+		case m::Mech::eMechState::Broken:
 			broken();
 			break;
-		case ya::Mech::eMechState::Water:
+		case m::Mech::eMechState::Water:
 			water();
 			break;
-		case ya::Mech::eMechState::End:
+		case m::Mech::eMechState::End:
 
 			break;
 		default:
@@ -67,6 +79,22 @@ namespace ya
 	void Mech::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
+		
+		if (nullptr != curImage) {
+			Vector2 mPos = GetComponent<Transform>()->GetPos();
+			mPos += curImage->GetOffset();
+			TransparentBlt(hdc
+				, (int)(mPos.x - curImage->GetWidth() / 2.f)
+				, (int)(mPos.y - curImage->GetHeight() / 2.f)
+				, (int)(curImage->GetWidth())
+				, (int)(curImage->GetHeight())
+				, curImage->GetHdc()
+				, 0
+				, 0
+				, (int)(curImage->GetWidth())
+				, (int)(curImage->GetHeight())
+				, RGB(255, 0, 255));
+		}
 	}
 	void Mech::Release()
 	{
@@ -82,8 +110,11 @@ namespace ya
 	}
 	void Mech::idle() {
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		curImage = nullptr;
 	}
 	void Mech::broken() {
+		mAnimator->Stop();
+		curImage = mImages[(UINT)COMBAT_CONDITION_T::BROKEN];
 		//mAnimator;
 	}
 	void Mech::water() {

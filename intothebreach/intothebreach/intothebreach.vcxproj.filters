@@ -32,9 +32,6 @@
     <Filter Include="Engine\Layer">
       <UniqueIdentifier>{cc2bc656-3033-4f20-abdb-49d4ed8d7491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Player">
-      <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents\Scene">
       <UniqueIdentifier>{b7670575-6de6-41bf-ad7e-34ad46002aa4}</UniqueIdentifier>
     </Filter>
@@ -74,9 +71,6 @@
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{615ef8ec-47b3-4764-b0d0-014f4863e2ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Ailen">
-      <UniqueIdentifier>{e07f2cc3-accd-43da-a1ae-7785d646cccb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Component\Animator">
       <UniqueIdentifier>{978f6b82-4112-4971-b35d-bccf269d7821}</UniqueIdentifier>
     </Filter>
@@ -92,14 +86,29 @@
     <Filter Include="Engine\Manager">
       <UniqueIdentifier>{26dafeb7-3def-4508-8966-864240a64195}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Weapon">
+    <Filter Include="Contents\Unit">
+      <UniqueIdentifier>{e0be7454-b16d-4d7c-bd0a-7acfb8b3dba6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Unit\Player">
+      <UniqueIdentifier>{1b8483da-4a47-45c0-8efe-c8b10d5bfa80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Unit\Ailen">
+      <UniqueIdentifier>{e07f2cc3-accd-43da-a1ae-7785d646cccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Attached">
+      <UniqueIdentifier>{9f876bf7-4c70-479f-8049-0e809593c900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Attached\Skill">
+      <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Attached\Weapon">
       <UniqueIdentifier>{bb37c828-52b4-4b84-991b-3f2a1c7284c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Pilot">
+    <Filter Include="Contents\Attached\Pilot">
       <UniqueIdentifier>{3ef4e0b8-7c56-47a7-bf91-47e82cef58a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Skill">
-      <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
+    <Filter Include="Contents\PlayerInfo">
+      <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,108 +127,113 @@
     <ClInclude Include="CommonInclude.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="yaEnums.h">
+    <ClInclude Include="mEnums.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="yaMath.h">
+    <ClInclude Include="mMath.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="YamYamEngine.h">
+    <ClInclude Include="_Engine.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="yaGameObject.h">
+    <ClInclude Include="mGameObject.h">
       <Filter>Engine\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="yaEntity.h">
+    <ClInclude Include="mEntity.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="yaApplication.h">
+    <ClInclude Include="mApplication.h">
       <Filter>Engine\High Level Interface</Filter>
     </ClInclude>
-    <ClInclude Include="yaScene.h">
+    <ClInclude Include="mScene.h">
       <Filter>Engine\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="yaComponent.h">
+    <ClInclude Include="mComponent.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="yaLayer.h">
+    <ClInclude Include="mLayer.h">
       <Filter>Engine\Layer</Filter>
     </ClInclude>
-    <ClInclude Include="Mech.h">
-      <Filter>Contents\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="yaTime.h">
+    <ClInclude Include="mTime.h">
       <Filter>Engine\Time</Filter>
     </ClInclude>
-    <ClInclude Include="yaInput.h">
+    <ClInclude Include="mInput.h">
       <Filter>Engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="yaResource.h">
+    <ClInclude Include="mResource.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaResources.h">
+    <ClInclude Include="mResources.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaImage.h">
+    <ClInclude Include="mImage.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="yaTransform.h">
+    <ClInclude Include="mTransform.h">
       <Filter>Engine\Component\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="yaCombatScene.h">
+    <ClInclude Include="mCombatScene.h">
       <Filter>Contents\Scene\CombatScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaSelectRobotScene.h">
+    <ClInclude Include="mSelectRobotScene.h">
       <Filter>Contents\Scene\SelectRobotScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaTitleScene.h">
+    <ClInclude Include="mTitleScene.h">
       <Filter>Contents\Scene\TitleScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaSelectLandScene.h">
+    <ClInclude Include="mSelectLandScene.h">
       <Filter>Contents\Scene\SelectLandScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaBackground.h">
+    <ClInclude Include="mBackground.h">
       <Filter>Contents\Background</Filter>
     </ClInclude>
-    <ClInclude Include="yaSelectGDI.h">
+    <ClInclude Include="mSelectGDI.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="yaEndingScene.h">
+    <ClInclude Include="mEndingScene.h">
       <Filter>Contents\Scene\EndingScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaIntroScene.h">
+    <ClInclude Include="mIntroScene.h">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClInclude>
     <ClInclude Include="Skill.h">
-      <Filter>Contents\Skill</Filter>
+      <Filter>Contents\Attached\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="yaAnimation.h">
+    <ClInclude Include="mAnimation.h">
       <Filter>Engine\Component\Animator</Filter>
     </ClInclude>
-    <ClInclude Include="yaAnimator.h">
+    <ClInclude Include="mAnimator.h">
       <Filter>Engine\Component\Animator</Filter>
     </ClInclude>
     <ClInclude Include="def.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="yaTile.h">
+    <ClInclude Include="mTile.h">
       <Filter>Contents\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="yaInLandScene.h">
+    <ClInclude Include="mInLandScene.h">
       <Filter>Contents\Scene\InLandScene</Filter>
     </ClInclude>
-    <ClInclude Include="yaCollider.h">
+    <ClInclude Include="mCollider.h">
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="yaSceneManager.h">
+    <ClInclude Include="mSceneManager.h">
       <Filter>Engine\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="yaPlayerInfo.h" />
-    <ClInclude Include="yaWeapon.h">
-      <Filter>Contents\Weapon</Filter>
+    <ClInclude Include="mWeapon.h">
+      <Filter>Contents\Attached\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="yaPilot.h">
-      <Filter>Contents\Pilot</Filter>
+    <ClInclude Include="mPilot.h">
+      <Filter>Contents\Attached\Pilot</Filter>
+    </ClInclude>
+    <ClInclude Include="mPlayerInfo.h">
+      <Filter>Contents\PlayerInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Mech.h">
+      <Filter>Contents\Unit\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="mCamera.h">
+      <Filter>Engine\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,99 +253,104 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="yaMath.cpp">
+    <ClCompile Include="mMath.cpp">
       <Filter>Engine\Common</Filter>
     </ClCompile>
-    <ClCompile Include="yaGameObject.cpp">
+    <ClCompile Include="mGameObject.cpp">
       <Filter>Engine\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="yaEntity.cpp">
+    <ClCompile Include="mEntity.cpp">
       <Filter>Engine\Common</Filter>
     </ClCompile>
-    <ClCompile Include="yaApplication.cpp">
+    <ClCompile Include="mApplication.cpp">
       <Filter>Engine\High Level Interface</Filter>
     </ClCompile>
-    <ClCompile Include="yaScene.cpp">
+    <ClCompile Include="mScene.cpp">
       <Filter>Engine\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="yaComponent.cpp">
+    <ClCompile Include="mComponent.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="yaLayer.cpp">
+    <ClCompile Include="mLayer.cpp">
       <Filter>Engine\Layer</Filter>
     </ClCompile>
-    <ClCompile Include="Mech.cpp">
-      <Filter>Contents\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="yaTime.cpp">
+    <ClCompile Include="mTime.cpp">
       <Filter>Engine\Time</Filter>
     </ClCompile>
-    <ClCompile Include="yaInput.cpp">
+    <ClCompile Include="mInput.cpp">
       <Filter>Engine\Input</Filter>
     </ClCompile>
-    <ClCompile Include="yaResource.cpp">
+    <ClCompile Include="mResource.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaResources.cpp">
+    <ClCompile Include="mResources.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaImage.cpp">
+    <ClCompile Include="mImage.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="yaTransform.cpp">
+    <ClCompile Include="mTransform.cpp">
       <Filter>Engine\Component\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="yaCombatScene.cpp">
+    <ClCompile Include="mCombatScene.cpp">
       <Filter>Contents\Scene\CombatScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaSelectRobotScene.cpp">
+    <ClCompile Include="mSelectRobotScene.cpp">
       <Filter>Contents\Scene\SelectRobotScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaTitleScene.cpp">
+    <ClCompile Include="mTitleScene.cpp">
       <Filter>Contents\Scene\TitleScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaSelectLandScene.cpp">
+    <ClCompile Include="mSelectLandScene.cpp">
       <Filter>Contents\Scene\SelectLandScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaBackground.cpp">
+    <ClCompile Include="mBackground.cpp">
       <Filter>Contents\Background</Filter>
     </ClCompile>
-    <ClCompile Include="yaSelectGDI.cpp">
+    <ClCompile Include="mSelectGDI.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="yaEndingScene.cpp">
+    <ClCompile Include="mEndingScene.cpp">
       <Filter>Contents\Scene\EndingScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaIntroScene.cpp">
+    <ClCompile Include="mIntroScene.cpp">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClCompile>
     <ClCompile Include="Skill.cpp">
-      <Filter>Contents\Skill</Filter>
+      <Filter>Contents\Attached\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="yaAnimation.cpp">
+    <ClCompile Include="mAnimation.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="yaAnimator.cpp">
+    <ClCompile Include="mAnimator.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="yaTile.cpp">
+    <ClCompile Include="mTile.cpp">
       <Filter>Contents\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="yaInLandScene.cpp">
+    <ClCompile Include="mInLandScene.cpp">
       <Filter>Contents\Scene\InLandScene</Filter>
     </ClCompile>
-    <ClCompile Include="yaCollider.cpp">
+    <ClCompile Include="mCollider.cpp">
       <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="yaSceneManager.cpp">
+    <ClCompile Include="mSceneManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="yaPlayerInfo.cpp" />
-    <ClCompile Include="yaWeapon.cpp">
-      <Filter>Contents\Weapon</Filter>
+    <ClCompile Include="mWeapon.cpp">
+      <Filter>Contents\Attached\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="yaPilot.cpp">
-      <Filter>Contents\Pilot</Filter>
+    <ClCompile Include="mPilot.cpp">
+      <Filter>Contents\Attached\Pilot</Filter>
+    </ClCompile>
+    <ClCompile Include="mPlayerInfo.cpp">
+      <Filter>Contents\PlayerInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Mech.cpp">
+      <Filter>Contents\Unit\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="mCamera.cpp">
+      <Filter>Engine\Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

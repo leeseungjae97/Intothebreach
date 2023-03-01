@@ -1,5 +1,5 @@
 #include "Skill.h"
-namespace ya {
+namespace m {
 	Skill::Skill()
 		
 	{
