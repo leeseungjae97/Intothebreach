@@ -196,9 +196,6 @@
     <ClInclude Include="mIntroScene.h">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClInclude>
-    <ClInclude Include="Skill.h">
-      <Filter>Contents\Attached\Skill</Filter>
-    </ClInclude>
     <ClInclude Include="mAnimation.h">
       <Filter>Engine\Component\Animator</Filter>
     </ClInclude>
@@ -238,6 +235,7 @@
     <ClInclude Include="mCollisionManager.h">
       <Filter>Engine\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Skill_Range.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -319,9 +317,6 @@
     <ClCompile Include="mIntroScene.cpp">
       <Filter>Contents\Scene\IntroScene</Filter>
     </ClCompile>
-    <ClCompile Include="Skill.cpp">
-      <Filter>Contents\Attached\Skill</Filter>
-    </ClCompile>
     <ClCompile Include="mAnimation.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
@@ -358,5 +353,6 @@
     <ClCompile Include="mCollisionManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Skill_Range.cpp" />
   </ItemGroup>
 </Project>
