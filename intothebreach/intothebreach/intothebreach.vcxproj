@@ -136,6 +136,7 @@
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="targetver.h" />
@@ -177,6 +178,7 @@
   <ItemGroup>
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="mCollisionManager.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="mAnimation.cpp" />
     <ClCompile Include="mAnimator.cpp" />

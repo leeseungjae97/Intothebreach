@@ -84,7 +84,7 @@ namespace m {
 
 			const wstring ext = p.path().extension();
 			if (ext == L".png") {
-
+				// 확장자 확인.
 			}
 			// 파일의 크기가 다른경우.
 			if (width < image->GetWidth())
@@ -108,7 +108,6 @@ namespace m {
 		CreateAnimation(name, mSpriteSheet
 			, Vector2(0.0f, 0.0f), Vector2((float)width, (float)height)
 			, offset, (UINT)fileCount, duration);
-
 	}
 
 	Animation* Animator::FindAnimation(const wstring& name) {

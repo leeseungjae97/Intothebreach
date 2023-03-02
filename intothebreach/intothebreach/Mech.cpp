@@ -8,6 +8,7 @@
 #include "mTime.h"
 #include "mAnimator.h"
 #include "mCamera.h"
+#include "mCollider.h"
 namespace m
 {
 	Mech::Mech(MECHS _mech)
@@ -19,6 +20,8 @@ namespace m
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
+		AddComponent(new Collider());
+
 
 		mImages.resize((UINT)COMBAT_CONDITION_T::END);
 		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++) {
@@ -28,6 +31,7 @@ namespace m
 			if (nullptr == mImages[i]) continue;
 			mImages[i]->SetOffset(Vector2(0, 0));
 		}
+		GetComponent<Collider>()->SetScale(Vector2(100.f, 100.f));
 
 		mAnimator = GetComponent<Animator>();
 

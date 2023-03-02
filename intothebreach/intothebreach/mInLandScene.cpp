@@ -25,23 +25,10 @@ namespace m {
 
 		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++) {
 			Background* b_ = new Background(MAKE_ISLAND_KEY(mType, i), MAKE_ISLAND_PATH(mType, i), 2);
-			b_->SetPos(ISLAND_POS[i]);
+			b_->SetPos(ISLAND0_POS[i]);
 			mSections.push_back(b_);
 			AddGameObeject(b_, LAYER_TYPE::BACKGROUND);
 		}
-		
-
-		/*Background* b1= new Background(L"island1", L"..\\Resources\\texture\\ui\\inLand\\island1\\island1.bmp");
-
-		Background* b2 = new Background(L"island2", L"..\\Resources\\texture\\ui\\inLand\\island2\\island2.bmp");
-
-		Background* b3 = new Background(L"island3", L"..\\Resources\\texture\\ui\\inLand\\island3\\island3.bmp");
-
-		Background* b4 = new Background(L"island4", L"..\\Resources\\texture\\ui\\inLand\\island4\\island4.bmp");*/
-
-		
-		
-
 	}
 	void InLandScene::Update() {
 		Scene::Update();

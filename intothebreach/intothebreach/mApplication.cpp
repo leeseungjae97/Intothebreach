@@ -19,9 +19,6 @@ namespace m
 
 	Application::~Application()
 	{
-		SceneManager::Release();
-		Resources::Release();
-		Camera::Release();
 		//Time::Release();
 	}
 

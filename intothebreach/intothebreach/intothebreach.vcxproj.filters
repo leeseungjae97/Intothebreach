@@ -235,6 +235,9 @@
     <ClInclude Include="mCamera.h">
       <Filter>Engine\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="mCollisionManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -350,6 +353,9 @@
       <Filter>Contents\Unit\Player</Filter>
     </ClCompile>
     <ClCompile Include="mCamera.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="mCollisionManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
   </ItemGroup>

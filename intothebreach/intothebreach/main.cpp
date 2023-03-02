@@ -5,6 +5,9 @@
 #include "intothebreach.h"
 #include "mApplication.h"
 #include "mSceneManager.h"
+#include "mResources.h"
+#include "mCamera.h"
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -81,6 +84,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     }
     m::SceneManager::Release();
+    m::Resources::Release();
+    m::Camera::Release();
     return (int) msg.wParam;
 }
 

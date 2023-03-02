@@ -36,8 +36,8 @@ enum class PLAYERINFO_TYPE {
 };
 enum class COMPONENT_TYPE {
 	TRANSFORM,
-	//COLLIDER,
-	//SPRITERENDERER,
+	COLLIDER,
+	SPRITERENDERER,
 	ANIMATOR,
 	//AUDIO,
 	END,
@@ -324,7 +324,14 @@ static wstring ISLANDS_SECTIONS_PATH[ISLANDS]{
 	L"island_3_",
 	L"island_4_",
 };
-static m::Vector2 ISLAND_POS[8]{
+static UINT ISLANDS_SECTIONS[(UINT)ISLAND_T::END]{
+	8,
+	8,
+	8,
+	8,
+	0
+};
+static m::Vector2 ISLAND0_POS[8] {
 	 m::Vector2{250.f, 230.f},
 	 m::Vector2{462.f, 69.f},
 	 m::Vector2{404.f, 267.f},
@@ -333,14 +340,6 @@ static m::Vector2 ISLAND_POS[8]{
 	 m::Vector2{824.f, 250.f},
 	 m::Vector2{412.f, 430.f},
 	 m::Vector2{801.f, 486.f},
-
-};
-static UINT ISLANDS_SECTIONS[ISLANDS]{
-	8,
-	8,
-	8,
-	8,
-	0
 };
 static wstring& MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
 	wstring* key = new wstring(L"");
@@ -349,7 +348,7 @@ static wstring& MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
 	if(sectionIdx < 0) key->append(L"island");
 	else {
 		key->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
-		key->append(std::to_wstring(sectionIdx));
+		key->append(std::to_wstring((UINT)_type));
 	}
 
 	return (*key);
@@ -362,7 +361,7 @@ static wstring& MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
 	}
 	else {
 		path->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
-		path->append(std::to_wstring(sectionIdx));
+		path->append(std::to_wstring((UINT)_type));
 	}
 	path->append(L".bmp");
 
