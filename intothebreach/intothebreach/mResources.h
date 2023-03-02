@@ -33,7 +33,7 @@ namespace m {
 			return dynamic_cast<T*>(resource);
 		};
 		static void Release() {
-			for (auto &pair : mResources) {
+			for (auto pair : mResources) {
 				if (nullptr == pair.second) continue;
 				delete pair.second;
 				pair.second = nullptr;

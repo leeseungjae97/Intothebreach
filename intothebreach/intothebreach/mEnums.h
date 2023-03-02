@@ -1,5 +1,6 @@
 #pragma once
 #include "def.h"
+#include "mMath.h"
 
 enum class SCENE_TYPE
 {
@@ -7,7 +8,11 @@ enum class SCENE_TYPE
 	TITLE,
 	SELECT_ROBOT,
 	SELECT_LAND,
-	IN_LAND,
+	IN_LAND0,
+	IN_LAND1,
+	IN_LAND2,
+	IN_LAND3,
+	IN_LAND4,
 	COMBAT,
 	ENDING,
 	END,
@@ -220,6 +225,14 @@ enum class COMBAT_CONDITION_T {
 	WATER_BROKEN,
 	END
 };
+enum class ISLAND_T {
+	ISLAND0,
+	ISLAND1,
+	ISLAND2,
+	ISLAND3,
+	ISLAND4,
+	END
+};
 static wstring RESOURCES_PATH[RESOURCES_1]{
 	L"alien",
 	L"combat",
@@ -297,18 +310,76 @@ static wstring GROUND_PATH[(UINT)TERRAIN_T::END]{
 	L"cave\\",
 	L""
 };
+static wstring ISLANDS_PATH[ISLANDS]{
+	L"island0\\",
+	L"island1\\",
+	L"island2\\",
+	L"island3\\",
+	L"island4\\",
+};
+static wstring ISLANDS_SECTIONS_PATH[ISLANDS]{
+	L"island_0_",
+	L"island_1_",
+	L"island_2_",
+	L"island_3_",
+	L"island_4_",
+};
+static m::Vector2 ISLAND_POS[8]{
+	 m::Vector2{250.f, 230.f},
+	 m::Vector2{462.f, 69.f},
+	 m::Vector2{404.f, 267.f},
+	 m::Vector2{608.f, 187.f},
+	 m::Vector2{726.f, 225.f},
+	 m::Vector2{824.f, 250.f},
+	 m::Vector2{412.f, 430.f},
+	 m::Vector2{801.f, 486.f},
+
+};
+static UINT ISLANDS_SECTIONS[ISLANDS]{
+	8,
+	8,
+	8,
+	8,
+	0
+};
+static wstring& MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
+	wstring* key = new wstring(L"");
+
+	key->append(ISLANDS_PATH[(UINT)_type]);
+	if(sectionIdx < 0) key->append(L"island");
+	else {
+		key->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		key->append(std::to_wstring(sectionIdx));
+	}
+
+	return (*key);
+}
+static wstring& MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
+	wstring* path = new wstring(L"..\\Resources\\texture\\ui\\inLand\\");
+	path->append(ISLANDS_PATH[(UINT)_type]);
+	if (sectionIdx < 0) {
+		path->append(L"island");
+	}
+	else {
+		path->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		path->append(std::to_wstring(sectionIdx));
+	}
+	path->append(L".bmp");
+
+	return (*path);
+}
 static wstring& MAKE_COMBAT_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
-	wstring* path = new wstring(L"");
+	wstring* key = new wstring(L"");
 	int _type = MECHS_T_HT[(UINT)_mech];
 
 	wstring path_1 = MECH_S_PATH[_type];
 	wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	wstring path_3 = MECH_CONDITION[(UINT)_cond];
-	path->append(path_1);
-	path->append(path_2);
-	path->append(path_3);
+	key->append(path_1);
+	key->append(path_2);
+	key->append(path_3);
 
-	return (*path);
+	return (*key);
 }
 static wstring& MAKE_COMBAT_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring* path = new wstring(L"..\\Resources\\texture\\player\\"); 

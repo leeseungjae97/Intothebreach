@@ -88,4 +88,9 @@ namespace m {
 		}
 		mDistance = mLookPosition - (mResolution / 2.0f);
 	}
+	void Camera::Release() {
+		if (nullptr != mCutton) delete mCutton;
+		if (nullptr != mTarget) delete mTarget;
+
+	}
 }

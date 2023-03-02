@@ -1,10 +1,11 @@
 #pragma once
 #include "mScene.h"
 namespace m {
+	class Background;
     class InLandScene :
         public Scene {
 	public:
-		InLandScene();
+		InLandScene(ISLAND_T _type);
 		~InLandScene();
 
 		virtual void Initialize() override;
@@ -14,6 +15,9 @@ namespace m {
 
 		virtual void OnEnter() override;
 		virtual void OnExit() override;
+	private:
+		ISLAND_T mType;
+		vector<Background*> mSections;
     };
 }
 

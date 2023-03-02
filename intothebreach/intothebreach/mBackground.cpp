@@ -3,6 +3,7 @@
 #include "mTransform.h"
 #include "mApplication.h"
 #include "mSelectGDI.h"
+#include "mCamera.h"
 extern m::Application application;
 namespace m {
 	Background::Background(const wstring& key
@@ -10,6 +11,7 @@ namespace m {
 		, int _sizeUp
 		, bool _full
 		, bool _isCenter
+		, bool _alphaCheck
 		
 	)
 		: mImage(nullptr)
@@ -18,6 +20,7 @@ namespace m {
 		, mSizeUp(_sizeUp)
 		, mIsFull(_full)
 		, mIsCenter(_isCenter)
+		, mAlpha(_alphaCheck)
 	{
 		AddComponent(new Transform());
 		if (mKey.empty() && mPath.empty()) return;
@@ -35,14 +38,13 @@ namespace m {
 	void Background::Render(HDC hdc) {
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
-		float _x = mPos.x;
-		float _y = mPos.y;
+
 		UINT iWidth;
 		UINT iHeight;
 		if (mImage == nullptr) {
 			SelectGDI tmp(hdc, BRUSH_TYPE::CUSTOM_BLACK);
-			Rectangle(hdc, 0, 0, application.GetResolutionWidth() - 1
-				, application.GetResolutionHeight() - 1);
+			Rectangle(hdc, 0, 0, application.GetResolutionWidth()
+				, application.GetResolutionHeight());
 		}
 		else {
 			if (mIsFull) {
@@ -59,22 +61,46 @@ namespace m {
 			}
 
 			if (mIsCenter) {
-				_x = (float)application.GetResolutionWidth() / 2;
-				_y = (float)application.GetResolutionHeight() / 2;
-				_x -= iWidth / 2;
-				_y -= iHeight / 2;
+				mPos.x = (float)application.GetResolutionWidth() / 2;
+				mPos.y = (float)application.GetResolutionHeight() / 2;
+				mPos.x -= iWidth / 2;
+				mPos.y -= iHeight / 2;
 			}
-			TransparentBlt(hdc
-				, (int)(_x)
-				, (int)(_y)
-				, (int)(iWidth)
-				, (int)(iHeight)
-				, mImage->GetHdc()
-				, 0
-				, 0
-				, (int)(mImage->GetWidth())
-				, (int)(mImage->GetHeight())
-				, RGB(255, 0, 255));
+			mPos = Camera::CalculatePos(mPos);
+			if (mAlpha) {
+				BLENDFUNCTION func = {};
+				func.BlendOp = AC_SRC_OVER;
+				func.BlendFlags = 0;
+				func.AlphaFormat = mAlpha;
+				func.SourceConstantAlpha = 125;
+
+				mPos = Camera::CalculatePos(mPos);
+				AlphaBlend(hdc
+					, (int)(mPos.x)
+					, (int)(mPos.y)
+					, (int)(iWidth)
+					, (int)(iHeight)
+					, mImage->GetHdc()
+					, 0
+					, 0
+					, (int)(mImage->GetWidth())
+					, (int)(mImage->GetHeight())
+					, func);
+			}
+			else {
+				TransparentBlt(hdc
+					, (int)(mPos.x)
+					, (int)(mPos.y)
+					, (int)(iWidth)
+					, (int)(iHeight)
+					, mImage->GetHdc()
+					, 0
+					, 0
+					, (int)(mImage->GetWidth())
+					, (int)(mImage->GetHeight())
+					, RGB(255, 0, 255));
+			}
+			
 		}
 		
 	}

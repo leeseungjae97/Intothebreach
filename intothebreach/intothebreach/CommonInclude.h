@@ -7,10 +7,10 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include <string>
 #include <commdlg.h>
 #include <assert.h>
 #include <bitset>
-#include <string>
 #include <vector>
 #include <queue>
 #include <list>

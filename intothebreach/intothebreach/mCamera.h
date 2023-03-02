@@ -24,6 +24,8 @@ namespace m {
 		static void PushEffect(CAMERA_EFFECT_TYPE _effect, float _duration);
 		static Vector2 CalculatePos(Vector2 _pos) { return _pos - mDistance; }
 		static void SetTarget(GameObject* _obj) { mTarget = _obj; }
+
+		static void Release();
 	private:
 		static void CalDiff();
 	private:

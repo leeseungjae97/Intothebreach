@@ -21,6 +21,7 @@ namespace m
 	{
 		SceneManager::Release();
 		Resources::Release();
+		Camera::Release();
 		//Time::Release();
 	}
 
@@ -28,8 +29,8 @@ namespace m
 	{
 		mHwnd = hWnd;
 		mHdc = GetDC(hWnd);
-		mWidth = 1600;
-		mHeight = 900;
+		mWidth = 1280;
+		mHeight = 720;
 
 		RECT rect = { 0, 0, (LONG)mWidth, (LONG)mHeight };
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);

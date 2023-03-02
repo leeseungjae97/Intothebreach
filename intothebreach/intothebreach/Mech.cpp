@@ -7,6 +7,7 @@
 #include "mTransform.h"
 #include "mTime.h"
 #include "mAnimator.h"
+#include "mCamera.h"
 namespace m
 {
 	Mech::Mech(MECHS _mech)
@@ -52,10 +53,10 @@ namespace m
 	{
 
 		GameObject::Update();
-		if (KEY_PREESED(KEYCODE_TYPE::D)) {
+		if (KEY_PREESED(KEYCODE_TYPE::Q)) {
 			mState = eMechState::Broken;
 		}
-		if (KEY_PREESED(KEYCODE_TYPE::A)) {
+		if (KEY_PREESED(KEYCODE_TYPE::E)) {
 			mState = eMechState::Idle;
 		}
 		switch (mState) {
@@ -83,6 +84,7 @@ namespace m
 		if (nullptr != curImage) {
 			Vector2 mPos = GetComponent<Transform>()->GetPos();
 			mPos += curImage->GetOffset();
+			mPos = Camera::CalculatePos(mPos);
 			TransparentBlt(hdc
 				, (int)(mPos.x - curImage->GetWidth() / 2.f)
 				, (int)(mPos.y - curImage->GetHeight() / 2.f)

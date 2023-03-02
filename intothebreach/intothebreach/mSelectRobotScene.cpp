@@ -22,6 +22,7 @@ namespace m
 
 	void SelectRobotScene::Initialize()
 	{
+		Scene::Initialize();
 		Background* b0 = new Background(L"", L"");
 		AddGameObeject(b0, LAYER_TYPE::BACKGROUND);
 
@@ -35,7 +36,6 @@ namespace m
 
 		Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 2.0f);
 
-		Scene::Initialize();
 	}
 
 	void SelectRobotScene::Update()

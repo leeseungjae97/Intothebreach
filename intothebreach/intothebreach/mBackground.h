@@ -6,7 +6,8 @@ namespace m {
         public GameObject {
     public:
         Background(const wstring& key, const wstring& path
-            , int _sizeUp = 0, bool _full = false, bool _isCenter = false);
+            , int _sizeUp = 0, bool _full = false
+            , bool _isCenter = false, bool _alphaCheck = false);
         ~Background();
 
         virtual void Initialize();
@@ -20,6 +21,7 @@ namespace m {
         wstring mKey;
         bool mIsFull;
         bool mIsCenter;
+        bool mAlpha;
         int mSizeUp;
     };
 

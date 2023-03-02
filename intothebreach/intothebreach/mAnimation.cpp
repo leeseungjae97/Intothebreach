@@ -3,6 +3,7 @@
 #include "mGameObject.h"
 #include "mAnimator.h"
 #include "mImage.h"
+#include "mCamera.h"
 
 namespace m {
 	Animation::Animation() 
@@ -47,6 +48,7 @@ namespace m {
 		func.SourceConstantAlpha = 255;
 
 		pos += mSpriteSheet[mSpriteIndex]->offset;
+		pos = Camera::CalculatePos(pos);
 		AlphaBlend(hdc
 			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x / 2.0f)
 			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y / 2.0f)

@@ -1,20 +1,45 @@
-@critical @high @low @today, `highlight2`
+@CRITICAL @HIGH @LOW @BUG @FIX , `highlight2`
 
 TotalDate - file:///E://기간.xlsx
 ☐ ctrl + enter
 ☐ @started(23-02-23 08:50) Alt + s
-✔ @done(23-02-23 08:51) Alt + d
-✘ @cancelled(23-02-23 17:22) Alt + c
+☑ @done(23-02-23 08:51) Alt + d
+☒ @cancelled(23-02-23 17:22) Alt + c
+
+포토샵 레이어 병합 단축키 Ctrl + e
 ==============================================
 2023-02-25:
-    ✔ Animation 마무리 @done(23-02-26 04:06)
-    ✔ sound 추출 @done(23-02-25 12:23)
+    ☑ Animation 마무리 @done(23-02-26 04:06)
+    ☑ sound 추출 @done(23-02-25 12:23)
 2023-02-26:
-    ✘ Tile 구현 (isometric view) @cancelled(23-02-27 00:31)
+    ☒ Tile 구현 (isometric view) @cancelled(23-02-27 00:31)
 2023-02-27:
-    ✔ Mech Resources 정리 @done(23-02-27 18:01)
+    ☑ Mech Resources 정리 @done(23-02-27 18:01)
 2023-02-28:
-    ☐ PlayerInfo static으로 전환
+
+2023-03-01:
+    ☑ Animator Play시 Texture가 고정됨. @started(23-03-01 10:20) @done(23-03-01 10:31) @lasted(11m39s)
+    ☑ Camera 정리 @started(23-03-01 10:58) @done(23-03-01 23:13) @lasted(12h15m44s)
+
+2023-03-02:
+    ☑ 윈도우 포커싱 키 해제@done(23-03-02 14:18)
+
+    ☐ InLandScene
+        ☑ 리소스 정리 @done(23-03-02 12:50)
+            ☑ Land0 @done(23-03-02 12:37)
+            ☑ Land1 @done(23-03-02 12:42)
+            ☑ Land2 @done(23-03-02 12:45)
+            ☑ Land3 @done(23-03-02 12:50)
+            ☑ Land4 @done(23-03-02 12:50)
+        ☐ 화면구성
+            ☑ Land0 @done(23-03-02 13:48)
+            ☐ Land1
+            ☐ Land2
+            ☐ Land3
+            ☐ Land4
+    ☐ SelectRobot에서 SelectLand로 넘어갈때 카메라 이동으로 처리
+        한화면에 두개를 불러와서 구현하고 카메라가 이동하는 식으로 해보자
+    ☐ PlayerInfo static으로 전환 @LOW 
     - RobotSelect에서 생성.
     - SelectLand
         - Robot 정보 확인가능
@@ -24,17 +49,11 @@ TotalDate - file:///E://기간.xlsx
     - InLand SelectLand와 동일
     - CombatScene
         - PlayerInfo 기반으로 유닛생성.
-2023-03-01:
-    ✔ Animator Play시 Texture가 고정됨. @started(23-03-01 10:20) @done(23-03-01 10:31) @lasted(11m39s)
-    ☐ Camera 정리
-    ☐ InLandScene
-        ☐ 리소스 정리
-        ☐ 화면구성
-            ☐ Land1
-            ☐ Land2
-            ☐ Land3
-            ☐ Land4
 MEMO:
     충돌체 기반으로 타일.
     타일을 만들어 놔야 전투씬 진행이 가능
     현재 남은 부분이 UI중점으로 남은것.
+
+    미인정 출석부 
+
+    일단 개 노가다로 섬의 위치를 맞추어 놓았음.
