@@ -136,6 +136,7 @@
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="mAlien.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="Resource.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="mWeapon.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mAlien.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mCollisionManager.cpp" />

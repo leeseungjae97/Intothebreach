@@ -457,3 +457,58 @@ wstring& MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 
 	return (*path);
 }
+enum class ALIEN_T {
+	Beetle,
+	Blobber,
+	Burrower,
+	Centipede,
+	Crab,
+	Digger,
+	Firefly,
+	Hornet,
+	Jelly,
+	Leaper,
+	Scarab,
+	Scorpion,
+	Slime,
+	Spider,
+	END
+};
+int ALIEN_T_HT[(UINT)ALIEN_T::END]{
+	5,
+	5,
+	4,
+	5,
+	5,
+	5,
+	5,
+	4,
+	5,
+	5,
+	5,
+	5,
+	7,
+	5,
+};
+
+
+
+wstring& MAKE_ALIEN_KEY(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring* key = new wstring(L"");
+
+	key->append(TILE_PATH[(UINT)_type]);
+	key->append(TILE_HEAD_PATH[(UINT)_type2]);
+
+
+	return (*key);
+}
+wstring& MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring* path = new wstring(L"..\\Resources\\texture\\alien\\");
+
+	path->append(TILE_PATH[(UINT)_type]);
+	path->append(TILE_HEAD_PATH[(UINT)_type2]);
+
+	path->append(L".bmp");
+
+	return (*path);
+}

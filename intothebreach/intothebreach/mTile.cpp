@@ -42,9 +42,6 @@ namespace m {
 
 		UINT tile_iWidth = mTileTex->GetWidth();
 		UINT tile_iHeight = mTileTex->GetHeight();
-		if (GetScale().x == 1 && GetScale().y == 1) {
-			SetScale(Vector2(mTileTex->GetWidth() * 2, mTileTex->GetHeight() * 2));
-		}
 		
 
 		Vector2 vRenderPos = Camera::CalculatePos(GetPos());

@@ -51,40 +51,75 @@ namespace m {
 				tile->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
 									, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
 				mTiles.push_back(tile);
+
+				Tile* posTile = new Tile(10);
+				posTile->SetTileTexture(L"square", L"..\\Resources\\texture\\terrain\\square_line2.bmp");
+				posTile->SetPos(Vector2(fX * 2, fY * 2));
+
+				mPosTiles.push_back(posTile);
+
 				AddGameObject(tile, LAYER_TYPE::TILE);
 			}
 		}
 
-		//for (size_t i = 0; i < mTiles.size(); i++) {
-		//	if (mTiles[i]->GetCoord().x == 1 && mTiles[i]->GetCoord().y == 1) {
-		//		TileHead* tHead = new TileHead();
-		//	}
-		//}
+		for (size_t i = 0; i < mTiles.size(); i++) {
+			if (mTiles[i]->GetCoord().x == 1 && mTiles[i]->GetCoord().y == 1) {
+				TileHead* tHead = new TileHead();
+			}
+		}
+	}
+	bool CombatScene::CheckRhombusPos(Tile* tile) {
+		float rY = MOUSE_POS.y;
+		float rX = MOUSE_POS.x;
+
+		Vector2 vv[4];
+		float g[4];
+		float in[4];
+
+		//¿Þ
+		vv[0].x = tile->GetPos().x;
+		vv[0].y = tile->GetPos().y + (tile->GetScale().y / 2);
+
+		//À§
+		vv[1].x = tile->GetPos().x + (tile->GetScale().x / 2);
+		vv[1].y = tile->GetPos().y;
+
+		//¿À
+		vv[2].x = tile->GetPos().x + tile->GetScale().x;
+		vv[2].y = tile->GetPos().y + (tile->GetScale().y / 2);
+
+		//¾Æ
+		vv[3].x = tile->GetPos().x + (tile->GetScale().x / 2);
+		vv[3].y = tile->GetPos().y + tile->GetScale().y;
+
+		g[0] = ((vv[0].y - vv[1].y) / (vv[0].x - vv[1].x));
+		g[1] = ((vv[1].y - vv[2].y) / (vv[1].x - vv[2].x));
+		g[2] = ((vv[2].y - vv[3].y) / (vv[2].x - vv[3].x));
+		g[3] = ((vv[3].y - vv[0].y) / (vv[3].x - vv[0].x));
+
+		in[0] = vv[0].y - g[0] * vv[0].x;
+		in[1] = vv[1].y - g[1] * vv[1].x;
+		in[2] = vv[2].y - g[2] * vv[2].x;
+		in[3] = vv[3].y - g[3] * vv[3].x;
+
+		float c1 = g[0] * vv[0].x + in[0];
+		float c2 = g[1] * vv[1].x + in[1];
+		float c3 = g[2] * vv[2].x + in[2];
+		float c4 = g[3] * vv[3].x + in[3];
+
+		if (g[0] * rX + in[0] < rY
+			&& g[1] * rX + in[1] < rY
+			&& g[2] * rX + in[2] > rY
+			&& g[3] * rX + in[3] > rY) {
+			return true;
+		}
+		else return false;
 	}
 	void CombatScene::Update() {
-		Vector2 mCurM = MOUSE_POS;
-		for (UINT i = 0; i < mTiles.size(); i++) {
-			float centerY = mTiles[i]->GetPos().y / 2;
-
-
-			if (mTiles[i]->GetPos() <= mCurM
-				&& mTiles[i]->GetPos() + mTiles[i]->GetScale() >= mCurM) {
-				
-
-				Vector2 m = MOUSE_POS;
-				DWORD color = GetPixel(application.GetHdc(), m.x, m.y);
-				unsigned int r = GetRValue(color);
-				unsigned int g = GetGValue(color);
-				unsigned int b = GetBValue(color);
-
-				//70, 75, 62
-				//if (r == 70 && g == 75 && b == 62) {
-				//	mTiles[i]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
-				//		, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
-				//}
-				wchar_t szFloat[50] = {};
-				swprintf_s(szFloat, 50, L"RGB = %d %d %d", r,g,b);
-				SetWindowText(application.GetHwnd(), szFloat);
+		for (UINT i = 0; i < mPosTiles.size(); i++) {
+			if (CheckRhombusPos(mPosTiles[i])) {
+				mTiles[i]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
+					, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
 			}
 		}
 		Scene::Update();

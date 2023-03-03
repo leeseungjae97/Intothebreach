@@ -26,7 +26,7 @@ namespace m
 		mScenes[(UINT)SCENE_TYPE::IN_LAND2] = new InLandScene(ISLAND_T::ISLAND2);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND3] = new InLandScene(ISLAND_T::ISLAND3);
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::ENDING];
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::COMBAT];
 
 		for ( Scene* scene : mScenes )
 		{

@@ -46,15 +46,23 @@ TotalDate - file:///E://기간.xlsx
                 실패 - 다른 타일도 색이 같고 타일 내부의 색도 다름
         시도2
             마름모의 꼭짓점을 나타내는 방정식으로 좌표를 판별
+            https://toughrogrammer.tistory.com/194
+            http://eirenehue.egloos.com/970017
+            https://stackoverflow.com/questions/18095689/converting-isometric-tile-map-coordinates-to-screen-coordinates
+            굳.
     :화면구성:
         ☑ Land1 @done(23-03-03 01:09)
         ☑ Land2 @done(23-03-03 01:30)
         ☑ Land3 @done(23-03-03 01:57)
 
 2023-03-04:
-    ☐ 미사일 테스트
-    ☐ Combat turn에 따라 배경 바꾸기
-    ☐ SelectRobot에서 SelectLand로 넘어갈때 카메라 이동으로 처리
+    ☐ Tile Pos 체크 함수 간단화 하기.
+    ☐ 미사일 테스트 
+        Tile Pos를 활용해서.
+    ☐ Object, Tile위에서 이동
+    ☐ Combat turn에 따라 배경 바꾸기 @LOW
+    ☐ SelectRobot에서 SelectLand로 넘어갈때 카메라 이동으로 처리 @LOW
+    ☐ 충돌체 함수, 콜백 함수.
         한화면에 두개를 불러와서 구현하고 카메라가 이동하는 식으로 해보자
 |================================================|
 |================================================|
@@ -76,6 +84,22 @@ MEMO:
     일단 개 노가다로 섬의 위치를 맞추어 놓았음.
 
     채워지는 픽셀의 개수에 따라 프레임이 떨어짐.
+
+    혹시 몰라 키핑 커서 위치의 색 가져오기 잘됨
+    //Vector2 m = MOUSE_POS;
+    //DWORD color = GetPixel(application.GetHdc(), m.x, m.y);
+    //unsigned int r = GetRValue(color);
+    //unsigned int g = GetGValue(color);
+    //unsigned int b = GetBValue(color);
+
+    ////70, 75, 62
+    //if (r == 70 && g == 75 && b == 62) {
+    //	mTiles[i]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
+    //		, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
+    //}
+    //wchar_t szFloat[50] = {};
+    //swprintf_s(szFloat, 50, L"RGB = %d %d %d", r,g,b);
+    //SetWindowText(application.GetHwnd(), szFloat);
 
     Combat의 진행.
     0.적군이 나타날 위치표시

@@ -15,6 +15,7 @@ namespace m {
     public:
         void SetTileTexture(const wstring& key, const wstring& path) {
             mTileTex = Resources::Load<Image>(key, path);
+            SetScale(Vector2(mTileTex->GetWidth() * 2, mTileTex->GetHeight() * 2));
         }
         void SetTileType(TILE_T _type) {
             mTileType = _type;

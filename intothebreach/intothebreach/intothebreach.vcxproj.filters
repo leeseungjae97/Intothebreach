@@ -237,6 +237,7 @@
       <Filter>Contents\Tile</Filter>
     </ClInclude>
     <ClInclude Include="mTileHead.h" />
+    <ClInclude Include="mAlien.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -357,5 +358,6 @@
       <Filter>Contents\Tile</Filter>
     </ClCompile>
     <ClCompile Include="mTileHead.cpp" />
+    <ClCompile Include="mAlien.cpp" />
   </ItemGroup>
 </Project>
