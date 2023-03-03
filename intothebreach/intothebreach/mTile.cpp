@@ -28,9 +28,9 @@ namespace m {
 	}
 	Tile::Tile(int m)
 		: mTileTex(nullptr)
-		, mCoord(Vector2::One) {
+		, mCoord(Vector2::One) 
+	{
 		AddComponent(new Transform());
-		
 	}
 	Tile::~Tile() {
 	}

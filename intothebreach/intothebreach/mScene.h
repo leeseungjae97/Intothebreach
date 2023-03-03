@@ -4,6 +4,8 @@
 
 namespace m
 {
+	class Mech;
+	class Tile;
 	class Scene : public Entity
 	{
 	public:
@@ -19,8 +21,15 @@ namespace m
 		virtual void OnExit() = 0;
 
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
+		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
+		void MakeTile(int iX, int iY);
+		vector<Tile*>& GetPosTiles() { return mPosTiles; }
+		vector<Tile*>& GetTiles() { return mTiles; }
 
-	private:
-		std::vector<Layer> mLayers;
+ 	private:
+		vector<Layer> mLayers;
+		vector<Tile*> mTiles;
+		vector<Tile*> mPosTiles;
+		vector<Mech*> mMechs;
 	};
 }

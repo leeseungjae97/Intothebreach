@@ -15,13 +15,10 @@ namespace m {
 		virtual void Release() override;
 
 		virtual void OnEnter() override;
-		virtual void OnExit() override;
-		bool CheckRhombusPos(Tile* tile);
-		void MakeTile();
+		virtual void OnExit() override;;
+		
 	private:
-		vector<Tile*> mTiles;
-		vector<Tile*> mPosTiles;
-		vector<TileHead*> mTileHeads;
+
 	};
 }
 

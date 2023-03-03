@@ -232,12 +232,15 @@
     <ClInclude Include="mCollisionManager.h">
       <Filter>Engine\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Skill_Range.h" />
     <ClInclude Include="mTile.h">
       <Filter>Contents\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="mTileHead.h" />
-    <ClInclude Include="mAlien.h" />
+    <ClInclude Include="Alien.h">
+      <Filter>Contents\Unit\Ailen</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill_Range.h">
+      <Filter>Contents\Attached\Skill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -352,12 +355,14 @@
     <ClCompile Include="mCollisionManager.cpp">
       <Filter>Engine\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Skill_Range.cpp" />
-    <ClCompile Include="YATILE.CPP" />
     <ClCompile Include="mTile.cpp">
       <Filter>Contents\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="mTileHead.cpp" />
-    <ClCompile Include="mAlien.cpp" />
+    <ClCompile Include="Alien.cpp">
+      <Filter>Contents\Unit\Ailen</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill_Range.cpp">
+      <Filter>Contents\Attached\Skill</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

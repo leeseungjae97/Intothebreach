@@ -15,12 +15,16 @@ namespace m {
     public:
         void SetTileTexture(const wstring& key, const wstring& path) {
             mTileTex = Resources::Load<Image>(key, path);
-            SetScale(Vector2(mTileTex->GetWidth() * 2, mTileTex->GetHeight() * 2));
+            SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
         }
         void SetTileType(TILE_T _type) {
             mTileType = _type;
         }
         Vector2 GetCoord() { return mCoord; }
+        Vector2 GetCenterPos() 
+        { 
+            return Vector2(GetPos().x + mTileTex->GetWidth() / 2, GetPos().y + mTileTex->GetHeight() / 2);
+        }
     private:
         virtual void Update() override;
         virtual void Render(HDC hdc) override;

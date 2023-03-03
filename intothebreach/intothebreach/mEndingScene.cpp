@@ -15,11 +15,9 @@ namespace m {
 	}
 	void EndingScene::Update() {
 		Scene::Update();
-		//if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
-		//	SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
-		//}
-
-
+		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+		}
 	}
 	void EndingScene::Render(HDC hdc) {
 		Scene::Render(hdc);

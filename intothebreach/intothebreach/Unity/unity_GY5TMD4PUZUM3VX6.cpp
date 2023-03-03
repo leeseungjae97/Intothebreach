@@ -1,4 +1,7 @@
 
+#include "E:\intothebreach\intothebreach\intothebreach\Alien.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mCamera.cpp"
 
 
@@ -102,10 +105,4 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\Skill_Range.cpp"
-
-
-#include "E:\intothebreach\intothebreach\intothebreach\mTileHead.cpp"
-
-
-#include "E:\intothebreach\intothebreach\intothebreach\YATILE.CPP"
 

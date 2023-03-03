@@ -20,7 +20,7 @@ namespace m
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
-		AddComponent(new Collider());
+		//AddComponent(new Collider());
 
 
 		mImages.resize((UINT)COMBAT_CONDITION_T::END);
@@ -29,9 +29,8 @@ namespace m
 				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == mImages[i]) continue;
-			mImages[i]->SetOffset(Vector2(0, 0));
+			mImages[i]->SetOffset(Vector2(35.f, 10.f));
 		}
-		GetComponent<Collider>()->SetScale(Vector2(100.f, 100.f));
 
 		mAnimator = GetComponent<Animator>();
 
@@ -46,6 +45,7 @@ namespace m
 			, AC_SRC_ALPHA
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		//GetComponent<Collider>()->SetScale(Vector2(50.f, 50.f));
 		mState = eMechState::Idle;
 	}
 	Mech::~Mech()

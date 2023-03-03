@@ -20,12 +20,12 @@ enum class SCENE_TYPE
 enum class LAYER_TYPE
 {
 	BACKGROUND,
-	MONSTER,
-	PLAYER,
+	UI,
 	TILE,
 	TILE_HEAD,
 	EFFECT,
-	UI,
+	MONSTER,
+	PLAYER,
 	END,
 };
 enum class PLAYERINFO_TYPE {

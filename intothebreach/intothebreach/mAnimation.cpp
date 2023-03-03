@@ -4,7 +4,7 @@
 #include "mAnimator.h"
 #include "mImage.h"
 #include "mCamera.h"
-
+#include "mResources.h"
 namespace m {
 	Animation::Animation() 
 		: mAnimator(nullptr)
@@ -46,20 +46,31 @@ namespace m {
 		func.BlendFlags = 0;
 		func.AlphaFormat = mAlpha;
 		func.SourceConstantAlpha = 255;
-
 		pos += mSpriteSheet[mSpriteIndex]->offset;
 		pos = Camera::CalculatePos(pos);
 		AlphaBlend(hdc
-			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x / 2.0f)
-			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y / 2.0f)
-			, int(mSpriteSheet[mSpriteIndex]->size.x)
-			, int(mSpriteSheet[mSpriteIndex]->size.y)
+			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x)
+			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y)
+			, int(mSpriteSheet[mSpriteIndex]->size.x * 2)
+			, int(mSpriteSheet[mSpriteIndex]->size.y * 2)
 			, mImage->GetHdc()				
 			, int(mSpriteSheet[mSpriteIndex]->leftTop.x)
 			, int(mSpriteSheet[mSpriteIndex]->leftTop.y)
 			, int(mSpriteSheet[mSpriteIndex]->size.x)
 			, int(mSpriteSheet[mSpriteIndex]->size.y)
 			, func);
+
+		//AlphaBlend(hdc
+		//	, int(pos.x)
+		//	, int(pos.y)
+		//	, int(mSpriteSheet[mSpriteIndex]->size.x * 2)
+		//	, int(mSpriteSheet[mSpriteIndex]->size.y * 2)
+		//	, mImage->GetHdc()
+		//	, int(mSpriteSheet[mSpriteIndex]->leftTop.x)
+		//	, int(mSpriteSheet[mSpriteIndex]->leftTop.y)
+		//	, int(mSpriteSheet[mSpriteIndex]->size.x)
+		//	, int(mSpriteSheet[mSpriteIndex]->size.y)
+		//	, func);
 
 		/*TransparentBlt(hdc
 			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x / 2.0f)

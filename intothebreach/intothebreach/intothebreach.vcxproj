@@ -136,7 +136,7 @@
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="mAlien.h" />
+    <ClInclude Include="Alien.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="Resource.h" />
@@ -160,7 +160,6 @@
     <ClInclude Include="mIntroScene.h" />
     <ClInclude Include="mLayer.h" />
     <ClInclude Include="mMath.h" />
-    <ClInclude Include="mTileHead.h" />
     <ClInclude Include="_Engine.h" />
     <ClInclude Include="mPilot.h" />
     <ClInclude Include="mPlayerInfo.h" />
@@ -178,7 +177,7 @@
     <ClInclude Include="mWeapon.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mAlien.cpp" />
+    <ClCompile Include="Alien.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mCollisionManager.cpp" />
@@ -214,8 +213,6 @@
     <ClCompile Include="mImage.cpp" />
     <ClCompile Include="mWeapon.cpp" />
     <ClCompile Include="Skill_Range.cpp" />
-    <ClCompile Include="mTileHead.cpp" />
-    <ClCompile Include="YATILE.CPP" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc" />
