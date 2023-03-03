@@ -15,6 +15,7 @@ namespace m {
         virtual void Render(HDC hdc);
         virtual void Release();
 
+        Vector2 GetSize() { return Vector2(mImage->GetWidth(), mImage->GetHeight()); }
     private :
         Image* mImage;
         wstring mPath;

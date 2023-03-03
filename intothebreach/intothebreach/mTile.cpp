@@ -1,29 +1,65 @@
 #include "mTile.h"
+#include "mImage.h"
+#include "mCamera.h"
 namespace m {
-	Tile::Tile(Vector2 pos)
-		: GameObject()
-		, mImage(nullptr)
-		, mPos{}
+	wstring tileTypeName[(UINT)TILE_T::END] = {
+	L"texture\\terrain\\green\\",
+	L"texture\\terrain\\acid\\",
+	L"texture\\terrain\\sand\\",
+	L"texture\\terrain\\snow\\",
+	L"texture\\terrain\\volcano\\",
+	L"texture\\terrain\\cave\\"
+	};
+
+
+	Tile::Tile(Vector2 _coord)
+		: mTileTex(nullptr)
+		, mCoord(_coord)
 	{
+		AddComponent(new Transform());
+		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
 	}
-	Tile::Tile(Image* img, int index) 
+	Tile::Tile()
+		: mTileTex(nullptr)
+		, mCoord(Vector2::One)
 	{
-		Initialize(img, index);
+		AddComponent(new Transform());
+		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
+	}
+	Tile::Tile(int m)
+		: mTileTex(nullptr)
+		, mCoord(Vector2::One) {
+		AddComponent(new Transform());
+		
 	}
 	Tile::~Tile() {
 	}
-	void Tile::Initialize(Image* img, int index) {
-		mIndex = index;
-		if (nullptr == img || index < 0) return;
-
-		mImage = img;
-
-	}
-	void Tile::SetIndex(int index) {
-	}
 	void Tile::Update() {
 	}
+
 	void Tile::Render(HDC hdc) {
-		GameObject::Render(hdc);
+		assert(mTileTex);
+
+		UINT tile_iWidth = mTileTex->GetWidth();
+		UINT tile_iHeight = mTileTex->GetHeight();
+		if (GetScale().x == 1 && GetScale().y == 1) {
+			SetScale(Vector2(mTileTex->GetWidth() * 2, mTileTex->GetHeight() * 2));
+		}
+		
+
+		Vector2 vRenderPos = Camera::CalculatePos(GetPos());
+		Vector2 vScale = GetScale();
+
+		TransparentBlt(hdc
+			, (int)(vRenderPos.x)
+			, (int)(vRenderPos.y)
+			, (int)(vScale.x)
+			, (int)(vScale.y)
+			, mTileTex->GetHdc()
+			, 0
+			, 0
+			, tile_iWidth
+			, tile_iHeight
+			, RGB(255, 0, 255));
 	}
 }

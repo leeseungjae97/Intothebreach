@@ -5,13 +5,24 @@
 namespace m {
 	Collider::Collider() 
 		: Component(COMPONENT_TYPE::COLLIDER)
-		, mCenter(Vector2::Zero)
 		, mScale(Vector2::One)
 		, mPos(Vector2::Zero)
+		, mOffset(Vector2::One)
+		, mCollisionCount(0)
 	{
+	}
+	Collider::Collider(Collider& _origin) 
+		: Component(COMPONENT_TYPE::COLLIDER)
+		, mScale(_origin.GetScale())
+		, mPos(_origin.GetPos())
+		, mOffset(_origin.GetOffset())
+		, mCollisionCount(0)
+	{
+
 	}
 	Collider::~Collider() {
 	}
+	
 	void Collider::Initialize() {
 	}
 	void Collider::Update() {
@@ -28,5 +39,16 @@ namespace m {
 			, (int)(vRenderPos.y + mScale.y / 2.f));
 	}
 	void Collider::Release() {
+	}
+	void Collider::OnCollisionEnter(Collider* other) {
+		++mCollisionCount;
+		GetOwner()->OnCollisionEnter(other);
+	}
+	void Collider::OnCollisionStay(Collider* other) {
+		GetOwner()->OnCollisionEnter(other);
+	}
+	void Collider::OnCollisionExit(Collider* other) {
+		--mCollisionCount;
+		GetOwner()->OnCollisionEnter(other);	
 	}
 }

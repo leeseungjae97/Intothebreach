@@ -39,7 +39,7 @@ namespace m
 	{
 
 	}
-	void Scene::AddGameObeject(GameObject* obj, LAYER_TYPE layer)
+	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{
 		mLayers[(UINT)layer].AddGameObject(obj);
 	}

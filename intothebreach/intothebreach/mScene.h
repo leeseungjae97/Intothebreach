@@ -18,7 +18,7 @@ namespace m
 		virtual void OnEnter() = 0;
 		virtual void OnExit() = 0;
 
-		void AddGameObeject(GameObject* obj, LAYER_TYPE layer);
+		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 
 	private:
 		std::vector<Layer> mLayers;

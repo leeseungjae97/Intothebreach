@@ -20,6 +20,17 @@
 
 #define ISLANDS 5
 
+#define TILE_SIZE_X 56.f
+#define TILE_SIZE_Y 74.f
+
+#define TILE_X_DIVIDE_RECT 2.f
+#define TILE_Y_DIVIDE_RECT 3.53f
+
+#define ONE_BUILDING_SCALE Vector2(31.f , 0.f)
+#define ONE_BUILDING_POS Vector2(10.f, 5.f)
+
 #define KEY_PREESED(KEY) m::KEY_STATE::PRESSED == m::Input::GetKeyState(KEY)
 #define KEY_DOWN(KEY) m::KEY_STATE::DOWN == m::Input::GetKeyState(KEY)
 #define KEY_UP(KEY) m::KEY_STATE::UP == m::Input::GetKeyState(KEY)
+
+#define MOUSE_POS m::Input::GetMousePos()

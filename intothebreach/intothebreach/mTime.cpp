@@ -43,7 +43,7 @@ namespace m
 			float FPS = 1.0f / (float)mDeltaTime;
 			swprintf_s(szFloat, 50, L"FPS : %d", (UINT)FPS);
 			//int iLen = wcsnlen_s(szFloat, 50);
-			SetWindowText(hWnd, szFloat);
+			/*SetWindowText(hWnd, szFloat);*/
 
 			mSecond = 0.0f;
 		}

@@ -5,7 +5,7 @@
 #include "E:\intothebreach\intothebreach\intothebreach\main.cpp"
 
 
-#include "E:\intothebreach\intothebreach\intothebreach\Skill.cpp"
+#include "E:\intothebreach\intothebreach\intothebreach\mCollisionManager.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mAnimation.cpp"
@@ -99,4 +99,13 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mWeapon.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\Skill_Range.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mTileHead.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\YATILE.CPP"
 

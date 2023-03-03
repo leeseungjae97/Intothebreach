@@ -1,6 +1,5 @@
 #pragma once
 #include "mEntity.h"
-
 namespace m
 {
 	class GameObject;

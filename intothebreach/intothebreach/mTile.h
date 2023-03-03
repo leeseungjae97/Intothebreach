@@ -1,23 +1,33 @@
 #pragma once
 #include "mGameObject.h"
+#include "mResources.h"
 namespace m {
-	class Image;
-	class Tile :public GameObject{
-	public:
-		Tile(Vector2 pos);
-		Tile(Image* img, int index);
-		~Tile();
+    class Image;
+    class Tile :
+        public GameObject {
+    public:
+        Tile(Vector2 _coord);
+        Tile();
+        Tile(int m);
+        ~Tile();
+   
 
-	public:
-		void Initialize(Image* img, int index);
-		void SetIndex(int index);
-		int GetIndex() { return mIndex; }
+    public:
+        void SetTileTexture(const wstring& key, const wstring& path) {
+            mTileTex = Resources::Load<Image>(key, path);
+        }
+        void SetTileType(TILE_T _type) {
+            mTileType = _type;
+        }
+        Vector2 GetCoord() { return mCoord; }
+    private:
+        virtual void Update() override;
+        virtual void Render(HDC hdc) override;
 
-		virtual void Update() override;
-		virtual void Render(HDC hdc) override;
-	private:
-		Image* mImage;
-		int mIndex;
-		Vector2 mPos;
-	};
+    private:
+        Image*      mTileTex;
+        TILE_T      mTileType;
+        Vector2     mCoord;
+    };
 }
+

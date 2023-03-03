@@ -15,7 +15,7 @@ namespace m {
 	}
 	void SelectLandScene::Initialize() {
 		Background* b1 = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, true);
-		AddGameObeject(b1, LAYER_TYPE::BACKGROUND);
+		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 		
 		Background* island1 = new Background(L"selectLandIsland1", L"..\\Resources\\texture\\ui\\selectLand\\island1x_0.bmp", 2, false, false);
 		island1->SetPos(Vector2(100, 80));
@@ -28,11 +28,11 @@ namespace m {
 		Background* island5 = new Background(L"selectLandIsland5", L"..\\Resources\\texture\\ui\\selectLand\\island1x_4.bmp", 2, false, false);
 		island5->SetPos(Vector2(500, 50));
 
-		AddGameObeject(island1, LAYER_TYPE::BACKGROUND);
-		AddGameObeject(island2, LAYER_TYPE::BACKGROUND);
-		AddGameObeject(island3, LAYER_TYPE::BACKGROUND);
-		AddGameObeject(island4, LAYER_TYPE::BACKGROUND);
-		AddGameObeject(island5, LAYER_TYPE::BACKGROUND);
+		AddGameObject(island1, LAYER_TYPE::BACKGROUND);
+		AddGameObject(island2, LAYER_TYPE::BACKGROUND);
+		AddGameObject(island3, LAYER_TYPE::BACKGROUND);
+		AddGameObject(island4, LAYER_TYPE::BACKGROUND);
+		AddGameObject(island5, LAYER_TYPE::BACKGROUND);
 		Scene::Initialize();
 	}
 	void SelectLandScene::Update() {

@@ -1,6 +1,8 @@
 #pragma once
 #include "mScene.h"
 namespace m {
+	class Tile;
+	class TileHead;
 	class CombatScene : public Scene {
 	public:
 		CombatScene();
@@ -15,6 +17,10 @@ namespace m {
 		virtual void OnEnter() override;
 		virtual void OnExit() override;
 
+		void MakeTile();
+	private:
+		vector<Tile*> mTiles;
+		vector<TileHead*> mTileHeads;
 	};
 }
 

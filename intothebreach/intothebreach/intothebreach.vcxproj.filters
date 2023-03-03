@@ -205,9 +205,6 @@
     <ClInclude Include="def.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="mTile.h">
-      <Filter>Contents\Tile</Filter>
-    </ClInclude>
     <ClInclude Include="mInLandScene.h">
       <Filter>Contents\Scene\InLandScene</Filter>
     </ClInclude>
@@ -236,6 +233,10 @@
       <Filter>Engine\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Skill_Range.h" />
+    <ClInclude Include="mTile.h">
+      <Filter>Contents\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="mTileHead.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -323,9 +324,6 @@
     <ClCompile Include="mAnimator.cpp">
       <Filter>Engine\Component\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="mTile.cpp">
-      <Filter>Contents\Tile</Filter>
-    </ClCompile>
     <ClCompile Include="mInLandScene.cpp">
       <Filter>Contents\Scene\InLandScene</Filter>
     </ClCompile>
@@ -354,5 +352,10 @@
       <Filter>Engine\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Skill_Range.cpp" />
+    <ClCompile Include="YATILE.CPP" />
+    <ClCompile Include="mTile.cpp">
+      <Filter>Contents\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="mTileHead.cpp" />
   </ItemGroup>
 </Project>

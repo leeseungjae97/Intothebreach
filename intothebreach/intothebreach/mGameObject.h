@@ -4,6 +4,7 @@
 #include "mTransform.h"
 namespace m
 {
+	class Collider;
 	class GameObject : public Entity
 	{
 	public:
@@ -19,6 +20,10 @@ namespace m
 		void CreateComponent(COMPONENT_TYPE _type);
 		Component* CreateComponent(Component* component);
 		void AddComponent(Component* component);
+
+		virtual void OnCollisionEnter(Collider* other) {};
+		virtual void OnCollisionStay(Collider* other) {};
+		virtual void OnCollisionExit(Collider* other) {};
 
 		template<typename T>
 		T* AddComponent()

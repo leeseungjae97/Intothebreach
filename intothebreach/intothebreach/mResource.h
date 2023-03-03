@@ -16,11 +16,5 @@ namespace m {
 		wstring mKey;
 		wstring mPath;
 	};
-	//class Image : public Resource {
-
-	//};
-	//class Sound : public Resource {
-
-	//};
 }
 

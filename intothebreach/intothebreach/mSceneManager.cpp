@@ -25,9 +25,8 @@ namespace m
 		mScenes[(UINT)SCENE_TYPE::IN_LAND1] = new InLandScene(ISLAND_T::ISLAND1);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND2] = new InLandScene(ISLAND_T::ISLAND2);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND3] = new InLandScene(ISLAND_T::ISLAND3);
-		mScenes[(UINT)SCENE_TYPE::IN_LAND4] = new InLandScene(ISLAND_T::ISLAND4);
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::SELECT_ROBOT];
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::ENDING];
 
 		for ( Scene* scene : mScenes )
 		{

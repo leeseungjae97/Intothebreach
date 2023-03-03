@@ -11,7 +11,7 @@ namespace m {
 	}
 	void TitleScene::Initialize() {
 		Background* b1 = new Background(L"title1",L"..\\Resources\\texture\\ui\\title\\calibration.bmp", 0, true, false);
-		AddGameObeject(b1, LAYER_TYPE::BACKGROUND);
+		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 		Scene::Initialize();
 	}
 	void TitleScene::Update() {

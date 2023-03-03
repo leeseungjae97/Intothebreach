@@ -8,9 +8,20 @@ namespace m
 		'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
 		'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
 		'Z', 'X', 'C', 'V', 'B', 'N', 'M',
+
+		VK_MENU,	//ALT,
+		VK_CONTROL,	//CTRL,
+		VK_LSHIFT,	//LSHIFT,
+		VK_SPACE,	//SPACE,
+		VK_RETURN,	//ENTER,
+		VK_ESCAPE,	//ESC,
+
+		VK_LBUTTON,
+		VK_RBUTTON,
 	};
 
-	std::vector<Input::Key> Input::mKeys;
+	vector<Input::Key> Input::mKeys;
+	m::Vector2 Input::mCurMousePos;
 
 	void Input::Initialize()
 	{
@@ -50,6 +61,11 @@ namespace m
 					mKeys[i].bPressed = false;
 				}
 			}
+			POINT ptPos = {};
+			GetCursorPos(&ptPos);
+
+			ScreenToClient(application.GetHwnd(), &ptPos);
+			mCurMousePos = Vector2((float)ptPos.x, (float)ptPos.y);
 		}
 		else {
 			for (int i = 0; i < (int)KEYCODE_TYPE::END; i++) {
