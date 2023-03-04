@@ -2,14 +2,14 @@
 #include "mImage.h"
 #include "mCamera.h"
 namespace m {
-	wstring tileTypeName[(UINT)TILE_T::END] = {
-	L"texture\\terrain\\green\\",
-	L"texture\\terrain\\acid\\",
-	L"texture\\terrain\\sand\\",
-	L"texture\\terrain\\snow\\",
-	L"texture\\terrain\\volcano\\",
-	L"texture\\terrain\\cave\\"
-	};
+	//wstring tileTypeName[(UINT)TILE_T::END] = {
+	//L"texture\\terrain\\green\\",
+	//L"texture\\terrain\\acid\\",
+	//L"texture\\terrain\\sand\\",
+	//L"texture\\terrain\\snow\\",
+	//L"texture\\terrain\\volcano\\",
+	//L"texture\\terrain\\cave\\"
+	//};
 
 
 	Tile::Tile(Vector2 _coord)
@@ -17,7 +17,6 @@ namespace m {
 		, mCoord(_coord)
 	{
 		AddComponent(new Transform());
-		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
 	}
 	Tile::Tile()
 		: mTileTex(nullptr)

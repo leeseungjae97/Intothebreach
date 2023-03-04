@@ -10,7 +10,7 @@ namespace m
 	class Mech : public GameObject
 	{
 	public:
-		enum class eMechState {
+		enum class MECH_STATE {
 			Idle,
 			Broken,
 			Water,
@@ -24,9 +24,21 @@ namespace m
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
+		//TODO : ¹«±â, ÆÄÀÏ·µ
+
 		void SetSkill();
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);
+
+		void SetCoord(Vector2 _coord) { mCoord = _coord; }
+		void SetFinalPos(Vector2 _pos) { mFinalPos = _pos; }
+		void SetFinalCoord(Vector2 _coord) { mFinalCoord = _coord; }
+
+		Vector2 GetFinalPos() { return mFinalPos; }
+		Vector2 GetCoord() { return mCoord; }
+		Vector2 GetFinalCoord() { return mFinalCoord; }
+
+		CLONE(Mech);
 
 	private:
 		void idle();
@@ -36,11 +48,17 @@ namespace m
 	private:
 		MECHS mMechType;
 		Animator* mAnimator;
-		eMechState mState;
+		MECH_STATE mState;
+		Image* curImage;
+
+		Vector2 mCoord;
+
+		Vector2 mFinalCoord;
+		Vector2 mFinalPos;
+
 		Weapon* mWeapon;
 		Pilot* mPilot;
 		vector<Skill*> mSkills;
 		vector<Image*> mImages;
-		Image* curImage;
 	};
 }

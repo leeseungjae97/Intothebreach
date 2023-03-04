@@ -76,6 +76,7 @@ namespace m
 		}
 		bool IsDead() { return mbDead; }
 		void Death() { mbDead = true; }
+
 	private:
 		bool mbDead;
 		std::vector<Component*> mComponents;

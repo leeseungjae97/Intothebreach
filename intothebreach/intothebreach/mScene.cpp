@@ -1,5 +1,7 @@
 #include "mScene.h"
 #include "mTile.h"
+#include "mInput.h"
+
 namespace m
 {
 	Scene::Scene()
@@ -33,34 +35,41 @@ namespace m
 			layer.Render(hdc);
 		}
 	}
-	void Scene::MakeTile(int iX, int iY) {
+	void Scene::MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2) {
+		mTiles.resize(iX, vector<Tile*>());
+		mPosTiles.resize(iY, vector<Tile*>());
+
 		float fX, fY;
 		float mX = (10.f * (TILE_SIZE_X / 2.f));
 		float mY = TILE_SIZE_Y / 4.f;
-		for (int i = 0; i < iX; i++) {
-			for (int j = 0; j < iY; j++) {
-				Tile* tile = new Tile(Vector2((float)j, (float)i));
-				fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (j - i) + mX);
-				fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (j + i) + mY);
+		for (int y = 0; y < iY; y++) {
+			for (int x = 0; x < iX; x++) {
+				Tile* tile = new Tile(Vector2((float)x, (float)y));
+				fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
+				fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
 				tile->SetPos(Vector2(fX * 2, fY * 2));
-				tile->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
-					, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
-				mTiles.push_back(tile);
+				tile->SetTileType(_type);
+				tile->SetTileTexture(MAKE_TILE_KEY(_type, _type2)
+					, MAKE_TILE_PATH(_type, _type2));
+				mTiles[y].push_back(tile);
 
-				Tile* posTile = new Tile(1);
-				posTile->SetTileTexture(L"square", L"..\\Resources\\texture\\terrain\\tile_square.bmp");
-				posTile->SetPos(Vector2(fX * 2, fY * 2));
-				mPosTiles.push_back(posTile);
-
+				AddGameObject(tile, LAYER_TYPE::TILE);				
+			}
+		}
+		for (int y = 0; y < iY; y++) {
+			for (int x = 0; x < iX; x++) {
+				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
+				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				posTile->SetPos(mTiles[y][x]->GetPos());
+				mPosTiles[y].push_back(posTile);
 				AddGameObject(posTile, LAYER_TYPE::TILE);
-				AddGameObject(tile, LAYER_TYPE::TILE);
 			}
 		}
 	}
 	bool Scene::CheckRhombusPos(Tile* tile, Vector2 _pos) {
-		Vector2 vv[4];
-		float g[4];
-		float in[4];
+		Vector2 vertex[4];
+		float gradient[4];
+		float intercept[4];
 		float direct[4][2] = {
 			{0, (tile->GetScale().y / 2)},
 			{(tile->GetScale().x / 2), 0},
@@ -68,25 +77,36 @@ namespace m
 			{(tile->GetScale().x / 2), tile->GetScale().y}
 		};
 		for (size_t i = 0; i < 4; i++) {
-			vv[i].x = tile->GetPos().x + direct[i][0];
-			vv[i].y = tile->GetPos().y + direct[i][1];
+			vertex[i].x = tile->GetPos().x + direct[i][0];
+			vertex[i].y = tile->GetPos().y + direct[i][1];
 		}
 		for (size_t i = 0; i < 4; i++) {
-			g[i] = ((vv[i].y - vv[(i + 1) % 4].y) / (vv[i].x - vv[(i + 1) % 4].x));
-			in[i] = vv[i].y - g[i] * vv[i].x;
+			gradient[i] = ((vertex[i].y - vertex[(i + 1) % 4].y) / (vertex[i].x - vertex[(i + 1) % 4].x));
+			intercept[i] = vertex[i].y - gradient[i] * vertex[i].x;
 		}
 		float rY = _pos.y;
 		float rX = _pos.x;
 
-		if (g[0] * rX + in[0] < rY
-			&& g[1] * rX + in[1] < rY
-			&& g[2] * rX + in[2] > rY
-			&& g[3] * rX + in[3] > rY) {
+		if (gradient[0] * rX + intercept[0] < rY
+			&& gradient[1] * rX + intercept[1] < rY
+			&& gradient[2] * rX + intercept[2] > rY
+			&& gradient[3] * rX + intercept[3] > rY) {
 			return true;
 		}
 		else return false;
 	}
-
+	void Scene::HighlightTile() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+					mPosTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
+				}
+				else {
+					mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				}
+			}
+		}
+	}
 	void Scene::Release()
 	{
 

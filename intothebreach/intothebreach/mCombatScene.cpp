@@ -35,54 +35,135 @@ namespace m {
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
-		
+		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
 
-		
-		
-		Scene::MakeTile(TILE_X, TILE_Y);
+
+		Mech* mech1 = new Mech(MECHS::artillery);
+		mech1->SetPos(Scene::GetPosTiles()[0][0]->GetCenterPos());
+		mech1->SetFinalPos(mech1->GetPos());
+
+		mech1->SetCoord(Scene::GetPosTiles()[0][0]->GetCoord());
+		mech1->SetFinalCoord(mech1->GetCoord());
+
+		AddGameObject(mech1, LAYER_TYPE::PLAYER);
+
+		GetMechs().push_back(mech1);
+
 	}
 	void CombatScene::Update() {
 		Scene::Update();
-		vector<Tile*> mPosTiles = Scene::GetPosTiles();
-		vector<Tile*> mTiles = Scene::GetTiles();
-		if (KEY_UP(KEYCODE_TYPE::LBTN)) {
-			
-			for (UINT i = 0; i < mPosTiles.size(); i++) {
-				if (Scene::CheckRhombusPos(mPosTiles[i], MOUSE_POS)) {
-					//Tile* pHeadTile = new Tile(mPosTiles[i]->GetCoord());
-					//pHeadTile->SetPos(mPosTiles[i]->GetPos());
-					//pHeadTile->SetTileType(TILE_T::GREEN);
-					//pHeadTile->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::forest)
-					//					, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::forest));
-					//AddGameObject(pHeadTile, LAYER_TYPE::TILE_HEAD);
-					vector<Tile*> mPosTiles = Scene::GetPosTiles();
-					Mech* mech1 = new Mech(MECHS::artillery);
-					mech1->SetPos(mPosTiles[i]->GetCenterPos());
-					AddGameObject(mech1, LAYER_TYPE::PLAYER);
-				}
-			}
-		}
-		if (KEY_UP(KEYCODE_TYPE::RBTN)) {
-			for (UINT i = 0; i < mPosTiles.size(); i++) {
-				if (Scene::CheckRhombusPos(mPosTiles[i], MOUSE_POS)) {
-					Tile* pHeadTile = new Tile(mPosTiles[i]->GetCoord());
-					pHeadTile->SetPos(mPosTiles[i]->GetPos());
-					pHeadTile->SetTileType(TILE_T::GREEN);
-					pHeadTile->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::building)
-										, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::building));
-					AddGameObject(pHeadTile, LAYER_TYPE::TILE_HEAD);
-
-				}
-			}
-		}
-		for (UINT i = 0; i < mPosTiles.size(); i++) {
-			if (CheckRhombusPos(mPosTiles[i], MOUSE_POS)) {
-				mTiles[i]->SetTileType(TILE_T::SAND);
-				mTiles[i]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
-					, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
-			}
-		}
+		TILES mPosTiles = (TILES)Scene::GetPosTiles();
+		TILES mTiles = (TILES)Scene::GetTiles();
+		vector<Mech*> mMechs = Scene::GetMechs();
 		
+		if (KEY_UP(KEYCODE_TYPE::LBTN)) {
+			if (nullptr != mMouseFollower) {
+				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
+				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
+				mMouseFollower = nullptr;
+			}
+			else {
+				for (int y = 0; y < mPosTiles.size(); y++) {
+					for (int x = 0; x < mPosTiles[y].size(); x++) {
+						if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+							for (UINT _i = 0; _i < mMechs.size(); _i++) {
+								if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
+									mMouseFollower = mMechs[_i];
+								}
+							}
+						}
+					}
+				}
+			}	
+		}
+		if (nullptr != mMouseFollower) {
+			for (int y = 0; y < mPosTiles.size(); y++) {
+				for (int x = 0; x < mPosTiles[y].size(); x++) {
+					if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+						mMouseFollower->SetCoord(mPosTiles[y][x]->GetCoord());
+						mMouseFollower->SetPos(mPosTiles[y][x]->GetCenterPos());
+
+
+						//BFS
+						if (mPosTiles[y][x]->GetCoord() == mMouseFollower->GetFinalCoord()) continue;
+						int map[TILE_X][TILE_Y]{};
+						/*int **map;
+
+						map = new int* [mPosTiles.size()]{};
+						for (int i = 0; i < mPosTiles.size(); i++)
+							map[i] = new int[mPosTiles[i].size()]{};*/
+
+
+						list<Vector2> queue;
+
+						map[(int)mMouseFollower->GetFinalCoord().x][(int)mMouseFollower->GetFinalCoord().y] = 1;
+						queue.push_back(mMouseFollower->GetFinalCoord());
+
+						float direct[4][2] = {
+								{0, 1}
+							,{-1, 0} ,{1, 0}
+								,{0, -1}
+						};
+						bool find = false;
+						int level = 0;
+						
+						for (int y = 0; y < mPosTiles.size(); y++) {
+							for (int x = 0; x < mPosTiles[y].size(); x++) {
+								mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
+									, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
+							}
+						}
+
+						while (!queue.empty()) {
+							Vector2 now = queue.front();
+							
+							queue.pop_front();
+							/*mTiles[(int)dx][(int)dy]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SNOW, TILE_HEAD_T::ground)
+								, MAKE_TILE_PATH(TILE_T::SNOW, TILE_HEAD_T::ground));*/
+							for (int y = 0; y < mPosTiles.size(); y++) {
+								for (int x = 0; x < mPosTiles[y].size(); x++) {
+									for (int i = 0; i < 4; i++) {
+										float dx = now.x + direct[i][0];
+										float dy = now.y + direct[i][1];
+
+										if (dx < 0 || dx >= mPosTiles[y].size() || dy < 0 || dy >= mPosTiles.size()) continue;
+										if (map[(int)dx][(int)dy] == 1) continue;
+										if (mMouseFollower->GetCoord().x == dx
+											&& mMouseFollower->GetCoord().y == dy) {
+											find = true;
+											break;
+										}
+
+										map[(int)dx][(int)dy] = 1;
+										mTiles[(int)dx][(int)dy]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
+											, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
+										queue.push_back(Vector2(dx, dy));
+									}
+									if (find) break;
+								}
+								if (find) break;
+							}
+							if (find) break;
+						}
+					}
+				}
+			}
+		}
+		if (nullptr != mMouseFollower) {
+			if (KEY_UP(KEYCODE_TYPE::RBTN)) {
+				for (int y = 0; y < mPosTiles.size(); y++) {
+					for (int x = 0; x < mPosTiles[y].size(); x++) {
+						mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
+							, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
+					}
+				}
+
+				mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+				mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+				mMouseFollower = nullptr;
+			}
+		}
+		Scene::HighlightTile();
 		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
 			SceneManager::LoadScene(SCENE_TYPE::IN_LAND0);
 		}

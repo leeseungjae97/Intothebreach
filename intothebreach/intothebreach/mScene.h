@@ -4,11 +4,13 @@
 
 namespace m
 {
+
 	class Mech;
 	class Tile;
 	class Scene : public Entity
 	{
 	public:
+		typedef vector<vector<Tile*>> TILES;
 		Scene();
 		virtual ~Scene();
 		
@@ -22,14 +24,17 @@ namespace m
 
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
-		void MakeTile(int iX, int iY);
-		vector<Tile*>& GetPosTiles() { return mPosTiles; }
-		vector<Tile*>& GetTiles() { return mTiles; }
+		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
+		void HighlightTile();
+		
+		TILES GetPosTiles() { return mPosTiles; }
+		TILES GetTiles() { return mTiles; }
+		vector<Mech*>& GetMechs() { return mMechs; }
 
  	private:
 		vector<Layer> mLayers;
-		vector<Tile*> mTiles;
-		vector<Tile*> mPosTiles;
+		TILES mTiles;
+		TILES mPosTiles;
 		vector<Mech*> mMechs;
 	};
 }

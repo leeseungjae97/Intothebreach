@@ -153,7 +153,35 @@ int MECHS_T_HT[(UINT)MECHS::END]{
 	(int)MECH_T::Science,
 	(int)MECH_T::Science,
 };
+m::Vector2 MECHS_OFFSET[(UINT)MECHS::END]{
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
 
+	{},
+	{},
+	{},
+	{},
+	{},
+	{},
+
+	{35.f, 10.f},
+	{},
+	{},
+	{},
+	{},
+	{},
+
+	{},
+	{},
+	{},
+	{},
+	{},
+};
 
 
 enum class PRIME_T {

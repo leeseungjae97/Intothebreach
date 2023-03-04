@@ -29,7 +29,7 @@ namespace m
 				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == mImages[i]) continue;
-			mImages[i]->SetOffset(Vector2(35.f, 10.f));
+			mImages[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
 		}
 
 		mAnimator = GetComponent<Animator>();
@@ -46,7 +46,7 @@ namespace m
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		//GetComponent<Collider>()->SetScale(Vector2(50.f, 50.f));
-		mState = eMechState::Idle;
+		mState = MECH_STATE::Idle;
 	}
 	Mech::~Mech()
 	{
@@ -58,22 +58,22 @@ namespace m
 
 		GameObject::Update();
 		if (KEY_PREESED(KEYCODE_TYPE::Q)) {
-			mState = eMechState::Broken;
+			mState = MECH_STATE::Broken;
 		}
 		if (KEY_PREESED(KEYCODE_TYPE::E)) {
-			mState = eMechState::Idle;
+			mState = MECH_STATE::Idle;
 		}
 		switch (mState) {
-		case m::Mech::eMechState::Idle:
+		case m::Mech::MECH_STATE::Idle:
 			idle();
 			break;
-		case m::Mech::eMechState::Broken:
+		case m::Mech::MECH_STATE::Broken:
 			broken();
 			break;
-		case m::Mech::eMechState::Water:
+		case m::Mech::MECH_STATE::Water:
 			water();
 			break;
-		case m::Mech::eMechState::End:
+		case m::Mech::MECH_STATE::End:
 
 			break;
 		default:
