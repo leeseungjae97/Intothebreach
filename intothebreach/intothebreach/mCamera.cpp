@@ -24,16 +24,16 @@ namespace m {
 		mCutton = Image::Create(L"Cutton", (UINT)mResolution.x, (UINT)mResolution.y);
 	}
 	void Camera::Update() {
-		if (KEY_PREESED(KEYCODE_TYPE::W)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::W)) {
 			mLookPosition.y -= Time::fDeltaTime() * 500.0f;
 		}
-		if (KEY_PREESED(KEYCODE_TYPE::S)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::S)) {
 			mLookPosition.y += Time::fDeltaTime() * 500.0f;
 		}
-		if (KEY_PREESED(KEYCODE_TYPE::A)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::A)) {
 			mLookPosition.x -= Time::fDeltaTime() * 500.0f;
 		}
-		if (KEY_PREESED(KEYCODE_TYPE::D)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::D)) {
 			mLookPosition.x += Time::fDeltaTime() * 500.0f;
 		}
 		

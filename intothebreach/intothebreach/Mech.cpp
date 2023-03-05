@@ -57,10 +57,10 @@ namespace m
 	{
 
 		GameObject::Update();
-		if (KEY_PREESED(KEYCODE_TYPE::Q)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
 			mState = MECH_STATE::Broken;
 		}
-		if (KEY_PREESED(KEYCODE_TYPE::E)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::E)) {
 			mState = MECH_STATE::Idle;
 		}
 		switch (mState) {

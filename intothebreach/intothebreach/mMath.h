@@ -92,6 +92,9 @@ namespace m {
         bool operator ==(const Vector2& other) {
             return (x == other.x && y == other.y);
         }
+        bool operator !=(const Vector2& other) {
+            return (x != other.x || y != other.y);
+        }
         bool operator <=(const Vector2& other) {
             return (x <= other.x && y <= other.y);
         }

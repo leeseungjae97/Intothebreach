@@ -29,7 +29,7 @@
 #define ONE_BUILDING_SCALE Vector2(31.f , 0.f)
 #define ONE_BUILDING_POS Vector2(10.f, 5.f)
 
-#define KEY_PREESED(KEY) m::KEY_STATE::PRESSED == m::Input::GetKeyState(KEY)
+#define KEY_PRESSED(KEY) m::KEY_STATE::PRESSED == m::Input::GetKeyState(KEY)
 #define KEY_DOWN(KEY) m::KEY_STATE::DOWN == m::Input::GetKeyState(KEY)
 #define KEY_UP(KEY) m::KEY_STATE::UP == m::Input::GetKeyState(KEY)
 

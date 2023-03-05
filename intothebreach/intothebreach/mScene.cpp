@@ -1,10 +1,12 @@
 #include "mScene.h"
 #include "mTile.h"
 #include "mInput.h"
-
+#include "Mech.h"
 namespace m
 {
 	Scene::Scene()
+		: mMouseFollower(nullptr)
+		, map(nullptr)
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
@@ -63,6 +65,114 @@ namespace m
 				posTile->SetPos(mTiles[y][x]->GetPos());
 				mPosTiles[y].push_back(posTile);
 				AddGameObject(posTile, LAYER_TYPE::TILE);
+			}
+		}
+		SetMap(iY, iX);
+	}
+	void Scene::ClearMap() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				map[y][x] = 0;
+			}
+		}
+	}
+	void Scene::DrawMoveDirectionTile() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+					if (map[y][x] != 1) continue;
+
+					Vector2 prevPos = mMouseFollower->GetFinalCoord();
+					Vector2 curPos = mMouseFollower->GetCoord();
+					list<Vector2> shortQue;
+					mTiles[(int)curPos.y][(int)curPos.x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SNOW, TILE_HEAD_T::ground)
+						, MAKE_TILE_PATH(TILE_T::SNOW, TILE_HEAD_T::ground));
+
+					while (prevPos != curPos) {
+						mTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SNOW, TILE_HEAD_T::ground)
+							, MAKE_TILE_PATH(TILE_T::SNOW, TILE_HEAD_T::ground));
+
+						if (prevPos.y < curPos.y) shortQue.push_back(Vector2(prevPos.x, ++prevPos.y));
+						else if (prevPos.y > curPos.y) shortQue.push_back(Vector2(prevPos.x, --prevPos.y));
+						else if (prevPos.x < curPos.x) shortQue.push_back(Vector2(++prevPos.x, prevPos.y));
+						else if ((prevPos.x > curPos.x)) shortQue.push_back(Vector2(--prevPos.x, prevPos.y));
+					}
+				}
+			}
+		}
+	}
+	void Scene::CheckMouseOutOfMapRange() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+					if (map[y][x] != 1 && nullptr != mMouseFollower) {
+						mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+						mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+					}
+					if (map[y][x] == 1 && nullptr != mMouseFollower) {
+						mMouseFollower->SetCoord(mPosTiles[y][x]->GetCoord());
+						mMouseFollower->SetPos(mPosTiles[y][x]->GetCenterPos());
+					}
+				}
+			}
+		}
+	}
+	void Scene::RobotDrag() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+					for (UINT _i = 0; _i < mMechs.size(); _i++) {
+						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
+							SetMouseFollower(mMechs[_i]);
+						}
+					}
+				}
+			}
+		}
+	}
+	void Scene::DrawMoveRangeTile() {
+		int moveLimit = 3;
+		struct Vector2_1 {
+			Vector2 pos;
+			int level;
+		};
+		list<Vector2_1> queue;
+
+		queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0));
+
+		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
+
+		bool find = false;
+
+		while (!queue.empty()) {
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+
+			for (int i = 0; i < 4; i++) {
+				float dx = now.pos.x + direct[i][0];
+				float dy = now.pos.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+				//if (map[(int)dy][(int)dx] == 1) continue;
+
+				if (now.level == moveLimit) {
+					find = true;
+					break;
+				}
+				map[(int)dy][(int)dx] = 1;
+				mTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SAND, TILE_HEAD_T::ground)
+					, MAKE_TILE_PATH(TILE_T::SAND, TILE_HEAD_T::ground));
+
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
+			}
+			if (find) break;
+		}
+	}
+	void Scene::ClearMTiles(TILE_T _type, TILE_HEAD_T _hT) {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(_type, _hT)
+					, MAKE_TILE_PATH(_type, _hT));
 			}
 		}
 	}

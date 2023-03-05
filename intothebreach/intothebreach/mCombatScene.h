@@ -17,8 +17,6 @@ namespace m {
 		virtual void OnEnter() override;
 		virtual void OnExit() override;;
 		
-	private:
-		Mech* mMouseFollower = nullptr;
 	};
 }
 
