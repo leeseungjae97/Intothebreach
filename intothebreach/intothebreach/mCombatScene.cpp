@@ -32,12 +32,15 @@ namespace m {
 				Background* b_ = new Background(L"combatBackground1"
 					, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, false);
 				b_->SetPos(Vector2(b_->GetSize().x * x, b_->GetSize().y * y));
+				mBacks.push_back(b_);
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
 		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
 
 
+		// 임시로 메카위치 설정
+		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 		Mech* mech1 = new Mech(MECHS::artillery);
 		mech1->SetPos(Scene::GetPosTiles()[0][0]->GetCenterPos());
 		mech1->SetFinalPos(mech1->GetPos());
@@ -61,9 +64,8 @@ namespace m {
 		if (nullptr != mMouseFollower) {
 			Scene::DrawMoveRangeTile();
 			Scene::DrawMoveDirectionTile();
+			Scene::CheckMouseOutOfMapRange();
 		}
-
-		Scene::CheckMouseOutOfMapRange();
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
 			Scene::ClearMap();
@@ -84,7 +86,6 @@ namespace m {
 			}	
 		}
 		
-		int a = 0;
 		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
 			SceneManager::LoadScene(SCENE_TYPE::IN_LAND0);
 		}

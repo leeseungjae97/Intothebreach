@@ -44,7 +44,6 @@ namespace m
 				map[i] = new int[x];
 			}
 		}
-
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 		void CheckMouseOutOfMapRange();
@@ -54,6 +53,8 @@ namespace m
 		vector<Layer> mLayers;
 		TILES mTiles;
 		TILES mPosTiles;
+		TILES mBoundaryTiles;
+		TILES mArrowTiles;
 		vector<Mech*> mMechs;
 		
 		Mech* mMouseFollower;

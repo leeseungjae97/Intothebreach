@@ -455,6 +455,7 @@ enum class TILE_T {
 	VOLCANO,
 	CAVE,
 	COMMON,
+	MOVE_RANGE,
 	END,
 };
 wstring TILE_PATH[(UINT)TILE_T::END]{
@@ -535,6 +536,87 @@ wstring& MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 
 	path->append(TILE_PATH[(UINT)_type]);
 	path->append(TILE_HEAD_PATH[(UINT)_type2]);
+
+	path->append(L".bmp");
+
+	return (*path);
+}
+
+enum class MOVE_TILE_T {
+	square,
+	square_g,
+	square_y_line,
+	square_g_line,
+	square_g_l,
+	square_g_r,
+	square_g_u,
+	square_g_d,
+	END
+};
+wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
+	L"square",
+	L"square_g",
+	L"square_y_line",
+	L"square_g_line",
+	L"square_line_g_l",
+	L"square_line_g_r",
+	L"square_line_g_u",
+	L"square_line_g_d",
+};
+
+wstring& MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
+	wstring* key = new wstring(L"");
+
+	key->append(MOVE_TILE_PATH[(UINT)_type]);
+
+
+	return (*key);
+}
+wstring& MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
+	wstring* path = new wstring(L"..\\Resources\\texture\\combat\\move\\");
+
+	path->append(MOVE_TILE_PATH[(UINT)_type]);
+
+	path->append(L".bmp");
+
+	return (*path);
+}
+enum class ARROW_T {
+	ARROW_D_U,
+	ARROW_L_R,
+	ARROW_L,
+	ARROW_R,
+	ARROW_U,
+	ARROW_D,
+	ARROW_COR_L_D,
+	ARROW_COR_L_U,
+	ARROW_COR_R_D,
+	ARROW_COR_R_U,
+	END
+};
+wstring ARROW_PATH[(UINT)ARROW_T::END]{
+	L"movearrow_du",
+	L"movearrow_lr",
+	L"movearrow_l",
+	L"movearrow_r",
+	L"movearrow_u",
+	L"movearrow_d",
+	L"movearrow_corner4",
+	L"movearrow_corner2",
+	L"movearrow_corner1",
+	L"movearrow_corner3",
+};
+wstring& MAKE_ARROW_TILE_KEY(ARROW_T _type) {
+	wstring* key = new wstring(L"");
+
+	key->append(ARROW_PATH[(UINT)_type]);
+
+	return (*key);
+}
+wstring& MAKE_ARROW_TILE_PATH(ARROW_T _type) {
+	wstring* path = new wstring(L"..\\Resources\\texture\\combat\\move\\");
+
+	path->append(ARROW_PATH[(UINT)_type]);
 
 	path->append(L".bmp");
 

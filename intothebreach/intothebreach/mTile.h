@@ -20,6 +20,21 @@ namespace m {
         void SetTileType(TILE_T _type) {
             mTileType = _type;
         }
+        TILE_T GetTileType() {
+            return mTileType;
+        }
+        void InitETCTiles(int _size) {
+            mETCTexs.resize(_size);
+        }
+        void ClearAddETCTiles() {
+            for(int i = 0; i < mETCTexs.size(); i ++) 
+                mETCTexs[i] = Resources::Load<Image>(SQUARE__KEY, SQUARE__PATH);
+        }
+        void SetETCTiles(const wstring& key, const wstring& path) {
+            ++eTCTexsIdx %= mETCTexs.size();
+            mETCTexs[eTCTexsIdx] = Resources::Load<Image>(key, path);
+            SetScale(Vector2((float)(mETCTexs[eTCTexsIdx]->GetWidth() * 2), (float)(mETCTexs[eTCTexsIdx]->GetHeight() * 2)));
+        }
         Vector2 GetCoord() { return mCoord; }
         Vector2 GetCenterPos() 
         { 
@@ -30,9 +45,12 @@ namespace m {
         virtual void Render(HDC hdc) override;
 
     private:
+        vector<Image*> mETCTexs;
         Image*      mTileTex;
         TILE_T      mTileType;
         Vector2     mCoord;
+
+        int eTCTexsIdx;
     };
 }
 

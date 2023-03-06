@@ -37,17 +37,17 @@ namespace m {
 	void Animation::Render(HDC hdc) {
 		GameObject* gObject = mAnimator->GetOwner();
 		Vector2 pos = gObject->GetPos();
-		//if (mbAffectedCamera) {
-
-		//}
+		if (mbAffectedCamera)
+			pos = Camera::CalculatePos(pos);
 
 		BLENDFUNCTION func = {};
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = mAlpha;
 		func.SourceConstantAlpha = 255;
+
 		pos += mSpriteSheet[mSpriteIndex]->offset;
-		pos = Camera::CalculatePos(pos);
+
 		AlphaBlend(hdc
 			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x)
 			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y)
