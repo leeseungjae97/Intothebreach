@@ -16,7 +16,7 @@ namespace m
 			Water,
 			End,
 		};
-		Mech(MECHS _mech);
+		Mech(MECHS _mech, Vector2 _coord);
 		~Mech();
 
 		virtual void Initialize() override;
@@ -38,6 +38,19 @@ namespace m
 		Vector2 GetCoord() { return mCoord; }
 		Vector2 GetFinalCoord() { return mFinalCoord; }
 
+		int GetFullHp() { return mHp; }
+		int GetCurHp() { return curHp; }
+
+		void Hit(int damage) { 
+			if (curHp < damage) curHp = 0;
+			else curHp -= damage;
+		}
+		void Repair(int repair) { 
+			if (curHp + repair < mHp) curHp = mHp;
+			else curHp += repair; 
+		}
+
+
 		CLONE(Mech);
 
 	private:
@@ -50,11 +63,19 @@ namespace m
 		Animator* mAnimator;
 		MECH_STATE mState;
 		Image* curImage;
+		vector<Image*> hpBar;
 
 		Vector2 mCoord;
 
 		Vector2 mFinalCoord;
 		Vector2 mFinalPos;
+
+		int mHp;
+		int curHp;
+		int moveRange;
+
+		bool endMove;
+		bool endAttack;
 
 		Weapon* mWeapon;
 		Pilot* mPilot;

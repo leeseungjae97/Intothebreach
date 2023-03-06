@@ -30,9 +30,9 @@ namespace m
 			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, true);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 
-		mMech = new Mech(MECHS::artillery);
+		/*mMech = new Mech(MECHS::artillery, Vector2(0,0));
 		mMech->SetPos(Vector2(100.f, 100.f));
-		AddGameObject(mMech, LAYER_TYPE::PLAYER);
+		AddGameObject(mMech, LAYER_TYPE::PLAYER);*/
 
 		Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 2.0f);
 

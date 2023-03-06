@@ -241,6 +241,7 @@
     <ClInclude Include="Skill_Range.h">
       <Filter>Contents\Attached\Skill</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -364,5 +365,6 @@
     <ClCompile Include="Skill_Range.cpp">
       <Filter>Contents\Attached\Skill</Filter>
     </ClCompile>
+    <ClCompile Include="Building.cpp" />
   </ItemGroup>
 </Project>

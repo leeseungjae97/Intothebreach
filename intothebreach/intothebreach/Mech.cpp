@@ -11,12 +11,19 @@
 #include "mCollider.h"
 namespace m
 {
-	Mech::Mech(MECHS _mech)
+	Mech::Mech(MECHS _mech, Vector2 _coord)
 		: mMechType(_mech)
 		, mPilot(nullptr)
 		, mWeapon(nullptr)
 		, curImage(nullptr)
 		, mAnimator(nullptr)
+		, endMove(false)
+		, endAttack(false)
+		, mCoord(_coord)
+		, mFinalCoord(_coord)
+		, mHp(0)
+		, curHp(0)
+		, moveRange(0)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());

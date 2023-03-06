@@ -1,6 +1,7 @@
 #include "mScene.h"
 #include "mTile.h"
 #include "mInput.h"
+#include "Building.h"
 #include "Mech.h"
 namespace m
 {
@@ -51,12 +52,17 @@ namespace m
 		mPosTiles.resize(iY, vector<Tile*>());
 		mBoundaryTiles.resize(iY, vector<Tile*>());
 		mArrowTiles.resize(iY, vector<Tile*>());
+		mStruturesTiles.resize(iY, vector<Building*>());
+		mEffectedTiles.resize(iY, vector<Tile*>());
+		mEnemyEmerge.resize(iY, vector<Tile*>());
+
 		float fX, fY;
 		float mX = (10.f * (TILE_SIZE_X / 2.f));
 		float mY = TILE_SIZE_Y / 4.f;
 		for (int y = 0; y < iY; y++) {
 			for (int x = 0; x < iX; x++) {
 				Tile* tile = new Tile(Vector2((float)x, (float)y));
+				//Building* b_ = new Building(STRUCTURES_T::Mountain, Vector2((float)x, (float)y));
 				fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
 				fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
 				tile->SetPos(Vector2(fX * 2, fY * 2));
@@ -73,6 +79,9 @@ namespace m
 				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
+				//Tile* efTile = new Tile(mTiles[y][x]->GetCoord());
+				//Tile* enETile = new Tile(mTiles[y][x]->GetCoord());
+
 				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				posTile->SetPos(mTiles[y][x]->GetPos());	
 
@@ -82,16 +91,34 @@ namespace m
 				etcTile->InitETCTiles(4);
 				etcTile->SetPos(mTiles[y][x]->GetPos());
 
+				//stTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				
+				//efTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				//efTile->SetPos(mTiles[y][x]->GetPos());
+
+				//enETile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				//enETile->SetPos(mTiles[y][x]->GetPos());
+
 				mPosTiles[y].push_back(posTile);
 				mBoundaryTiles[y].push_back(etcTile);
 				mArrowTiles[y].push_back(awTile);
+				
+				//mEffectedTiles[y].push_back(efTile);
+				//mEnemyEmerge[y].push_back(enETile);
 
 				AddGameObject(posTile, LAYER_TYPE::TILE);
-				AddGameObject(etcTile, LAYER_TYPE::TILE);
+				//AddGameObject(stTile, LAYER_TYPE::TILE);
+				//AddGameObject(efTile, LAYER_TYPE::TILE);
+				//AddGameObject(enETile, LAYER_TYPE::TILE);
+
 				AddGameObject(awTile, LAYER_TYPE::TILE);
+				AddGameObject(etcTile, LAYER_TYPE::TILE);
 			}
 		}
-		
+		Building* stTile = new Building(STRUCTURES_T::Mountain, mTiles[3][3]->GetCoord());
+		stTile->SetPos(mTiles[3][3]->GetCenterPos());
+		mStruturesTiles[0].push_back(stTile);
+		AddGameObject(stTile, LAYER_TYPE::TILE);
 		SetMap(iY, iX);
 	}
 	/// <summary>
@@ -163,7 +190,7 @@ namespace m
 						}
 						
 						shortQue.push_back(Vector2(prevPos.x, prevPos.y));
-						mArrowTiles[prevPos.y][prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+						mArrowTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 							MAKE_ARROW_TILE_PATH(type));
 					}
 					if(mp.x < prevPos.x) type = ARROW_T::ARROW_R;
@@ -171,7 +198,7 @@ namespace m
 					if(mp.y < prevPos.y) type = ARROW_T::ARROW_D;
 					if(mp.y > prevPos.y) type = ARROW_T::ARROW_U;
 
-					mArrowTiles[prevPos.y][prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+					mArrowTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 						MAKE_ARROW_TILE_PATH(type));
 				}
 			}
@@ -229,6 +256,11 @@ namespace m
 		};
 		list<Vector2_1> queue;
 		queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0));
+		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileType(TILE_T::MOVE_RANGE);
+		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileTexture(
+			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
+			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
+
 		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
 
 		bool find = false;
@@ -252,7 +284,6 @@ namespace m
 
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
 				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
-				
 				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
 					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
 			}
@@ -262,6 +293,7 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (mPosTiles[y][x]->GetTileType() == TILE_T::MOVE_RANGE) {
+					MOVE_TILE_T type = (MOVE_TILE_T)0;
 					if (y + 1 < mPosTiles.size() && mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_d)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_d));
@@ -278,6 +310,7 @@ namespace m
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_r)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_r));
 					}
+					
 					
 				}
 			}

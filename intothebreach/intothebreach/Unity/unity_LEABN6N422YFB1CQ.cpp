@@ -1,5 +1,8 @@
 
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\mAlien.cpp"
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\Alien.cpp"
+
+
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\mCamera.cpp"
@@ -105,10 +108,4 @@
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\Skill_Range.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\mTileHead.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\YATILE.CPP"
 

@@ -545,6 +545,7 @@ wstring& MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 enum class MOVE_TILE_T {
 	square,
 	square_g,
+	square_w,
 	square_y_line,
 	square_g_line,
 	square_g_l,
@@ -556,6 +557,7 @@ enum class MOVE_TILE_T {
 wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square",
 	L"square_g",
+	L"square_w",
 	L"square_y_line",
 	L"square_g_line",
 	L"square_line_g_l",
@@ -622,3 +624,11 @@ wstring& MAKE_ARROW_TILE_PATH(ARROW_T _type) {
 
 	return (*path);
 }
+enum class STRUCTURES_T {
+	Mountain,
+	C_Building,
+	END,
+};
+wstring STRUCTURE_PATH[(UINT)STRUCTURES_T::END]{
+	L"mountain_0",
+};

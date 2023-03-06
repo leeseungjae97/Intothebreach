@@ -4,13 +4,15 @@
 
 namespace m
 {
-
 	class Mech;
+	class Alien;
 	class Tile;
+	class Building;
 	class Scene : public Entity
 	{
 	public:
 		typedef vector<vector<Tile*>> TILES;
+		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
 		Scene();
 		virtual ~Scene();
@@ -55,8 +57,13 @@ namespace m
 		TILES mPosTiles;
 		TILES mBoundaryTiles;
 		TILES mArrowTiles;
+		BUILDINGS mStruturesTiles;
+		TILES mEffectedTiles;
+		TILES mEnemyEmerge;
+
 		vector<Mech*> mMechs;
-		
+		vector<Alien*> mAilens;
+
 		Mech* mMouseFollower;
 		int **map;
 	};

@@ -137,6 +137,7 @@
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Alien.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="Resource.h" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
+    <ClCompile Include="Building.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mCollisionManager.cpp" />
