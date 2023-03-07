@@ -54,7 +54,6 @@ namespace m {
 		Scene::Update();
 
 		Mech* mMouseFollower = Scene::GetMouseFollower();
-
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 		Scene::HighlightTile();
 
@@ -62,11 +61,9 @@ namespace m {
 			Scene::DrawMoveRangeTile();
 			Scene::DrawMoveDirectionTile();
 			Scene::CheckMouseOutOfMapRange();
-			Scene::ClearMap();
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
-			Scene::ClearMap();
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			Scene::SetMouseFollower(nullptr);
@@ -74,7 +71,6 @@ namespace m {
 		
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
 			if (nullptr != mMouseFollower) {
-				Scene::ClearMap();
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
 				Scene::SetMouseFollower(nullptr);

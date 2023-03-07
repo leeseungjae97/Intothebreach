@@ -129,6 +129,12 @@ namespace m
 
 		AddGameObject(stTile1, LAYER_TYPE::TILE);
 
+		Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
+		stTile2->SetPos(mTiles[2][0]->GetCenterPos());
+		mStruturesTiles[2][0] = stTile2;
+
+		AddGameObject(stTile2, LAYER_TYPE::TILE);
+
 		SetMap(iY, iX);
 	}
 	/// <summary>
@@ -159,75 +165,115 @@ namespace m
 					if (map[y][x] != 1) continue;
 					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
 
-
 					Vector2 prevPos = mMouseFollower->GetFinalCoord();
 					Vector2 curPos = mMouseFollower->GetCoord();
 
 					list<Vector2> directQue;
-					Vector2_1 now{};
-					while (now.pos != curPos) {
+					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
+
+					while (!pathQueue.empty() && now.pos != curPos) {
 						now = pathQueue.back();
 						pathQueue.pop_back();
 					}
+					directQue.push_back(Vector2(now.pos.x, now.pos.y));
 
-					while (now.pos != prevPos) {
-						directQue.push_back(Vector2(now.pos.x, now.pos.y));
+					while (!pathQueue.empty() && now.pos != prevPos) {
 						now = pathQueue[now.parentIdx];
+						directQue.push_back(Vector2(now.pos.x, now.pos.y));
 					}
-					Vector2 tmP{};
-					Vector2 tmNP{};
 
 					ARROW_T type = (ARROW_T)0;
 
 					Vector2 pos = Vector2::Zero;
 					Vector2 nPos = Vector2::Zero;
 
+					vector<Vector2> mVec;
 					while (!directQue.empty()) {
 						pos = directQue.back();
-						if (tmP == Vector2::Zero) tmP = pos;
+						mVec.push_back(Vector2(pos.x, pos.y));
 						directQue.pop_back();
-						nPos = directQue.back();
-						if (tmNP == Vector2::Zero) tmNP = nPos;
-
-						// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
-						// 현재 포스보다 다음포스의 y가 클 때.
-						if (pos.y < nPos.y) {
-							if (pos.y == nPos.y) {
-								if (pos.x < nPos.x) type = ARROW_T::ARROW_COR_R_U;
-								if (pos.x > nPos.x) type = ARROW_T::ARROW_COR_L_U;
-							}
-							else {
+						if (!directQue.empty()) {
+							nPos = directQue.back();
+							// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
+							if (pos.y != nPos.y) {
 								type = ARROW_T::ARROW_D_U;
-							}
-						}
-						// 현재 포스보다 다음포스의 y가 작을 때.
-						else if (pos.y > nPos.y) {
-							if (pos.y == nPos.y) {
-								if (pos.x < nPos.x) type = ARROW_T::ARROW_COR_R_D;
-								if (pos.x > nPos.x) type = ARROW_T::ARROW_COR_L_D;
-							}
-							else {
-								type = ARROW_T::ARROW_D_U;
-							}
-						}
-						// 현재 포스보다 다음포스의 x가 클 때.
-						else if (pos.x < nPos.x) {
-							type = ARROW_T::ARROW_L_R;
-						}
-						// 현재 포스보다 다음포스의 x가 작을 때.
-						else if (pos.x > nPos.x) {
-							type = ARROW_T::ARROW_L_R;
+								if (pos.y < nPos.y) {
+									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) {
+										type = ARROW_T::ARROW_COR_R_D;
 
+
+									}
+									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) {
+										type = ARROW_T::ARROW_COR_L_D;
+
+									}
+								}
+								if (pos.y > nPos.y) {
+									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) {
+										type = ARROW_T::ARROW_COR_R_U;
+										
+
+
+									}
+									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) {
+										type = ARROW_T::ARROW_COR_L_U;
+
+									}
+								}
+							}
+							else if (pos.x != nPos.x) {
+								type = ARROW_T::ARROW_L_R;
+								if (pos.x < nPos.x) {
+									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) {
+										type = ARROW_T::ARROW_COR_R_D;
+
+
+									}
+									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) {
+										type = ARROW_T::ARROW_COR_R_U;
+
+									}
+								}
+								if (pos.x > nPos.x) {
+									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) {
+										type = ARROW_T::ARROW_COR_L_D;
+
+
+									}
+									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) {
+										type = ARROW_T::ARROW_COR_L_U;
+
+									}
+								}
+								
+
+								/*if (idx > 1 && pos.x > nPos.x) {
+									if (pos.y < mVec[idx - 1].y) {
+										type = ARROW_T::ARROW_COR_L_U;
+									}
+									if (pos.y > mVec[idx - 1].y) {
+										type = ARROW_T::ARROW_COR_L_D;
+									}
+								}
+								else if (idx > 1 && pos.x < nPos.x) {
+									if (pos.y < mVec[idx - 1].y) {
+										type = ARROW_T::ARROW_COR_R_D;
+									}
+									if (pos.y > mVec[idx - 1].y) {
+										type = ARROW_T::ARROW_COR_R_U;
+									}
+								}*/
+							}
 							mArrowTiles[(int)pos.y][(int)pos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 								MAKE_ARROW_TILE_PATH(type));
 						}
 					}
-					if (tmP.x < tmNP.x) type = ARROW_T::ARROW_R;
-					if (tmP.x > tmNP.x) type = ARROW_T::ARROW_L;
-					if (tmP.y < tmNP.y) type = ARROW_T::ARROW_D;
-					if (tmP.y > tmNP.y) type = ARROW_T::ARROW_U;
+					if (mVec.size() > 1 &&mVec[mVec.size() - 2].x < curPos.x) type = ARROW_T::ARROW_R;
+					if (mVec.size() > 1 &&mVec[mVec.size() - 2].x > curPos.x) type = ARROW_T::ARROW_L;
+					if (mVec.size() > 1 &&mVec[mVec.size() - 2].y < curPos.y) type = ARROW_T::ARROW_D;
+					if (mVec.size() > 1 &&mVec[mVec.size() - 2].y > curPos.y) type = ARROW_T::ARROW_U;
 
-					mArrowTiles[(int)tmP.y][(int)tmP.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+					mArrowTiles[(int)curPos.y][(int)curPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 						MAKE_ARROW_TILE_PATH(type));
 
 					 
@@ -325,7 +371,7 @@ namespace m
 	/// </summary>
 	void Scene::DrawMoveRangeTile() {
 		// 임시 이동 범위
-		int moveLimit = 3;
+		int moveLimit = 5;
 
 		list<Vector2_1>queue;
 
@@ -414,6 +460,7 @@ namespace m
 	void Scene::ClearMTiles(TILE_T _type, TILE_HEAD_T _hT) {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				ClearMap();
 				pathQueue.clear();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
