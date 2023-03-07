@@ -5,6 +5,9 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
+#include "D:\progressing\intothebreach\intothebreach\intothebreach\func.cpp"
+
+
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\mCamera.cpp"
 
 

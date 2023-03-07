@@ -14,6 +14,11 @@ namespace m
 		typedef vector<vector<Tile*>> TILES;
 		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
+		struct Vector2_1 {
+			Vector2 pos;
+			int level;
+			int parentIdx;
+		};
 		Scene();
 		virtual ~Scene();
 		
@@ -61,6 +66,8 @@ namespace m
 		TILES mEffectedTiles;
 		TILES mEnemyEmerge;
 
+		vector<Vector2_1> pathQueue;
+
 		vector<Mech*> mMechs;
 		vector<Alien*> mAilens;
 
@@ -68,6 +75,5 @@ namespace m
 		int map[TILE_Y][TILE_X]{};
 		int cmap[TILE_Y][TILE_X]{};
 		int backTack[TILE_SIZE];
-		list<Vector2> shortQue;
 	};
 }

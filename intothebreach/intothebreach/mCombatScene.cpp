@@ -62,6 +62,7 @@ namespace m {
 			Scene::DrawMoveRangeTile();
 			Scene::DrawMoveDirectionTile();
 			Scene::CheckMouseOutOfMapRange();
+			Scene::ClearMap();
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {

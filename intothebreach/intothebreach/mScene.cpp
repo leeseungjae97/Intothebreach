@@ -159,47 +159,79 @@ namespace m
 					if (map[y][x] != 1) continue;
 					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
 
-					int moveLimit = 3;
 
-					struct Vector2_1 {
-						Vector2 pos;
-						int level;
-					};
-					list<Vector2_1> queue;
+					Vector2 prevPos = mMouseFollower->GetFinalCoord();
+					Vector2 curPos = mMouseFollower->GetCoord();
 
-					queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0));
-
-					float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-
-					bool find = false;
-
-					while (!queue.empty()) {
-						Vector2_1 now = queue.front();
-						queue.pop_front();
-
-						for (int i = 0; i < 4; i++) {
-							float dx = now.pos.x + direct[i][0];
-							float dy = now.pos.y + direct[i][1];
-
-							if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
-							if (mMouseFollower->GetFinalCoord().x == dx
-								&& mMouseFollower->GetFinalCoord().y == dy) continue;
-							if (map[(int)dy][(int)dx] == -1) continue;
-							queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
-							shortQue.push_back(Vector2(dx, dy));
-							cmap[(int)dy][(int)dx] = 1;
-							break;
-						}
-						if (find) break;
+					list<Vector2> directQue;
+					Vector2_1 now{};
+					while (now.pos != curPos) {
+						now = pathQueue.back();
+						pathQueue.pop_back();
 					}
 
+					while (now.pos != prevPos) {
+						directQue.push_back(Vector2(now.pos.x, now.pos.y));
+						now = pathQueue[now.parentIdx];
+					}
+					Vector2 tmP{};
+					Vector2 tmNP{};
 
-					//Vector2 prevPos = mMouseFollower->GetFinalCoord();
-					//Vector2 curPos = mMouseFollower->GetCoord();
-					//// 클릭 후 마우스가 메카에서 벗어나야지 화살표를 찍음.
-					//if (prevPos == curPos) continue;
+					ARROW_T type = (ARROW_T)0;
 
-					//// 첫 화살표의 표시는 while문에 걸리지 않음.
+					Vector2 pos = Vector2::Zero;
+					Vector2 nPos = Vector2::Zero;
+
+					while (!directQue.empty()) {
+						pos = directQue.back();
+						if (tmP == Vector2::Zero) tmP = pos;
+						directQue.pop_back();
+						nPos = directQue.back();
+						if (tmNP == Vector2::Zero) tmNP = nPos;
+
+						// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
+						// 현재 포스보다 다음포스의 y가 클 때.
+						if (pos.y < nPos.y) {
+							if (pos.y == nPos.y) {
+								if (pos.x < nPos.x) type = ARROW_T::ARROW_COR_R_U;
+								if (pos.x > nPos.x) type = ARROW_T::ARROW_COR_L_U;
+							}
+							else {
+								type = ARROW_T::ARROW_D_U;
+							}
+						}
+						// 현재 포스보다 다음포스의 y가 작을 때.
+						else if (pos.y > nPos.y) {
+							if (pos.y == nPos.y) {
+								if (pos.x < nPos.x) type = ARROW_T::ARROW_COR_R_D;
+								if (pos.x > nPos.x) type = ARROW_T::ARROW_COR_L_D;
+							}
+							else {
+								type = ARROW_T::ARROW_D_U;
+							}
+						}
+						// 현재 포스보다 다음포스의 x가 클 때.
+						else if (pos.x < nPos.x) {
+							type = ARROW_T::ARROW_L_R;
+						}
+						// 현재 포스보다 다음포스의 x가 작을 때.
+						else if (pos.x > nPos.x) {
+							type = ARROW_T::ARROW_L_R;
+
+							mArrowTiles[(int)pos.y][(int)pos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+								MAKE_ARROW_TILE_PATH(type));
+						}
+					}
+					if (tmP.x < tmNP.x) type = ARROW_T::ARROW_R;
+					if (tmP.x > tmNP.x) type = ARROW_T::ARROW_L;
+					if (tmP.y < tmNP.y) type = ARROW_T::ARROW_D;
+					if (tmP.y > tmNP.y) type = ARROW_T::ARROW_U;
+
+					mArrowTiles[(int)tmP.y][(int)tmP.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+						MAKE_ARROW_TILE_PATH(type));
+
+					 
+					// 첫 화살표의 표시는 while문에 걸리지 않음.
 
 					//ARROW_T type = (ARROW_T)0;
 					//Vector2 mp{};
@@ -295,13 +327,10 @@ namespace m
 		// 임시 이동 범위
 		int moveLimit = 3;
 
-		// 임시 구조체 레벨이 포함됨.
-		struct Vector2_1 {
-			Vector2 pos;
-			int level;
-		};
-		list<Vector2_1> queue;
-		queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0));
+		list<Vector2_1>queue;
+
+		queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0, -1));
+		pathQueue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0, -1));
 		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileType(TILE_T::MOVE_RANGE);
 		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileTexture(
 			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
@@ -319,10 +348,11 @@ namespace m
 
 		bool find = false;
 
+		int idx = -1;
 		while (!queue.empty()) {
 			Vector2_1 now = queue.front();
 			queue.pop_front();
-
+			idx++;
 			for (int i = 0; i < 4; i++) {
 				float dx = now.pos.x + direct[i][0];
 				float dy = now.pos.y + direct[i][1];
@@ -331,14 +361,17 @@ namespace m
 				if (mMouseFollower->GetFinalCoord().x == dx
 					&& mMouseFollower->GetFinalCoord().y == dy) continue;
 				if (map[(int)dy][(int)dx] == -1) continue;
-				if (now.level >= moveLimit) {
+				if (map[(int)dy][(int)dx] == 1) continue;
+ 				if (now.level >= moveLimit) {
 					find = true;
 					break;
 				}
 				map[(int)dy][(int)dx] = 1;
 
 				
-				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
 				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
 				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
 					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
@@ -381,7 +414,7 @@ namespace m
 	void Scene::ClearMTiles(TILE_T _type, TILE_HEAD_T _hT) {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				
+				pathQueue.clear();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
