@@ -18,6 +18,7 @@ namespace m {
         Vector2 GetCoord() { return mCoord; }
         Vector2 GetFinalCoord() { return mFinalCoord; }
 
+        STRUCTURES_T GetType() { return mType; }
         virtual void Update() override;
         virtual void Render(HDC hdc) override;
 

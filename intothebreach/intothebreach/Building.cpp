@@ -11,8 +11,13 @@ namespace m {
 	{
 		AddComponent(new Transform());
 
-		mImage =Resources::Load<Image>(L"testMoutain", L"..\\Resources\\texture\\terrain\\green\\mountain_0.bmp");
-		mImage->SetOffset(Vector2(20.f, 40.f));
+		if (_type == STRUCTURES_T::Mountain) {
+			mImage =Resources::Load<Image>(L"testMoutain", L"..\\Resources\\texture\\terrain\\green\\mountain_0.bmp");
+		}
+		else {
+			mImage = Resources::Load<Image>(SQUARE__KEY, SQUARE__PATH);
+		}
+		mImage->SetOffset(Vector2(47.f, -18.f));
 		SetScale(Vector2((float)(mImage->GetWidth() * 2), (float)(mImage->GetHeight() * 2)));
 	}
 	Building::~Building() {

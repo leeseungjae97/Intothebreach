@@ -39,18 +39,18 @@ namespace m
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
 
-		int** GetMap() { return map; }
+		//int** GetMap() { return map; }
 		void SetMap(int y, int x) {
-			map = new int* [y];
+			/*map = new int* [y];
 			for (int i = 0; i < y; i++) {
 				map[i] = new int[x];
-			}
+			}*/
 		}
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 		void CheckMouseOutOfMapRange();
 		void RobotDrag();
-
+		void t(int level);
  	private:
 		vector<Layer> mLayers;
 		TILES mTiles;
@@ -65,6 +65,9 @@ namespace m
 		vector<Alien*> mAilens;
 
 		Mech* mMouseFollower;
-		int **map;
+		int map[TILE_Y][TILE_X]{};
+		int cmap[TILE_Y][TILE_X]{};
+		int backTack[TILE_SIZE];
+		list<Vector2> shortQue;
 	};
 }

@@ -7,7 +7,7 @@ namespace m
 {
 	Scene::Scene()
 		: mMouseFollower(nullptr)
-		, map(nullptr)
+		//, map(nullptr)
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
@@ -79,6 +79,7 @@ namespace m
 				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
+				Building* stTile = new Building(STRUCTURES_T::C_Building , mTiles[y][x]->GetCoord());
 				//Tile* efTile = new Tile(mTiles[y][x]->GetCoord());
 				//Tile* enETile = new Tile(mTiles[y][x]->GetCoord());
 
@@ -102,11 +103,12 @@ namespace m
 				mPosTiles[y].push_back(posTile);
 				mBoundaryTiles[y].push_back(etcTile);
 				mArrowTiles[y].push_back(awTile);
-				
+				mStruturesTiles[y].push_back(stTile);
 				//mEffectedTiles[y].push_back(efTile);
 				//mEnemyEmerge[y].push_back(enETile);
 
 				AddGameObject(posTile, LAYER_TYPE::TILE);
+				AddGameObject(stTile, LAYER_TYPE::TILE);
 				//AddGameObject(stTile, LAYER_TYPE::TILE);
 				//AddGameObject(efTile, LAYER_TYPE::TILE);
 				//AddGameObject(enETile, LAYER_TYPE::TILE);
@@ -117,8 +119,16 @@ namespace m
 		}
 		Building* stTile = new Building(STRUCTURES_T::Mountain, mTiles[3][3]->GetCoord());
 		stTile->SetPos(mTiles[3][3]->GetCenterPos());
-		mStruturesTiles[0].push_back(stTile);
+		mStruturesTiles[3][3] =stTile;
+
 		AddGameObject(stTile, LAYER_TYPE::TILE);
+
+		Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
+		stTile1->SetPos(mTiles[1][2]->GetCenterPos());
+		mStruturesTiles[1][2] = stTile1;
+
+		AddGameObject(stTile1, LAYER_TYPE::TILE);
+
 		SetMap(iY, iX);
 	}
 	/// <summary>
@@ -129,8 +139,13 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				map[y][x] = 0;
+				cmap[y][x] = 0;
 			}
 		}
+	}
+
+	void Scene::t(int level) {
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 	}
 	/// <summary>
 	/// 최단거리의 이동거리 출력
@@ -142,24 +157,56 @@ namespace m
 				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					// 이동가능 거리 인지 확인
 					if (map[y][x] != 1) continue;
-				
-					Vector2 prevPos = mMouseFollower->GetFinalCoord();
-					Vector2 curPos = mMouseFollower->GetCoord();
-					// 클릭 후 마우스가 메카에서 벗어나야지 화살표를 찍음.
-					if (prevPos == curPos) continue;
+					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
 
-					list<Vector2> shortQue;
-					// 첫 화살표의 표시는 while문에 걸리지 않음.
-					//mTiles[(int)curPos.y][(int)curPos.x]->SetTileType(TILE_T::SNOW);
-					//mTiles[(int)curPos.y][(int)curPos.x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::SNOW, TILE_HEAD_T::ground)
-					//	, MAKE_TILE_PATH(TILE_T::SNOW, TILE_HEAD_T::ground));
+					int moveLimit = 3;
 
-					ARROW_T type = (ARROW_T)0;
-					Vector2 mp{};
-					// 이전위치를 비교하면서 최단거리 저장.
-					while (prevPos != curPos) {
+					struct Vector2_1 {
+						Vector2 pos;
+						int level;
+					};
+					list<Vector2_1> queue;
+
+					queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0));
+
+					float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+					bool find = false;
+
+					while (!queue.empty()) {
+						Vector2_1 now = queue.front();
+						queue.pop_front();
+
+						for (int i = 0; i < 4; i++) {
+							float dx = now.pos.x + direct[i][0];
+							float dy = now.pos.y + direct[i][1];
+
+							if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+							if (mMouseFollower->GetFinalCoord().x == dx
+								&& mMouseFollower->GetFinalCoord().y == dy) continue;
+							if (map[(int)dy][(int)dx] == -1) continue;
+							queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
+							shortQue.push_back(Vector2(dx, dy));
+							cmap[(int)dy][(int)dx] = 1;
+							break;
+						}
+						if (find) break;
+					}
+
+
+					//Vector2 prevPos = mMouseFollower->GetFinalCoord();
+					//Vector2 curPos = mMouseFollower->GetCoord();
+					//// 클릭 후 마우스가 메카에서 벗어나야지 화살표를 찍음.
+					//if (prevPos == curPos) continue;
+
+					//// 첫 화살표의 표시는 while문에 걸리지 않음.
+
+					//ARROW_T type = (ARROW_T)0;
+					//Vector2 mp{};
+					/*while (prevPos != curPos) {
+						
 						mp = prevPos;
-						if (prevPos.y < curPos.y) {
+						if (prevPos.y < curPos.y && map[(int)prevPos.y + 1][(int)prevPos.x] != -1) {
 							prevPos.y++;
 							if (prevPos.y == curPos.y) {
 								if (prevPos.x < curPos.x) type = ARROW_T::ARROW_COR_R_U;
@@ -168,9 +215,8 @@ namespace m
 							else {
 								type = ARROW_T::ARROW_D_U;
 							}
-							
 						}
-						else if (prevPos.y > curPos.y) {
+						else if (prevPos.y > curPos.y && map[(int)prevPos.y - 1][(int)prevPos.x] != -1) {
 							prevPos.y--;
 							if (prevPos.y == curPos.y) {
 								if (prevPos.x < curPos.x) type = ARROW_T::ARROW_COR_R_D;
@@ -180,11 +226,11 @@ namespace m
 								type = ARROW_T::ARROW_D_U;
 							}
 						}
-						else if (prevPos.x < curPos.x) {
+						else if (prevPos.x < curPos.x && map[(int)prevPos.y][(int)prevPos.x + 1] != -1) {
 							prevPos.x++;
 							type = ARROW_T::ARROW_L_R;
 						}
-						else if (prevPos.x > curPos.x) {
+						else if (prevPos.x > curPos.x && map[(int)prevPos.y][(int)prevPos.x - 1] != -1) {
 							prevPos.x--;
 							type = ARROW_T::ARROW_L_R;
 						}
@@ -199,7 +245,7 @@ namespace m
 					if(mp.y > prevPos.y) type = ARROW_T::ARROW_U;
 
 					mArrowTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-						MAKE_ARROW_TILE_PATH(type));
+						MAKE_ARROW_TILE_PATH(type));*/
 				}
 			}
 		}
@@ -261,6 +307,14 @@ namespace m
 			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
 			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
 
+		for (int y = 0; y < mStruturesTiles.size(); y++) {
+			for (int x = 0; x < mStruturesTiles[y].size(); x++) {
+				if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain) {
+					map[y][x] = -1;
+					cmap[y][x] = -1;
+				}
+			}
+		}
 		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
 
 		bool find = false;
@@ -276,12 +330,14 @@ namespace m
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
 				if (mMouseFollower->GetFinalCoord().x == dx
 					&& mMouseFollower->GetFinalCoord().y == dy) continue;
-				if (now.level == moveLimit) {
+				if (map[(int)dy][(int)dx] == -1) continue;
+				if (now.level >= moveLimit) {
 					find = true;
 					break;
 				}
 				map[(int)dy][(int)dx] = 1;
 
+				
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1));
 				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
 				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
@@ -388,7 +444,13 @@ namespace m
 	}
 	void Scene::Release()
 	{
-
+		Safe_Delete_Y_Vec(mTiles);
+		Safe_Delete_Y_Vec(mPosTiles);
+		Safe_Delete_Y_Vec(mBoundaryTiles);
+		Safe_Delete_Y_Vec(mArrowTiles);
+		Safe_Delete_Y_Vec(mEnemyEmerge);
+		Safe_Delete_Y_Vec(mEffectedTiles);
+		Safe_Delete_Y_Vec(mStruturesTiles);
 	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{

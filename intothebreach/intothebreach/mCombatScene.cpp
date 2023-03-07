@@ -41,8 +41,8 @@ namespace m {
 
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
-		Mech* mech1 = new Mech(MECHS::artillery, Vector2(0,0));
-		mech1->SetPos(Scene::GetPosTiles()[0][0]->GetCenterPos());
+		Mech* mech1 = new Mech(MECHS::artillery, Vector2(2,2));
+		mech1->SetPos(Scene::GetPosTiles()[2][2]->GetCenterPos());
 		mech1->SetFinalPos(mech1->GetPos());
 
 		AddGameObject(mech1, LAYER_TYPE::PLAYER);

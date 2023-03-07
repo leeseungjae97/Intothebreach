@@ -45,3 +45,20 @@
 #define MOUSE_POS m::Input::GetMousePos()
 
 #define CLONE(type) type* Clone() {return new type(*this);}
+
+template <typename T>
+void Safe_Delete_X_Vec(vector<T>& _vec) {
+	for (size_t i = 0; i < _vec.size(); i++) {
+		if (nullptr != _vec[i]) delete _vec[i];
+	}
+	_vec.clear();
+}
+template <typename T>
+void Safe_Delete_Y_Vec(vector<vector<T>>& _vec) {
+	for (size_t i = 0; i < _vec.size(); i++) {
+		if (!_vec[i].empty()) {
+			Safe_Delete_X_Vec(_vec[i]);
+		}
+	}
+	_vec.clear();
+}

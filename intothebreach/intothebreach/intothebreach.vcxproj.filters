@@ -241,7 +241,12 @@
     <ClInclude Include="Skill_Range.h">
       <Filter>Contents\Attached\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="Building.h" />
+    <ClInclude Include="func.h">
+      <Filter>Engine\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Contents\Tile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -365,6 +370,11 @@
     <ClCompile Include="Skill_Range.cpp">
       <Filter>Contents\Attached\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="func.cpp">
+      <Filter>Engine\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Contents\Tile</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

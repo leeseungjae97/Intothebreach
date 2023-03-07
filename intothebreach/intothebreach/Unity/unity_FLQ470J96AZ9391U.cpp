@@ -2,6 +2,12 @@
 #include "E:\intothebreach\intothebreach\intothebreach\Alien.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\Building.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\func.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mCamera.cpp"
 
 

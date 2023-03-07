@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="def.h" />
+    <ClInclude Include="func.h" />
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
     <ClInclude Include="framework.h" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="func.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mCollisionManager.cpp" />
