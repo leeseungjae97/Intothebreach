@@ -29,27 +29,32 @@ namespace m
 		AddComponent(new Transform());
 		//AddComponent(new Collider());
 
-
 		mImages.resize((UINT)COMBAT_CONDITION_T::END);
+
 		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++) {
 			mImages[i] = Resources::Load<Image>(
 				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == mImages[i]) continue;
-			mImages[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
+
+			if((COMBAT_CONDITION_T)i == COMBAT_CONDITION_T::IDLE)
+				mImages[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
 		}
 
 		mAnimator = GetComponent<Animator>();
+		float fWid = mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() - MECHS_IMAGE_SIZE[(UINT)mMechType];
+		UINT len = mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / fWid;
 
 		mAnimator->CreateAnimation(
 			MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
 			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]
 			, Vector2(Vector2::Zero)
-			, Vector2(MECH_IDLE_SIZE_X, MECH_IDLE_SIZE_Y)
+			, Vector2(fWid,
+				mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetHeight())
 			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
-			, 4
+			, len
 			, 0.1f
-			, AC_SRC_ALPHA
+			, AC_SRC_OVER
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		//GetComponent<Collider>()->SetScale(Vector2(50.f, 50.f));
@@ -99,8 +104,8 @@ namespace m
 			TransparentBlt(hdc
 				, (int)(mPos.x - curImage->GetWidth() / 2.f)
 				, (int)(mPos.y - curImage->GetHeight() / 2.f)
-				, (int)(curImage->GetWidth())
-				, (int)(curImage->GetHeight())
+				, (int)(curImage->GetWidth() * 2)
+				, (int)(curImage->GetHeight() * 2)
 				, curImage->GetHdc()
 				, 0
 				, 0
@@ -131,6 +136,7 @@ namespace m
 		//mAnimator;
 	}
 	void Mech::water() {
-		
+		mAnimator->Stop();
+		curImage = mImages[(UINT)COMBAT_CONDITION_T::WATER];
 	}
 }

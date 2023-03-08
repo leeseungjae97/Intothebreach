@@ -30,36 +30,50 @@ namespace m {
 				mSpriteIndex += 1;
 			}
 		}
-		
 	}
 	void Animation::Initialize() {
 	}
 	void Animation::Render(HDC hdc) {
 		GameObject* gObject = mAnimator->GetOwner();
 		Vector2 pos = gObject->GetPos();
+
 		if (mbAffectedCamera)
 			pos = Camera::CalculatePos(pos);
 
-		BLENDFUNCTION func = {};
-		func.BlendOp = AC_SRC_OVER;
-		func.BlendFlags = 0;
-		func.AlphaFormat = mAlpha;
-		func.SourceConstantAlpha = 255;
-
 		pos += mSpriteSheet[mSpriteIndex]->offset;
 
-		AlphaBlend(hdc
-			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x)
-			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y)
+		if (mAlpha == AC_SRC_OVER) {
+			TransparentBlt(hdc
+			, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x / 2.0f)
+			, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y / 2.0f)
 			, int(mSpriteSheet[mSpriteIndex]->size.x * 2)
 			, int(mSpriteSheet[mSpriteIndex]->size.y * 2)
-			, mImage->GetHdc()				
+			, mImage->GetHdc()
 			, int(mSpriteSheet[mSpriteIndex]->leftTop.x)
 			, int(mSpriteSheet[mSpriteIndex]->leftTop.y)
 			, int(mSpriteSheet[mSpriteIndex]->size.x)
 			, int(mSpriteSheet[mSpriteIndex]->size.y)
-			, func);
+			, RGB(255,0,255));
+		}
+		else {
+			BLENDFUNCTION func = {};
+			func.BlendOp = AC_SRC_OVER;
+			func.BlendFlags = 0;
+			func.AlphaFormat = mAlpha;
+			func.SourceConstantAlpha = 255;
 
+			AlphaBlend(hdc
+				, int(pos.x - mSpriteSheet[mSpriteIndex]->size.x /2.0)
+				, int(pos.y - mSpriteSheet[mSpriteIndex]->size.y /2.0)
+				, int(mSpriteSheet[mSpriteIndex]->size.x * 2)
+				, int(mSpriteSheet[mSpriteIndex]->size.y * 2)
+				, mImage->GetHdc()
+				, int(mSpriteSheet[mSpriteIndex]->leftTop.x)
+				, int(mSpriteSheet[mSpriteIndex]->leftTop.y)
+				, int(mSpriteSheet[mSpriteIndex]->size.x)
+				, int(mSpriteSheet[mSpriteIndex]->size.y)
+				, func);
+		}
 		//AlphaBlend(hdc
 		//	, int(pos.x)
 		//	, int(pos.y)
@@ -103,6 +117,7 @@ namespace m {
 
 			mSpriteSheet.push_back(sprite);
 		}
+
 	}
 	void Animation::Reset() {
 		mSpriteIndex = 0;

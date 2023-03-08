@@ -145,13 +145,8 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				map[y][x] = 0;
-				cmap[y][x] = 0;
 			}
 		}
-	}
-
-	void Scene::t(int level) {
-		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 	}
 	/// <summary>
 	/// 최단거리의 이동거리 출력
@@ -162,7 +157,11 @@ namespace m
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					// 이동가능 거리 인지 확인
-					if (map[y][x] != 1) continue;
+					if (map[y][x] == MECH) {
+						if (mMouseFollower->GetCoord().x != x &&
+							mMouseFollower->GetCoord().y != y) continue;
+					}
+					if (map[y][x] == BUILDING) continue;
 					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
 
 					Vector2 prevPos = mMouseFollower->GetFinalCoord();
@@ -198,71 +197,24 @@ namespace m
 							if (pos.y != nPos.y) {
 								type = ARROW_T::ARROW_D_U;
 								if (pos.y < nPos.y) {
-									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) {
-										type = ARROW_T::ARROW_COR_R_D;
-
-
-									}
-									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) {
-										type = ARROW_T::ARROW_COR_L_D;
-
-									}
+									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_D;
 								}
 								if (pos.y > nPos.y) {
-									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) {
-										type = ARROW_T::ARROW_COR_R_U;
-										
-
-
-									}
-									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) {
-										type = ARROW_T::ARROW_COR_L_U;
-
-									}
+									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_U;
+									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_U;
 								}
 							}
 							else if (pos.x != nPos.x) {
 								type = ARROW_T::ARROW_L_R;
 								if (pos.x < nPos.x) {
-									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) {
-										type = ARROW_T::ARROW_COR_R_D;
-
-
-									}
-									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) {
-										type = ARROW_T::ARROW_COR_R_U;
-
-									}
+									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_U;
 								}
 								if (pos.x > nPos.x) {
-									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) {
-										type = ARROW_T::ARROW_COR_L_D;
-
-
-									}
-									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) {
-										type = ARROW_T::ARROW_COR_L_U;
-
-									}
+									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_D;
+									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_U;
 								}
-								
-
-								/*if (idx > 1 && pos.x > nPos.x) {
-									if (pos.y < mVec[idx - 1].y) {
-										type = ARROW_T::ARROW_COR_L_U;
-									}
-									if (pos.y > mVec[idx - 1].y) {
-										type = ARROW_T::ARROW_COR_L_D;
-									}
-								}
-								else if (idx > 1 && pos.x < nPos.x) {
-									if (pos.y < mVec[idx - 1].y) {
-										type = ARROW_T::ARROW_COR_R_D;
-									}
-									if (pos.y > mVec[idx - 1].y) {
-										type = ARROW_T::ARROW_COR_R_U;
-									}
-								}*/
 							}
 							mArrowTiles[(int)pos.y][(int)pos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 								MAKE_ARROW_TILE_PATH(type));
@@ -275,55 +227,6 @@ namespace m
 
 					mArrowTiles[(int)curPos.y][(int)curPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 						MAKE_ARROW_TILE_PATH(type));
-
-					 
-					// 첫 화살표의 표시는 while문에 걸리지 않음.
-
-					//ARROW_T type = (ARROW_T)0;
-					//Vector2 mp{};
-					/*while (prevPos != curPos) {
-						
-						mp = prevPos;
-						if (prevPos.y < curPos.y && map[(int)prevPos.y + 1][(int)prevPos.x] != -1) {
-							prevPos.y++;
-							if (prevPos.y == curPos.y) {
-								if (prevPos.x < curPos.x) type = ARROW_T::ARROW_COR_R_U;
-								if (prevPos.x > curPos.x) type = ARROW_T::ARROW_COR_L_U;
-							}
-							else {
-								type = ARROW_T::ARROW_D_U;
-							}
-						}
-						else if (prevPos.y > curPos.y && map[(int)prevPos.y - 1][(int)prevPos.x] != -1) {
-							prevPos.y--;
-							if (prevPos.y == curPos.y) {
-								if (prevPos.x < curPos.x) type = ARROW_T::ARROW_COR_R_D;
-								if (prevPos.x > curPos.x) type = ARROW_T::ARROW_COR_L_D;
-							}
-							else {
-								type = ARROW_T::ARROW_D_U;
-							}
-						}
-						else if (prevPos.x < curPos.x && map[(int)prevPos.y][(int)prevPos.x + 1] != -1) {
-							prevPos.x++;
-							type = ARROW_T::ARROW_L_R;
-						}
-						else if (prevPos.x > curPos.x && map[(int)prevPos.y][(int)prevPos.x - 1] != -1) {
-							prevPos.x--;
-							type = ARROW_T::ARROW_L_R;
-						}
-						
-						shortQue.push_back(Vector2(prevPos.x, prevPos.y));
-						mArrowTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-							MAKE_ARROW_TILE_PATH(type));
-					}
-					if(mp.x < prevPos.x) type = ARROW_T::ARROW_R;
-					if(mp.x > prevPos.x) type = ARROW_T::ARROW_L;
-					if(mp.y < prevPos.y) type = ARROW_T::ARROW_D;
-					if(mp.y > prevPos.y) type = ARROW_T::ARROW_U;
-
-					mArrowTiles[(int)prevPos.y][(int)prevPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-						MAKE_ARROW_TILE_PATH(type));*/
 				}
 			}
 		}
@@ -336,12 +239,12 @@ namespace m
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					// 마우스의 위치가 이동가능 범위가 아닐때
-					if (map[y][x] != 1) {
+					if (map[y][x] != MOVE) {
 						mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 						mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 					}
 					// 마우스의 위치가 이동가능 범위일때
-					if (map[y][x] == 1) {
+					if (map[y][x] == MOVE) {
 						mMouseFollower->SetCoord(mPosTiles[y][x]->GetCoord());
 						mMouseFollower->SetPos(mPosTiles[y][x]->GetCenterPos());
 					}
@@ -385,13 +288,16 @@ namespace m
 		for (int y = 0; y < mStruturesTiles.size(); y++) {
 			for (int x = 0; x < mStruturesTiles[y].size(); x++) {
 				if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain) {
-					map[y][x] = -1;
-					cmap[y][x] = -1;
+					map[y][x] = BUILDING;
 				}
 			}
 		}
+		for (int i = 0; i < mMechs.size(); i++) {
+			Vector2 mp = mMechs[i]->GetFinalCoord();
+			map[(int)mp.y][(int)mp.x] = MECH;
+		}
 		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
-
+		
 		bool find = false;
 
 		int idx = -1;
@@ -406,13 +312,14 @@ namespace m
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
 				if (mMouseFollower->GetFinalCoord().x == dx
 					&& mMouseFollower->GetFinalCoord().y == dy) continue;
-				if (map[(int)dy][(int)dx] == -1) continue;
-				if (map[(int)dy][(int)dx] == 1) continue;
+				if (map[(int)dy][(int)dx] == BUILDING) continue;
+				if (map[(int)dy][(int)dx] == MECH) continue;
+				if (map[(int)dy][(int)dx] == MOVE) continue;
  				if (now.level >= moveLimit) {
 					find = true;
 					break;
 				}
-				map[(int)dy][(int)dx] = 1;
+				map[(int)dy][(int)dx] = MOVE;
 
 				
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
@@ -424,6 +331,8 @@ namespace m
 			}
 			if (find) break;
 		}
+		
+
 		// 이동범위 경계선 그리기
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {

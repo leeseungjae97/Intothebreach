@@ -73,7 +73,5 @@ namespace m
 
 		Mech* mMouseFollower;
 		int map[TILE_Y][TILE_X]{};
-		int cmap[TILE_Y][TILE_X]{};
-		int backTack[TILE_SIZE];
 	};
 }

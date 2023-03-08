@@ -46,6 +46,10 @@
 
 #define CLONE(type) type* Clone() {return new type(*this);}
 
+#define MOVE 1
+#define MECH -2
+#define BUILDING -1
+
 template <typename T>
 void Safe_Delete_X_Vec(vector<T>& _vec) {
 	for (size_t i = 0; i < _vec.size(); i++) {
