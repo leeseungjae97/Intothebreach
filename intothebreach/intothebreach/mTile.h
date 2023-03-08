@@ -35,6 +35,9 @@ namespace m {
             mETCTexs[eTCTexsIdx] = Resources::Load<Image>(key, path);
             SetScale(Vector2((float)(mETCTexs[eTCTexsIdx]->GetWidth() * 2), (float)(mETCTexs[eTCTexsIdx]->GetHeight() * 2)));
         }
+        void SetSourceConstantAlpha(BYTE _constant) {
+            mConstant = _constant;
+        }
         Vector2 GetCoord() { return mCoord; }
         Vector2 GetCenterPos() 
         { 
@@ -50,6 +53,7 @@ namespace m {
         TILE_T      mTileType;
         Vector2     mCoord;
 
+        BYTE mConstant;
         int eTCTexsIdx;
     };
 }

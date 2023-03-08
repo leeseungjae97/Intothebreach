@@ -33,6 +33,7 @@ namespace m
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
+		void MakeVariTile(int iX, int iY);
 		void HighlightTile();
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
@@ -41,21 +42,18 @@ namespace m
 		TILES GetTiles() { return mTiles; }
 		vector<Mech*>& GetMechs() { return mMechs; }
 
-		Mech* GetMouseFollower() { return mMouseFollower; }
-		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
-
-		//int** GetMap() { return map; }
-		void SetMap(int y, int x) {
-			/*map = new int* [y];
-			for (int i = 0; i < y; i++) {
-				map[i] = new int[x];
-			}*/
-		}
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 		void CheckMouseOutOfMapRange();
 		void RobotDrag();
-		void t(int level);
+
+		Mech* GetMouseFollower() { return mMouseFollower; }
+		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
+
+		//int** GetMap() { return map; }
+	private:
+		void SetMap(int y, int x);
+		
  	private:
 		vector<Layer> mLayers;
 		TILES mTiles;

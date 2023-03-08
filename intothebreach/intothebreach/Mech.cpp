@@ -42,22 +42,22 @@ namespace m
 		}
 
 		mAnimator = GetComponent<Animator>();
-		float fWid = mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() - MECHS_IMAGE_SIZE[(UINT)mMechType];
-		UINT len = mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / fWid;
+		//float fWid = mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() - MECHS_IMAGE_SIZE[(UINT)mMechType].x;
+		UINT len = UINT(mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / (mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() + MECHS_IMAGE_SIZE[(UINT)mMechType].x));
+		float fHei = mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetHeight() + MECHS_IMAGE_SIZE[(UINT)mMechType].y;
+		float fWid = (float)(mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / len);
 
 		mAnimator->CreateAnimation(
 			MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
 			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]
 			, Vector2(Vector2::Zero)
-			, Vector2(fWid,
-				mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetHeight())
+			, Vector2(fWid, fHei)
 			, mImages[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
 			, len
-			, 0.1f
+			, 0.5f
 			, AC_SRC_OVER
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
-		//GetComponent<Collider>()->SetScale(Vector2(50.f, 50.f));
 		mState = MECH_STATE::Idle;
 	}
 	Mech::~Mech()

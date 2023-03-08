@@ -16,6 +16,7 @@ namespace m {
 		: mTileTex(nullptr)
 		, mCoord(_coord)
 		, eTCTexsIdx(0)
+		, mConstant(50)
 	{
 		AddComponent(new Transform());
 	}
@@ -23,6 +24,7 @@ namespace m {
 		: mTileTex(nullptr)
 		, mCoord(Vector2::One)
 		, eTCTexsIdx(0)
+		, mConstant(50)
 	{
 		AddComponent(new Transform());
 		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
@@ -31,6 +33,7 @@ namespace m {
 		: mTileTex(nullptr)
 		, mCoord(Vector2::One) 
 		, eTCTexsIdx(0)
+		, mConstant(50)
 	{
 		AddComponent(new Transform());
 	}
@@ -75,7 +78,7 @@ namespace m {
 				func.BlendOp = AC_SRC_OVER;
 				func.BlendFlags = 0;
 				func.AlphaFormat = AC_SRC_ALPHA;
-				func.SourceConstantAlpha = 50;
+				func.SourceConstantAlpha = mConstant;
 
 				AlphaBlend(hdc
 					, (int)(vRenderPos.x)

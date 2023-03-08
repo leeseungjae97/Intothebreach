@@ -53,7 +53,7 @@ namespace m {
 			, int(mSpriteSheet[mSpriteIndex]->leftTop.y)
 			, int(mSpriteSheet[mSpriteIndex]->size.x)
 			, int(mSpriteSheet[mSpriteIndex]->size.y)
-			, RGB(255,0,255));
+			, RGB(255, 0, 255));
 		}
 		else {
 			BLENDFUNCTION func = {};

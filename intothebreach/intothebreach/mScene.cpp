@@ -74,17 +74,44 @@ namespace m
 				AddGameObject(tile, LAYER_TYPE::TILE);				
 			}
 		}
+		MakeVariTile(iY, iX);
+		Building* stTile = new Building(STRUCTURES_T::Mountain, mTiles[3][3]->GetCoord());
+		stTile->SetPos(mTiles[3][3]->GetCenterPos());
+		mStruturesTiles[3][3] =stTile;
+
+		AddGameObject(stTile, LAYER_TYPE::TILE);
+
+		Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
+		stTile1->SetPos(mTiles[1][2]->GetCenterPos());
+		mStruturesTiles[1][2] = stTile1;
+
+		AddGameObject(stTile1, LAYER_TYPE::TILE);
+
+		Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
+		stTile2->SetPos(mTiles[2][0]->GetCenterPos());
+		mStruturesTiles[2][0] = stTile2;
+
+		AddGameObject(stTile2, LAYER_TYPE::TILE);
+
+		SetMap(0, 0);
+	}
+	/// <summary>
+	/// 맵위의 오브젝트 표시를 위해 벡터 초기화.
+	/// </summary>
+	/// <param name="iX"></param>
+	/// <param name="iY"></param>
+	void Scene::MakeVariTile(int iX, int iY) {
 		for (int y = 0; y < iY; y++) {
 			for (int x = 0; x < iX; x++) {
 				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
-				Building* stTile = new Building(STRUCTURES_T::C_Building , mTiles[y][x]->GetCoord());
+				Building* stTile = new Building(STRUCTURES_T::C_Building, mTiles[y][x]->GetCoord());
 				//Tile* efTile = new Tile(mTiles[y][x]->GetCoord());
 				//Tile* enETile = new Tile(mTiles[y][x]->GetCoord());
 
 				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				posTile->SetPos(mTiles[y][x]->GetPos());	
+				posTile->SetPos(mTiles[y][x]->GetPos());
 
 				awTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				awTile->SetPos(mTiles[y][x]->GetPos());
@@ -93,7 +120,7 @@ namespace m
 				etcTile->SetPos(mTiles[y][x]->GetPos());
 
 				//stTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				
+
 				//efTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				//efTile->SetPos(mTiles[y][x]->GetPos());
 
@@ -117,26 +144,8 @@ namespace m
 				AddGameObject(etcTile, LAYER_TYPE::TILE);
 			}
 		}
-		Building* stTile = new Building(STRUCTURES_T::Mountain, mTiles[3][3]->GetCoord());
-		stTile->SetPos(mTiles[3][3]->GetCenterPos());
-		mStruturesTiles[3][3] =stTile;
-
-		AddGameObject(stTile, LAYER_TYPE::TILE);
-
-		Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
-		stTile1->SetPos(mTiles[1][2]->GetCenterPos());
-		mStruturesTiles[1][2] = stTile1;
-
-		AddGameObject(stTile1, LAYER_TYPE::TILE);
-
-		Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
-		stTile2->SetPos(mTiles[2][0]->GetCenterPos());
-		mStruturesTiles[2][0] = stTile2;
-
-		AddGameObject(stTile2, LAYER_TYPE::TILE);
-
-		SetMap(iY, iX);
 	}
+
 	/// <summary>
 	/// 표기했던 이동가능거리 초기화.
 	/// 메카의 위치(FinalPos)가 바뀌면 불러옴.
@@ -216,6 +225,7 @@ namespace m
 									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_U;
 								}
 							}
+							
 							mArrowTiles[(int)pos.y][(int)pos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
 								MAKE_ARROW_TILE_PATH(type));
 						}
@@ -239,11 +249,13 @@ namespace m
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					// 마우스의 위치가 이동가능 범위가 아닐때
+					// 원래 위치에 돌아감
 					if (map[y][x] != MOVE) {
 						mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 						mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 					}
 					// 마우스의 위치가 이동가능 범위일때
+					// 마우스위치의 타일로 이동
 					if (map[y][x] == MOVE) {
 						mMouseFollower->SetCoord(mPosTiles[y][x]->GetCoord());
 						mMouseFollower->SetPos(mPosTiles[y][x]->GetCenterPos());
@@ -269,22 +281,11 @@ namespace m
 			}
 		}
 	}
-	/// <summary>
-	/// 이동범위 타일 바꾸는 BFS
-	/// </summary>
-	void Scene::DrawMoveRangeTile() {
-		// 임시 이동 범위
-		int moveLimit = 5;
-
-		list<Vector2_1>queue;
-
-		queue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0, -1));
-		pathQueue.push_back(Vector2_1(mMouseFollower->GetFinalCoord(), 0, -1));
-		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileType(TILE_T::MOVE_RANGE);
-		mPosTiles[(int)mMouseFollower->GetFinalCoord().y][(int)mMouseFollower->GetFinalCoord().x]->SetTileTexture(
-			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
-			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
-
+	void Scene::SetMap(int y, int x) {
+		//map = new int* [y];
+		//for (int i = 0; i < y; i++) {
+		//	map[i] = new int[x];
+		//}
 		for (int y = 0; y < mStruturesTiles.size(); y++) {
 			for (int x = 0; x < mStruturesTiles[y].size(); x++) {
 				if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain) {
@@ -296,6 +297,26 @@ namespace m
 			Vector2 mp = mMechs[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = MECH;
 		}
+	}
+	/// <summary>
+	/// 이동범위 타일 바꾸는 BFS
+	/// </summary>
+	void Scene::DrawMoveRangeTile() {
+		// 임시 이동 범위
+		int moveLimit = 5;
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = mMouseFollower->GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+		mPosTiles[(int)stPos.y][(int)stPos.x]->SetTileType(TILE_T::MOVE_RANGE);
+		mPosTiles[(int)stPos.y][(int)stPos.x]->SetSourceConstantAlpha(200);
+		mPosTiles[(int)stPos.y][(int)stPos.x]->SetTileTexture(
+			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_w)
+			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_w));
+
+		SetMap(0,0);
 		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
 		
 		bool find = false;
@@ -310,8 +331,8 @@ namespace m
 				float dy = now.pos.y + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
-				if (mMouseFollower->GetFinalCoord().x == dx
-					&& mMouseFollower->GetFinalCoord().y == dy) continue;
+				if (stPos.x == dx
+					&& stPos.y == dy) continue;
 				if (map[(int)dy][(int)dx] == BUILDING) continue;
 				if (map[(int)dy][(int)dx] == MECH) continue;
 				if (map[(int)dy][(int)dx] == MOVE) continue;
