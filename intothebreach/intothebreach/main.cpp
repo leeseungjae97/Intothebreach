@@ -40,7 +40,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     //    순회하면서 들어오는 메세지를 처리해준다.
 
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(267);
+    //_CrtSetBreakAlloc(7225);
     // 전역 문자열을 초기화합니다.
 
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -62,9 +62,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
-            if (WM_QUIT == msg.message)
+            if (WM_QUIT == msg.message) {
+                m::SceneManager::Release();
+                m::Resources::Release();
+                m::Camera::Release();
                 break;
-
+            }
             if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);
@@ -73,19 +76,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            // 여기서 게임 로직이 돌아가야한다.
             application.Run();
         }
     }
 
-
-    if (WM_QUIT == msg.message)
-    {
-
-    }
-    m::SceneManager::Release();
-    m::Resources::Release();
-    m::Camera::Release();
     return (int) msg.wParam;
 }
 

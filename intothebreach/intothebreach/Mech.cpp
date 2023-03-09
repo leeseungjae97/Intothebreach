@@ -11,7 +11,7 @@
 #include "mCollider.h"
 namespace m
 {
-	Mech::Mech(MECHS _mech, Vector2 _coord)
+	Mech::Mech(MECHS _mech, Vector2 _coord, int _range)
 		: mMechType(_mech)
 		, mPilot(nullptr)
 		, mWeapon(nullptr)
@@ -21,9 +21,10 @@ namespace m
 		, endAttack(false)
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
+		, mFinalPos(Vector2::One)
+		, moveRange(_range)
 		, mHp(0)
 		, curHp(0)
-		, moveRange(0)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
@@ -36,9 +37,7 @@ namespace m
 				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == mImages[i]) continue;
-
-			if((COMBAT_CONDITION_T)i == COMBAT_CONDITION_T::IDLE)
-				mImages[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
+			mImages[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
 		}
 
 		mAnimator = GetComponent<Animator>();
@@ -58,7 +57,19 @@ namespace m
 			, AC_SRC_OVER
 		);
 		mAnimator->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
-		mState = MECH_STATE::Idle;
+		mState = STATE::Idle;
+	}
+	Mech::Mech(Mech& _origin) 
+		: mMechType(_origin.mMechType)
+		, GameObject(_origin)
+		, curImage(_origin.curImage)
+		, mCoord(_origin.mCoord)
+		, mFinalCoord(_origin.mFinalCoord)
+		, mFinalPos(_origin.mFinalPos)
+		, moveRange(_origin.moveRange)
+		, mState(_origin.mState)
+	{
+		mAnimator = GetComponent<Animator>();
 	}
 	Mech::~Mech()
 	{
@@ -70,22 +81,22 @@ namespace m
 
 		GameObject::Update();
 		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
-			mState = MECH_STATE::Broken;
+			mState = STATE::Broken;
 		}
 		if (KEY_PRESSED(KEYCODE_TYPE::E)) {
-			mState = MECH_STATE::Idle;
+			mState = STATE::Idle;
 		}
 		switch (mState) {
-		case m::Mech::MECH_STATE::Idle:
+		case m::Mech::STATE::Idle:
 			idle();
 			break;
-		case m::Mech::MECH_STATE::Broken:
+		case m::Mech::STATE::Broken:
 			broken();
 			break;
-		case m::Mech::MECH_STATE::Water:
+		case m::Mech::STATE::Water:
 			water();
 			break;
-		case m::Mech::MECH_STATE::End:
+		case m::Mech::STATE::End:
 
 			break;
 		default:
@@ -133,7 +144,6 @@ namespace m
 	void Mech::broken() {
 		mAnimator->Stop();
 		curImage = mImages[(UINT)COMBAT_CONDITION_T::BROKEN];
-		//mAnimator;
 	}
 	void Mech::water() {
 		mAnimator->Stop();

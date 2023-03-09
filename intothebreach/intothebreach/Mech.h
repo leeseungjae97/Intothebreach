@@ -10,13 +10,8 @@ namespace m
 	class Mech : public GameObject
 	{
 	public:
-		enum class MECH_STATE {
-			Idle,
-			Broken,
-			Water,
-			End,
-		};
-		Mech(MECHS _mech, Vector2 _coord);
+		Mech(MECHS _mech, Vector2 _coord, int _range);
+		Mech(Mech& _origin);
 		~Mech();
 
 		virtual void Initialize() override;
@@ -49,9 +44,9 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair; 
 		}
+		int GetMove() { return moveRange; }
+		void SetMove(int _move) { moveRange = _move; }
 
-
-		CLONE(Mech);
 
 	private:
 		void idle();
@@ -61,8 +56,8 @@ namespace m
 	private:
 		MECHS mMechType;
 		Animator* mAnimator;
-		MECH_STATE mState;
-		Image* curImage;
+		Image* curImage; 
+		STATE mState;
 		vector<Image*> hpBar;
 
 		Vector2 mCoord;

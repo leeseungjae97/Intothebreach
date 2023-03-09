@@ -8,6 +8,13 @@ namespace m
 	class GameObject : public Entity
 	{
 	public:
+		enum class STATE {
+			Idle,
+			Broken,
+			Water,
+			Death,
+			End,
+		};
 		GameObject(GameObject& other);
 		GameObject();
 		virtual ~GameObject();
@@ -37,11 +44,6 @@ namespace m
 
 		template<typename T>
 		__forceinline T* GetComponent() {
-			/*for (Component* comp : mComponents) {
-				if (dynamic_cast<T*>(comp)) {
-					return dynamic_cast<T*>(comp);
-				}
-			}*/
 			T* component;
 			for (auto c : mComponents) {
 				component = dynamic_cast<T*>(c);
@@ -77,9 +79,12 @@ namespace m
 		bool IsDead() { return mbDead; }
 		void Death() { mbDead = true; }
 
+		STATE GetState() { return mState; }
+		void SetState(STATE _state) { mState = _state; }
 	private:
 		bool mbDead;
-		std::vector<Component*> mComponents;
+		vector<Component*> mComponents;
+		STATE mState;
 	};
 
 }

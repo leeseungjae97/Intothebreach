@@ -168,75 +168,84 @@ namespace m
 					// 이동가능 거리 인지 확인
 					if (map[y][x] == MECH) {
 						if (mMouseFollower->GetCoord().x != x &&
-							mMouseFollower->GetCoord().y != y) continue;
+							mMouseFollower->GetCoord().y != y) {
+							int a = 0;
+							continue;
+						}
 					}
 					if (map[y][x] == BUILDING) continue;
-					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
 
-					Vector2 prevPos = mMouseFollower->GetFinalCoord();
-					Vector2 curPos = mMouseFollower->GetCoord();
+					Vector2 prevCoord = mMouseFollower->GetFinalCoord();
+					Vector2 curCoord = mMouseFollower->GetCoord();
+
+					if (prevCoord == curCoord) continue;
 
 					list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
 
-					while (!pathQueue.empty() && now.pos != curPos) {
+					while (!pathQueue.empty() && now.coord != curCoord) {
 						now = pathQueue.back();
 						pathQueue.pop_back();
 					}
-					directQue.push_back(Vector2(now.pos.x, now.pos.y));
+					directQue.push_back(Vector2(now.coord.x, now.coord.y));
 
-					while (!pathQueue.empty() && now.pos != prevPos) {
+					while (!pathQueue.empty() && now.coord != prevCoord) {
 						now = pathQueue[now.parentIdx];
-						directQue.push_back(Vector2(now.pos.x, now.pos.y));
+						directQue.push_back(Vector2(now.coord.x, now.coord.y));
 					}
 
 					ARROW_T type = (ARROW_T)0;
 
-					Vector2 pos = Vector2::Zero;
-					Vector2 nPos = Vector2::Zero;
+					Vector2 coord = Vector2::Zero;
+					Vector2 nCoord = Vector2::Zero;
 
 					vector<Vector2> mVec;
 					while (!directQue.empty()) {
-						pos = directQue.back();
-						mVec.push_back(Vector2(pos.x, pos.y));
+						coord = directQue.back();
+						mVec.push_back(Vector2(coord.x, coord.y));
 						directQue.pop_back();
 						if (!directQue.empty()) {
-							nPos = directQue.back();
+							nCoord = directQue.back();
 							// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
-							if (pos.y != nPos.y) {
+							if (coord.y != nCoord.y) {
 								type = ARROW_T::ARROW_D_U;
-								if (pos.y < nPos.y) {
-									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_D;
-									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_D;
+								if (coord.y < nCoord.y) {
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_D;
 								}
-								if (pos.y > nPos.y) {
-									if (mVec.size() > 1 && pos.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_U;
-									if (mVec.size() > 1 && pos.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_U;
+								if (coord.y > nCoord.y) {
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_U;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_U;
 								}
 							}
-							else if (pos.x != nPos.x) {
+							else if (coord.x != nCoord.x) {
 								type = ARROW_T::ARROW_L_R;
-								if (pos.x < nPos.x) {
-									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_D;
-									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_U;
+								if (coord.x < nCoord.x) {
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_U;
 								}
-								if (pos.x > nPos.x) {
-									if (mVec.size() > 1 && pos.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_D;
-									if (mVec.size() > 1 && pos.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_U;
+								if (coord.x > nCoord.x) {
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_U;
 								}
 							}
-							
-							mArrowTiles[(int)pos.y][(int)pos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-								MAKE_ARROW_TILE_PATH(type));
+							if (coord == prevCoord) {
+								if (coord.x < nCoord.x) type = ARROW_T::ARROW_ST_L;
+								if (coord.x > nCoord.x) type = ARROW_T::ARROW_ST_R;
+								if (coord.y < nCoord.y) type = ARROW_T::ARROW_ST_U;
+								if (coord.y > nCoord.y) type = ARROW_T::ARROW_ST_D;
+							}
 						}
+						if (mVec.size() > 1 && coord == curCoord) {
+							if (mVec[mVec.size() - 2].x < curCoord.x) type = ARROW_T::ARROW_R;
+							if (mVec[mVec.size() - 2].x > curCoord.x) type = ARROW_T::ARROW_L;
+							if (mVec[mVec.size() - 2].y < curCoord.y) type = ARROW_T::ARROW_D;
+							if (mVec[mVec.size() - 2].y > curCoord.y) type = ARROW_T::ARROW_U;
+						}
+						if (coord.x < 0 || coord.y < 0) continue;
+						mArrowTiles[(int)coord.y][(int)coord.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
+							MAKE_ARROW_TILE_PATH(type));
 					}
-					if (mVec.size() > 1 &&mVec[mVec.size() - 2].x < curPos.x) type = ARROW_T::ARROW_R;
-					if (mVec.size() > 1 &&mVec[mVec.size() - 2].x > curPos.x) type = ARROW_T::ARROW_L;
-					if (mVec.size() > 1 &&mVec[mVec.size() - 2].y < curPos.y) type = ARROW_T::ARROW_D;
-					if (mVec.size() > 1 &&mVec[mVec.size() - 2].y > curPos.y) type = ARROW_T::ARROW_U;
-
-					mArrowTiles[(int)curPos.y][(int)curPos.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-						MAKE_ARROW_TILE_PATH(type));
 				}
 			}
 		}
@@ -274,7 +283,14 @@ namespace m
 				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
-							SetMouseFollower(mMechs[_i]);
+
+							mMouseFollower = mMechs[_i];
+
+							mAlphaFollower = new Mech(*mMouseFollower);
+							mAlphaFollower->SetCoord(mMouseFollower->GetFinalCoord());
+							mAlphaFollower->SetFinalCoord(mMouseFollower->GetFinalCoord());
+							mAlphaFollower->SetFinalPos(mMouseFollower->GetFinalPos());
+							mAlphaFollower->SetPos(mMouseFollower->GetFinalPos());
 						}
 					}
 				}
@@ -298,23 +314,28 @@ namespace m
 			map[(int)mp.y][(int)mp.x] = MECH;
 		}
 	}
+	void Scene::DrawFootTile() {
+		for (UINT _i = 0; _i < mMechs.size(); _i++) {
+			Vector2 mCoord = mMechs[_i]->GetFinalCoord();
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MOVE_RANGE);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(50);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
+				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_w)
+				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_w));
+		}
+	}
 	/// <summary>
 	/// 이동범위 타일 바꾸는 BFS
 	/// </summary>
 	void Scene::DrawMoveRangeTile() {
 		// 임시 이동 범위
-		int moveLimit = 5;
+		int moveLimit = mMouseFollower->GetMove();
 
 		list<Vector2_1>queue;
 
 		Vector2 stPos = mMouseFollower->GetFinalCoord();
 		queue.push_back(Vector2_1(stPos, 0, -1));
 		pathQueue.push_back(Vector2_1(stPos, 0, -1));
-		mPosTiles[(int)stPos.y][(int)stPos.x]->SetTileType(TILE_T::MOVE_RANGE);
-		mPosTiles[(int)stPos.y][(int)stPos.x]->SetSourceConstantAlpha(200);
-		mPosTiles[(int)stPos.y][(int)stPos.x]->SetTileTexture(
-			MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_w)
-			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_w));
 
 		SetMap(0,0);
 		float direct[4][2] = {{0, 1},{-1, 0} ,{1, 0},{0, -1}};
@@ -327,26 +348,27 @@ namespace m
 			queue.pop_front();
 			idx++;
 			for (int i = 0; i < 4; i++) {
-				float dx = now.pos.x + direct[i][0];
-				float dy = now.pos.y + direct[i][1];
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
 				if (stPos.x == dx
 					&& stPos.y == dy) continue;
 				if (map[(int)dy][(int)dx] == BUILDING) continue;
-				if (map[(int)dy][(int)dx] == MECH) continue;
+				//if (map[(int)dy][(int)dx] == MECH) continue;
 				if (map[(int)dy][(int)dx] == MOVE) continue;
  				if (now.level >= moveLimit) {
 					find = true;
 					break;
 				}
-				map[(int)dy][(int)dx] = MOVE;
 
 				
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 				pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
+				if (map[(int)dy][(int)dx] == MECH) continue;
 				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
+				map[(int)dy][(int)dx] = MOVE;
 				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
 					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
 			}
@@ -358,6 +380,7 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (mPosTiles[y][x]->GetTileType() == TILE_T::MOVE_RANGE) {
+					/*if (map[y ][x] == MECH) continue;*/
 					MOVE_TILE_T type = (MOVE_TILE_T)0;
 					if (y + 1 < mPosTiles.size() && mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_d)

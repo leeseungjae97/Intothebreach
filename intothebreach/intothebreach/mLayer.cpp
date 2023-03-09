@@ -20,6 +20,10 @@ namespace m
 			if (gameObj == nullptr)
 				continue;
 
+			if (gameObj->GetState()
+				== GameObject::STATE::Death)
+				continue;
+
 			gameObj->Initialize();
 		}
 	}
@@ -28,6 +32,9 @@ namespace m
 		for (GameObject* gameObj : mGameObjects)
 		{
 			if (gameObj == nullptr)
+				continue;
+			if (gameObj->GetState()
+				== GameObject::STATE::Death)
 				continue;
 
 			gameObj->Update();
@@ -38,6 +45,10 @@ namespace m
 		for (GameObject* gameObj : mGameObjects)
 		{
 			if (gameObj == nullptr)
+				continue;
+
+			if (gameObj->GetState()
+				== GameObject::STATE::Death)
 				continue;
 
 			gameObj->Render(hdc);

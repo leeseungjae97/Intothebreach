@@ -1,7 +1,7 @@
 #pragma once
 #include "def.h"
 #include "mMath.h"
-
+#include "CommonInclude.h"
 enum class SCENE_TYPE
 {
 	INTRO,
@@ -330,34 +330,34 @@ enum class COMBAT_CONDITION_T {
 	L"_ns",
 	L"_h"
 };
- wstring& MAKE_COMBAT_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
-	 wstring* key = new wstring(L"");
+ wstring MAKE_COMBAT_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
+	 wstring key = L"";
 	 int _type = MECHS_T_HT[(UINT)_mech];
 
 	 wstring path_1 = MECH_S_PATH[_type];
 	 wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	 wstring path_3 = MECH_CONDITION[(UINT)_cond];
 
-	 key->append(path_1);
-	 key->append(path_2);
-	 key->append(path_3);
+	 key.append(path_1);
+	 key.append(path_2);
+	 key.append(path_3);
 
-	 return (*key);
+	 return key;
  };
- wstring& MAKE_COMBAT_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
-	 wstring* path = new wstring(L"..\\Resources\\texture\\player\\");
+ wstring MAKE_COMBAT_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
+	 wstring path = L"..\\Resources\\texture\\player\\";
 	 int _type = MECHS_T_HT[(UINT)_mech];
 
 	 wstring path_1 = MECH_S_PATH[_type];
 	 wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	 wstring path_3 = MECH_CONDITION[(UINT)_cond];
 
-	 path->append(path_1);
-	 path->append(path_2);
-	 path->append(path_3);
-	 path->append(L".bmp");
+	 path.append(path_1);
+	 path.append(path_2);
+	 path.append(path_3);
+	 path.append(L".bmp");
 
-	 return (*path);
+	 return path;
  };
  wstring ISLANDS_PATH[ISLANDS]{
 	L"island0\\",
@@ -432,30 +432,30 @@ m::Vector2* ISLANDS_POS[(UINT)ISLAND_T::END]{
 	ISLAND2_POS,
 	ISLAND3_POS,
 };
-wstring& MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
-	wstring* key = new wstring(L"");
+wstring MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
+	wstring key = L"";
 
-	key->append(ISLANDS_PATH[(UINT)_type]);
-	if (sectionIdx < 0) key->append(L"island");
+	key.append(ISLANDS_PATH[(UINT)_type]);
+	if (sectionIdx < 0) key.append(L"island");
 	else {
-		key->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
-		key->append(std::to_wstring(sectionIdx));
+		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		key.append(std::to_wstring(sectionIdx));
 	}
-	return (*key);
+	return key;
 };
-wstring& MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
-	wstring* path = new wstring(L"..\\Resources\\texture\\ui\\inLand\\");
-	path->append(ISLANDS_PATH[(UINT)_type]);
+wstring MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
+	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
+	path.append(ISLANDS_PATH[(UINT)_type]);
 	if (sectionIdx < 0) {
-		path->append(L"island");
+		path.append(L"island");
 	}
 	else {
-		path->append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
-		path->append(std::to_wstring(sectionIdx));
+		path.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		path.append(std::to_wstring(sectionIdx));
 	}
-	path->append(L".bmp");
+	path.append(L".bmp");
 
-	return (*path);
+	return path;
 };
 enum class TILE_HEAD_T {
 	ground,
@@ -496,24 +496,24 @@ wstring TILE_PATH[(UINT)TILE_T::END]{
    L"cave\\",
    L""
 };
-wstring& MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2) {
-	wstring* key = new wstring(L"");
+wstring MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring key = L"";
 
-	key->append(TILE_PATH[(UINT)_type]);
-	key->append(TILE_HEAD_PATH[(UINT)_type2]);
+	key.append(TILE_PATH[(UINT)_type]);
+	key.append(TILE_HEAD_PATH[(UINT)_type2]);
 
 
-	return (*key);
+	return key;
 }
-wstring& MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
-	wstring* path = new wstring(L"..\\Resources\\texture\\terrain\\");
+wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring path = L"..\\Resources\\texture\\terrain\\";
 
-	path->append(TILE_PATH[(UINT)_type]);
-	path->append(TILE_HEAD_PATH[(UINT)_type2]);
+	path.append(TILE_PATH[(UINT)_type]);
+	path.append(TILE_HEAD_PATH[(UINT)_type2]);
 
-	path->append(L".bmp");
+	path.append(L".bmp");
 
-	return (*path);
+	return path;
 }
 enum class ALIEN_T {
 	Beetle,
@@ -551,24 +551,24 @@ int ALIEN_T_HT[(UINT)ALIEN_T::END]{
 
 
 
-wstring& MAKE_ALIEN_KEY(TILE_T _type, TILE_HEAD_T _type2) {
-	wstring* key = new wstring(L"");
+wstring MAKE_ALIEN_KEY(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring key = L"";
 
-	key->append(TILE_PATH[(UINT)_type]);
-	key->append(TILE_HEAD_PATH[(UINT)_type2]);
+	key.append(TILE_PATH[(UINT)_type]);
+	key.append(TILE_HEAD_PATH[(UINT)_type2]);
 
 
-	return (*key);
+	return key;
 }
-wstring& MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
-	wstring* path = new wstring(L"..\\Resources\\texture\\alien\\");
+wstring MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
+	wstring path = L"..\\Resources\\texture\\alien\\";
 
-	path->append(TILE_PATH[(UINT)_type]);
-	path->append(TILE_HEAD_PATH[(UINT)_type2]);
+	path.append(TILE_PATH[(UINT)_type]);
+	path.append(TILE_HEAD_PATH[(UINT)_type2]);
+		
+	path.append(L".bmp");
 
-	path->append(L".bmp");
-
-	return (*path);
+	return path;
 }
 
 enum class MOVE_TILE_T {
@@ -595,22 +595,22 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_g_d",
 };
 
-wstring& MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
-	wstring* key = new wstring(L"");
+wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
+	wstring key = L"";
 
-	key->append(MOVE_TILE_PATH[(UINT)_type]);
+	key.append(MOVE_TILE_PATH[(UINT)_type]);
 
 
-	return (*key);
+	return key;
 }
-wstring& MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
-	wstring* path = new wstring(L"..\\Resources\\texture\\combat\\move\\");
+wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
+	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
-	path->append(MOVE_TILE_PATH[(UINT)_type]);
+	path.append(MOVE_TILE_PATH[(UINT)_type]);
 
-	path->append(L".bmp");
+	path.append(L".bmp");
 
-	return (*path);
+	return path;
 }
 enum class ARROW_T {
 	ARROW_D_U,
@@ -623,6 +623,11 @@ enum class ARROW_T {
 	ARROW_COR_L_U,
 	ARROW_COR_R_D,
 	ARROW_COR_R_U,
+	ARROW_ST_D,
+	ARROW_ST_U,
+	ARROW_ST_L,
+	ARROW_ST_R,
+
 	END
 };
 wstring ARROW_PATH[(UINT)ARROW_T::END]{
@@ -636,22 +641,27 @@ wstring ARROW_PATH[(UINT)ARROW_T::END]{
 	L"movearrow_corner2",
 	L"movearrow_corner1",
 	L"movearrow_corner3",
+	L"movearrow_cap_d",
+	L"movearrow_cap_u",
+	L"movearrow_cap_l",
+	L"movearrow_cap_r",
+
 };
-wstring& MAKE_ARROW_TILE_KEY(ARROW_T _type) {
-	wstring* key = new wstring(L"");
+wstring MAKE_ARROW_TILE_KEY(ARROW_T _type) {
+	wstring key = L"";
 
-	key->append(ARROW_PATH[(UINT)_type]);
+	key.append(ARROW_PATH[(UINT)_type]);
 
-	return (*key);
+	return key;
 }
-wstring& MAKE_ARROW_TILE_PATH(ARROW_T _type) {
-	wstring* path = new wstring(L"..\\Resources\\texture\\combat\\move\\");
+wstring MAKE_ARROW_TILE_PATH(ARROW_T _type) {
+	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
-	path->append(ARROW_PATH[(UINT)_type]);
+	path.append(ARROW_PATH[(UINT)_type]);
 
-	path->append(L".bmp");
+	path.append(L".bmp");
 
-	return (*path);
+	return path;
 };
 enum class STRUCTURES_T {
 	Mountain,

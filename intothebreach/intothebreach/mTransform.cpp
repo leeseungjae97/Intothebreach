@@ -2,8 +2,8 @@
 namespace m {
 	Transform::Transform(Transform& other)
 		: Component(other)
-		, mPos(Vector2::Zero)
-		, mScale(Vector2::One)
+		, mPos(other.mPos)
+		, mScale(other.mScale)
 	{
 	}
 	Transform::Transform()

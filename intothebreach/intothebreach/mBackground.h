@@ -16,6 +16,7 @@ namespace m {
         virtual void Release();
 
         Vector2 GetSize() { return Vector2((float)mImage->GetWidth(), (float)mImage->GetHeight()); }
+
     private :
         Image* mImage;
         wstring mPath;

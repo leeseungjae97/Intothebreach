@@ -5,9 +5,12 @@
 namespace m {
 	Animator::Animator(Animator& _origin)
 		: Component(_origin)
-		, mActiveAnimation(nullptr)
-		, mbLoop(false) 
-		, stopAnimator(false)
+		, mActiveAnimation(_origin.mActiveAnimation)
+		, mbLoop(_origin.mbLoop)
+		, stopAnimator(_origin.stopAnimator)
+		//, mSpriteSheet(_origin.mSpriteSheet)
+		//, mAnimations(_origin.mAnimations)
+		//, mEvents(_origin.mEvents)
 	{
 		for (AnimationPair animationPair : _origin.mAnimations) {
 			Animation* animation = new Animation(*(animationPair.second));

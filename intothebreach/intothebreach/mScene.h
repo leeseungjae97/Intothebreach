@@ -15,7 +15,7 @@ namespace m
 		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
 		struct Vector2_1 {
-			Vector2 pos;
+			Vector2 coord;
 			int level;
 			int parentIdx;
 		};
@@ -30,6 +30,7 @@ namespace m
 		virtual void OnEnter() = 0;
 		virtual void OnExit() = 0;
 
+	public:
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
@@ -48,9 +49,13 @@ namespace m
 		void RobotDrag();
 
 		Mech* GetMouseFollower() { return mMouseFollower; }
-		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
+		Mech* GetAlphaFollower() { return mAlphaFollower; }
 
-		//int** GetMap() { return map; }
+		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
+		void SetAlphaFollower(Mech* _mM) { mAlphaFollower= _mM; }
+
+		void DrawFootTile();
+
 	private:
 		void SetMap(int y, int x);
 		
@@ -70,6 +75,7 @@ namespace m
 		vector<Alien*> mAilens;
 
 		Mech* mMouseFollower;
+		Mech* mAlphaFollower;
 		int map[TILE_Y][TILE_X]{};
 	};
 }

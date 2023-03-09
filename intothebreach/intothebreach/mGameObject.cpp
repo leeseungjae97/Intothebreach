@@ -5,7 +5,7 @@
 namespace m
 {
 	GameObject::GameObject(GameObject& other) 
-		: mComponents{ }
+		: mComponents{}
 		, mbDead(false)
 	{
 		mComponents.resize((UINT)COMPONENT_TYPE::END);

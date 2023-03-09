@@ -19,7 +19,6 @@ namespace m
 
 	Application::~Application()
 	{
-		//Time::Release();
 	}
 
 	void Application::Initialize(HWND hWnd)

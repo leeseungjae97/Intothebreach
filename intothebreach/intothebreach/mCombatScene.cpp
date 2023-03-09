@@ -9,7 +9,7 @@
 #include "mResources.h"
 #include "mTile.h"
 #include "Mech.h"
-
+#include "func.h"
 extern m::Application application;
 namespace m {
 	CombatScene::CombatScene() {
@@ -36,34 +36,38 @@ namespace m {
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
+
 		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
-
-
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
-		Mech* mech1 = new Mech(MECHS::artillery, Vector2(2, 2));
-		mech1->SetPos(Scene::GetPosTiles()[2][2]->GetCenterPos());
-		mech1->SetFinalPos(mech1->GetPos());
 
-		AddGameObject(mech1, LAYER_TYPE::PLAYER);
+		Mech* mech1 = object::Instantiate(Vector2(2, 2), LAYER_TYPE::PLAYER, MECHS::artillery);
+		Mech* mech2 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::PLAYER, MECHS::tank);
+		Mech* mech3 = object::Instantiate(Vector2(6, 6), LAYER_TYPE::PLAYER, MECHS::punch);
 
-		GetMechs().push_back(mech1);
+		//Mech* mech1 = new Mech(MECHS::artillery, Vector2(2, 2), 4);
+		//mech1->SetPos(Scene::GetPosTiles()[2][2]->GetCenterPos());
+		//mech1->SetFinalPos(mech1->GetPos());
 
-		Mech* mech2 = new Mech(MECHS::tank, Vector2(4, 4));
-		mech2->SetPos(Scene::GetPosTiles()[4][4]->GetCenterPos());
-		mech2->SetFinalPos(mech2->GetPos());
+		//AddGameObject(mech1, LAYER_TYPE::PLAYER);
 
-		AddGameObject(mech2, LAYER_TYPE::PLAYER);
+		//GetMechs().push_back(mech1);
 
-		GetMechs().push_back(mech2);
+		//Mech* mech2 = new Mech(*mech1);
+		//mech2->SetPos(Scene::GetPosTiles()[4][4]->GetCenterPos());
+		//mech2->SetFinalPos(mech2->GetPos());
 
-		Mech* mech3 = new Mech(MECHS::punch, Vector2(6, 6));
-		mech3->SetPos(Scene::GetPosTiles()[6][6]->GetCenterPos());
-		mech3->SetFinalPos(mech3->GetPos());
+		//AddGameObject(mech2, LAYER_TYPE::PLAYER);
 
-		AddGameObject(mech3, LAYER_TYPE::PLAYER);
+		//GetMechs().push_back(mech2);
 
-		GetMechs().push_back(mech3);
+		//Mech* mech3 = new Mech(MECHS::punch, Vector2(6, 6), 4);
+		//mech3->SetPos(Scene::GetPosTiles()[6][6]->GetCenterPos());
+		//mech3->SetFinalPos(mech3->GetPos());
+
+		//AddGameObject(mech3, LAYER_TYPE::PLAYER);
+
+		//GetMechs().push_back(mech3);
 
 	}
 	void CombatScene::Update() {
@@ -95,7 +99,7 @@ namespace m {
 				Scene::RobotDrag();
 			}	
 		}
-		
+		Scene::DrawFootTile();
 		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
 			SceneManager::LoadScene(SCENE_TYPE::IN_LAND0);
 		}

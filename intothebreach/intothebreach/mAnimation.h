@@ -24,7 +24,7 @@ namespace m {
             }
         };
     public:
-        Animation(Animation& other) = default;
+        Animation(Animation& other);
         Animation();
         ~Animation();
 
@@ -42,7 +42,7 @@ namespace m {
     private:
         Animator* mAnimator;
         Image* mImage;
-        vector<Sprite*> mSpriteSheet;
+        vector<Sprite> mSpriteSheet;
 
         int mSpriteIndex;
         int mAlpha;

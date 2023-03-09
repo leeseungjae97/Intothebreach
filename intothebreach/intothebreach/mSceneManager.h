@@ -11,6 +11,9 @@ namespace m
 		static void Render(HDC hdc);
 		static void Release();
 		static void LoadScene(SCENE_TYPE type);
+
+		static Scene* GetActiveScene() { return mActiveScene; }
+
 	private:
 		static std::vector<Scene*> mScenes;
 		static Scene* mActiveScene;

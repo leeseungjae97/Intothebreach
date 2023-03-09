@@ -15,6 +15,7 @@ namespace m {
 
 		virtual void OnEnter() override;
 		virtual void OnExit() override;
+
 	private:
 		ISLAND_T mType;
 		vector<Background*> mSections;
