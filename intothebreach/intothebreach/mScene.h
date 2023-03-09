@@ -1,11 +1,13 @@
 #pragma once
 #include "mEntity.h"
 #include "mLayer.h"
+#include "Mech.h"
+#include "Alien.h"
+#include "mUnit.h"
 
 namespace m
 {
-	class Mech;
-	class Alien;
+	class Unit;
 	class Tile;
 	class Building;
 	class Scene : public Entity
@@ -31,6 +33,7 @@ namespace m
 		virtual void OnExit() = 0;
 
 	public:
+		void MoveAlgo();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
@@ -51,9 +54,19 @@ namespace m
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
 
-		void SetMouseFollower(Mech* _mM) { mMouseFollower = _mM; }
-		void SetAlphaFollower(Mech* _mM) { mAlphaFollower= _mM; }
-
+		void SetMouseFollower(Mech* _mM) { 
+			mMouseFollower = _mM; 
+			if(nullptr == _mM) SetAlphaFollower(_mM);
+		}
+		void SetAlphaFollower(Mech* _mM) {
+			if (nullptr != mAlphaFollower) {
+				SetAlphaState(GameObject::STATE::Death);
+			}
+			mAlphaFollower= _mM; 
+		}
+		void SetAlphaState(GameObject::STATE state) {
+			mAlphaFollower->SetState(state);
+		}
 		void DrawFootTile();
 
 	private:

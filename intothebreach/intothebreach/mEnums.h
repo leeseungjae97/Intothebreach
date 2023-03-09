@@ -64,6 +64,7 @@ enum class MECH_T {
 	Cyborg,
 	END,
 };
+
 enum class MECHS {
 	electrice,
 	flame,
@@ -94,6 +95,93 @@ enum class MECHS {
 	tele,
 
 	END
+};
+int MECH_DEFAULT_WEAPON[(UINT)MECHS::END]{
+	//electrice,
+	//flame,
+	//guard,
+	//judo,
+	//laser,
+	//leap,
+	//punch,
+
+	//charge,
+	//jet,
+	//mirror,
+	//tank,
+	//unstable,
+	//wall,
+
+	//artillery,
+	//dstrike,
+	//ice,
+	//ignite,
+	//rockart,
+	//rocket,
+
+	//grav,
+	//nano,
+	//pulse,
+	//science,
+	//tele,
+};
+int MECH_HP[(UINT)MECHS::END]{
+	3,
+	3,
+	4,
+	4,
+	3,
+	4,
+	3,
+
+	3,
+	4,
+	3,
+	3,
+	3,
+	3,
+
+	3,
+	3,
+	3,
+	3,
+	3,
+	3,
+
+	4,
+	4,
+	4,
+	4,
+	4
+};
+int MECH_MOVE_RANGE[(UINT)MECHS::END]{
+	3,//electrice,
+	3,//flame,
+	4,//guard,
+	4,//judo,
+	3,//laser,
+	4,//leap,
+	3,//punch,
+
+	3,//charge,
+	4,//jet,
+	3,//mirror,
+	3,//tank,
+	3,//unstable,
+	3,//wall,
+
+	3,//artillery,
+	3,//dstrike,
+	3,//ice,
+	3,//ignite,
+	3,//rockart,
+	3,//rocket,
+
+	4,//grav,
+	4,//nano,
+	4,//pulse,
+	4,//science,
+	4//tele,
 };
 wstring MECHS_RESOURCES_PATH[(UINT)MECHS::END]{
    L"mech_electrice",
@@ -533,39 +621,53 @@ enum class ALIEN_T {
 	Spider,
 	END
 };
-int ALIEN_T_HT[(UINT)ALIEN_T::END]{
-	5,
-	5,
-	4,
-	5,
-	5,
-	5,
-	5,
-	4,
-	5,
-	5,
-	5,
-	5,
-	7,
-	5,
+wstring ALIEN_PATH[(UINT)ALIEN_T::END]{
+	L"beetle",
+	L"blobber",
+	L"burrower",
+	L"centipede",
+	L"crab",
+	L"digger",
+	L"firefly",
+	L"hornet",
+	L"jelly",
+	L"leaper",
+	L"scarab",
+	L"scorpion",
+	L"slime",
+	L"spider",
 };
 
+enum class ALIEN_CONDITION {
+	NONE,
+	IDLE,
+	WATER,
+	DEATH,
+	EMERGE,
+	END
+};
+wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
+	L"",
+	L"a",
+	L"Bw",
+	L"_death",
+	L"_emerge",
+};
 
-
-wstring MAKE_ALIEN_KEY(TILE_T _type, TILE_HEAD_T _type2) {
+wstring MAKE_ALIEN_KEY(ALIEN_T _type, ALIEN_CONDITION _type2) {
 	wstring key = L"";
 
-	key.append(TILE_PATH[(UINT)_type]);
+	key.append(ALIEN_PATH[(UINT)_type]);
 	key.append(TILE_HEAD_PATH[(UINT)_type2]);
 
 
 	return key;
 }
-wstring MAKE_ALIEN_PATH(TILE_T _type, TILE_HEAD_T _type2) {
+wstring MAKE_ALIEN_PATH(ALIEN_T _type, ALIEN_CONDITION _type2) {
 	wstring path = L"..\\Resources\\texture\\alien\\";
 
-	path.append(TILE_PATH[(UINT)_type]);
-	path.append(TILE_HEAD_PATH[(UINT)_type2]);
+	path.append(ALIEN_PATH[(UINT)_type]);
+	path.append(ALIEN_CONDITION_PATH[(UINT)_type2]);
 		
 	path.append(L".bmp");
 
@@ -672,3 +774,4 @@ enum class STRUCTURES_T {
 wstring STRUCTURE_PATH[(UINT)STRUCTURES_T::END]{
 	L"mountain_0",
 };
+

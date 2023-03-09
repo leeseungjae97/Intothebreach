@@ -247,6 +247,9 @@
     <ClInclude Include="Building.h">
       <Filter>Contents\Tile</Filter>
     </ClInclude>
+    <ClInclude Include="mUnit.h">
+      <Filter>Contents\Unit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -375,6 +378,9 @@
     </ClCompile>
     <ClCompile Include="Building.cpp">
       <Filter>Contents\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="mUnit.cpp">
+      <Filter>Contents\Unit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

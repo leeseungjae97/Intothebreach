@@ -27,13 +27,15 @@ namespace m::object {
 
 
 	static inline Mech* Instantiate(Vector2 pos, LAYER_TYPE type , MECHS mType) {
-		Mech* gameObj = new Mech(mType, pos, 4);
+		Mech* gameObj = new Mech(mType, pos, MECH_MOVE_RANGE[(UINT)mType]);
 		Scene* scene = SceneManager::GetActiveScene();
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)pos.y][(int)pos.x]->GetCenterPos());
 		gameObj->SetFinalPos(gameObj->GetPos());
-		scene->GetMechs().push_back(gameObj);
+		if(type != LAYER_TYPE::PLAYER_CLONE) 
+			scene->GetMechs().push_back(gameObj);
+
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}

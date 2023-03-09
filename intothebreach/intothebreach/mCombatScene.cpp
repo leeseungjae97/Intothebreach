@@ -44,62 +44,10 @@ namespace m {
 		Mech* mech1 = object::Instantiate(Vector2(2, 2), LAYER_TYPE::PLAYER, MECHS::artillery);
 		Mech* mech2 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::PLAYER, MECHS::tank);
 		Mech* mech3 = object::Instantiate(Vector2(6, 6), LAYER_TYPE::PLAYER, MECHS::punch);
-
-		//Mech* mech1 = new Mech(MECHS::artillery, Vector2(2, 2), 4);
-		//mech1->SetPos(Scene::GetPosTiles()[2][2]->GetCenterPos());
-		//mech1->SetFinalPos(mech1->GetPos());
-
-		//AddGameObject(mech1, LAYER_TYPE::PLAYER);
-
-		//GetMechs().push_back(mech1);
-
-		//Mech* mech2 = new Mech(*mech1);
-		//mech2->SetPos(Scene::GetPosTiles()[4][4]->GetCenterPos());
-		//mech2->SetFinalPos(mech2->GetPos());
-
-		//AddGameObject(mech2, LAYER_TYPE::PLAYER);
-
-		//GetMechs().push_back(mech2);
-
-		//Mech* mech3 = new Mech(MECHS::punch, Vector2(6, 6), 4);
-		//mech3->SetPos(Scene::GetPosTiles()[6][6]->GetCenterPos());
-		//mech3->SetFinalPos(mech3->GetPos());
-
-		//AddGameObject(mech3, LAYER_TYPE::PLAYER);
-
-		//GetMechs().push_back(mech3);
-
 	}
 	void CombatScene::Update() {
 		Scene::Update();
-
-		Mech* mMouseFollower = Scene::GetMouseFollower();
-		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
-		Scene::HighlightTile();
-
-		if (nullptr != mMouseFollower) {
-			Scene::DrawMoveRangeTile();
-			Scene::DrawMoveDirectionTile();
-			Scene::CheckMouseOutOfMapRange();
-		}
-
-		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
-			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
-			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
-			Scene::SetMouseFollower(nullptr);
-		}
-		
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
-			if (nullptr != mMouseFollower) {
-				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
-				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
-				Scene::SetMouseFollower(nullptr);
-			}
-			else {
-				Scene::RobotDrag();
-			}	
-		}
-		Scene::DrawFootTile();
+		Scene::MoveAlgo();
 		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
 			SceneManager::LoadScene(SCENE_TYPE::IN_LAND0);
 		}

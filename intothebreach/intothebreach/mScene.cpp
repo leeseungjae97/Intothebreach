@@ -179,7 +179,11 @@ namespace m
 					Vector2 prevCoord = mMouseFollower->GetFinalCoord();
 					Vector2 curCoord = mMouseFollower->GetCoord();
 
-					if (prevCoord == curCoord) continue;
+					if (prevCoord == curCoord) {
+						SetAlphaState(GameObject::STATE::Death);
+						continue;
+					}
+					SetAlphaState(GameObject::STATE::Idle);
 
 					list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
@@ -284,9 +288,8 @@ namespace m
 				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
-							mMouseFollower = mMechs[_i];
-
-							//mAlphaFollower = object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::PLAYER_CLONE, mMouseFollower->GetMechType());
+							SetMouseFollower(mMechs[_i]);
+							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::PLAYER_CLONE, mMouseFollower->GetMechType()));
 						}
 					}
 				}
@@ -480,6 +483,34 @@ namespace m
 		Safe_Delete_Y_Vec(mEnemyEmerge);
 		Safe_Delete_Y_Vec(mEffectedTiles);
 		Safe_Delete_Y_Vec(mStruturesTiles);
+	}
+	void Scene::MoveAlgo() {
+		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
+		Scene::HighlightTile();
+
+		if (nullptr != mMouseFollower) {
+			Scene::DrawMoveRangeTile();
+			Scene::DrawMoveDirectionTile();
+			Scene::CheckMouseOutOfMapRange();
+		}
+
+		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
+			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+			SetMouseFollower(nullptr);
+		}
+
+		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
+			if (nullptr != mMouseFollower) {
+				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
+				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
+				SetMouseFollower(nullptr);
+			}
+			else {
+				Scene::RobotDrag();
+			}
+		}
+		Scene::DrawFootTile();
 	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{

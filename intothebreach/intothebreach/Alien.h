@@ -1,10 +1,16 @@
 #pragma once
-#include "mGameObject.h"
+#include "mUnit.h"
 namespace m {
+    class Image;
+    class Animator;
+    class Pilot;
+    class Weapon;
     class Alien :
-        public GameObject {
+        public Unit {
     public:
-        Alien();
+
+        Alien(ALIEN_T mType);
+        Alien(Alien& _origin);
         ~Alien();
 
         virtual void Initialize() override;
@@ -12,8 +18,11 @@ namespace m {
         virtual void Render(HDC hdc) override;
         virtual void Release() override;
 
+        virtual void idle() override;
+        virtual void broken() override;
+        virtual void water() override;
     private:
-
+        ALIEN_T mAlienType;
     };
 }
 
