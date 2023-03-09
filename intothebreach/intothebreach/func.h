@@ -29,11 +29,12 @@ namespace m::object {
 	static inline Mech* Instantiate(Vector2 pos, LAYER_TYPE type , MECHS mType) {
 		Mech* gameObj = new Mech(mType, pos, 4);
 		Scene* scene = SceneManager::GetActiveScene();
-		scene->AddGameObject(gameObj, type);
+
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)pos.y][(int)pos.x]->GetCenterPos());
 		gameObj->SetFinalPos(gameObj->GetPos());
 		scene->GetMechs().push_back(gameObj);
+		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
 

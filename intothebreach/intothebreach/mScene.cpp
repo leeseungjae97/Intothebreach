@@ -3,6 +3,7 @@
 #include "mInput.h"
 #include "Building.h"
 #include "Mech.h"
+#include "func.h"
 namespace m
 {
 	Scene::Scene()
@@ -283,14 +284,9 @@ namespace m
 				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
-
 							mMouseFollower = mMechs[_i];
 
-							mAlphaFollower = new Mech(*mMouseFollower);
-							mAlphaFollower->SetCoord(mMouseFollower->GetFinalCoord());
-							mAlphaFollower->SetFinalCoord(mMouseFollower->GetFinalCoord());
-							mAlphaFollower->SetFinalPos(mMouseFollower->GetFinalPos());
-							mAlphaFollower->SetPos(mMouseFollower->GetFinalPos());
+							//mAlphaFollower = object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::PLAYER_CLONE, mMouseFollower->GetMechType());
 						}
 					}
 				}

@@ -26,6 +26,7 @@ enum class LAYER_TYPE
 	EFFECT,
 	MONSTER,
 	PLAYER,
+	PLAYER_CLONE,
 	END,
 };
 enum class PLAYERINFO_TYPE {

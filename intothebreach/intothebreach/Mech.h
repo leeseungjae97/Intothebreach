@@ -47,7 +47,7 @@ namespace m
 		int GetMove() { return moveRange; }
 		void SetMove(int _move) { moveRange = _move; }
 
-
+		MECHS GetMechType() { return mMechType; }
 	private:
 		void idle();
 		void broken();
