@@ -51,12 +51,22 @@ namespace m
 	void Scene::MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2) {
 		mTiles.resize(iY, vector<Tile*>());
 		mPosTiles.resize(iY, vector<Tile*>());
+		mPosOutLineTiles.resize(iY, vector<Tile*>());
 		mBoundaryTiles.resize(iY, vector<Tile*>());
 		mArrowTiles.resize(iY, vector<Tile*>());
 		mStruturesTiles.resize(iY, vector<Building*>());
 		mEffectedTiles.resize(iY, vector<Tile*>());
 		mEnemyEmerge.resize(iY, vector<Tile*>());
-
+		for (int y = 0; y < iY; y++) {
+			mTiles[y].resize(iX);
+			mPosTiles[y].resize(iX);
+			mPosOutLineTiles[y].resize(iX);
+			mBoundaryTiles[y].resize(iX);
+			mArrowTiles[y].resize(iX);
+			mStruturesTiles[y].resize(iX);
+			mEffectedTiles[y].resize(iX);
+			mEnemyEmerge[y].resize(iX);
+		}
 		float fX, fY;
 		float mX = (10.f * (TILE_SIZE_X / 2.f));
 		float mY = TILE_SIZE_Y / 4.f;
@@ -70,7 +80,7 @@ namespace m
 				tile->SetTileType(_type);
 				tile->SetTileTexture(MAKE_TILE_KEY(_type, _type2)
 					, MAKE_TILE_PATH(_type, _type2));
-				mTiles[y].push_back(tile);
+				mTiles[y][x] = tile;
 
 				AddGameObject(tile, LAYER_TYPE::TILE);				
 			}
@@ -102,14 +112,14 @@ namespace m
 	/// <param name="iX"></param>
 	/// <param name="iY"></param>
 	void Scene::MakeVariTile(int iX, int iY) {
+		/*for (int y = iY - 1; y >= 0; y--) {
+			for (int x = iX - 1; x >= 0; x--) {*/
 		for (int y = 0; y < iY; y++) {
 			for (int x = 0; x < iX; x++) {
 				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
 				Building* stTile = new Building(STRUCTURES_T::C_Building, mTiles[y][x]->GetCoord());
-				//Tile* efTile = new Tile(mTiles[y][x]->GetCoord());
-				//Tile* enETile = new Tile(mTiles[y][x]->GetCoord());
 
 				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				posTile->SetPos(mTiles[y][x]->GetPos());
@@ -119,34 +129,29 @@ namespace m
 
 				etcTile->InitETCTiles(4);
 				etcTile->SetPos(mTiles[y][x]->GetPos());
+				mPosTiles[y][x] = posTile;
+				mBoundaryTiles[y][x] = etcTile;
+				mArrowTiles[y][x] = awTile;
+				mStruturesTiles[y][x] = stTile;
 
-				//stTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-
-				//efTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				//efTile->SetPos(mTiles[y][x]->GetPos());
-
-				//enETile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				//enETile->SetPos(mTiles[y][x]->GetPos());
-
-				mPosTiles[y].push_back(posTile);
-				mBoundaryTiles[y].push_back(etcTile);
-				mArrowTiles[y].push_back(awTile);
-				mStruturesTiles[y].push_back(stTile);
-				//mEffectedTiles[y].push_back(efTile);
-				//mEnemyEmerge[y].push_back(enETile);
-
-				AddGameObject(posTile, LAYER_TYPE::TILE);
-				AddGameObject(stTile, LAYER_TYPE::TILE);
-				//AddGameObject(stTile, LAYER_TYPE::TILE);
-				//AddGameObject(efTile, LAYER_TYPE::TILE);
-				//AddGameObject(enETile, LAYER_TYPE::TILE);
-
-				AddGameObject(awTile, LAYER_TYPE::TILE);
 				AddGameObject(etcTile, LAYER_TYPE::TILE);
+				AddGameObject(stTile, LAYER_TYPE::TILE);
+				AddGameObject(awTile, LAYER_TYPE::TILE);
+				AddGameObject(posTile, LAYER_TYPE::TILE);
+
+			}
+		}
+		for (int y = 0; y < iY; y++) {
+			for (int x = 0; x < iX; x++) {
+				Tile* posLineTile = new Tile(mTiles[y][x]->GetCoord());
+				posLineTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				posLineTile->SetPos(mTiles[y][x]->GetPos());
+				mPosOutLineTiles[y][x] = posLineTile;
+				AddGameObject(posLineTile, LAYER_TYPE::TILE);
 			}
 		}
 	}
-
+	
 	/// <summary>
 	/// 표기했던 이동가능거리 초기화.
 	/// 메카의 위치(FinalPos)가 바뀌면 불러옴.
@@ -166,23 +171,23 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+					
 					// 이동가능 거리 인지 확인
 					if (map[y][x] == MECH) {
 						if (mMouseFollower->GetCoord().x != x &&
 							mMouseFollower->GetCoord().y != y) {
-							int a = 0;
 							continue;
 						}
 					}
-					if (map[y][x] == BUILDING) continue;
+					if (mMouseFollower->GetFinalCoord() == mMouseFollower->GetCoord()) continue;
+					if (map[y][x] != MOVE) {
+						SetAlphaState(GameObject::STATE::Death);
+						continue;
+					}
 
 					Vector2 prevCoord = mMouseFollower->GetFinalCoord();
 					Vector2 curCoord = mMouseFollower->GetCoord();
 
-					if (prevCoord == curCoord) {
-						SetAlphaState(GameObject::STATE::Death);
-						continue;
-					}
 					SetAlphaState(GameObject::STATE::Idle);
 
 					list<Vector2> directQue;
@@ -289,7 +294,7 @@ namespace m
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
 							SetMouseFollower(mMechs[_i]);
-							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::PLAYER_CLONE, mMouseFollower->GetMechType()));
+							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetMechType()));
 						}
 					}
 				}
@@ -354,7 +359,6 @@ namespace m
 				if (stPos.x == dx
 					&& stPos.y == dy) continue;
 				if (map[(int)dy][(int)dx] == BUILDING) continue;
-				//if (map[(int)dy][(int)dx] == MECH) continue;
 				if (map[(int)dy][(int)dx] == MOVE) continue;
  				if (now.level >= moveLimit) {
 					find = true;
@@ -375,11 +379,10 @@ namespace m
 		}
 		
 
-		// 이동범위 경계선 그리기
+		//// 이동범위 경계선 그리기
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (mPosTiles[y][x]->GetTileType() == TILE_T::MOVE_RANGE) {
-					/*if (map[y ][x] == MECH) continue;*/
 					MOVE_TILE_T type = (MOVE_TILE_T)0;
 					if (y + 1 < mPosTiles.size() && mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_d)
@@ -416,7 +419,9 @@ namespace m
 				pathQueue.clear();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				//mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
+				mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mTiles[y][x]->SetTileType(TILE_T::GREEN);
 				mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
 					, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
@@ -430,46 +435,55 @@ namespace m
 	/// <param name="tile">꼭짓점을 추출할 타일</param>
 	/// <param name="_pos">현재 위치(마우스커서)</param>
 	/// <returns>현재위치가 타일의 마름모 좌표 내부에 있는지 여부</returns>
-	bool Scene::CheckRhombusPos(Tile* tile, Vector2 _pos) {
+	bool Scene::CheckRhombusPos(GameObject* obj, Vector2 otherPos) {
 		Vector2 vertex[4];
 		float gradient[4];
 		float intercept[4];
 		float direct[4][2] = {
-			{0, (tile->GetScale().y / 2)},
-			{(tile->GetScale().x / 2), 0},
-			{tile->GetScale().x, (tile->GetScale().y / 2)},
-			{(tile->GetScale().x / 2), tile->GetScale().y}
+			{0, (obj->GetScale().y / 2)},
+			{(obj->GetScale().x / 2), 0},
+			{obj->GetScale().x, (obj->GetScale().y / 2)},
+			{(obj->GetScale().x / 2), obj->GetScale().y}
 		};
 		for (size_t i = 0; i < 4; i++) {
-			vertex[i].x = tile->GetPos().x + direct[i][0];
-			vertex[i].y = tile->GetPos().y + direct[i][1];
+			vertex[i].x = obj->GetPos().x + direct[i][0];
+			vertex[i].y = obj->GetPos().y + direct[i][1];
 		}
 		for (size_t i = 0; i < 4; i++) {
 			gradient[i] = ((vertex[i].y - vertex[(i + 1) % 4].y) / (vertex[i].x - vertex[(i + 1) % 4].x));
 			intercept[i] = vertex[i].y - gradient[i] * vertex[i].x;
 		}
-		float rY = _pos.y;
-		float rX = _pos.x;
+		float _y = otherPos.y;
+		float _x = otherPos.x;
 
-		if (gradient[0] * rX + intercept[0] < rY
-			&& gradient[1] * rX + intercept[1] < rY
-			&& gradient[2] * rX + intercept[2] > rY
-			&& gradient[3] * rX + intercept[3] > rY) {
+		if (gradient[0] * _x + intercept[0] < _y
+			&& gradient[1] * _x + intercept[1] < _y
+			&& gradient[2] * _x + intercept[2] > _y
+			&& gradient[3] * _x + intercept[3] > _y) {
 			return true;
 		}
+		else return false;
+	}
+	bool Scene::CheckRectPos(GameObject* obj, Vector2 otherPos) {
+		Vector2 fP = { obj->GetPos().x, obj->GetPos().y };
+		Vector2 lP = { fP.x + obj->GetScale().x, fP.y + obj->GetScale().y };
+
+		if (fP <= otherPos && lP >= otherPos) return true;
 		else return false;
 	}
 	/// <summary>
 	/// 마우스 위치의 타일 바꿈
 	/// </summary>
 	void Scene::HighlightTile() {
-		for (int y = 0; y < mPosTiles.size(); y++) {
-			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
-					mPosTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
+		for (int y = 0; y < mPosOutLineTiles.size(); y++) {
+			for (int x = 0; x < mPosOutLineTiles[y].size(); x++) {
+				if (Scene::CheckRhombusPos(mPosOutLineTiles[y][x], MOUSE_POS)) {
+					if (map[y][x] != MOVE) {
+						mPosOutLineTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
+					}
 				}
 				else {
-					mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+					mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				}
 			}
 		}
@@ -478,6 +492,7 @@ namespace m
 	{
 		Safe_Delete_Y_Vec(mTiles);
 		Safe_Delete_Y_Vec(mPosTiles);
+		Safe_Delete_Y_Vec(mPosOutLineTiles);
 		Safe_Delete_Y_Vec(mBoundaryTiles);
 		Safe_Delete_Y_Vec(mArrowTiles);
 		Safe_Delete_Y_Vec(mEnemyEmerge);
@@ -485,9 +500,8 @@ namespace m
 		Safe_Delete_Y_Vec(mStruturesTiles);
 	}
 	void Scene::MoveAlgo() {
+		
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
-		Scene::HighlightTile();
-
 		if (nullptr != mMouseFollower) {
 			Scene::DrawMoveRangeTile();
 			Scene::DrawMoveDirectionTile();
@@ -510,7 +524,9 @@ namespace m
 				Scene::RobotDrag();
 			}
 		}
+		
 		Scene::DrawFootTile();
+		Scene::HighlightTile();
 	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{

@@ -73,7 +73,7 @@ namespace m {
 			func.BlendOp = AC_SRC_OVER;
 			func.BlendFlags = 0;
 			func.AlphaFormat = mAlpha;
-			func.SourceConstantAlpha = 255;
+			func.SourceConstantAlpha = mAnimator->GetConstant();
 
 			AlphaBlend(hdc
 				, int(pos.x - mSpriteSheet[mSpriteIndex].size.x /2.0)

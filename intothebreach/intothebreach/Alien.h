@@ -9,7 +9,7 @@ namespace m {
         public Unit {
     public:
 
-        Alien(ALIEN_T mType);
+        Alien(ALIENS mType, Vector2 _coord, int _range, int _hp);
         Alien(Alien& _origin);
         ~Alien();
 
@@ -22,7 +22,7 @@ namespace m {
         virtual void broken() override;
         virtual void water() override;
     private:
-        ALIEN_T mAlienType;
+        ALIENS mAlienType;
     };
 }
 

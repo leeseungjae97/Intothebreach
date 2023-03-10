@@ -35,7 +35,8 @@ namespace m
 	public:
 		void MoveAlgo();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
-		bool CheckRhombusPos(Tile* tile, Vector2 _pos);
+		bool CheckRhombusPos(GameObject* obj, Vector2 otherPos);
+		bool CheckRectPos(GameObject* obj, Vector2 otherPos);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
 		void HighlightTile();
@@ -76,6 +77,7 @@ namespace m
 		vector<Layer> mLayers;
 		TILES mTiles;
 		TILES mPosTiles;
+		TILES mPosOutLineTiles;
 		TILES mBoundaryTiles;
 		TILES mArrowTiles;
 		BUILDINGS mStruturesTiles;

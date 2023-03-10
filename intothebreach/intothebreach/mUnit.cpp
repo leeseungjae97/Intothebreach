@@ -2,8 +2,10 @@
 #include "mAnimator.h"
 #include "mTransform.h"
 #include "mCamera.h"
+#include "mResources.h"
+#include "mSelectGDI.h"
 namespace m {
-	Unit::Unit(Vector2 _coord, int _range)
+	Unit::Unit(Vector2 _coord, int _range, int hp)
 		: mPilot(nullptr)
 		, mWeapon(nullptr)
 		, curImage(nullptr)
@@ -14,13 +16,18 @@ namespace m {
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::One)
 		, moveRange(_range)
-		, mHp(0)
-		, curHp(0)
+		, mHp(hp)
+		, curHp(hp)
 	{
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
 
+		hpImage = Resources::Load<Image>(HP_BAR, HP_BAR);
+		hpImage->SetOffset(Vector2(10.f, -45.f));
+
+		hpBack = Resources::Load<Image>(HP_BAR_BACK, HP_BAR_BACK);
+		hpBack->SetOffset(Vector2(16.f, -39.f));
 	}
 	Unit::Unit(Unit& _origin) 
 		: GameObject(_origin)
@@ -45,9 +52,11 @@ namespace m {
 	}
 	void Unit::Render(HDC hdc) {
 		GameObject::Render(hdc);
-		Image* curImage = GetCurImage();
+		
+		Vector2 mPos = GetComponent<Transform>()->GetPos();
+		
 		if (nullptr != GetCurImage()) {
-			Vector2 mPos = GetComponent<Transform>()->GetPos();
+			Image* curImage = GetCurImage();
 			mPos += curImage->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
 			TransparentBlt(hdc
@@ -62,6 +71,46 @@ namespace m {
 				, (int)(curImage->GetHeight())
 				, RGB(255, 0, 255));
 		}
+		if (lType == LAYER_TYPE::CLONE) return;
+
+
+		mPos = GetComponent<Transform>()->GetPos();
+		if (nullptr != hpImage) {
+			mPos += hpImage->GetOffset();
+			mPos = Camera::CalculatePos(mPos);
+			TransparentBlt(hdc
+				, (int)(mPos.x - hpImage->GetWidth() / 2.f)
+				, (int)(mPos.y - hpImage->GetHeight() / 2.f)
+				, (int)(hpImage->GetWidth() * 2)
+				, (int)(hpImage->GetHeight() * 2)
+				, hpImage->GetHdc()
+				, 0
+				, 0
+				, (int)(hpImage->GetWidth())
+				, (int)(hpImage->GetHeight())
+				, RGB(255, 0, 255));
+		}
+		mPos = GetComponent<Transform>()->GetPos();
+		if (nullptr != hpBack) {
+			mPos += hpBack->GetOffset();
+			mPos = Camera::CalculatePos(mPos);
+			
+			int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
+			int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
+
+			int hpWidth = (hpBack->GetWidth() * 2) / mHp;
+			int hpHeight = hpBack->GetHeight() * 2;
+			for (int i = 0; i < mHp; i++) {
+				SelectGDI p(hdc, BRUSH_TYPE::GREEN);
+				Rectangle(hdc
+					, (int)(px + hpWidth * i)
+					, (int)(py)
+					, (int)(px + hpWidth * (i + 1))
+					, (int)(py + hpHeight));
+			}
+		}
+		
+		
 	}
 	void Unit::Release() {
 		GameObject::Release();

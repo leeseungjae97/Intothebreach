@@ -9,7 +9,7 @@ namespace m {
     class Unit :
         public GameObject {
 	public:
-		Unit(Vector2 _coord, int _range);
+		Unit(Vector2 _coord, int _range, int hp);
 		Unit(Unit& _origin);
 		Unit();
 		~Unit();
@@ -30,6 +30,7 @@ namespace m {
 		Vector2 GetCoord() { return mCoord; }
 		Vector2 GetFinalCoord() { return mFinalCoord; }
 
+		void SetHp(int _hp) {mHp = curHp = _hp;}
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
 
@@ -46,10 +47,14 @@ namespace m {
 
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
+
 		STATE GetMState() { return mState; }
 		void SetMState(STATE _state) { mState = _state; }
 		Image* GetCurImage() { return curImage; }
 		void SetCurImage(Image* m) { curImage = m; }
+
+		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
+		LAYER_TYPE GetLayerType() { return lType; }
 
 		virtual void idle() = 0;
 		virtual void broken() = 0;
@@ -58,8 +63,11 @@ namespace m {
     private:
 		Animator* mAnimator;
 		Image* curImage;
+		Image* hpImage;
+		Image* hpBack;
 		STATE mState;
 		vector<Image*> hpBar;
+		LAYER_TYPE lType;
 
 		Vector2 mCoord;
 

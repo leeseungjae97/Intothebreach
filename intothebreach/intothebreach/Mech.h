@@ -10,7 +10,7 @@ namespace m
 	class Mech : public Unit
 	{
 	public:
-		Mech(MECHS _mech, Vector2 _coord, int _range);
+		Mech(MECHS _mech, Vector2 _coord, int _range, int _hp);
 		Mech(Mech& _origin);
 		~Mech();
 

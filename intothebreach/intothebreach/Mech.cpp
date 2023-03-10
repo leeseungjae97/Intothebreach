@@ -11,37 +11,35 @@
 #include "mCollider.h"
 namespace m
 {
-	Mech::Mech(MECHS _mech, Vector2 _coord, int _range)
-		: Unit(_coord, _range)
+	Mech::Mech(MECHS _mech, Vector2 _coord, int _range, int _hp)
+		: Unit(_coord, _range, _hp)
 		, mMechType(_mech)
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
 
 		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++) {
 			GetMImages()[i] = Resources::Load<Image>(
-				MAKE_COMBAT_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
-				, MAKE_COMBAT_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
+				MAKE_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
+				, MAKE_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == GetMImages()[i]) continue;
 			GetMImages()[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
 		}
 
-		
-		//float fWid = mImages[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() - MECHS_IMAGE_SIZE[(UINT)mMechType].x;
 		UINT len = UINT(GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / (GetMImages()[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() + MECHS_IMAGE_SIZE[(UINT)mMechType].x));
 		float fHei = GetMImages()[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetHeight() + MECHS_IMAGE_SIZE[(UINT)mMechType].y;
 		float fWid = (float)(GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / len);
 
 		GetAnimator()->CreateAnimation(
-			MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
+			MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
 			, GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]
 			, Vector2(Vector2::Zero)
 			, Vector2(fWid, fHei)
 			, GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
 			, len
 			, 0.5f
-			, AC_SRC_OVER
+			, AC_SRC_ALPHA
 		);
-		GetAnimator()->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		SetMState(STATE::Idle);
 	}
 	Mech::Mech(Mech& _origin) 
@@ -89,8 +87,8 @@ namespace m
 		Unit::Release();
 	}
 	void Mech::idle() {
-		GetAnimator()->Play(MAKE_COMBAT_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
-		 SetCurImage(nullptr);
+		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		SetCurImage(nullptr);
 	}
 	void Mech::broken() {
 		GetAnimator()->Stop();

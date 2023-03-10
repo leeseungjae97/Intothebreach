@@ -77,10 +77,10 @@ namespace m {
 		UINT fileCount = 0;
 
 		std::filesystem::path fs(path);
-		std::vector<Image*> images;
+		vector<Image*> images;
 		for (auto& p : std::filesystem::recursive_directory_iterator(path)) {
-			std::wstring fileName = p.path().filename();
-			std::wstring fullName = path + L"\\" + fileName;
+			wstring fileName = p.path().filename();
+			wstring fullName = path + L"\\" + fileName;
 			Image* image = Resources::Load<Image>(fileName, fullName);
 			images.push_back(image);
 

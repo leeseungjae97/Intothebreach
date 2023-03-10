@@ -98,6 +98,7 @@ namespace m
 		m_arrBrush[(UINT)BRUSH_TYPE::BLACK] = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		m_arrBrush[(UINT)BRUSH_TYPE::CUSTOM_BLACK] = (HBRUSH)CreateSolidBrush(RGB(9,7,8));
 		m_arrBrush[(UINT)BRUSH_TYPE::GRAY] = (HBRUSH)GetStockObject(GRAY_BRUSH);
+		m_arrBrush[(UINT)BRUSH_TYPE::GREEN] = (HBRUSH)CreateSolidBrush(RGB(50, 255, 50));
 
 		//red pen
 		m_arrPen[(UINT)PEN_TYPE::RED] = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));

@@ -4,14 +4,15 @@
 #include "CommonInclude.h"
 enum class SCENE_TYPE
 {
-	INTRO,
-	TITLE,
-	SELECT_ROBOT,
-	SELECT_LAND,
 	IN_LAND0,
 	IN_LAND1,
 	IN_LAND2,
 	IN_LAND3,
+	IN_LAND4,
+	INTRO,
+	TITLE,
+	SELECT_ROBOT,
+	SELECT_LAND,
 	COMBAT,
 	ENDING,
 	END,
@@ -26,7 +27,7 @@ enum class LAYER_TYPE
 	EFFECT,
 	MONSTER,
 	PLAYER,
-	PLAYER_CLONE,
+	CLONE,
 	END,
 };
 enum class PLAYERINFO_TYPE {
@@ -48,6 +49,7 @@ enum class BRUSH_TYPE {
 	BLACK,
 	CUSTOM_BLACK,
 	GRAY,
+	GREEN,
 	END,
 };
 enum class PEN_TYPE {
@@ -126,33 +128,33 @@ int MECH_DEFAULT_WEAPON[(UINT)MECHS::END]{
 	//tele,
 };
 int MECH_HP[(UINT)MECHS::END]{
-	3,
-	3,
-	4,
-	4,
-	3,
-	4,
-	3,
+	3,//electrice,
+	3,//flame,
+	4,//guard,
+	4,//judo,
+	3,//laser,
+	4,//leap,
+	3,//punch,
 
-	3,
-	4,
-	3,
-	3,
-	3,
-	3,
+	3,//charge,
+	4,//jet,
+	3,//mirror,
+	3,//tank,
+	3,//unstable,
+	3,//wall,
 
-	3,
-	3,
-	3,
-	3,
-	3,
-	3,
+	3,//artillery,
+	3,//dstrike,
+	3,//ice,
+	3,//ignite,
+	3,//rockart,
+	3,//rocket,
 
-	4,
-	4,
-	4,
-	4,
-	4
+	4,//grav,
+	4,//nano,
+	4,//pulse,
+	4,//science,
+	4//tele,
 };
 int MECH_MOVE_RANGE[(UINT)MECHS::END]{
 	3,//electrice,
@@ -419,7 +421,7 @@ enum class COMBAT_CONDITION_T {
 	L"_ns",
 	L"_h"
 };
- wstring MAKE_COMBAT_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
+ wstring MAKE_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	 wstring key = L"";
 	 int _type = MECHS_T_HT[(UINT)_mech];
 
@@ -433,7 +435,7 @@ enum class COMBAT_CONDITION_T {
 
 	 return key;
  };
- wstring MAKE_COMBAT_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
+ wstring MAKE_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	 wstring path = L"..\\Resources\\texture\\player\\";
 	 int _type = MECHS_T_HT[(UINT)_mech];
 
@@ -448,7 +450,7 @@ enum class COMBAT_CONDITION_T {
 
 	 return path;
  };
- wstring ISLANDS_PATH[ISLANDS]{
+ wstring ISLAND_FOLDER_PATH[ISLANDS]{
 	L"island0\\",
 	L"island1\\",
 	L"island2\\",
@@ -462,18 +464,41 @@ enum class COMBAT_CONDITION_T {
 	L"island_3_",
 	L"island_4_",
 };
+ wstring ISLANDS_PATH[ISLANDS]{
+	L"island1x_0",
+	L"island1x_1",
+	L"island1x_2",
+	L"island1x_3",
+	L"island1x_4",
+ };
  enum class ISLAND_T {
 	 ISLAND0,
 	 ISLAND1,
 	 ISLAND2,
 	 ISLAND3,
+	 ISLAND4,
 	 END
+ };
+ m::Vector2 ISLAND_OUTLINE_OFFSET[(UINT)ISLAND_T::END]{
+	{0, 0},
+	{-8, 18},
+	{6, -4},
+	{-2, -5},
+	{0, 0}
+ };
+ m::Vector2 ISLANDS_POS[(UINT)ISLAND_T::END]{
+	 {100, 80},
+	 {250, 370},
+	 {580, 250},
+	 {900, 440},
+	 {500, 50}
  };
  UINT ISLANDS_SECTIONS[(UINT)ISLAND_T::END]{
 	8,
 	8,
 	8,
 	8,
+	0,
 };
 m::Vector2 ISLAND0_POS[8]{
 	m::Vector2{250.f, 230.f},
@@ -515,16 +540,16 @@ m::Vector2 ISLAND3_POS[8]{
 	m::Vector2{739.f, 384.f},
 	m::Vector2{873.f, 402.f}
 };
-m::Vector2* ISLANDS_POS[(UINT)ISLAND_T::END]{
+m::Vector2* ISLANDS_SECTION_POS[(UINT)ISLAND_T::END]{
 	ISLAND0_POS,
 	ISLAND1_POS,
 	ISLAND2_POS,
 	ISLAND3_POS,
 };
-wstring MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
+wstring MAKE_SECTION_KEY(ISLAND_T _type, int sectionIdx) {
 	wstring key = L"";
 
-	key.append(ISLANDS_PATH[(UINT)_type]);
+	key.append(ISLAND_FOLDER_PATH[(UINT)_type]);
 	if (sectionIdx < 0) key.append(L"island");
 	else {
 		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
@@ -532,9 +557,9 @@ wstring MAKE_ISLAND_KEY(ISLAND_T _type, int sectionIdx) {
 	}
 	return key;
 };
-wstring MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
+wstring MAKE_SECTION_PATH(ISLAND_T _type, int sectionIdx) {
 	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
-	path.append(ISLANDS_PATH[(UINT)_type]);
+	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
 	if (sectionIdx < 0) {
 		path.append(L"island");
 	}
@@ -543,6 +568,38 @@ wstring MAKE_ISLAND_PATH(ISLAND_T _type, int sectionIdx) {
 		path.append(std::to_wstring(sectionIdx));
 	}
 	path.append(L".bmp");
+
+	return path;
+};
+
+wstring MAKE_ISLAND_KEY(ISLAND_T _type) {
+	wstring key = L"";
+
+	key.append(ISLANDS_PATH[(UINT)_type]);
+
+	return key;
+};
+wstring MAKE_ISLAND_PATH(ISLAND_T _type) {
+	wstring path = L"..\\Resources\\texture\\ui\\selectLand\\";
+
+	path.append(ISLANDS_PATH[(UINT)_type]);
+	path.append(L".bmp");
+
+	return path;
+};
+wstring MAKE_ISLAND_OUTLINE_KEY(ISLAND_T _type) {
+	wstring key = L"";
+
+	key.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	key.append(L"island_out.bmp");
+
+	return key;
+};
+wstring MAKE_ISLAND_OUTLINE_PATH(ISLAND_T _type) {
+	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
+
+	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	path.append(L"island_out.bmp");
 
 	return path;
 };
@@ -604,7 +661,7 @@ wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 
 	return path;
 }
-enum class ALIEN_T {
+enum class ALIENS {
 	Beetle,
 	Blobber,
 	Burrower,
@@ -621,7 +678,7 @@ enum class ALIEN_T {
 	Spider,
 	END
 };
-wstring ALIEN_PATH[(UINT)ALIEN_T::END]{
+wstring ALIEN_PATH[(UINT)ALIENS::END]{
 	L"beetle",
 	L"blobber",
 	L"burrower",
@@ -639,7 +696,7 @@ wstring ALIEN_PATH[(UINT)ALIEN_T::END]{
 };
 
 enum class ALIEN_CONDITION {
-	NONE,
+	SIZE,
 	IDLE,
 	WATER,
 	DEATH,
@@ -653,8 +710,47 @@ wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
 	L"_death",
 	L"_emerge",
 };
+m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
+	//x, y
+	{},//Beetle,
+	{},//Blobber,
+	{},//Burrower,
+	{},//Centipede,
+	{},//Crab,
+	{},//Digger,
+	{},//Firefly,
+	{},//Hornet,
+	{},//Jelly,
+	{},//Leaper,
+	{},//Scarab,
+	{},//Scorpion,
+	{},//Slime,
+	{},//Spider,
+};
+m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
+	//x, y
+	{0,0},//Beetle,
+	{0,0},//Blobber,
+	{0,0},//Burrower,
+	{0,0},//Centipede,
+	{0,0},//Crab,
+	{0,0},//Digger,
+	{0,0},//Firefly,
+	{30,48},//Hornet,
+	{0,0},//Jelly,
+	{0,0},//Leaper,
+	{0,0},//Scarab,
+	{0,0},//Scorpion,
+	{0,0},//Slime,
+	{0,0},//Spider,
+};
+int ALIEN_MOVE_RANGE[(UINT)ALIENS::END]{
 
-wstring MAKE_ALIEN_KEY(ALIEN_T _type, ALIEN_CONDITION _type2) {
+};
+int ALIEN_HP[(UINT)ALIENS::END]{
+
+};
+wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2) {
 	wstring key = L"";
 
 	key.append(ALIEN_PATH[(UINT)_type]);
@@ -663,7 +759,7 @@ wstring MAKE_ALIEN_KEY(ALIEN_T _type, ALIEN_CONDITION _type2) {
 
 	return key;
 }
-wstring MAKE_ALIEN_PATH(ALIEN_T _type, ALIEN_CONDITION _type2) {
+wstring MAKE_ALIEN_PATH(ALIENS _type, ALIEN_CONDITION _type2) {
 	wstring path = L"..\\Resources\\texture\\alien\\";
 
 	path.append(ALIEN_PATH[(UINT)_type]);

@@ -41,7 +41,7 @@ namespace m
 	void SelectRobotScene::Update()
 	{
 		Scene::Update();
-		if (Input::GetKeyState(KEYCODE_TYPE::N) == KEY_STATE::DOWN) {
+		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
 	}

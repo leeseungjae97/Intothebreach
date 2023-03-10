@@ -34,7 +34,8 @@ namespace m {
             , UINT spriteLength, float duration, UINT alphaCheck = 0, bool bAffectedCamera = false);
         // 파일별로 있는 애니메이션
         void CreateAnimations(const wstring& path, const wstring& name, Vector2 offset = Vector2::Zero, float duration = 0.1f);
-
+        void SetConstant(BYTE _constant) { mConstant = _constant; }
+        BYTE GetConstant() { return mConstant; }
         Animation* FindAnimation(const wstring& name);
         void Play(const wstring& name, bool loop);
         void Stop();
@@ -43,6 +44,8 @@ namespace m {
         function<void()>& GetStartEvent(const wstring name);
         function<void()>& GetCompleteEvent(const wstring name);
         function<void()>& GetEndEvent(const wstring name);
+
+
 
     private:
         map<wstring, Animation*> mAnimations;
@@ -53,6 +56,8 @@ namespace m {
 
         bool mbLoop;
         bool stopAnimator;
+
+        BYTE mConstant;
     };
 
     typedef map<wstring, Animation*>::iterator AnimationIter;

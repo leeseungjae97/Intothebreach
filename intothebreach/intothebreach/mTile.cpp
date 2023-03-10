@@ -43,29 +43,7 @@ namespace m {
 	}
 
 	void Tile::Render(HDC hdc) {
-		if (!mETCTexs.empty()) {
-			for (int i = 0; i < mETCTexs.size(); i++) {
-				assert(mETCTexs[i]);
-				UINT tile_iWidth = mETCTexs[i]->GetWidth();
-				UINT tile_iHeight = mETCTexs[i]->GetHeight();
-
-				Vector2 vRenderPos = Camera::CalculatePos(GetPos());
-				Vector2 vScale = GetScale();
-				TransparentBlt(hdc
-					, (int)(vRenderPos.x)
-					, (int)(vRenderPos.y)
-					, (int)(vScale.x)
-					, (int)(vScale.y)
-					, mETCTexs[i]->GetHdc()
-					, 0
-					, 0
-					, tile_iWidth
-					, tile_iHeight
-					, RGB(255, 0, 255));
-			}
-		}
-		else {
-			assert(mTileTex);
+		if(nullptr != mTileTex) {
 			UINT tile_iWidth = mTileTex->GetWidth();
 			UINT tile_iHeight = mTileTex->GetHeight();
 
@@ -99,6 +77,27 @@ namespace m {
 					, (int)(vScale.x)
 					, (int)(vScale.y)
 					, mTileTex->GetHdc()
+					, 0
+					, 0
+					, tile_iWidth
+					, tile_iHeight
+					, RGB(255, 0, 255));
+			}
+		}
+		if (!mETCTexs.empty()) {
+			for (int i = 0; i < mETCTexs.size(); i++) {
+				if (nullptr == mETCTexs[i]) continue;
+				UINT tile_iWidth = mETCTexs[i]->GetWidth();
+				UINT tile_iHeight = mETCTexs[i]->GetHeight();
+
+				Vector2 vRenderPos = Camera::CalculatePos(GetPos());
+				Vector2 vScale = GetScale();
+				TransparentBlt(hdc
+					, (int)(vRenderPos.x)
+					, (int)(vRenderPos.y)
+					, (int)(vScale.x)
+					, (int)(vScale.y)
+					, mETCTexs[i]->GetHdc()
 					, 0
 					, 0
 					, tile_iWidth
