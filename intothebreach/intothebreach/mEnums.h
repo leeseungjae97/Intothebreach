@@ -25,7 +25,7 @@ enum class LAYER_TYPE
 	TILE,
 	TILE_HEAD,
 	EFFECT,
-	MONSTER,
+	ALIEN,
 	PLAYER,
 	CLONE,
 	END,
@@ -696,19 +696,17 @@ wstring ALIEN_PATH[(UINT)ALIENS::END]{
 };
 
 enum class ALIEN_CONDITION {
-	SIZE,
 	IDLE,
-	WATER,
 	DEATH,
 	EMERGE,
+	WATER,
 	END
 };
 wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
-	L"",
 	L"a",
-	L"Bw",
 	L"_death",
 	L"_emerge",
+	L"Bw",
 };
 m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
 	//x, y
@@ -727,6 +725,54 @@ m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
 	{},//Slime,
 	{},//Spider,
 };
+m::Vector2 ALIENS_IDLE_SIZE[(UINT)ALIENS::END]{
+	{0,0},//Beetle,
+	{0,0},//Blobber,
+	{0,0},//Burrower,
+	{0,0},//Centipede,
+	{0,0},//Crab,
+	{0,0},//Digger,
+	{37,37},//Firefly,
+	{32,48},//Hornet,
+	{0,0},//Jelly,
+	{42,37},//Leaper,
+	{0,0},//Scarab,
+	{0,0},//Scorpion,
+	{0,0},//Slime,
+	{0,0},//Spider,
+};
+m::Vector2 ALIENS_DEATH_SIZE[(UINT)ALIENS::END]{
+	{0,0},//Beetle,
+	{0,0},//Blobber,
+	{0,0},//Burrower,
+	{0,0},//Centipede,
+	{0,0},//Crab,
+	{0,0},//Digger,
+	{41,0},//Firefly,
+	{30,48},//Hornet,
+	{0,0},//Jelly,
+	{54,38},//Leaper,
+	{0,0},//Scarab,
+	{0,0},//Scorpion,
+	{0,0},//Slime,
+	{0,0},//Spider,
+};
+m::Vector2 ALIENS_EMERGE_SIZE[(UINT)ALIENS::END]{
+	{0,0},//Beetle,
+	{0,0},//Blobber,
+	{0,0},//Burrower,
+	{0,0},//Centipede,
+	{0,0},//Crab,
+	{0,0},//Digger,
+	{42,43},//Firefly,
+	{41,52},//Hornet,
+	{0,0},//Jelly,
+	{43,44},//Leaper,
+	{0,0},//Scarab,
+	{0,0},//Scorpion,
+	{0,0},//Slime,
+	{0,0},//Spider,
+};
 m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 	//x, y
 	{0,0},//Beetle,
@@ -738,11 +784,27 @@ m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Firefly,
 	{30,48},//Hornet,
 	{0,0},//Jelly,
-	{0,0},//Leaper,
+	{42,37},//Leaper,
 	{0,0},//Scarab,
 	{0,0},//Scorpion,
 	{0,0},//Slime,
 	{0,0},//Spider,
+};
+m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{
+	{ALIENS_IDLE_SIZE[0], ALIENS_DEATH_SIZE[0], ALIENS_EMERGE_SIZE[0]},//Beetle,
+	{ALIENS_IDLE_SIZE[1], ALIENS_DEATH_SIZE[1], ALIENS_EMERGE_SIZE[1]},//Blobber,
+	{ALIENS_IDLE_SIZE[2], ALIENS_DEATH_SIZE[2], ALIENS_EMERGE_SIZE[2]},//Burrower,
+	{ALIENS_IDLE_SIZE[3], ALIENS_DEATH_SIZE[3], ALIENS_EMERGE_SIZE[3]},//Centipede,
+	{ALIENS_IDLE_SIZE[4], ALIENS_DEATH_SIZE[4], ALIENS_EMERGE_SIZE[4]},//Crab,
+	{ALIENS_IDLE_SIZE[5], ALIENS_DEATH_SIZE[5], ALIENS_EMERGE_SIZE[5]},//Digger,
+	{ALIENS_IDLE_SIZE[6], ALIENS_DEATH_SIZE[6], ALIENS_EMERGE_SIZE[6]},//Firefly,
+	{ALIENS_IDLE_SIZE[7], ALIENS_DEATH_SIZE[7], ALIENS_EMERGE_SIZE[7]},//Hornet,
+	{ALIENS_IDLE_SIZE[8], ALIENS_DEATH_SIZE[8], ALIENS_EMERGE_SIZE[8]},//Jelly,
+	{ALIENS_IDLE_SIZE[9], ALIENS_DEATH_SIZE[9], ALIENS_EMERGE_SIZE[9]},//Leaper,
+	{ALIENS_IDLE_SIZE[10], ALIENS_DEATH_SIZE[10], ALIENS_EMERGE_SIZE[10]},//Scarab,
+	{ALIENS_IDLE_SIZE[11], ALIENS_DEATH_SIZE[11], ALIENS_EMERGE_SIZE[11]},//Scorpion,
+	{ALIENS_IDLE_SIZE[12], ALIENS_DEATH_SIZE[12], ALIENS_EMERGE_SIZE[12]},//Slime,
+	{ALIENS_IDLE_SIZE[13], ALIENS_DEATH_SIZE[13], ALIENS_EMERGE_SIZE[13]},//Spider,
 };
 int ALIEN_MOVE_RANGE[(UINT)ALIENS::END]{
 
