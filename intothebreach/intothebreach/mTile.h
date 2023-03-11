@@ -41,7 +41,7 @@ namespace m {
         Vector2 GetCoord() { return mCoord; }
         Vector2 GetCenterPos() 
         { 
-            return Vector2(GetPos().x + mTileTex->GetWidth() / 2, GetPos().y + mTileTex->GetHeight() / 2);
+            return Vector2(GetPos().x + (mTileTex->GetWidth() / 2), GetPos().y + (mTileTex->GetHeight() / 2));
         }
     private:
         virtual void Update() override;

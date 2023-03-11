@@ -28,6 +28,7 @@ enum class LAYER_TYPE
 	ALIEN,
 	PLAYER,
 	CLONE,
+	SKILL,
 	END,
 };
 enum class PLAYERINFO_TYPE {
@@ -706,7 +707,7 @@ wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
 	L"a",
 	L"_death",
 	L"_emerge",
-	L"Bw",
+	L"_Bw",
 };
 m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
 	//x, y
@@ -790,6 +791,23 @@ m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Slime,
 	{0,0},//Spider,
 };
+int ALIENS_APL_COND[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
+	{},//Beetle,
+	{},//Blobber,
+	{},//Burrower,
+	{},//Centipede,
+	{},//Crab,
+	{},//Digger,
+	{1,1,1,1},//Firefly,
+	{1,1,1,0},//Hornet,
+	{},//Jelly,
+	{1,1,1,1},//Leaper,
+	{},//Scarab,
+	{},//Scorpion,
+	{},//Slime,
+	{},//Spider,
+
+};
 m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{
 	{ALIENS_IDLE_SIZE[0], ALIENS_DEATH_SIZE[0], ALIENS_EMERGE_SIZE[0]},//Beetle,
 	{ALIENS_IDLE_SIZE[1], ALIENS_DEATH_SIZE[1], ALIENS_EMERGE_SIZE[1]},//Blobber,
@@ -807,10 +825,37 @@ m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{
 	{ALIENS_IDLE_SIZE[13], ALIENS_DEATH_SIZE[13], ALIENS_EMERGE_SIZE[13]},//Spider,
 };
 int ALIEN_MOVE_RANGE[(UINT)ALIENS::END]{
+	3,//Beetle,
+	3,//Blobber,
+	3,//Burrower,
+	3,//Centipede,
+	3,//Crab,
+	3,//Digger,
+	3,//Firefly,
+	3,//Hornet,
+	3,//Jelly,
+	3,//Leaper,
+	3,//Scarab,
+	3,//Scorpion,
+	3,//Slime,
+	3,//Spider,
 
 };
 int ALIEN_HP[(UINT)ALIENS::END]{
-
+	3,//Beetle,
+	3,//Blobber,
+	3,//Burrower,
+	3,//Centipede,
+	3,//Crab,
+	3,//Digger,
+	3,//Firefly,
+	3,//Hornet,
+	3,//Jelly,
+	3,//Leaper,
+	3,//Scarab,
+	3,//Scorpion,
+	3,//Slime,
+	3,//Spider,
 };
 wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2) {
 	wstring key = L"";
@@ -835,6 +880,8 @@ wstring MAKE_ALIEN_PATH(ALIENS _type, ALIEN_CONDITION _type2) {
 enum class MOVE_TILE_T {
 	square,
 	square_g,
+	square_gy,
+	square_b,
 	square_w,
 	square_y_line,
 	square_g_line,
@@ -847,6 +894,8 @@ enum class MOVE_TILE_T {
 wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square",
 	L"square_g",
+	L"square_gy",
+	L"square_b",
 	L"square_w",
 	L"square_y_line",
 	L"square_g_line",
@@ -933,3 +982,8 @@ wstring STRUCTURE_PATH[(UINT)STRUCTURES_T::END]{
 	L"mountain_0",
 };
 
+enum class SKILL_T {
+	ARC,
+	ST,
+	END,
+};

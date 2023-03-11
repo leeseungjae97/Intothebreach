@@ -9,6 +9,8 @@
 #include "mAnimator.h"
 #include "mCamera.h"
 #include "mCollider.h"
+#include "mSkill.h"
+#include "func.h"
 namespace m
 {
 	Mech::Mech(MECHS _mech, Vector2 _coord, int _range, int _hp)
@@ -40,7 +42,7 @@ namespace m
 			, AC_SRC_ALPHA
 		);
 		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
-		SetMState(STATE::Idle);
+		SetState(STATE::Idle);
 	}
 	Mech::Mech(Mech& _origin) 
 		: mMechType(_origin.mMechType)
@@ -56,12 +58,12 @@ namespace m
 	{
 		Unit::Update();
 		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
-			SetMState(STATE::Broken);
+			SetState(STATE::Broken);
 		}
 		if (KEY_PRESSED(KEYCODE_TYPE::E)) {
-			SetMState(STATE::Idle);
+			SetState(STATE::Idle);
 		}
-		switch (GetMState()) {
+		switch (GetState()) {
 		case m::Mech::STATE::Idle:
 			idle();
 			break;

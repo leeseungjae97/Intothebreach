@@ -319,13 +319,21 @@ namespace m
 		}
 	}
 	void Scene::DrawFootTile() {
+		for (UINT _i = 0; _i < mAliens.size(); _i++) {
+			Vector2 mCoord = mAliens[_i]->GetFinalCoord();
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MOVE_RANGE);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(100);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
+				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_gy)
+				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_gy));
+		}
 		for (UINT _i = 0; _i < mMechs.size(); _i++) {
 			Vector2 mCoord = mMechs[_i]->GetFinalCoord();
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MOVE_RANGE);
-			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(50);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(150);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
-				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_w)
-				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_w));
+				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_b)
+				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_b));
 		}
 	}
 	/// <summary>
@@ -421,6 +429,7 @@ namespace m
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				//mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
+				mPosTiles[y][x]->SetSourceConstantAlpha(50);
 				mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mTiles[y][x]->SetTileType(TILE_T::GREEN);
 				mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)

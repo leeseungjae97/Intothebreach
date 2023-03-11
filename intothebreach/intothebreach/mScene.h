@@ -4,11 +4,10 @@
 #include "Mech.h"
 #include "Alien.h"
 #include "mUnit.h"
-
+#include "mTile.h"
 namespace m
 {
 	class Unit;
-	class Tile;
 	class Building;
 	class Scene : public Entity
 	{
@@ -43,9 +42,15 @@ namespace m
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
 		
+		Vector2 GetCoordCenterPos(Vector2 _coord) {
+			return mPosTiles[_coord.y][_coord.x]->GetCenterPos();
+		}
+
 		TILES GetPosTiles() { return mPosTiles; }
 		TILES GetTiles() { return mTiles; }
 		vector<Mech*>& GetMechs() { return mMechs; }
+		vector<Alien*>& GetAliens() { return mAliens; }
+
 
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
@@ -87,7 +92,7 @@ namespace m
 		vector<Vector2_1> pathQueue;
 
 		vector<Mech*> mMechs;
-		vector<Alien*> mAilens;
+		vector<Alien*> mAliens;
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;

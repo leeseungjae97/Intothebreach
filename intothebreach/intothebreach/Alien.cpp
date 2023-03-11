@@ -12,11 +12,12 @@ namespace m {
 
 
 		for (UINT i = 0; i < (UINT)ALIEN_CONDITION::END; i++) {
+			if (ALIENS_APL_COND[(UINT)mType][i] != 1) continue;
 			GetMImages()[i] = Resources::Load<Image>(
 				MAKE_ALIEN_KEY(mAlienType, (ALIEN_CONDITION)i)
 				, MAKE_ALIEN_PATH(mAlienType, (ALIEN_CONDITION)i));
 			if (nullptr == GetMImages()[i]) continue;
-			//GetMImages()[i]->SetOffset(ALIEN_OFFSET[(UINT)mAlienType]);
+			GetMImages()[i]->SetOffset(ALIEN_OFFSET[(UINT)mAlienType]);
 		}
 		for (int i = 0; i < 3; i++) {
 			Vector2 size = ALIENS_SIZES[(UINT)mAlienType][i];
@@ -24,17 +25,17 @@ namespace m {
 
 			GetAnimator()->CreateAnimation(
 				MAKE_ALIEN_KEY(mAlienType, (ALIEN_CONDITION)i)
-				, GetMImages()[(UINT)i]
+				, GetMImages()[i]
 				, Vector2(Vector2::Zero)
 				, Vector2(size.x, size.y)
-				, GetMImages()[(UINT)i]->GetOffset()
+				, GetMImages()[i]->GetOffset()
 				, len
 				, 0.5f
-				, AC_SRC_ALPHA
+				, AC_SRC_OVER
 			);
 		}
 		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
-		SetMState(STATE::Idle);
+		SetState(STATE::Idle);
 	}
 	Alien::Alien(Alien& _origin) 
 		: mAlienType(_origin.mAlienType)
@@ -49,10 +50,10 @@ namespace m {
 	void Alien::Update() {
 		Unit::Update();
 		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
-			SetMState(STATE::Broken);
+			SetState(STATE::Broken);
 		}
 		if (KEY_PRESSED(KEYCODE_TYPE::E)) {
-			SetMState(STATE::Idle);
+			SetState(STATE::Idle);
 		}
 	}
 	void Alien::Render(HDC hdc) {

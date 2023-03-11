@@ -140,10 +140,10 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="mCollisionManager.h" />
+    <ClInclude Include="mSkill.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="mUnit.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Skill_Range.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="mAnimation.h" />
     <ClInclude Include="mAnimator.h" />
@@ -211,6 +211,7 @@
     <ClCompile Include="mScene.cpp" />
     <ClCompile Include="mSceneManager.cpp" />
     <ClCompile Include="mSelectLandScene.cpp" />
+    <ClCompile Include="mSkill.cpp" />
     <ClCompile Include="mTile.cpp" />
     <ClCompile Include="mTime.cpp" />
     <ClCompile Include="mTitleScene.cpp" />
@@ -218,7 +219,6 @@
     <ClCompile Include="mImage.cpp" />
     <ClCompile Include="mUnit.cpp" />
     <ClCompile Include="mWeapon.cpp" />
-    <ClCompile Include="Skill_Range.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc" />

@@ -11,6 +11,7 @@
 #include "Mech.h"
 #include "func.h"
 #include "Alien.h"
+#include "mSkill.h"
 extern m::Application application;
 namespace m {
 	CombatScene::CombatScene() {
@@ -43,16 +44,23 @@ namespace m {
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 
-		Mech* mech1 = object::Instantiate(Vector2(2, 2), LAYER_TYPE::PLAYER, MECHS::artillery);
+		Mech* mech1 = object::Instantiate(Vector2(1, 2), LAYER_TYPE::PLAYER, MECHS::artillery);
 		Mech* mech2 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::PLAYER, MECHS::tank);
 		Mech* mech3 = object::Instantiate(Vector2(6, 6), LAYER_TYPE::PLAYER, MECHS::punch);
 
-		Alien* alien1 = object::Instantiate(Vector2(7, 7), LAYER_TYPE::ALIEN, ALIENS::Hornet);
-
+		Alien* alien1 = object::Instantiate(Vector2(6, 2), LAYER_TYPE::ALIEN, ALIENS::Hornet);
+		Alien* alien2 = object::Instantiate(Vector2(2, 4), LAYER_TYPE::ALIEN, ALIENS::Leaper);
+		Alien* alien3 = object::Instantiate(Vector2(2, 3), LAYER_TYPE::ALIEN, ALIENS::Firefly);
 	}
 	void CombatScene::Update() {
 		Scene::Update();
 		Scene::MoveAlgo();
+		if (KEY_PRESSED(KEYCODE_TYPE::C)) {
+			//Skill* skill = object::Instantiate(GetMechs()[0]->GetCoord() , GetAliens()[0]->GetCoord(),
+			//	LAYER_TYPE::SKILL, SKILL_T::ARC);
+			Skill* skill = object::Instantiate(GetMechs()[0]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
+				LAYER_TYPE::SKILL, SKILL_T::ARC);
+		}
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);
 		}

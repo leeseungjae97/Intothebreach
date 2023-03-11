@@ -36,8 +36,8 @@ namespace m {
 		, mFinalCoord(_origin.mFinalCoord)
 		, mFinalPos(_origin.mFinalPos)
 		, moveRange(_origin.moveRange)
-		, mState(_origin.mState)
 	{
+		SetState(_origin.GetState());
 		mAnimator = GetComponent<Animator>();
 	}
 	Unit::Unit() {
@@ -53,7 +53,7 @@ namespace m {
 	void Unit::Render(HDC hdc) {
 		GameObject::Render(hdc);
 		
-		Vector2 mPos = GetComponent<Transform>()->GetPos();
+		Vector2 mPos = GetPos();
 		
 		if (nullptr != GetCurImage()) {
 			Image* curImage = GetCurImage();
@@ -97,7 +97,7 @@ namespace m {
 			
 			int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
 			int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
-
+			if (mHp == 0) return;
 			int hpWidth = (hpBack->GetWidth() * 2) / mHp;
 			int hpHeight = hpBack->GetHeight() * 2;
 			for (int i = 0; i < mHp; i++) {

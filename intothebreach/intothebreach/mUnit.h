@@ -48,8 +48,8 @@ namespace m {
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
 
-		STATE GetMState() { return mState; }
-		void SetMState(STATE _state) { mState = _state; }
+		//STATE GetMState() { return mState; }
+		//void SetMState(STATE _state) { mState = _state; }
 		Image* GetCurImage() { return curImage; }
 		void SetCurImage(Image* m) { curImage = m; }
 
@@ -65,7 +65,7 @@ namespace m {
 		Image* curImage;
 		Image* hpImage;
 		Image* hpBack;
-		STATE mState;
+		//STATE mState;
 		vector<Image*> hpBar;
 		LAYER_TYPE lType;
 

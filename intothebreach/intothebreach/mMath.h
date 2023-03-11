@@ -119,7 +119,7 @@ namespace m {
 			return sqrtf(x * x + y * y);
 		}
 
-		Vector2 Normalize() {
+		Vector2& Normalize() {
 			float length = Length();
 			x /= length;
 			y /= length;
@@ -140,5 +140,20 @@ namespace m {
 };
 
 namespace m::math {
+    inline Vector2 Rotate(Vector2 vector, float degree) {
+        float radian = (degree / 180.f) * PI;
+        vector.Normalize();
+        float x = cosf(radian) * vector.x - sinf(radian) * vector.y;
+        float y = sinf(radian) * vector.x + cosf(radian) * vector.y;
 
+        return Vector2(x, y);
+    }
+
+    inline float Dot(Vector2& v1, Vector2& v2) {
+        return v1.x * v2.x + v1.y * v2.y;
+    }
+
+    inline float Cross(Vector2 v1, Vector2 v2) {
+        return v1.x * v2.y - v1.y * v2.x;
+    }
 }

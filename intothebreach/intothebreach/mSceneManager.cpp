@@ -34,7 +34,7 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::TITLE];
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::COMBAT];
 	}
 
 	void SceneManager::Update()

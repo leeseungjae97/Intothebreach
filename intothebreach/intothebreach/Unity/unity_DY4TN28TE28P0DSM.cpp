@@ -92,6 +92,9 @@
 #include "E:\intothebreach\intothebreach\intothebreach\mSelectLandScene.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mSkill.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mTile.cpp"
 
 
@@ -111,7 +114,4 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mWeapon.cpp"
-
-
-#include "E:\intothebreach\intothebreach\intothebreach\Skill_Range.cpp"
 
