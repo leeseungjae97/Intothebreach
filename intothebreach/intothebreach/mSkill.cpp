@@ -11,7 +11,7 @@ namespace m {
 		AddComponent(new Transform);
 		AddComponent(new Animator);
 
-		mTheta = -PI / 2.f;
+		mTheta = -PI / 4.f;
 	}
 	Skill::Skill(Skill& _origin) {
 	}
@@ -20,28 +20,34 @@ namespace m {
 		AddComponent(new Transform);
 		AddComponent(new Animator);
 
-		mTheta = -PI / 2.f;
+		mTheta = -PI / 4.f;
 	}
 	Skill::~Skill() {
 	}
 	void Skill::Initialize() {
 		
 	}
+	void Skill::PreCal() {
+		dh = mFinalEdPos.y - mStPos.y;
+		if (mFinalEdPos.y > mStPos.y) {
+			MAX_Y = 
+		}
+
+	}
 	void Skill::Update() {
-		Vector2 mS = GetPos();
+		Vector2 mPos = GetPos();
 		
 		switch (mType) {
 		case SKILL_T::ARC:
 		{
-			mEdPos = math::Rotate(mEdPos, 5.0f);
-			mS.x += 500.f * mEdPos.x * cosf(mTheta) * Time::fDeltaTime();
-			mS.y += 500.f * mEdPos.y * sinf(mTheta) * Time::fDeltaTime();
+			PreCal();
+
 		}
 		break;
 		case SKILL_T::ST:
 		{
-			mS.x += 500.f * mEdPos.x * Time::fDeltaTime();
-			mS.y += 500.f * mEdPos.y * Time::fDeltaTime();
+			mPos.x += 500.f * mEdPos.x * Time::fDeltaTime();
+			mPos.y += 500.f * mEdPos.y * Time::fDeltaTime();
 		}
 		break;
 		case SKILL_T::END:
@@ -53,10 +59,10 @@ namespace m {
 			break;
 		}
 
-		if (mFinalEdPos <= mS) {
-			object::Destory(this);
-		}
-		SetPos(mS);
+		//if (mFinalEdPos <= mS) {
+		//	object::Destory(this);
+		//}
+		SetPos(mPos);
 	}
 	void Skill::Render(HDC hdc) {
 		Vector2 mPos = GetPos();

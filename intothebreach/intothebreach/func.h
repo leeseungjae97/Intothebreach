@@ -39,6 +39,7 @@ namespace m::object {
 		gameObj->GetAnimator()->SetConstant(255);
 		gameObj->SetLayerType(type);
 		if (type == LAYER_TYPE::CLONE) {
+			gameObj->SetState(GameObject::STATE::Death);
 			gameObj->GetAnimator()->SetConstant(100);
 			
 		}

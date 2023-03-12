@@ -17,7 +17,7 @@ namespace m {
         Vector2 GetCurCoord() { return curCoord; }
         void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
         LAYER_TYPE GetLayerType() { return mLayerType; }
-
+        void PreCal();
         void SetSkillType(SKILL_T _type) { mType = _type; }
         SKILL_T GetSkillType() { return mType; }
         void SetStPos(Vector2 _pos) { mStPos = _pos; }
@@ -28,8 +28,20 @@ namespace m {
             mEdPos.Normalize();
         }
         Vector2 GetEndPos() { mEdPos; }
+
     private:
         float mTheta;
+        
+        float vx;
+        float vy;
+        float g;
+
+        float dat;
+        float mh;
+        float dh;
+        float t = 0.0f;
+        float MAX_Y;
+        float mht = 1.5f;
         LAYER_TYPE mLayerType;
         SKILL_T mType;
         Vector2 curCoord;
