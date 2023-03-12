@@ -34,11 +34,8 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			mEdPos = math::Rotate(mEdPos, 5.0f);
-			//mS.x += 500.f * mEdPos.x * cosf(mTheta) * Time::fDeltaTime();
-			//mS.y += 500.f * mEdPos.y * sinf(mTheta) * Time::fDeltaTime();
-			mTheta += 0.05f;
-			mS.x += 100.f * cosf(mTheta) * Time::fDeltaTime();
-			mS.y += 100.f * sinf(mTheta) * Time::fDeltaTime();
+			mS.x += 500.f * mEdPos.x * cosf(mTheta) * Time::fDeltaTime();
+			mS.y += 500.f * mEdPos.y * sinf(mTheta) * Time::fDeltaTime();
 		}
 		break;
 		case SKILL_T::ST:
