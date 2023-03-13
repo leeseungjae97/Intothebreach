@@ -28,10 +28,22 @@ namespace m {
 		
 	}
 	void Skill::PreCal() {
-		dh = mFinalEdPos.y - mStPos.y;
-		if (mFinalEdPos.y > mStPos.y) {
-			MAX_Y = 
-		}
+		fEndHeight = mFinalEdPos.y - mStPos.y;
+		fHeight = 50 - mStPos.y;
+
+		fg = 2 * fHeight / (fMaxTime * fMaxTime);
+		fy = sqrtf(1 * fg * fHeight);
+
+		float a = fg;
+		float b = - 2 * fy;
+		float c = 2 * fEndHeight;
+
+		fEndTime = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
+
+		fx = -(mStPos.x - mFinalEdPos.x) / fEndTime;
+
+
+		//A = () / 2 * ();
 
 	}
 	void Skill::Update() {
@@ -41,6 +53,10 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			PreCal();
+			fTime += Time::fDeltaTime();
+
+			mPos.x = mStPos.x - fx * fTime;
+			mPos.y = mStPos.y - (fy * fTime) - (0.5f * fg * fTime * fTime);
 
 		}
 		break;
@@ -58,10 +74,14 @@ namespace m {
 		default:
 			break;
 		}
-
-		//if (mFinalEdPos <= mS) {
-		//	object::Destory(this);
-		//}
+		if (mStPos.x > mFinalEdPos.x) {
+			if (mFinalEdPos.y <= mPos.y) {
+				object::Destory(this);
+			}
+		}
+		if (mFinalEdPos <= mPos) {
+			object::Destory(this);
+		}
 		SetPos(mPos);
 	}
 	void Skill::Render(HDC hdc) {

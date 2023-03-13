@@ -24,7 +24,7 @@ namespace m {
 		mCutton = Image::Create(L"Cutton", (UINT)mResolution.x, (UINT)mResolution.y);
 	}
 	void Camera::Update() {
-		if (KEY_PRESSED(KEYCODE_TYPE::W)) {
+		/*if (KEY_PRESSED(KEYCODE_TYPE::W)) {
 			mLookPosition.y -= Time::fDeltaTime() * 500.0f;
 		}
 		if (KEY_PRESSED(KEYCODE_TYPE::S)) {
@@ -35,7 +35,7 @@ namespace m {
 		}
 		if (KEY_PRESSED(KEYCODE_TYPE::D)) {
 			mLookPosition.x += Time::fDeltaTime() * 500.0f;
-		}
+		}*/
 		
 
 		CalDiff();

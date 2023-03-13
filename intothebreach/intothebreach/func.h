@@ -79,6 +79,7 @@ namespace m::object {
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
+		//if (mType == SKILL_T::ARC) gameObj->PreCal();
 		gameObj->SetLayerType(type);
 		gameObj->SetSkillType(mType);
 

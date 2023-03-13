@@ -26,25 +26,34 @@ namespace m {
             mEdPos -= mStPos;
             mFinalEdPos = _pos;
             mEdPos.Normalize();
+
+            if (mStPos < mFinalEdPos) minPos = mStPos;
+            else minPos = mFinalEdPos;
         }
         Vector2 GetEndPos() { mEdPos; }
 
     private:
         float mTheta;
         
-        float vx;
-        float vy;
-        float g;
+        float A;
+        float B;
+        float C;
 
-        float dat;
-        float mh;
-        float dh;
-        float t = 0.0f;
-        float MAX_Y;
-        float mht = 1.5f;
+        float fx;
+        float fy;
+
+        float fg;
+        float fEndTime;
+        float fMaxHeight;
+        float fHeight;
+        float fEndHeight;
+        float fTime = 0.f;
+        float fMaxTime = 0.8f;
+
         LAYER_TYPE mLayerType;
         SKILL_T mType;
         Vector2 curCoord;
+        Vector2 minPos;
         Vector2 mStPos;
         Vector2 mEdPos;
         Vector2 mFinalEdPos;
