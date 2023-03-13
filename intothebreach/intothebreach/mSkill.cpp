@@ -41,10 +41,6 @@ namespace m {
 		fEndTime = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
 
 		fx = -(mStPos.x - mFinalEdPos.x) / fEndTime;
-
-
-		//A = () / 2 * ();
-
 	}
 	void Skill::Update() {
 		Vector2 mPos = GetPos();
@@ -57,6 +53,7 @@ namespace m {
 
 			mPos.x = mStPos.x - fx * fTime;
 			mPos.y = mStPos.y - (fy * fTime) - (0.5f * fg * fTime * fTime);
+
 
 		}
 		break;
@@ -87,6 +84,10 @@ namespace m {
 	void Skill::Render(HDC hdc) {
 		Vector2 mPos = GetPos();
 		SelectGDI p(hdc, BRUSH_TYPE::GREEN);
+		
+		float _theta = atan2(mPos.y, mPos.x);
+
+
 
 		Rectangle(hdc,
 			(int)(mPos.x),
@@ -94,6 +95,10 @@ namespace m {
 			(int)(mPos.x + 50),
 			(int)(mPos.y + 50)
 			);
+
+		/**RotateBitmap(bitmap, hdc, size x, size y,
+		* angle(theta), dstX, dstY);
+		*/
 	}
 	void Skill::Release() {
 	}

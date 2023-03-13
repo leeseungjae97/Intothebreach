@@ -170,7 +170,7 @@ namespace m
 	void Scene::DrawMoveDirectionTile() {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				if (Scene::CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
 					
 					// 이동가능 거리 인지 확인
 					if (map[y][x] == MECH) {
@@ -266,7 +266,7 @@ namespace m
 	void Scene::CheckMouseOutOfMapRange() {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
 					// 마우스의 위치가 이동가능 범위가 아닐때
 					// 원래 위치에 돌아감
 					if (map[y][x] != MOVE) {
@@ -290,7 +290,7 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				// 마우스의 위치있는 메카 마우스에 따라오게
-				if (CheckRhombusPos(mPosTiles[y][x], MOUSE_POS)) {
+				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
 							SetMouseFollower(mMechs[_i]);
@@ -438,55 +438,12 @@ namespace m
 		}
 	}
 	/// <summary>
-	/// 사각형 땅의 각 꼭짓점을 구하고
-	/// 꼭짓점끼리의 절편과 기울기를 이용해 마름모의 좌표를 구함
-	/// </summary>
-	/// <param name="tile">꼭짓점을 추출할 타일</param>
-	/// <param name="_pos">현재 위치(마우스커서)</param>
-	/// <returns>현재위치가 타일의 마름모 좌표 내부에 있는지 여부</returns>
-	bool Scene::CheckRhombusPos(GameObject* obj, Vector2 otherPos) {
-		Vector2 vertex[4];
-		float gradient[4];
-		float intercept[4];
-		float direct[4][2] = {
-			{0, (obj->GetScale().y / 2)},
-			{(obj->GetScale().x / 2), 0},
-			{obj->GetScale().x, (obj->GetScale().y / 2)},
-			{(obj->GetScale().x / 2), obj->GetScale().y}
-		};
-		for (size_t i = 0; i < 4; i++) {
-			vertex[i].x = obj->GetPos().x + direct[i][0];
-			vertex[i].y = obj->GetPos().y + direct[i][1];
-		}
-		for (size_t i = 0; i < 4; i++) {
-			gradient[i] = ((vertex[i].y - vertex[(i + 1) % 4].y) / (vertex[i].x - vertex[(i + 1) % 4].x));
-			intercept[i] = vertex[i].y - gradient[i] * vertex[i].x;
-		}
-		float _y = otherPos.y;
-		float _x = otherPos.x;
-
-		if (gradient[0] * _x + intercept[0] < _y
-			&& gradient[1] * _x + intercept[1] < _y
-			&& gradient[2] * _x + intercept[2] > _y
-			&& gradient[3] * _x + intercept[3] > _y) {
-			return true;
-		}
-		else return false;
-	}
-	bool Scene::CheckRectPos(GameObject* obj, Vector2 otherPos) {
-		Vector2 fP = { obj->GetPos().x, obj->GetPos().y };
-		Vector2 lP = { fP.x + obj->GetScale().x, fP.y + obj->GetScale().y };
-
-		if (fP <= otherPos && lP >= otherPos) return true;
-		else return false;
-	}
-	/// <summary>
 	/// 마우스 위치의 타일 바꿈
 	/// </summary>
 	void Scene::HighlightTile() {
 		for (int y = 0; y < mPosOutLineTiles.size(); y++) {
 			for (int x = 0; x < mPosOutLineTiles[y].size(); x++) {
-				if (Scene::CheckRhombusPos(mPosOutLineTiles[y][x], MOUSE_POS)) {
+				if (math::CheckRhombusPos(mPosOutLineTiles[y][x]->GetPos(), mPosOutLineTiles[y][x]->GetScale(), MOUSE_POS)) {
 					if (map[y][x] != MOVE) {
 						mPosOutLineTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
 					}

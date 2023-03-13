@@ -34,10 +34,6 @@ namespace m {
 
     private:
         float mTheta;
-        
-        float A;
-        float B;
-        float C;
 
         float fx;
         float fy;
