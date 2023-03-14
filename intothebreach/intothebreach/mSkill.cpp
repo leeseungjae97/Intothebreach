@@ -4,6 +4,9 @@
 #include "mTransform.h"
 #include "mAnimator.h"
 #include "func.h"
+#include "mApplication.h"
+#include "mImage.h"
+extern m::Application application;
 namespace m {
 	Skill::Skill(SKILL_T _type)
 		: mType(_type)
@@ -87,14 +90,31 @@ namespace m {
 		
 		float _theta = atan2(mPos.y, mPos.x);
 
+	    Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
+		Image* output = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_square.bmp");;
+		HBITMAP hbm = im->GetBitmap();
+		BITMAP bm;
+		GetObject(hbm, sizeof(bm), &bm);
 
+		bitmap::RotatingImage(im, output, bm.bmWidth, bm.bmHeight, _theta);
 
-		Rectangle(hdc,
+		TransparentBlt(hdc, 
+			(int)(mPos.x),
+			(int)(mPos.y),
+			(int)(output->GetWidth() * 2),
+			(int)(output->GetHeight() * 2),
+			output->GetHdc(),
+			0,0,
+			output->GetWidth(), output->GetHeight(),
+			RGB(255,0,255));
+		//PlgBlt(hdc, );
+
+	/*	Rectangle(hdc,
 			(int)(mPos.x),
 			(int)(mPos.y),
 			(int)(mPos.x + 50),
 			(int)(mPos.y + 50)
-			);
+			);*/
 
 		/**RotateBitmap(bitmap, hdc, size x, size y,
 		* angle(theta), dstX, dstY);
