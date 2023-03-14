@@ -95,20 +95,15 @@ namespace m::object {
 	
 }
 namespace m::bitmap {
-	static void RotatingImage(Image* image, Image* output, int img_width
-		, int img_height, float theta) {
-		for (int y = 0; y < img_height; y++) {
-			for (int x = img_width - 1; x >= 0; x--) {
-				output->SetPixel(img_width - x, y, image->GetPixel(x, y));
-				/*float _x = cosf(theta) * x + sinf(theta) * y;
-				float _y = -1 * sinf(theta) * x + cosf(theta) * y;
-				float pY = abs(_y);*/
-				//만약 가져오려는 좌표가 캔버스를 벗어나면, 그냥 검정색으로 처리
-				/*if ((pY < img_width && _x < img_height))
-					output->SetPixel(x, y, image->GetPixel(_x, pY));*/
-				//else
-					//output->SetPixel(x, y, Pixel{ 0,0,0,0 }); //0
-			}
-		}
+	static void RotatingImage(RECT* image, RECT*,
+		float angle) {
+		float sina = sinf(angle);
+		float cosa = cosf(angle);
+		
+		float xc = (image->left + image->right )* 0.5;
+		float yc = (image->top + image->bottom) * 0.5;
+
+		float w2 = image->right - xc;
+		float h2 = image->bottom - yc;
 	}
 }

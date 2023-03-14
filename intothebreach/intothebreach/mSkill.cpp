@@ -93,10 +93,8 @@ namespace m {
 	    Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
 		Image* output = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_square.bmp");;
 		HBITMAP hbm = im->GetBitmap();
-		BITMAP bm;
+		RECT bm;
 		GetObject(hbm, sizeof(bm), &bm);
-
-		bitmap::RotatingImage(im, output, bm.bmWidth, bm.bmHeight, _theta);
 
 		TransparentBlt(hdc, 
 			(int)(mPos.x),
