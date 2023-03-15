@@ -86,37 +86,19 @@ namespace m {
 	}
 	void Skill::Render(HDC hdc) {
 		Vector2 mPos = GetPos();
-		SelectGDI p(hdc, BRUSH_TYPE::GREEN);
-		
+
 		float _theta = atan2(mPos.y, mPos.x);
 
 	    Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
-		Image* output = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_square.bmp");;
-		HBITMAP hbm = im->GetBitmap();
-		RECT bm;
-		GetObject(hbm, sizeof(bm), &bm);
 
-		TransparentBlt(hdc, 
-			(int)(mPos.x),
-			(int)(mPos.y),
-			(int)(output->GetWidth() * 2),
-			(int)(output->GetHeight() * 2),
-			output->GetHdc(),
-			0,0,
-			output->GetWidth(), output->GetHeight(),
-			RGB(255,0,255));
-		//PlgBlt(hdc, );
+		wchar_t szFloat[50] = {};
+		swprintf_s(szFloat, 50, L"degree : %f", _theta);
+		size_t iLen = wcsnlen_s(szFloat, 50);
+		RECT rt = { 50, 100, 150, 150 };
+		DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
 
-	/*	Rectangle(hdc,
-			(int)(mPos.x),
-			(int)(mPos.y),
-			(int)(mPos.x + 50),
-			(int)(mPos.y + 50)
-			);*/
-
-		/**RotateBitmap(bitmap, hdc, size x, size y,
-		* angle(theta), dstX, dstY);
-		*/
+		bitmap::RotateBitmap(hdc, mPos,
+			im->GetBitmap(), im->GetWidth(), im->GetHeight(), (_theta * 180 / PI), im->GetHdc());
 	}
 	void Skill::Release() {
 	}

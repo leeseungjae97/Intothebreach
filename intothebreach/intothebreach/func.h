@@ -91,19 +91,62 @@ namespace m::object {
 	static void Destory(GameObject* obj) {
 		obj->SetState(GameObject::STATE::Death);
 	}
-
+	static void DrawText(wstring ar ...) {
+	/*	wchar_t szFloat[50] = {};
+		swprintf_s(szFloat, 50, L"degree : %f", _theta * 180 / PI);
+		size_t iLen = wcsnlen_s(szFloat, 50);
+		RECT rt = { 50, 100, 150, 150 };
+		DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);*/
+	}
 	
 }
 namespace m::bitmap {
-	static void RotatingImage(RECT* image, RECT*,
-		float angle) {
-		float sina = sinf(angle);
-		float cosa = cosf(angle);
-		
-		float xc = (image->left + image->right )* 0.5;
-		float yc = (image->top + image->bottom) * 0.5;
+	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap, int iw, int he, float angle, HDC sourceDC) {
+		// Get the dimensions of the bitmap
+		BITMAP bmp;
+		GetObject(hBitmap, sizeof(BITMAP), &bmp);
 
-		float w2 = image->right - xc;
-		float h2 = image->bottom - yc;
+		//float rad = angle * PI / 180;
+
+		float centerX = 300;
+		float centerY = 300;
+
+		XFORM xform;
+		xform.eM11 = cos(angle);
+		xform.eM12 = sin(angle);
+		xform.eM21 = -sin(angle);
+		xform.eM22 = cos(angle);
+		xform.eDx = (FLOAT)(centerX - centerX * cos(angle) + centerY * sin(angle));
+		xform.eDy = (FLOAT)(centerY - centerX * sin(angle) - centerY * cos(angle));
+
+		SetGraphicsMode(hdc, GM_ADVANCED);
+		SetWorldTransform(hdc, &xform);
+
+		// Draw the rotated bitmap
+		//StretchBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight,
+		//	sourceDC, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+		//BitBlt(hdc, pos.x, pos.y, bmp.bmWidth, bmp.bmHeight,
+		//	sourceDC, 0, 0, SRCCOPY);
+		// Reset the world transform
+
+		TransparentBlt(hdc,
+			(int)(pos.x),
+			(int)(pos.y),
+			(int)(iw * 2),
+			(int)(he * 2),
+			sourceDC,
+			0, 0,
+			iw, he,
+			RGB(255, 0, 255));
+
+
+		xform.eM11 = 1;
+		xform.eM12 = 0;
+		xform.eM21 = 0;
+		xform.eM22 = 1;
+		xform.eDx = 0;
+		xform.eDy = 0;
+		SetWorldTransform(hdc, &xform);
+		
 	}
 }

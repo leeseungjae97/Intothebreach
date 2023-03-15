@@ -16,6 +16,7 @@ namespace m {
 
 		HDC GetHdc() { return mHdc; }
 		HBITMAP GetBitmap() { return mHBitmap; }
+		//void SetBitmap() {}
 		UINT GetWidth() { return mWidth; }
 		UINT GetHeight() { return mHeight; }
 		void SetOffset(Vector2 _offset) { mOffset = _offset; }
