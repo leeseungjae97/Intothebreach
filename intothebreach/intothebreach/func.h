@@ -101,7 +101,8 @@ namespace m::object {
 	
 }
 namespace m::bitmap {
-	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap, int iw, int he, float angle, HDC sourceDC) {
+	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap
+		, int iw, int he, float angle, HDC sourceDC) {
 		// Get the dimensions of the bitmap
 		BITMAP bmp;
 		GetObject(hBitmap, sizeof(BITMAP), &bmp);
@@ -112,22 +113,29 @@ namespace m::bitmap {
 		float centerY = 300;
 
 		XFORM xform;
+		//xform.eM11 = (FLOAT)0.8660;
+		//xform.eM12 = (FLOAT)0.5000;
+		//xform.eM21 = (FLOAT)-0.5000;
+		//xform.eM22 = (FLOAT)0.8660;
+
 		xform.eM11 = cos(angle);
 		xform.eM12 = sin(angle);
 		xform.eM21 = -sin(angle);
 		xform.eM22 = cos(angle);
-		xform.eDx = (FLOAT)(centerX - centerX * cos(angle) + centerY * sin(angle));
-		xform.eDy = (FLOAT)(centerY - centerX * sin(angle) - centerY * cos(angle));
+		float cos_ang = cos(angle);
+		float sin_ang = sin(angle);
+		xform.eDx = (pos.x - (cos_ang * pos.x) )+ (sin_ang * pos.y);
+		xform.eDy = (pos.y - (sin_ang * pos.x) )- (cos_ang * pos.y);
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);
 
-		// Draw the rotated bitmap
 		//StretchBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight,
 		//	sourceDC, 0, 0, bmp.bmWidth, bmp.bmHeight, SRCCOPY);
-		//BitBlt(hdc, pos.x, pos.y, bmp.bmWidth, bmp.bmHeight,
-		//	sourceDC, 0, 0, SRCCOPY);
-		// Reset the world transform
+		//StretchBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight,
+		//	sourceDC, 0,0,bmp.bmWidth, bmp.bmHeight, SRCCOPY);
+		/*BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight,
+			sourceDC, bmp.bmWidth, bmp.bmHeight, SRCCOPY);*/
 
 		TransparentBlt(hdc,
 			(int)(pos.x),
@@ -139,14 +147,12 @@ namespace m::bitmap {
 			iw, he,
 			RGB(255, 0, 255));
 
-
 		xform.eM11 = 1;
 		xform.eM12 = 0;
 		xform.eM21 = 0;
 		xform.eM22 = 1;
 		xform.eDx = 0;
 		xform.eDy = 0;
-		SetWorldTransform(hdc, &xform);
-		
+		SetWorldTransform(hdc, &xform);		
 	}
 }

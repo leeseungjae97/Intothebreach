@@ -57,6 +57,11 @@ namespace m {
 			mPos.x = mStPos.x - fx * fTime;
 			mPos.y = mStPos.y - (fy * fTime) - (0.5f * fg * fTime * fTime);
 
+			wchar_t szFloat[500] = {};
+			swprintf_s(szFloat, 500, L"x : %f, y : %f", fx * fTime, fy * fTime);
+			size_t iLen = wcsnlen_s(szFloat, 500);
+			RECT rt = { 50, 100, 150, 200 };
+			DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
 
 		}
 		break;
@@ -86,19 +91,23 @@ namespace m {
 	}
 	void Skill::Render(HDC hdc) {
 		Vector2 mPos = GetPos();
-
-		float _theta = atan2(mPos.y, mPos.x);
+		Vector2 md = mPos;
+		md.Normalize();
+		float _theta = atan2(md.y, md.x);
 
 	    Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
 
-		wchar_t szFloat[50] = {};
-		swprintf_s(szFloat, 50, L"degree : %f", _theta);
-		size_t iLen = wcsnlen_s(szFloat, 50);
-		RECT rt = { 50, 100, 150, 150 };
-		DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+		//wchar_t szFloat[500] = {};
+		//swprintf_s(szFloat, 500, L"degree : %f, cos : %lf, sin : %lf", _theta, cos(_theta), sin(_theta));
+		//size_t iLen = wcsnlen_s(szFloat, 500);
+		//RECT rt = { 50, 100, 200, 200 };
+		//DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+
+
 
 		bitmap::RotateBitmap(hdc, mPos,
-			im->GetBitmap(), im->GetWidth(), im->GetHeight(), (_theta * 180 / PI), im->GetHdc());
+			im->GetBitmap(), im->GetWidth()
+			, im->GetHeight(), _theta, im->GetHdc());
 	}
 	void Skill::Release() {
 	}
