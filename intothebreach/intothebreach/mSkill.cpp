@@ -35,13 +35,18 @@ namespace m {
 		fHeight = 50 - mStPos.y;
 
 		fg = 2 * fHeight / (fMaxTime * fMaxTime);
-		fy = sqrtf(1 * fg * fHeight);
+		fy = sqrtf(fg * fHeight);
 
 		float a = fg;
 		float b = - 2 * fy;
 		float c = 2 * fEndHeight;
 
-		fEndTime = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
+		if (a == 0) {
+			fEndTime = fMaxTime;
+		}
+		else {
+			fEndTime = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
+		}
 
 		fx = -(mStPos.x - mFinalEdPos.x) / fEndTime;
 	}
@@ -52,16 +57,22 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			PreCal();
+			
 			fTime += Time::fDeltaTime();
 
 			mPos.x = mStPos.x - fx * fTime;
 			mPos.y = mStPos.y - (fy * fTime) - (0.5f * fg * fTime * fTime);
+			/*Vector2 m = mFinalEdPos - mPos;
+			float theta = atan2(m.y, m.x);
 
 			wchar_t szFloat[500] = {};
-			swprintf_s(szFloat, 500, L"x : %f, y : %f", fx * fTime, fy * fTime);
+			swprintf_s(szFloat, 500
+				, L"fx : %f, fy : %f\n posx : %f, posy : %f\ntheta : %f, angle : %f"
+				, fx , fy , m.x, m.y, theta , theta * 180 / PI);
+
 			size_t iLen = wcsnlen_s(szFloat, 500);
-			RECT rt = { 50, 100, 150, 200 };
-			DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+			RECT rt = { 50, 100, 400, 200 };
+			DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);*/
 
 		}
 		break;
@@ -91,23 +102,74 @@ namespace m {
 	}
 	void Skill::Render(HDC hdc) {
 		Vector2 mPos = GetPos();
-		Vector2 md = mPos;
-		md.Normalize();
-		float _theta = atan2(md.y, md.x);
+		switch (mType) {
+		case SKILL_T::ARC:
+		{
+			Vector2 cm = max(mFinalEdPos, mStPos);
+			Vector2 m = max(cm, mPos) - min(cm, mPos);
+			m.Normalize();
+			float _theta = atan2(m.y, m.x);
 
-	    Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
+			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
 
-		//wchar_t szFloat[500] = {};
-		//swprintf_s(szFloat, 500, L"degree : %f, cos : %lf, sin : %lf", _theta, cos(_theta), sin(_theta));
-		//size_t iLen = wcsnlen_s(szFloat, 500);
-		//RECT rt = { 50, 100, 200, 200 };
-		//DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+			//wchar_t szFloat[500] = {};
+			//swprintf_s(szFloat, 500, L"degree : %f, cos : %lf, sin : %lf", _theta, cos(_theta), sin(_theta));
+			//size_t iLen = wcsnlen_s(szFloat, 500);
+			//RECT rt = { 50, 100, 200, 200 };
+			//DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+
+			if (mFinalEdPos.x < mStPos.x) { _theta *= -1; }
 
 
+			bitmap::RotateBitmap(hdc, mPos,
+				im->GetBitmap(), im->GetWidth()
+				, im->GetHeight(), _theta, im->GetHdc());
+		}
+			break;
+		case SKILL_T::ST:
+		{
+			Image* im;
+			SKILL_DIR dir = SKILL_DIR::D;
+			if (mStPos < mFinalEdPos) 
+				dir = SKILL_DIR::R;
+			if (mStPos > mFinalEdPos) 
+				dir = SKILL_DIR::L;
+			if (mStPos.x < mFinalEdPos.x
+				&& mStPos.y > mFinalEdPos.y)
+				dir = SKILL_DIR::U;
+			if (mStPos.x > mFinalEdPos.x
+				&& mStPos.y < mFinalEdPos.y)
+				dir = SKILL_DIR::D;
 
-		bitmap::RotateBitmap(hdc, mPos,
-			im->GetBitmap(), im->GetWidth()
-			, im->GetHeight(), _theta, im->GetHdc());
+
+			wchar_t szFloat[500] = {};
+			swprintf_s(szFloat, 500, MAKE_SKILL_PATH(mType, dir).c_str() );
+
+			size_t iLen = wcsnlen_s(szFloat, 500);
+			RECT rt = { 50, 100, 400, 200 };
+			DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+
+
+			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
+			TransparentBlt(hdc,
+				(int)(mPos.x),
+				(int)(mPos.y),
+				(int)(im->GetWidth() * 2),
+				(int)(im->GetHeight() * 2),
+				im->GetHdc(),
+				0,0,
+				im->GetWidth(),
+				im->GetHeight(), 
+				RGB(255, 0, 255));
+		}
+			break;
+		case SKILL_T::END:
+			break;
+		default:
+			break;
+		}
+		
+	
 	}
 	void Skill::Release() {
 	}

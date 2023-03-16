@@ -46,6 +46,11 @@ namespace m {
         float fTime = 0.f;
         float fMaxTime = 0.8f;
 
+        double vx;
+        double vy;
+        double dt;
+        double g;
+
         LAYER_TYPE mLayerType;
         SKILL_T mType;
         Vector2 curCoord;

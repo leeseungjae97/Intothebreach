@@ -110,6 +110,9 @@
     <Filter Include="Contents\PlayerInfo">
       <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Common\Infos">
+      <UniqueIdentifier>{e6abab41-70d5-415b-be60-3d291ef0fe6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -249,6 +252,24 @@
     </ClInclude>
     <ClInclude Include="mSkill.h">
       <Filter>Contents\Attached\Skill</Filter>
+    </ClInclude>
+    <ClInclude Include="MechEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
+    </ClInclude>
+    <ClInclude Include="AlienEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
+    </ClInclude>
+    <ClInclude Include="IslandEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
+    </ClInclude>
+    <ClInclude Include="TileEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
+    </ClInclude>
+    <ClInclude Include="StructureEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
+    </ClInclude>
+    <ClInclude Include="SkillEnums.h">
+      <Filter>Engine\Common\Infos</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
