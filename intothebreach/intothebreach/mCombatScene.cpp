@@ -58,8 +58,8 @@ namespace m {
 		if (KEY_PRESSED(KEYCODE_TYPE::C)) {
 			Skill* skill = object::Instantiate(GetMechs()[0]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
 				LAYER_TYPE::SKILL, SKILL_T::ARC);
-			Skill* skill2 = object::Instantiate(GetMechs()[1]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
-				LAYER_TYPE::SKILL, SKILL_T::ST);
+			//Skill* skill2 = object::Instantiate(GetMechs()[1]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
+			//	LAYER_TYPE::SKILL, SKILL_T::ST);
 		}
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);

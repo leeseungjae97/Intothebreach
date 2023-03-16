@@ -79,7 +79,7 @@ namespace m::object {
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
-		//if (mType == SKILL_T::ARC) gameObj->PreCal();
+		if (mType == SKILL_T::ARC) gameObj->PreCal();
 		gameObj->SetLayerType(type);
 		gameObj->SetSkillType(mType);
 
@@ -115,8 +115,8 @@ namespace m::bitmap {
 		xform.eM12 = sin(angle);
 		xform.eM21 = -sin(angle);
 		xform.eM22 = cos(angle);
-		xform.eDx = (pos.x - (cos_ang * pos.x) )+ (sin_ang * pos.y);
-		xform.eDy = (pos.y - (sin_ang * pos.x) )- (cos_ang * pos.y);
+		xform.eDx = (pos.x - (cos_ang * pos.x) ) + (sin_ang * pos.y) + bmp.bmWidth;
+		xform.eDy = (pos.y - (sin_ang * pos.x) ) - (cos_ang * pos.y) - bmp.bmHeight / 2;
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);
@@ -138,5 +138,14 @@ namespace m::bitmap {
 		xform.eDx = 0;
 		xform.eDy = 0;
 		SetWorldTransform(hdc, &xform);		
+		//TransparentBlt(hdc,
+		//	(int)(pos.x),
+		//	(int)(pos.y),
+		//	(int)(iw * 2),
+		//	(int)(he * 2),
+		//	sourceDC,
+		//	0, 0,
+		//	iw, he,
+		//	RGB(255, 0, 255));
 	}
 }

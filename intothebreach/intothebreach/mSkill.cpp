@@ -56,8 +56,6 @@ namespace m {
 		switch (mType) {
 		case SKILL_T::ARC:
 		{
-			PreCal();
-			
 			fTime += Time::fDeltaTime();
 
 			mPos.x = mStPos.x - fx * fTime;
@@ -90,13 +88,38 @@ namespace m {
 		default:
 			break;
 		}
-		if (mStPos.x > mFinalEdPos.x) {
-			if (mFinalEdPos.y <= mPos.y) {
-				object::Destory(this);
+		
+		if (mStPos.x > mFinalEdPos.x){
+			// 물체보다 오른쪽 위에 있을때.
+			if (mStPos.y < mFinalEdPos.y) {
+				if (mFinalEdPos.y <= mPos.y
+					|| mFinalEdPos.x >= mPos.x) {
+					object::Destory(this);
+				}
+			}
+			// 물체보다 오른쪽 아래, 오른쪽 동일선 일때.
+			else {
+				if (mFinalEdPos.y >= mPos.y
+					|| mFinalEdPos.x >= mPos.x) {
+					object::Destory(this);
+				}
 			}
 		}
-		if (mFinalEdPos <= mPos) {
-			object::Destory(this);
+		else {
+			// 왼쪽 위
+			if (mStPos.y < mFinalEdPos.y) {
+				if (mFinalEdPos.y <= mPos.y
+					|| mFinalEdPos.x <= mPos.x) {
+					object::Destory(this);
+				}
+			}
+			// 물체보다 왼쪽 아래, 왼쪽 동일선 일때.
+			else {
+				if (mFinalEdPos.y >= mPos.y
+					|| mFinalEdPos.x <= mPos.x) {
+					object::Destory(this);
+				}
+			}
 		}
 		SetPos(mPos);
 	}
@@ -106,17 +129,18 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			Vector2 cm = max(mFinalEdPos, mStPos);
-			Vector2 m = max(cm, mPos) - min(cm, mPos);
+			Vector2 m = mFinalEdPos - mPos;
 			m.Normalize();
-			float _theta = atan2(m.y, m.x);
+			//if (prevPosy == mPos.y) mPos.y *= -1;
+			float _theta = atan2(m.x , m.y);
 
 			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
 
-			//wchar_t szFloat[500] = {};
-			//swprintf_s(szFloat, 500, L"degree : %f, cos : %lf, sin : %lf", _theta, cos(_theta), sin(_theta));
-			//size_t iLen = wcsnlen_s(szFloat, 500);
-			//RECT rt = { 50, 100, 200, 200 };
-			//DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
+			wchar_t szFloat[500] = {};
+			swprintf_s(szFloat, 500, L"fHeight : %f, fy : %f", fHeight, fy);
+			size_t iLen = wcsnlen_s(szFloat, 500);
+			RECT rt = { 50, 100, 400, 500 };
+			DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);
 
 			if (mFinalEdPos.x < mStPos.x) { _theta *= -1; }
 
@@ -142,12 +166,12 @@ namespace m {
 				dir = SKILL_DIR::D;
 
 
-			wchar_t szFloat[500] = {};
-			swprintf_s(szFloat, 500, MAKE_SKILL_PATH(mType, dir).c_str() );
+			//wchar_t szFloat[500] = {};
+			//swprintf_s(szFloat, 500, MAKE_SKILL_PATH(mType, dir).c_str() );
 
-			size_t iLen = wcsnlen_s(szFloat, 500);
-			RECT rt = { 50, 100, 400, 200 };
-			DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+			//size_t iLen = wcsnlen_s(szFloat, 500);
+			//RECT rt = { 50, 100, 400, 200 };
+			//DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
 
 
 			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));

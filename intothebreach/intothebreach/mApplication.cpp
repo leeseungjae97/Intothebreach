@@ -83,7 +83,7 @@ namespace m
 
 	}
 	void Application::Clear() {
-		SelectGDI a(mHdc, BRUSH_TYPE::GRAY);
+		SelectGDI a(mBackHdc, BRUSH_TYPE::BLACK);
 
 		Rectangle(mBackHdc
 			, -1
