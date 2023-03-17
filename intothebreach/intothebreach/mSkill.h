@@ -46,10 +46,24 @@ namespace m {
         float fTime = 0.f;
         float fMaxTime = 0.8f;
 
-        double vx;
-        double vy;
+        float vXo;
+        float vYo;
+
+        double xV;
+        double yV;
         double dt;
         double g;
+
+        float _x;
+        float _y;
+
+        float dis;
+        float mx;
+        float my;
+
+        float a;
+        float b;
+        float c;
 
         LAYER_TYPE mLayerType;
         SKILL_T mType;

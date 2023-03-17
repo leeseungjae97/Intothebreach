@@ -289,9 +289,6 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="mMath.cpp">
-      <Filter>Engine\Common</Filter>
-    </ClCompile>
     <ClCompile Include="mGameObject.cpp">
       <Filter>Engine\GameObject</Filter>
     </ClCompile>
@@ -390,9 +387,6 @@
     </ClCompile>
     <ClCompile Include="Alien.cpp">
       <Filter>Contents\Unit\Ailen</Filter>
-    </ClCompile>
-    <ClCompile Include="func.cpp">
-      <Filter>Engine\Common</Filter>
     </ClCompile>
     <ClCompile Include="Building.cpp">
       <Filter>Contents\Tile</Filter>

@@ -60,6 +60,8 @@ namespace m {
 				LAYER_TYPE::SKILL, SKILL_T::ARC);
 			//Skill* skill2 = object::Instantiate(GetMechs()[1]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
 			//	LAYER_TYPE::SKILL, SKILL_T::ST);
+			Skill* skill3 = object::Instantiate(GetMechs()[2]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
+				LAYER_TYPE::SKILL, SKILL_T::ARC);
 		}
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);
