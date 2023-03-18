@@ -34,36 +34,41 @@ namespace m {
 
     private:
         float mTheta;
+        float fTime;
 
-        float fx;
-        float fy;
+        float fEndHeight;
+        float fHeight;
 
         float fg;
+        float fy;
+        float fMaxTime = 1.f;
         float fEndTime;
-        float fMaxHeight;
-        float fHeight;
-        float fEndHeight;
-        float fTime = 0.f;
-        float fMaxTime = 0.8f;
+        float fx;
 
-        float vXo;
-        float vYo;
+        float mSpeed;
 
-        double xV;
-        double yV;
-        double dt;
-        double g;
-
-        float _x;
-        float _y;
-
-        float dis;
-        float mx;
-        float my;
-
+        float time2;
+        Vector2 Missile_vec = Vector2(0,0);
+        Vector2 Missile_vec2;
         float a;
-        float b;
-        float c;
+
+        float m_Z;
+        float m_fZ;
+        float time;
+
+        bool ifChild;
+
+        float m_fTarget_distance;
+
+        Skill* mC;
+        
+        float vx;
+        float vy;
+
+        float h;
+        float k;
+
+        float tm = 0;
 
         LAYER_TYPE mLayerType;
         SKILL_T mType;

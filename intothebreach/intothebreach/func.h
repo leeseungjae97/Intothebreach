@@ -115,8 +115,10 @@ namespace m::bitmap {
 		xform.eM12 = sin(angle);
 		xform.eM21 = -sin(angle);
 		xform.eM22 = cos(angle);
-		xform.eDx = (pos.x - (cos_ang * pos.x) ) + (sin_ang * pos.y) + bmp.bmWidth;
-		xform.eDy = (pos.y - (sin_ang * pos.x) ) - (cos_ang * pos.y) - bmp.bmHeight;
+		//xform.eDx = (pos.x - (cos_ang * pos.x) ) + (sin_ang * pos.y) + bmp.bmWidth;
+		//xform.eDy = (pos.y - (sin_ang * pos.x) ) - (cos_ang * pos.y) - bmp.bmHeight;
+		xform.eDx = 0;
+		xform.eDy = 0;
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);
