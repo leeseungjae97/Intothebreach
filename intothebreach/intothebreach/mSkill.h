@@ -8,7 +8,7 @@ namespace m {
         Skill(Skill& _origin);
         Skill();
         ~Skill();
-
+        
         virtual void Initialize() override;
         virtual void Update() override;
         virtual void Render(HDC hdc) override;
@@ -21,61 +21,30 @@ namespace m {
         void SetSkillType(SKILL_T _type) { mType = _type; }
         SKILL_T GetSkillType() { return mType; }
         void SetStPos(Vector2 _pos) { mStPos = _pos; }
-        void SetEndPos(Vector2 _pos) {
-            mEdPos = _pos;
-            mEdPos -= mStPos;
-            mFinalEdPos = _pos;
-            mEdPos.Normalize();
-
-            if (mStPos < mFinalEdPos) minPos = mStPos;
-            else minPos = mFinalEdPos;
-        }
-        Vector2 GetEndPos() { mEdPos; }
+        void SetEndPos(Vector2 _pos) {mFinalEdPos = _pos;}
+        bool GetEndFire() { return endFire; }
 
     private:
-        float mTheta;
-        float fTime;
-
-        float fEndHeight;
-        float fHeight;
-
-        float fg;
-        float fy;
-        float fMaxTime = 1.f;
-        float fEndTime;
-        float fx;
-
-        float mSpeed;
-
-        float time2;
-        Vector2 Missile_vec = Vector2(0,0);
-        Vector2 Missile_vec2;
-        float a;
+        Vector2 Missile_vec;
 
         float m_Z;
         float m_fZ;
         float time;
+        float time2;
 
-        bool ifChild;
-
-        float m_fTarget_distance;
-
-        Skill* mC;
-        
-        float vx;
-        float vy;
-
-        float h;
-        float k;
-
+        float m_fMissile_distance;
         float tm = 0;
 
+        bool endFire;
+
         LAYER_TYPE mLayerType;
+
         SKILL_T mType;
+
         Vector2 curCoord;
-        Vector2 minPos;
+        Vector2 curPos;
+
         Vector2 mStPos;
-        Vector2 mEdPos;
         Vector2 mFinalEdPos;
     };
 }

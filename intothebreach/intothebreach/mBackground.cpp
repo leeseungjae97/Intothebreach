@@ -33,9 +33,11 @@ namespace m {
 		
 	}
 	void Background::Update() {
+		GameObject::Update();
 	}
 
 	void Background::Render(HDC hdc) {
+		GameObject::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
 

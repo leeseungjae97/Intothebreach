@@ -7,6 +7,7 @@ namespace m
 	GameObject::GameObject(GameObject& other) 
 		: mComponents{}
 		, mbDead(false)
+		, firstUpdate(false)
 	{
 		mComponents.resize((UINT)COMPONENT_TYPE::END);
 		for (Component* component : other.mComponents) {
@@ -35,6 +36,7 @@ namespace m
 
 	void GameObject::Initialize()
 	{
+		
 		for (Component* comp : mComponents)
 		{
 			if (comp == nullptr)
@@ -46,6 +48,7 @@ namespace m
 
 	void GameObject::Update()
 	{
+		firstUpdate = true;
 		for (Component* comp : mComponents)
 		{
 			if (comp == nullptr)

@@ -40,9 +40,11 @@ namespace m {
 	Tile::~Tile() {
 	}
 	void Tile::Update() {
+		GameObject::Update();
 	}
 
 	void Tile::Render(HDC hdc) {
+		GameObject::Render(hdc);
 		if(nullptr != mTileTex) {
 			UINT tile_iWidth = mTileTex->GetWidth();
 			UINT tile_iHeight = mTileTex->GetHeight();

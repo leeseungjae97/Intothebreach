@@ -122,7 +122,7 @@ namespace m {
 		}
 
 		float Length() {
-			return sqrtf(x * x + y * y);
+			return sqrt(x * x + y * y);
 		}
 
 		Vector2& Normalize() {

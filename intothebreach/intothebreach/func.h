@@ -6,7 +6,7 @@
 #include "mTransform.h"
 #include "mSkill.h"
 #include "mTile.h"
-
+#include "CommonInclude.h"
 namespace m::object {
 	template <typename T>
 	static inline T* Instantiate(LAYER_TYPE type) {
@@ -69,9 +69,6 @@ namespace m::object {
 	}
 
 	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T mType) {
-		//Vector2 stP = scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos();
-		//Vector2 enP = scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos();
-		//Skill* gameObj = new Skill(stP, enP, mType);
 		Skill* gameObj = new Skill(mType);
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -79,7 +76,7 @@ namespace m::object {
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
-		if (mType == SKILL_T::ARC) gameObj->PreCal();
+		gameObj->PreCal();
 		gameObj->SetLayerType(type);
 		gameObj->SetSkillType(mType);
 
@@ -101,36 +98,61 @@ namespace m::object {
 	
 }
 namespace m::bitmap {
-	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap
-		, int iw, int he, float angle, HDC sourceDC) {
+	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap, float _theta, HDC sourceDC) {
 		BITMAP bmp;
-		GetObject(hBitmap, sizeof(BITMAP), &bmp);
+		GetObject(hBitmap, sizeof(bmp), &bmp);
+		float angle = _theta * 180.f / PI;
+
+		angle = fmod(angle, 360.0f);
+		if (angle < 0) {
+			angle += 360.0f;
+		}
+		_theta = angle * PI / 180.f;
+
+		wchar_t szFloat[500] = {};
+		swprintf_s(szFloat, 500, L"angle : %f, theta : %f", _theta * 180.f / PI, _theta);
+		size_t iLen = wcsnlen_s(szFloat, 500);
+		//left top right bottom
+		RECT rt = { 50, 120, 400, 140 };
+		DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+
+		float cos_ang = cos(_theta);
+		float sin_ang = sin(_theta);
+
+		float _cos_ang = cos(_theta* -1);
+		float _sin_ang = sin(_theta* -1);
+
+		float cx = bmp.bmWidth / 2.0f;
+		float cy = bmp.bmHeight / 2.0f;
+	
+
+		
 
 		XFORM xform;
+		xform.eM11 = cos_ang;
+		xform.eM12 = sin_ang;
+		xform.eM21 = -sin_ang;
+		xform.eM22 = cos_ang;
+		//if (_theta < 0) {
+		//	xform.eDx = (pos.x - (cos_ang * pos.x)) + (sin_ang * pos.y) - bmp.bmWidth;
+		//}else xform.eDx = (pos.x - (cos_ang * pos.x)) + (sin_ang * pos.y) + bmp.bmWidth;
+		//xform.eDx = cx - ((cos_ang * cx) - (sin_ang * cy));
+		//xform.eDy = cy - ((sin_ang * cx) + (cos_ang * cy));
+		xform.eDx = pos.x - cos_ang * pos.x + sin_ang * pos.y + bmp.bmWidth;
+		xform.eDy = pos.y - sin_ang * pos.x - cos_ang * pos.y - bmp.bmHeight;
 
-		float cos_ang = cos(angle);
-		float sin_ang = sin(angle);
-
-		xform.eM11 = cos(angle);
-		xform.eM12 = sin(angle);
-		xform.eM21 = -sin(angle);
-		xform.eM22 = cos(angle);
-		//xform.eDx = (pos.x - (cos_ang * pos.x) ) + (sin_ang * pos.y) + bmp.bmWidth;
-		//xform.eDy = (pos.y - (sin_ang * pos.x) ) - (cos_ang * pos.y) - bmp.bmHeight;
-		xform.eDx = 0;
-		xform.eDy = 0;
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);
-
+	
 		TransparentBlt(hdc,
 			(int)(pos.x),
 			(int)(pos.y),
-			(int)(iw * 2),
-			(int)(he * 2),
+			(int)(bmp.bmWidth * 2),
+			(int)(bmp.bmHeight * 2),
 			sourceDC,
 			0, 0,
-			iw, he,
+			bmp.bmWidth, bmp.bmHeight,
 			RGB(255, 0, 255));
 
 		xform.eM11 = 1;
@@ -140,14 +162,27 @@ namespace m::bitmap {
 		xform.eDx = 0;
 		xform.eDy = 0;
 		SetWorldTransform(hdc, &xform);		
-		//TransparentBlt(hdc,
-		//	(int)(pos.x),
-		//	(int)(pos.y),
-		//	(int)(iw * 2),
-		//	(int)(he * 2),
-		//	sourceDC,
-		//	0, 0,
-		//	iw, he,
-		//	RGB(255, 0, 255));
+
+
+		float cosine = (float)cos(_theta);
+		float sine = (float)sin(_theta);
+
+		// Compute dimensions of the resulting bitmap
+		// First get the coordinates of the 3 corners other than origin
+		int x1 = (int)(bmp.bmHeight * sine);
+		int y1 = (int)(bmp.bmHeight * cosine);
+		int x2 = (int)(bmp.bmWidth * cosine + bmp.bmHeight * sine);
+		int y2 = (int)(bmp.bmHeight * cosine - bmp.bmWidth * sine);
+		int x3 = (int)(bmp.bmWidth * cosine);
+		int y3 = (int)(-bmp.bmWidth * sine);
+
+		int minx = min(0, min(x1, min(x2, x3)));
+		int miny = min(0, min(y1, min(y2, y3)));
+		int maxx = max(0, max(x1, max(x2, x3)));
+		int maxy = max(0, max(y1, max(y2, y3)));
+
+		int w = maxx - minx;
+		int h = maxy - miny;
+
 	}
 }

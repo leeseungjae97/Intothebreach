@@ -44,6 +44,7 @@ namespace m
 	{
 		for (GameObject* gameObj : mGameObjects)
 		{
+			if (!gameObj->GetIsFirstUpdate()) continue;
 			if (gameObj == nullptr)
 				continue;
 

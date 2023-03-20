@@ -27,7 +27,7 @@ namespace m
 		void CreateComponent(COMPONENT_TYPE _type);
 		Component* CreateComponent(Component* component);
 		void AddComponent(Component* component);
-
+		bool GetIsFirstUpdate() { return firstUpdate; }
 		virtual void OnCollisionEnter(Collider* other) {};
 		virtual void OnCollisionStay(Collider* other) {};
 		virtual void OnCollisionExit(Collider* other) {};
@@ -82,6 +82,7 @@ namespace m
 		STATE GetState() { return mState; }
 		void SetState(STATE _state) { mState = _state; }
 	private:
+		bool firstUpdate;
 		bool mbDead;
 		vector<Component*> mComponents;
 		STATE mState;

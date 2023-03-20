@@ -9,6 +9,8 @@
 
 #define WEAPONS_ 3
 
+#define ARC_CONST 3
+
 #define PRIMES_ 9
 #define BRUTES_ 10
 #define RANGES_ 10

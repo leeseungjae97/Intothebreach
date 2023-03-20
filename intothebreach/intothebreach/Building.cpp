@@ -24,9 +24,10 @@ namespace m {
 
 	}
 	void Building::Update() {
-
+		GameObject::Update();
 	}
 	void Building::Render(HDC hdc) {
+		GameObject::Render(hdc);
 		Vector2 mPos = GetPos();
 		mPos += mImage->GetOffset();
 		Vector2 mScale = GetScale();
