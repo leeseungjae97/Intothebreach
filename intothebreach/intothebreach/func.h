@@ -53,7 +53,7 @@ namespace m::object {
 		return gameObj;
 	}
 	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType) {
-		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType]);
+		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST);
 		Scene* scene = SceneManager::GetActiveScene();
 
 		gameObj->Initialize();
@@ -137,7 +137,6 @@ namespace m::bitmap {
 		//xform.eDy = cy - ((sin_ang * cx) + (cos_ang * cy));
 		xform.eDx = (pos.x - cos_ang * pos.x + sin_ang * pos.y) + bmp.bmWidth;
 		xform.eDy = (pos.y - sin_ang * pos.x - cos_ang * pos.y) - bmp.bmHeight;
-
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);

@@ -41,7 +41,7 @@ namespace m
 		void ClearMap();
 		
 		Vector2 GetCoordCenterPos(Vector2 _coord) {
-			return mPosTiles[_coord.y][_coord.x]->GetCenterPos();
+			return mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos();
 		}
 
 		TILES GetPosTiles() { return mPosTiles; }

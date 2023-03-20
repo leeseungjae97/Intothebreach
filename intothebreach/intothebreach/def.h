@@ -8,6 +8,7 @@
 #define RESOURCES_1 10
 
 #define WEAPONS_ 3
+#define MAX_WEAPONS 2
 
 #define ARC_CONST 3
 

@@ -4,8 +4,9 @@
 #include "mCamera.h"
 #include "mResources.h"
 #include "mSelectGDI.h"
+#include "mSkill.h"
 namespace m {
-	Unit::Unit(Vector2 _coord, int _range, int hp)
+	Unit::Unit(Vector2 _coord, int _range, int hp, int _type)
 		: mPilot(nullptr)
 		, mWeapon(nullptr)
 		, curImage(nullptr)
@@ -19,6 +20,7 @@ namespace m {
 		, mHp(hp)
 		, curHp(hp)
 	{
+		SetSkill(_type);
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
@@ -28,6 +30,8 @@ namespace m {
 
 		hpBack = Resources::Load<Image>(HP_BAR_BACK, HP_BAR_BACK);
 		hpBack->SetOffset(Vector2(16.f, -39.f));
+
+		mSkills.resize(MAX_WEAPONS);
 	}
 	Unit::Unit(Unit& _origin) 
 		: GameObject(_origin)
@@ -116,6 +120,13 @@ namespace m {
 		GameObject::Release();
 	}
 	void Unit::SetSkill() {
+
+	}
+	void Unit::SetSkill(int type) {
+		mSkills.push_back(new Skill((SKILL_T)type));
+	}
+	void Unit::SetSkill(int idx, SKILL_T type) {
+		mSkills[idx] = new Skill(type);
 	}
 	void Unit::ChangePilotSlot() {
 	}

@@ -4,8 +4,8 @@
 #include "mResources.h"
 #include "mInput.h"
 namespace m {
-	Alien::Alien(ALIENS mType, Vector2 _coord, int _range, int _hp)
-		: Unit(_coord, _range, _hp)
+	Alien::Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type)
+		: Unit(_coord, _range, _hp, (int)_type)
 		, mAlienType(mType)
 	{
 		GetMImages().resize((UINT)ALIEN_CONDITION::END);
@@ -21,7 +21,7 @@ namespace m {
 		}
 		for (int i = 0; i < 3; i++) {
 			Vector2 size = ALIENS_SIZES[(UINT)mAlienType][i];
-			UINT len = GetMImages()[(UINT)i]->GetWidth() / size.x;
+			UINT len = (UINT)GetMImages()[(UINT)i]->GetWidth() / size.x;
 
 			GetAnimator()->CreateAnimation(
 				MAKE_ALIEN_KEY(mAlienType, (ALIEN_CONDITION)i)
