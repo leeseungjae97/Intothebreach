@@ -30,9 +30,9 @@ namespace m
 		mDeltaTime = differnceFrequency / (double)mCpuFrequency.QuadPart;
 		
 		mPrevFrequency.QuadPart = mCurFrequency.QuadPart;
-#ifdef _DEBUG
-		if (mDeltaTime > (1. / 60.)) mDeltaTime = (1. / 60.);
-#endif
+//#ifdef _DEBUG
+//		if (mDeltaTime > (1. / 60.)) mDeltaTime = (1. / 60.);
+//#endif
 	}
 
 	void Time::Render(HDC hdc)

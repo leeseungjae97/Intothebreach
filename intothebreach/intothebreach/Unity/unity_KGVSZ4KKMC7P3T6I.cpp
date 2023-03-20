@@ -5,9 +5,6 @@
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\func.cpp"
-
-
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\mCamera.cpp"
 
 
@@ -69,9 +66,6 @@
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\mLayer.cpp"
-
-
-#include "D:\progressing\intothebreach\intothebreach\intothebreach\mMath.cpp"
 
 
 #include "D:\progressing\intothebreach\intothebreach\intothebreach\mSelectRobotScene.cpp"
