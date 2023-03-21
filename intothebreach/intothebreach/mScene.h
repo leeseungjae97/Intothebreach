@@ -32,14 +32,16 @@ namespace m
 		virtual void OnExit() = 0;
 
 	public:
-		void MoveAlgo();
+		void MoveMech();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
 		void HighlightTile();
+		void DrawSkillRangeTile();
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
-		
+		void DrawFootTile();
+
 		Vector2 GetCoordCenterPos(Vector2 _coord) {
 			return mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos();
 		}
@@ -71,7 +73,7 @@ namespace m
 		void SetAlphaState(GameObject::STATE state) {
 			mAlphaFollower->SetState(state);
 		}
-		void DrawFootTile();
+		
 
 	private:
 		void SetMap(int y, int x);

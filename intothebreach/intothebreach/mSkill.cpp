@@ -37,6 +37,7 @@ namespace m {
 		curPos = mStPos;
 
 		arcXMaxTime = 0.5f;
+		arcYMaxTime = 1.f;
 		maxHeight = 25.f;
 	}
 	void Skill::Update() {
@@ -45,8 +46,9 @@ namespace m {
 		switch (mType) {
 		case SKILL_T::ARC: 
 		{
-			float d = abs(m_fMissile_distance);
+			float d = m_fMissile_distance;
 			float vX = (d / arcXMaxTime);
+			float vY = (d / arcYMaxTime);
 			mPos.x += vX * Missile_vec.x * Time::fDeltaTime();
 			mPos.y += vX * Missile_vec.y * Time::fDeltaTime();
 			curPos = mPos;
@@ -75,11 +77,13 @@ namespace m {
 	}
 	void Skill::Render(HDC hdc) {
 
-		float d = abs(m_fMissile_distance);
-		float vY = (d / arcXMaxTime);
+		float d = m_fMissile_distance;
+		float vX = (d / arcXMaxTime);
+		float vY = (d / arcYMaxTime);
 		// X의 이동 시간을 토대로 속도계산
 		// 이동거리가 달라도 같은 시간에 도달
-		moveXtime += vY * abs(Missile_vec.Length()) * Time::fDeltaTime();
+		moveXtime += vX * abs(Missile_vec.Length()) * Time::fDeltaTime();
+		//moveXtime += vY * abs(Missile_vec.Length()) * Time::fDeltaTime();
 
 		m_fZ = (-moveXtime * moveXtime + d * moveXtime);	
 
@@ -89,7 +93,7 @@ namespace m {
 			Vector2 mPos = GetPos();
 
 			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
-			mPos.y -= m_fZ / d;
+			mPos.y -= (m_fZ / d);
 			curPos = mPos;
 
 			TransparentBlt(hdc,

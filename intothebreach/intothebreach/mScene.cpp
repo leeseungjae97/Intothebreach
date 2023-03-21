@@ -340,7 +340,6 @@ namespace m
 	/// 이동범위 타일 바꾸는 BFS
 	/// </summary>
 	void Scene::DrawMoveRangeTile() {
-		// 임시 이동 범위
 		int moveLimit = mMouseFollower->GetMove();
 
 		list<Vector2_1>queue;
@@ -454,6 +453,14 @@ namespace m
 			}
 		}
 	}
+	void Scene::DrawSkillRangeTile() {
+		if (nullptr == mMouseFollower) return;
+		int index = 0;
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) index = 1;
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_2)) index = 2;
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_3)) index = 3;
+		mMouseFollower->GetSkill(index);
+	}
 	void Scene::Release()
 	{
 		Safe_Delete_Y_Vec(mTiles);
@@ -465,8 +472,7 @@ namespace m
 		Safe_Delete_Y_Vec(mEffectedTiles);
 		Safe_Delete_Y_Vec(mStruturesTiles);
 	}
-	void Scene::MoveAlgo() {
-		
+	void Scene::MoveMech() {
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 		if (nullptr != mMouseFollower) {
 			Scene::DrawMoveRangeTile();

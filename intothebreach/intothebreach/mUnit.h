@@ -18,9 +18,14 @@ namespace m {
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
+
 		void SetSkill();
 		void SetSkill(int type);
 		void SetSkill(int idx, SKILL_T type);
+
+		SKILL_T GetSkill(int idx) {
+			mSkills[idx];
+		}
 
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);

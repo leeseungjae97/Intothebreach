@@ -32,6 +32,7 @@ namespace m {
         float moveXtime;
         float time2;
         float arcXMaxTime;
+        float arcYMaxTime;
         float maxHeight;
 
         float m_fMissile_distance;
