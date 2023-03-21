@@ -45,7 +45,7 @@ namespace m {
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 
 		Mech* mech1 = object::Instantiate(Vector2(1, 4), LAYER_TYPE::PLAYER, MECHS::artillery);
-		Mech* mech2 = object::Instantiate(Vector2(7, 0), LAYER_TYPE::PLAYER, MECHS::tank);
+		Mech* mech2 = object::Instantiate(Vector2(4, 7), LAYER_TYPE::PLAYER, MECHS::tank);
 		Mech* mech3 = object::Instantiate(Vector2(7, 4), LAYER_TYPE::PLAYER, MECHS::punch);
 
 		Alien* alien1 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::ALIEN, ALIENS::Hornet);
@@ -58,8 +58,8 @@ namespace m {
 		if (KEY_PRESSED(KEYCODE_TYPE::C)) {
 			Skill* skill = object::Instantiate(GetMechs()[0]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
 				LAYER_TYPE::SKILL, SKILL_T::ARC);
-			//Skill* skill2 = object::Instantiate(GetMechs()[1]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
-			//	LAYER_TYPE::SKILL, SKILL_T::ST);
+			Skill* skill2 = object::Instantiate(GetMechs()[1]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
+				LAYER_TYPE::SKILL, SKILL_T::ST);
 			Skill* skill3 = object::Instantiate(GetMechs()[2]->GetFinalCoord(), GetAliens()[0]->GetFinalCoord(),
 				LAYER_TYPE::SKILL, SKILL_T::ARC);
 		}

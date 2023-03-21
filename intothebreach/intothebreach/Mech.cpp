@@ -14,7 +14,7 @@
 namespace m
 {
 	Mech::Mech(MECHS _mech, Vector2 _coord, int _range, int _hp)
-		: Unit(_coord, _range, _hp)
+		: Unit(_coord, _range, _hp, BASIC_WEAPON[(UINT)_mech])
 		, mMechType(_mech)
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
@@ -57,6 +57,10 @@ namespace m
 	void Mech::Update()
 	{
 		Unit::Update();
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) {
+			
+		}
+
 		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
 			SetState(STATE::Broken);
 		}

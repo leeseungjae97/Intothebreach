@@ -69,7 +69,7 @@ namespace m {
 				mPos.y -= iHeight / 2;
 			}
 			mPos += mImage->GetOffset();
-			SetScale(Vector2(iWidth, iHeight));
+			SetScale(Vector2((float)iWidth, (float)iHeight));
 			mPos = Camera::CalculatePos(mPos);
 			if (mAlpha) {
 				BLENDFUNCTION func = {};

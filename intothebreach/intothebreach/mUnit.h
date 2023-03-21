@@ -9,7 +9,7 @@ namespace m {
     class Unit :
         public GameObject {
 	public:
-		Unit(Vector2 _coord, int _range, int hp);
+		Unit(Vector2 _coord, int _range, int hp, int type);
 		Unit(Unit& _origin);
 		Unit();
 		~Unit();
@@ -19,6 +19,9 @@ namespace m {
 		virtual void Release() override;
 
 		void SetSkill();
+		void SetSkill(int type);
+		void SetSkill(int idx, SKILL_T type);
+
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);
 

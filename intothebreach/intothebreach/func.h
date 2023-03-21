@@ -53,7 +53,7 @@ namespace m::object {
 		return gameObj;
 	}
 	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType) {
-		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType]);
+		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST);
 		Scene* scene = SceneManager::GetActiveScene();
 
 		gameObj->Initialize();

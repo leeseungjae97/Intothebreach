@@ -110,7 +110,7 @@
     <Filter Include="Contents\PlayerInfo">
       <UniqueIdentifier>{fe7d43f7-efa7-4779-85c0-28b9564857a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Common\Infos">
+    <Filter Include="Engine\Common\Enums">
       <UniqueIdentifier>{e6abab41-70d5-415b-be60-3d291ef0fe6f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -254,22 +254,22 @@
       <Filter>Contents\Attached\Skill</Filter>
     </ClInclude>
     <ClInclude Include="MechEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
     <ClInclude Include="AlienEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
     <ClInclude Include="IslandEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
     <ClInclude Include="TileEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
     <ClInclude Include="StructureEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
     <ClInclude Include="SkillEnums.h">
-      <Filter>Engine\Common\Infos</Filter>
+      <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
