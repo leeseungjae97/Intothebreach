@@ -30,12 +30,14 @@ namespace m {
 	}
 	void Skill::PreCal() {
 		Missile_vec = mFinalEdPos - mStPos;
-		Vector2 maxDistance = max(mFinalEdPos, mStPos) - min(mFinalEdPos, mStPos);
 
 		m_fMissile_distance = Missile_vec.Length();
 		Missile_vec.Normalize();
 
 		curPos = mStPos;
+
+		arcXMaxTime = 0.5f;
+		maxHeight = 25.f;
 	}
 	void Skill::Update() {
 		GameObject::Update();
@@ -43,8 +45,10 @@ namespace m {
 		switch (mType) {
 		case SKILL_T::ARC: 
 		{
-			mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
-			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
+			float d = abs(m_fMissile_distance);
+			float vX = (d / arcXMaxTime);
+			mPos.x += vX * Missile_vec.x * Time::fDeltaTime();
+			mPos.y += vX * Missile_vec.y * Time::fDeltaTime();
 			curPos = mPos;
 		}
 			break;
@@ -70,75 +74,33 @@ namespace m {
 		SetPos(mPos);
 	}
 	void Skill::Render(HDC hdc) {
-		//Vector2 mPos = GetPos();
-
-		//Image* im;
-		//SKILL_DIR dir = SKILL_DIR::D;
-		//if (mStPos < mFinalEdPos)
-		//	dir = SKILL_DIR::R;
-		//if (mStPos > mFinalEdPos)
-		//	dir = SKILL_DIR::L;
-		//if (mStPos.x < mFinalEdPos.x
-		//	&& mStPos.y > mFinalEdPos.y)
-		//	dir = SKILL_DIR::U;
-		//if (mStPos.x > mFinalEdPos.x
-		//	&& mStPos.y < mFinalEdPos.y)
-		//	dir = SKILL_DIR::D;
-		//im = Resources::Load<Image>(MAKE_SKILL_KEY(SKILL_T::ST, dir), MAKE_SKILL_PATH(SKILL_T::ST, dir));
-		//TransparentBlt(hdc,
-		//	(int)(mPos.x),
-		//	(int)(mPos.y),
-		//	(int)(im->GetWidth() * 2),
-		//	(int)(im->GetHeight() * 2),
-		//	im->GetHdc(),
-		//	0, 0,
-		//	im->GetWidth(),
-		//	im->GetHeight(),
-		//	RGB(255, 0, 255));
-
-		time += 500.f * abs(Missile_vec.Length()) * Time::fDeltaTime();
-		time2 = time * 2;
 
 		float d = abs(m_fMissile_distance);
-		m_fZ = (-time * time +d * time);
-		m_Z = (-time2 * time2 + d * time2);
+		float vY = (d / arcXMaxTime);
+		// X의 이동 시간을 토대로 속도계산
+		// 이동거리가 달라도 같은 시간에 도달
+		moveXtime += vY * abs(Missile_vec.Length()) * Time::fDeltaTime();
+
+		m_fZ = (-moveXtime * moveXtime + d * moveXtime);	
 
 		switch (mType) {
 		case SKILL_T::ARC:
 		{
-			//if (m_fZ < 0) {
-			//	time = 0;
-			//	time2 = 0;
-			//	m_fZ = 0;
-			//	return;
-			//}
-			Vector2 mPos = curPos;
+			Vector2 mPos = GetPos();
 
 			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
-			
-			float Dir;
-			float _theta = 0;
-			_theta = atan2((time2 - time), ((m_Z - m_fZ) / d));
-			mPos.y -= (m_fZ / d);
-
-			if (Missile_vec.x > 0) {
-				Dir = 1;
-			}
-			else {
-				Dir = -1;
-			}
-			_theta *= Dir;
-
-			wchar_t szFloat[500] = {};
-			swprintf_s(szFloat, 500, L"time: %f time2: %f", time, time2);
-			size_t iLen = wcsnlen_s(szFloat, 500);
-			RECT rt = { 50, 140, 400, 160 };
-			DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
-			
+			mPos.y -= m_fZ / d;
 			curPos = mPos;
 
-			bitmap::RotateBitmap(hdc, mPos,
-				im->GetBitmap(), _theta, im->GetHdc());
+			TransparentBlt(hdc,
+				(int)(mPos.x),
+				(int)(mPos.y),
+				(int)(im->GetWidth()* 2),
+				(int)(im->GetHeight() * 2),
+				im->GetHdc(),
+				0, 0,
+				im->GetWidth(), im->GetHeight(),
+				RGB(255, 0, 255));
 		}
 			break;
 		case SKILL_T::ST:

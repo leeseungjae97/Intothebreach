@@ -119,25 +119,14 @@ namespace m::bitmap {
 		float cos_ang = cos(_theta);
 		float sin_ang = sin(_theta);
 
-		float _cos_ang = cos(_theta* -1);
-		float _sin_ang = sin(_theta* -1);
-
 		float cx = bmp.bmWidth / 2.0f;
 		float cy = bmp.bmHeight / 2.0f;
-	
-
-		
 
 		XFORM xform;
 		xform.eM11 = cos_ang;
 		xform.eM12 = sin_ang;
 		xform.eM21 = -sin_ang;
 		xform.eM22 = cos_ang;
-		//if (_theta < 0) {
-		//	xform.eDx = (pos.x - (cos_ang * pos.x)) + (sin_ang * pos.y) - bmp.bmWidth;
-		//}else xform.eDx = (pos.x - (cos_ang * pos.x)) + (sin_ang * pos.y) + bmp.bmWidth;
-		//xform.eDx = cx - ((cos_ang * cx) - (sin_ang * cy));
-		//xform.eDy = cy - ((sin_ang * cx) + (cos_ang * cy));
 		xform.eDx = pos.x - cos_ang * pos.x + sin_ang * pos.y + bmp.bmWidth;
 		xform.eDy = pos.y - sin_ang * pos.x - cos_ang * pos.y - bmp.bmHeight;
 
@@ -161,28 +150,6 @@ namespace m::bitmap {
 		xform.eM22 = 1;
 		xform.eDx = 0;
 		xform.eDy = 0;
-		SetWorldTransform(hdc, &xform);		
-
-
-		float cosine = (float)cos(_theta);
-		float sine = (float)sin(_theta);
-
-		// Compute dimensions of the resulting bitmap
-		// First get the coordinates of the 3 corners other than origin
-		int x1 = (int)(bmp.bmHeight * sine);
-		int y1 = (int)(bmp.bmHeight * cosine);
-		int x2 = (int)(bmp.bmWidth * cosine + bmp.bmHeight * sine);
-		int y2 = (int)(bmp.bmHeight * cosine - bmp.bmWidth * sine);
-		int x3 = (int)(bmp.bmWidth * cosine);
-		int y3 = (int)(-bmp.bmWidth * sine);
-
-		int minx = min(0, min(x1, min(x2, x3)));
-		int miny = min(0, min(y1, min(y2, y3)));
-		int maxx = max(0, max(x1, max(x2, x3)));
-		int maxy = max(0, max(y1, max(y2, y3)));
-
-		int w = maxx - minx;
-		int h = maxy - miny;
-
+		SetWorldTransform(hdc, &xform);
 	}
 }
