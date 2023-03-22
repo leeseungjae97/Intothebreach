@@ -67,7 +67,7 @@ int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//tele,
 };
 int** MAKE_SKILL_RANGE(SKILL_T skill) {
-
+	return nullptr;
 }
 wstring MAKE_SKILL_KEY(SKILL_T skill, SKILL_DIR dir) {
 	wstring key = L"";

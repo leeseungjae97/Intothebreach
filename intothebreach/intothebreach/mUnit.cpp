@@ -128,6 +128,9 @@ namespace m {
 	void Unit::SetSkill(int idx, SKILL_T type) {
 		mSkills[idx] = new Skill(type);
 	}
+	SKILL_T Unit::GetSkill(int idx) {
+		return mSkills[idx]->GetSkillType();
+	}
 	void Unit::ChangePilotSlot() {
 	}
 	Weapon* Unit::ChangeWeaponSlot(int index) {

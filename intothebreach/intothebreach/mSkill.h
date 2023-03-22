@@ -23,22 +23,28 @@ namespace m {
         void SetStPos(Vector2 _pos) { mStPos = _pos; }
         void SetEndPos(Vector2 _pos) {mFinalEdPos = _pos;}
         bool GetEndFire() { return endFire; }
-
+        void CalEndFire();
     private:
         Vector2 Missile_vec;
 
-        float m_Z;
-        float m_fZ;
-        float moveXtime;
-        float time2;
-        float arcXMaxTime;
-        float arcYMaxTime;
         float maxHeight;
 
         float m_fMissile_distance;
-        float tm = 0;
 
         bool endFire;
+
+        float offsetHeight;
+        float maxTheta;
+        float minTheta;
+        float fHeight;
+        float fMaxTime;
+        float fTime;
+        float velocityY;
+        float velocityX;
+        float gravityAccel;
+
+        Vector2 prevMPos;
+        float arcTheta;
 
         LAYER_TYPE mLayerType;
 

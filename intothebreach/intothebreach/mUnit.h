@@ -1,8 +1,8 @@
 #pragma once
 #include "mGameObject.h"
-#include "mImage.h"
 namespace m {
 	class Weapon;
+	class Image;
 	class Pilot;
 	class Skill;
 	class Animator;
@@ -18,14 +18,11 @@ namespace m {
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
-
 		void SetSkill();
 		void SetSkill(int type);
 		void SetSkill(int idx, SKILL_T type);
 
-		SKILL_T GetSkill(int idx) {
-			mSkills[idx];
-		}
+		SKILL_T GetSkill(int idx);
 
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);

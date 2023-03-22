@@ -28,36 +28,67 @@ namespace m {
 	void Skill::Initialize() {
 		
 	}
+	void Skill::CalEndFire() {
+		Vector2 vec = GetPos();
+		float absD = abs(mFinalEdPos.x - mStPos.x);
+		float absMD = abs(vec.x - mStPos.x);
+		float diff = absD - absMD;
+
+		absD - absMD <= 0 ? endFire = true : endFire = false;
+	}
 	void Skill::PreCal() {
 		Missile_vec = mFinalEdPos - mStPos;
 
 		m_fMissile_distance = Missile_vec.Length();
-		Missile_vec.Normalize();
 
-		curPos = mStPos;
+		fMaxTime = 0.5f;
 
-		arcXMaxTime = 0.5f;
-		arcYMaxTime = 1.f;
-		maxHeight = 25.f;
+		offsetHeight = mFinalEdPos.y - mStPos.y;
+		fHeight = 100 - min(mStPos.y, mFinalEdPos.y);
+
+
+		// 낙하에 걸리는 시간
+		// 임의의 중력가속도 = 2 * 거리 / 시간^2
+		gravityAccel = 2 * fHeight / (fMaxTime * fMaxTime);
+
+		// 지면 도달 시간 == 속도
+		velocityY =sqrtf(2 * fHeight * gravityAccel);
+
+		float a = gravityAccel;
+
+		// 속도 == 최고 높이에서 떨어지는 값.
+		// 반절짜리 라서 2를 곱함.
+		float b = -2 * velocityY;
+		float c = 2 * offsetHeight;
+
+		// 고도각
+		// 근의 공식에 따라 두개의 (-, +)x가 나옴.
+		maxTheta = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
+		minTheta = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
+
+		// x의 속도
+		// 속도 = 거리 / 고도각.
+		velocityX = -(mStPos.x - mFinalEdPos.x) / maxTheta;
 	}
 	void Skill::Update() {
 		GameObject::Update();
 		Vector2 mPos = GetPos();
 		switch (mType) {
-		case SKILL_T::ARC: 
+		case SKILL_T::ARC:
 		{
-			float d = m_fMissile_distance;
-			float vX = (d / arcXMaxTime);
-			float vY = (d / arcYMaxTime);
-			mPos.x += vX * Missile_vec.x * Time::fDeltaTime();
-			mPos.y += vX * Missile_vec.y * Time::fDeltaTime();
-			curPos = mPos;
+			fTime += Time::fDeltaTime();
+			prevMPos = mPos;
+			mPos.x = ( mStPos.x - velocityX * fTime) /** Time::fDeltaTime()*/;
+			mPos.y = ( mStPos.y - velocityY * fTime - (0.5f * gravityAccel * fTime * fTime)) /** Time::fDeltaTime()*/;
+			Vector2 diff = prevMPos - mPos;
+			arcTheta = atan2(diff.y, diff.x);
 		}
 			break;
 		case SKILL_T::ST:
 		{
-			mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
-			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
+			float _theta = atan2(Missile_vec.y, Missile_vec.x);
+			mPos.x += 500.f * cosf(_theta) * Time::fDeltaTime();
+			mPos.y += 500.f * sinf(_theta) * Time::fDeltaTime();
 			curPos = mPos;
 		}
 			break;
@@ -69,42 +100,31 @@ namespace m {
 		default:
 			break;
 		}
-		if (m_fZ < 0) {
-			object::Destory(this);
-			endFire = true;
-		}
+		CalEndFire();
 		SetPos(mPos);
+
+		if (endFire) {
+			object::Destory(this);
+		}
 	}
 	void Skill::Render(HDC hdc) {
-
-		float d = m_fMissile_distance;
-		float vX = (d / arcXMaxTime);
-		float vY = (d / arcYMaxTime);
-		// X의 이동 시간을 토대로 속도계산
-		// 이동거리가 달라도 같은 시간에 도달
-		moveXtime += vX * abs(Missile_vec.Length()) * Time::fDeltaTime();
-		//moveXtime += vY * abs(Missile_vec.Length()) * Time::fDeltaTime();
-
-		m_fZ = (-moveXtime * moveXtime + d * moveXtime);	
-
 		switch (mType) {
 		case SKILL_T::ARC:
 		{
 			Vector2 mPos = GetPos();
+			float Dir;
+			Image* im = nullptr;
+			if (Missile_vec.x > 0) {
+				Dir = 1;
+				im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_L.bmp");
+			}
+			else {
+				Dir = -1;
+				im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_R.bmp");
+			}
 
-			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile.bmp");
-			mPos.y -= (m_fZ / d);
-			curPos = mPos;
-
-			TransparentBlt(hdc,
-				(int)(mPos.x),
-				(int)(mPos.y),
-				(int)(im->GetWidth()* 2),
-				(int)(im->GetHeight() * 2),
-				im->GetHdc(),
-				0, 0,
-				im->GetWidth(), im->GetHeight(),
-				RGB(255, 0, 255));
+			bitmap::RotateBitmap(hdc, mPos, im->GetBitmap(),
+				arcTheta, im->GetHdc());
 		}
 			break;
 		case SKILL_T::ST:
