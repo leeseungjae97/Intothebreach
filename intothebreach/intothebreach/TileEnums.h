@@ -61,6 +61,7 @@ wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 enum class MOVE_TILE_T {
 	square,
 	square_g,
+	square_r,
 	square_gy,
 	square_b,
 	square_w,
@@ -75,6 +76,7 @@ enum class MOVE_TILE_T {
 wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square",
 	L"square_g",
+	L"square_r",
 	L"square_gy",
 	L"square_b",
 	L"square_w",

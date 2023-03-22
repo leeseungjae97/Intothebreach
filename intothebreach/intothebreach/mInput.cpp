@@ -1,5 +1,6 @@
 #include "mInput.h"
 #include "mApplication.h"
+#include "mTime.h"
 extern m::Application application;
 namespace m
 {
@@ -23,7 +24,6 @@ namespace m
 
 	vector<Input::Key> Input::mKeys;
 	m::Vector2 Input::mCurMousePos;
-
 	void Input::Initialize()
 	{
 		for (UINT i = 0; i < (UINT)KEYCODE_TYPE::END; i++)
@@ -32,20 +32,21 @@ namespace m
 			keyInfo.key = (KEYCODE_TYPE)i;
 			keyInfo.state = KEY_STATE::NONE;
 			keyInfo.bPressed = false;
-
 			mKeys.push_back(keyInfo);
 		}
 	}
 	
 	void Input::Update()
 	{
+
 		HWND hwnd = GetFocus();
 		if (nullptr != hwnd) {
 			for (UINT i = 0; i < (UINT)KEYCODE_TYPE::END; i++) {
 				if (GetAsyncKeyState(ASCII[i]) & 0x8000) {
 					// 이전 프레임에도 눌려 있었다
-					if (mKeys[i].bPressed)
+					if (mKeys[i].bPressed) {
 						mKeys[i].state = KEY_STATE::PRESSED;
+					}
 					else
 						mKeys[i].state = KEY_STATE::DOWN;
 
@@ -54,10 +55,14 @@ namespace m
 				else // 현재 프레임에 키가 눌려있지 않다.
 				{
 					// 이전 프레임에 내키가 눌려있엇다.
-					if (mKeys[i].bPressed)
+					if (mKeys[i].bPressed) 
+					{
 						mKeys[i].state = KEY_STATE::UP;
-					else
+					}
+					else 
+					{
 						mKeys[i].state = KEY_STATE::NONE;
+					}
 
 					mKeys[i].bPressed = false;
 				}
@@ -77,10 +82,8 @@ namespace m
 				else if (KEY_STATE::UP == mKeys[i].state) {
 					mKeys[i].state = KEY_STATE::NONE;
 				}
-			}
-			
+			}	
 		}
-		
 	}
 
 	void Input::Render(HDC hdc)

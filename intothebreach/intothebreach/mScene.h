@@ -96,6 +96,11 @@ namespace m
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
+
+		bool isAttack;
+		int index;
+		int finalIndex;
 		int map[TILE_Y][TILE_X]{};
+		int skill_range_map[TILE_Y][TILE_X]{};
 	};
 }

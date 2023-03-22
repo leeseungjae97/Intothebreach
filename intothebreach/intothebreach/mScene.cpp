@@ -12,6 +12,7 @@ namespace m
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
+		isAttack = false;
 	}
 	Scene::~Scene()
 	{
@@ -160,6 +161,7 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				map[y][x] = 0;
+				skill_range_map[y][x] = 0;
 			}
 		}
 	}
@@ -455,12 +457,43 @@ namespace m
 	}
 	void Scene::DrawSkillRangeTile() {
 		if (nullptr == mMouseFollower) return;
-		int index = 0;
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) index = 1;
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_2)) index = 2;
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_3)) index = 3;
+		if (index == -1) return;
 		mMouseFollower->GetSkill(index);
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = mMouseFollower->GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+
+		SetMap(0, 0);
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty()) {
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++) {
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+				if (skill_range_map[(int)dy][(int)dx] == MOVE) continue;
+				if ((stPos.y != dy && stPos.x == dx) || (stPos.x != dx && stPos.y == dy)) {
+					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+					mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
+					skill_range_map[(int)dy][(int)dx] = MOVE;
+					mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
+						, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_r));
+				}
+			}
+		}
 	}
+
 	void Scene::Release()
 	{
 		Safe_Delete_Y_Vec(mTiles);
@@ -475,18 +508,27 @@ namespace m
 	void Scene::MoveMech() {
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 		if (nullptr != mMouseFollower) {
-			Scene::DrawMoveRangeTile();
-			Scene::DrawMoveDirectionTile();
+			if (!isAttack) {
+				Scene::DrawMoveRangeTile();
+				Scene::DrawMoveDirectionTile();
+			}
+			else {
+				Scene::DrawSkillRangeTile();
+			}
 			Scene::CheckMouseOutOfMapRange();
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
+			isAttack = false;
+			index = -1;
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			SetMouseFollower(nullptr);
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
+			isAttack = false;
+			index = -1;
 			if (nullptr != mMouseFollower) {
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
@@ -499,6 +541,20 @@ namespace m
 		
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
+
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) {
+			index = 0;
+			isAttack = true;
+		}
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_2)) {
+			index = 1;
+			isAttack = true;
+		}
+		if (KEY_PRESSED(KEYCODE_TYPE::NUM_3)) {
+			index = 2;
+			isAttack = true;
+		}
+		
 	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{

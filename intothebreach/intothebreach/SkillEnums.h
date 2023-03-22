@@ -18,7 +18,6 @@ enum class SKILL_N {
 	punch,
 	END,
 };
-
 wstring SKILL_PATH[(UINT)SKILL_N::END]{
 	L"shotup_tribomb_missile",
 	L"shot_mechtank_",
