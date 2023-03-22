@@ -54,6 +54,7 @@ namespace m
 
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
+		void DrawOutLineTile();
 		void CheckMouseOutOfMapRange();
 		void RobotDrag();
 
@@ -97,7 +98,7 @@ namespace m
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
 
-		bool isAttack;
+		int isAttack;
 		int index;
 		int finalIndex;
 		int map[TILE_Y][TILE_X]{};

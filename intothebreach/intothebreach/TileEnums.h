@@ -27,6 +27,8 @@ enum class TILE_T {
 	CAVE,
 	COMMON,
 	MOVE_RANGE,
+	PLAYER,
+	MONSTER,
 	END,
 };
 wstring TILE_PATH[(UINT)TILE_T::END]{

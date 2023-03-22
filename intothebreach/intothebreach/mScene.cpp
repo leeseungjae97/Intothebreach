@@ -319,11 +319,15 @@ namespace m
 			Vector2 mp = mMechs[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = MECH;
 		}
+		for (int i = 0; i < mAliens.size(); i++) {
+			Vector2 mp = mAliens[i]->GetFinalCoord();
+			map[(int)mp.y][(int)mp.x] = ALIEN;
+		}
 	}
 	void Scene::DrawFootTile() {
 		for (UINT _i = 0; _i < mAliens.size(); _i++) {
 			Vector2 mCoord = mAliens[_i]->GetFinalCoord();
-			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MOVE_RANGE);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MONSTER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(100);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
 				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_gy)
@@ -331,7 +335,7 @@ namespace m
 		}
 		for (UINT _i = 0; _i < mMechs.size(); _i++) {
 			Vector2 mCoord = mMechs[_i]->GetFinalCoord();
-			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MOVE_RANGE);
+			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::PLAYER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(150);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
 				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_b)
@@ -378,7 +382,8 @@ namespace m
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 				pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
-				if (map[(int)dy][(int)dx] == MECH) continue;
+				if (map[(int)dy][(int)dx] == MECH
+					|| map[(int)dy][(int)dx] == ALIEN) continue;
 				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
 				map[(int)dy][(int)dx] = MOVE;
 				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
@@ -388,29 +393,37 @@ namespace m
 		}
 		
 
-		//// 이동범위 경계선 그리기
+		
+		DrawOutLineTile();
+	}
+	//// 이동범위 경계선 그리기
+	void Scene::DrawOutLineTile() {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				if (mPosTiles[y][x]->GetTileType() == TILE_T::MOVE_RANGE) {
-					MOVE_TILE_T type = (MOVE_TILE_T)0;
-					if (y + 1 < mPosTiles.size() && mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
+					// x,y 타일 주변 4방향으로 검사해서 MOVE tile이 아니면 외곽선 추가.
+					if (y + 1 < mPosTiles.size() 
+						&& mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_d)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_d));
 					}
-					if (y - 1 >= 0 && mPosTiles[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
+					if (y - 1 >= 0 
+						&& mPosTiles[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_u)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_u));
 					}
-					if (x - 1 >= 0 &&  mPosTiles[y][x - 1]->GetTileType() != TILE_T::MOVE_RANGE) {
+					if (x - 1 >= 0 
+						&& mPosTiles[y][x - 1]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_l)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_l));
 					}
-					if (x + 1 < mPosTiles[y].size() && mPosTiles[y][x+1]->GetTileType() != TILE_T::MOVE_RANGE) {
+					if (x + 1 < mPosTiles[y].size() 
+						&& mPosTiles[y][x + 1]->GetTileType() != TILE_T::MOVE_RANGE) {
 						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_r)
 							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_r));
 					}
-					
-					
+
+
 				}
 			}
 		}
@@ -458,7 +471,7 @@ namespace m
 	void Scene::DrawSkillRangeTile() {
 		if (nullptr == mMouseFollower) return;
 		if (index == -1) return;
-		mMouseFollower->GetSkill(index);
+		SKILL_T type = mMouseFollower->GetSkill(index);
 
 		list<Vector2_1>queue;
 
@@ -482,9 +495,17 @@ namespace m
 
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
 				if (skill_range_map[(int)dy][(int)dx] == MOVE) continue;
-				if ((stPos.y != dy && stPos.x == dx) || (stPos.x != dx && stPos.y == dy)) {
+				bool rangeCheck = false;
+				for (int _i = 0; _i < 4; _i++) {
+					if (stPos.x + direct[_i][0] == dx 
+						&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
+				}
+				
+				if ((stPos.y != dy && stPos.x == dx) 
+					|| (stPos.x != dx && stPos.y == dy)) {
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
+					if (rangeCheck) continue;
 					mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
 					skill_range_map[(int)dy][(int)dx] = MOVE;
 					mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
@@ -508,7 +529,7 @@ namespace m
 	void Scene::MoveMech() {
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 		if (nullptr != mMouseFollower) {
-			if (!isAttack) {
+			if (isAttack == -1) {
 				Scene::DrawMoveRangeTile();
 				Scene::DrawMoveDirectionTile();
 			}
@@ -519,7 +540,7 @@ namespace m
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower) {
-			isAttack = false;
+			isAttack = -1;
 			index = -1;
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
@@ -527,7 +548,7 @@ namespace m
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
-			isAttack = false;
+			isAttack = -1;
 			index = -1;
 			if (nullptr != mMouseFollower) {
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
@@ -542,17 +563,17 @@ namespace m
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
 
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) {
-			index = 0;
-			isAttack = true;
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_2)) {
-			index = 1;
-			isAttack = true;
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_3)) {
-			index = 2;
-			isAttack = true;
+		
+		if (KEY_UP(KEYCODE_TYPE::NUM_1)) {index = 0;}
+		if (KEY_UP(KEYCODE_TYPE::NUM_2)) {index = 1;}
+		if (KEY_UP(KEYCODE_TYPE::NUM_3)) {index = 2;}
+		if (KEY_UP(KEYCODE_TYPE::NUM_1)
+			|| KEY_UP(KEYCODE_TYPE::NUM_2)
+			|| KEY_UP(KEYCODE_TYPE::NUM_3)) {
+			isAttack *= -1;
+			if (nullptr != mMouseFollower) {
+				GetAlphaFollower()->SetState(GameObject::STATE::Death);
+			}
 		}
 		
 	}

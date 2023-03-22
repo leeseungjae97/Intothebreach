@@ -48,9 +48,9 @@ namespace m {
 		Mech* mech2 = object::Instantiate(Vector2(4, 7), LAYER_TYPE::PLAYER, MECHS::tank);
 		Mech* mech3 = object::Instantiate(Vector2(7, 4), LAYER_TYPE::PLAYER, MECHS::punch);
 
-		Alien* alien1 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::ALIEN, ALIENS::Hornet);
-		Alien* alien2 = object::Instantiate(Vector2(0, 7), LAYER_TYPE::ALIEN, ALIENS::Leaper);
-		Alien* alien3 = object::Instantiate(Vector2(2, 3), LAYER_TYPE::ALIEN, ALIENS::Firefly);
+		Alien* alien1 = object::Instantiate(Vector2(4, 4), LAYER_TYPE::MONSTER, ALIENS::Hornet);
+		Alien* alien2 = object::Instantiate(Vector2(0, 7), LAYER_TYPE::MONSTER, ALIENS::Leaper);
+		Alien* alien3 = object::Instantiate(Vector2(2, 3), LAYER_TYPE::MONSTER, ALIENS::Firefly);
 	}
 	void CombatScene::Update() {
 		Scene::Update();

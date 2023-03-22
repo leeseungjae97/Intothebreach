@@ -54,6 +54,7 @@
 
 #define MOVE 1
 #define MECH -2
+#define ALIEN -3
 #define BUILDING -1
 
 template <typename T>
