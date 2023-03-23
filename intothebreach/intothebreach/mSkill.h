@@ -32,6 +32,7 @@ namespace m {
         float m_fMissile_distance;
 
         bool endFire;
+        bool underAttack;
 
         float offsetHeight;
         float maxTheta;

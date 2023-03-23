@@ -4,6 +4,8 @@
 #include "Building.h"
 #include "Mech.h"
 #include "func.h"
+#include "mSkill.h"
+#include "mUnit.h"
 namespace m
 {
 	Scene::Scene()
@@ -161,6 +163,12 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				map[y][x] = 0;
+			}
+		}
+	}
+	void Scene::ClearSkillRangeMap() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				skill_range_map[y][x] = 0;
 			}
 		}
@@ -172,7 +180,8 @@ namespace m
 	void Scene::DrawMoveDirectionTile() {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
+				Tile* p = mPosTiles[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					
 					// 이동가능 거리 인지 확인
 					if (map[y][x] == MECH) {
@@ -268,7 +277,8 @@ namespace m
 	void Scene::CheckMouseOutOfMapRange() {
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
-				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
+				Tile* p = mPosTiles[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					// 마우스의 위치가 이동가능 범위가 아닐때
 					// 원래 위치에 돌아감
 					if (map[y][x] != MOVE) {
@@ -292,7 +302,8 @@ namespace m
 		for (int y = 0; y < mPosTiles.size(); y++) {
 			for (int x = 0; x < mPosTiles[y].size(); x++) {
 				// 마우스의 위치있는 메카 마우스에 따라오게
-				if (math::CheckRhombusPos(mPosTiles[y][x]->GetPos(), mPosTiles[y][x]->GetScale(), MOUSE_POS)) {
+				Tile* p = mPosTiles[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					for (UINT _i = 0; _i < mMechs.size(); _i++) {
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord()) {
 							SetMouseFollower(mMechs[_i]);
@@ -441,7 +452,6 @@ namespace m
 				pathQueue.clear();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				//mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
 				mPosTiles[y][x]->SetSourceConstantAlpha(50);
 				mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
@@ -457,7 +467,8 @@ namespace m
 	void Scene::HighlightTile() {
 		for (int y = 0; y < mPosOutLineTiles.size(); y++) {
 			for (int x = 0; x < mPosOutLineTiles[y].size(); x++) {
-				if (math::CheckRhombusPos(mPosOutLineTiles[y][x]->GetPos(), mPosOutLineTiles[y][x]->GetScale(), MOUSE_POS)) {
+				Tile* p = mPosTiles[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					if (map[y][x] != MOVE) {
 						mPosOutLineTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
 					}
@@ -467,6 +478,26 @@ namespace m
 				}
 			}
 		}
+	}
+	void Scene::ActiveSkill() {
+		for (int y = 0; y < mPosTiles.size(); y++) {
+			for (int x = 0; x < mPosTiles[y].size(); x++) {
+				//if (skill_range_map[y][x] != MOVE) continue;
+				Tile* p = mPosTiles[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
+					if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
+						// 스킬 전개.
+						mMouseFollower->FireSkill(p->GetCoord(), index);
+						for (int i = 0; i < effectUnits[(UINT)p->GetCoord().y][(UINT)p->GetCoord().x].size(); i++) {
+							// 현재 
+							effectUnits[(UINT)p->GetCoord().y][(UINT)p->GetCoord().x][i]->Hit(1);
+						}
+					}
+				}
+			}
+		}
+		// 공격완료하면 clear
+		ClearSkillRangeMap();
 	}
 	void Scene::DrawSkillRangeTile() {
 		if (nullptr == mMouseFollower) return;
@@ -535,6 +566,7 @@ namespace m
 			}
 			else {
 				Scene::DrawSkillRangeTile();
+				Scene::ActiveSkill();
 			}
 			Scene::CheckMouseOutOfMapRange();
 		}
@@ -551,6 +583,7 @@ namespace m
 			isAttack = -1;
 			index = -1;
 			if (nullptr != mMouseFollower) {
+				MoveEffectUnit(mMouseFollower);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
 				SetMouseFollower(nullptr);
@@ -577,8 +610,24 @@ namespace m
 		}
 		
 	}
+	void Scene::MoveEffectUnit(Unit* unit) {
+		Vector2 idx = unit->GetFinalCoord();
+		Vector2 nIdx = unit->GetCoord();
+		for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++) {
+			if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit) {
+				effectUnits[(UINT)idx.y][(UINT)idx.x]
+					.erase(effectUnits[(UINT)idx.y][(UINT)idx.x].begin() + i);
+				effectUnits[(UINT)nIdx.y][(UINT)nIdx.x].push_back(unit);
+			}
+		}
+	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{
 		mLayers[(UINT)layer].AddGameObject(obj);
+
+		if (nullptr != dynamic_cast<Unit*>(obj) && layer != LAYER_TYPE::CLONE) {
+			Vector2 idx = ((Unit*)obj)->GetCoord();
+			effectUnits[(UINT)idx.y][(UINT)idx.x].push_back(dynamic_cast<Unit*>(obj));
+		}
 	}
 }

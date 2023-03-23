@@ -5,6 +5,7 @@
 #include "mResources.h"
 #include "mSelectGDI.h"
 #include "mSkill.h"
+#include "func.h"
 namespace m {
 	Unit::Unit(Vector2 _coord, int _range, int hp, int _type)
 		: mPilot(nullptr)
@@ -104,7 +105,7 @@ namespace m {
 			if (mHp == 0) return;
 			int hpWidth = (hpBack->GetWidth() * 2) / mHp;
 			int hpHeight = hpBack->GetHeight() * 2;
-			for (int i = 0; i < mHp; i++) {
+			for (int i = 0; i < curHp; i++) {
 				SelectGDI p(hdc, BRUSH_TYPE::GREEN);
 				Rectangle(hdc
 					, (int)(px + hpWidth * i)
@@ -119,11 +120,14 @@ namespace m {
 	void Unit::Release() {
 		GameObject::Release();
 	}
+	Skill* Unit::FireSkill(Vector2 pos, int idx) {
+		return object::Instantiate(mSkills, this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
+	}
 	void Unit::SetSkill() {
 
 	}
-	void Unit::SetSkill(int type) {
-		mSkills.push_back(new Skill((SKILL_T)type));
+	void Unit::SetSkill(SKILL_T type) {
+		mSkills.push_back(new Skill(type));
 	}
 	void Unit::SetSkill(int idx, SKILL_T type) {
 		mSkills[idx] = new Skill(type);

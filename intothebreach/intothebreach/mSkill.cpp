@@ -49,7 +49,7 @@ namespace m {
 
 		// 낙하에 걸리는 시간
 		// 임의의 중력가속도 = 2 * 거리 / 시간^2
-		gravityAccel = 2 * fHeight / (fMaxTime * fMaxTime);
+		gravityAccel = 3.5 * fHeight / (fMaxTime * fMaxTime);
 
 		// 지면 도달 시간 == 속도
 		velocityY =sqrtf(2 * fHeight * gravityAccel);
@@ -112,17 +112,12 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			Vector2 mPos = GetPos();
-			float Dir;
-			Image* im = nullptr;
-			if (Missile_vec.x > 0) {
-				Dir = 1;
-				im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_L.bmp");
-			}
-			else {
-				Dir = -1;
-				im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_R.bmp");
-			}
+			Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_L.bmp");
 
+			//float Dir;
+			//if (Missile_vec.x > 0)	{Dir = 1;}
+			//else					{Dir = -1;}
+			
 			bitmap::RotateBitmap(hdc, mPos, im->GetBitmap(),
 				arcTheta, im->GetHdc());
 		}

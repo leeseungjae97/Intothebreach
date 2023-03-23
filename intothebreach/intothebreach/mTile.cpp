@@ -2,16 +2,6 @@
 #include "mImage.h"
 #include "mCamera.h"
 namespace m {
-	//wstring tileTypeName[(UINT)TILE_T::END] = {
-	//L"texture\\terrain\\green\\",
-	//L"texture\\terrain\\acid\\",
-	//L"texture\\terrain\\sand\\",
-	//L"texture\\terrain\\snow\\",
-	//L"texture\\terrain\\volcano\\",
-	//L"texture\\terrain\\cave\\"
-	//};
-
-
 	Tile::Tile(Vector2 _coord)
 		: mTileTex(nullptr)
 		, mCoord(_coord)

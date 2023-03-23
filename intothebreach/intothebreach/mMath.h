@@ -146,69 +146,6 @@ namespace m {
 };
 
 namespace m::math {
-    float min4(float a, float b, float c, float d) {
-        if (a < b) {
-            if (c < a) {
-                if (d < c)
-                    return d;
-                else
-                    return c;
-            }
-            else {
-                if (d < a)
-                    return d;
-                else
-                    return a;
-            }
-        }
-        else {
-            if (c < b) {
-                if (d < c)
-                    return d;
-                else
-                    return c;
-            }
-            else {
-                if (d < b)
-                    return d;
-                else
-                    return b;
-            }
-        }
-    }
-
-    // Helper function for getting the maximum of 4 floats
-    float max4(float a, float b, float c, float d) {
-        if (a > b) {
-            if (c > a) {
-                if (d > c)
-                    return d;
-                else
-                    return c;
-            }
-            else {
-                if (d > a)
-                    return d;
-                else
-                    return a;
-            }
-        }
-        else {
-            if (c > b) {
-                if (d > c)
-                    return d;
-                else
-                    return c;
-            }
-            else {
-                if (d > b)
-                    return d;
-                else
-                    return b;
-            }
-        }
-    }
-
     inline Vector2 Rotate(Vector2 vector, float degree) {
         float radian = (degree / 180.f) * PI;
         vector.Normalize();

@@ -6,7 +6,7 @@
 #include "mImage.h"
 extern m::Application application;
 namespace m {
-	Size Camera::mResolution = {};
+	Vector2 Camera::mResolution = {};
 	Vector2 Camera::mLookPosition = {};
 	Vector2 Camera::mDistance = {};
 	GameObject* Camera::mTarget = nullptr;

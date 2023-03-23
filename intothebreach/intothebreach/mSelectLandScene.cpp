@@ -32,7 +32,8 @@ namespace m {
 	void SelectLandScene::Update() {
 		Scene::Update();
 		for (int i = 0; i < Islands.size(); i++) {
-			if (math::CheckRectPos(Islands[i]->GetPos(), Islands[i]->GetScale(),MOUSE_POS)) {
+			Background* p = Islands[i];
+			if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 				outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
 			}
 			else {
@@ -42,7 +43,8 @@ namespace m {
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
 			for (int i = 0; i < Islands.size() - 1; i++) {
-				if (math::CheckRectPos(Islands[i]->GetPos(), Islands[i]->GetScale(), MOUSE_POS)) {
+				Background* p = Islands[i];
+				if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					SceneManager::LoadScene((SCENE_TYPE)i);
 				}
 			}

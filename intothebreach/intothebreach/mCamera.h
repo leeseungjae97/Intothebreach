@@ -33,7 +33,7 @@ namespace m {
 		~Camera() = delete;
 
 	private:
-		static Size mResolution;
+		static Vector2 mResolution;
 		static Vector2 mLookPosition;
 		static Vector2 mDistance;
 		static GameObject* mTarget;

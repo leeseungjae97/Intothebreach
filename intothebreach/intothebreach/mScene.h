@@ -57,6 +57,9 @@ namespace m
 		void DrawOutLineTile();
 		void CheckMouseOutOfMapRange();
 		void RobotDrag();
+		void ActiveSkill();
+		void ClearSkillRangeMap();
+		void MoveEffectUnit(Unit* unit);
 
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
@@ -86,9 +89,13 @@ namespace m
 		TILES mPosOutLineTiles;
 		TILES mBoundaryTiles;
 		TILES mArrowTiles;
-		BUILDINGS mStruturesTiles;
 		TILES mEffectedTiles;
 		TILES mEnemyEmerge;
+
+		vector<Unit*> effectUnits[TILE_Y][TILE_X];
+
+
+		BUILDINGS mStruturesTiles;
 
 		vector<Vector2_1> pathQueue;
 

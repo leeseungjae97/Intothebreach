@@ -68,17 +68,19 @@ namespace m::object {
 		return gameObj;
 	}
 
-	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T mType) {
+	static inline Skill* Instantiate(vector<Skill*>& vS, 
+		Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T mType) {
 		Skill* gameObj = new Skill(mType);
 		Scene* scene = SceneManager::GetActiveScene();
 
 		gameObj->Initialize();
+		gameObj->SetLayerType(type);
+		gameObj->SetSkillType(mType);
+
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
 		gameObj->PreCal();
-		gameObj->SetLayerType(type);
-		gameObj->SetSkillType(mType);
 
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
