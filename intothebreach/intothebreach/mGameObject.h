@@ -8,11 +8,13 @@ namespace m
 	class GameObject : public Entity
 	{
 	public:
-		enum class STATE {
+		enum class STATE
+		{
 			Idle,
 			Broken,
 			Water,
 			Death,
+			Emerge,
 			End,
 		};
 		GameObject(GameObject& other);
@@ -29,7 +31,7 @@ namespace m
 		void AddComponent(Component* component);
 		bool GetIsFirstUpdate() { return firstUpdate; }
 
-		
+
 
 		virtual void OnCollisionEnter(Collider* other) {};
 		virtual void OnCollisionStay(Collider* other) {};
@@ -46,37 +48,47 @@ namespace m
 		}
 
 		template<typename T>
-		__forceinline T* GetComponent() {
+		__forceinline T* GetComponent()
+		{
 			T* component;
-			for (auto c : mComponents) {
+			for (auto c : mComponents)
+			{
 				component = dynamic_cast<T*>(c);
-				if (nullptr != component) {
+				if (nullptr != component)
+				{
 					return component;
 				}
 			}
 
 			return nullptr;
 		}
-		__forceinline Component* GetComponentOfType(COMPONENT_TYPE type) {
+		__forceinline Component* GetComponentOfType(COMPONENT_TYPE type)
+		{
 			Component* comp = nullptr;
-			for (Component* c : mComponents) {
-				if (c->GetType() == type) {
+			for (Component* c : mComponents)
+			{
+				if (c->GetType() == type)
+				{
 					comp = c;
 					break;
 				}
 			}
 			return comp;
 		}
-		void SetPos(Vector2 _pos) {
+		void SetPos(Vector2 _pos)
+		{
 			GetComponent<Transform>()->SetPos(_pos);
 		}
-		Vector2 GetPos() {
+		Vector2 GetPos()
+		{
 			return GetComponent<Transform>()->GetPos();
 		}
-		void SetScale(Vector2 _scale) {
+		void SetScale(Vector2 _scale)
+		{
 			GetComponent<Transform>()->SetScale(_scale);
 		}
-		Vector2 GetScale() {
+		Vector2 GetScale()
+		{
 			return GetComponent<Transform>()->GetScale();
 		}
 		bool IsDead() { return mbDead; }

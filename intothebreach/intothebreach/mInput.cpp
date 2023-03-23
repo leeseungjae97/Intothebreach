@@ -40,7 +40,7 @@ namespace m
 	{
 
 		HWND hwnd = GetFocus();
-		if (nullptr != hwnd) {
+		if (NULL != hwnd) {
 			for (UINT i = 0; i < (UINT)KEYCODE_TYPE::END; i++) {
 				if (GetAsyncKeyState(ASCII[i]) & 0x8000) {
 					// 이전 프레임에도 눌려 있었다

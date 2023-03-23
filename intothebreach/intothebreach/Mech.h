@@ -22,6 +22,7 @@ namespace m
 		virtual void idle() override;
 		virtual void broken() override;
 		virtual void water() override;
+		virtual void emerge() override;
 
 		MECHS GetMechType() { return mMechType; }
 	private:

@@ -48,6 +48,10 @@ namespace m {
 				mActiveAnimation->Reset();
 			}
 		}
+		if (!mbLoop && mActiveAnimation->IsComplete())
+		{
+			stopAnimator = true;
+		}
 	}
 	void Animator::Render(HDC hdc) {
 		if (stopAnimator) return;

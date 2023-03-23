@@ -6,7 +6,8 @@
 #include "mSelectGDI.h"
 #include "mSkill.h"
 #include "func.h"
-namespace m {
+namespace m
+{
 	Unit::Unit(Vector2 _coord, int _range, int hp, int _type)
 		: mPilot(nullptr)
 		, mWeapon(nullptr)
@@ -34,7 +35,7 @@ namespace m {
 
 		mSkills.resize(MAX_WEAPONS);
 	}
-	Unit::Unit(Unit& _origin) 
+	Unit::Unit(Unit& _origin)
 		: GameObject(_origin)
 		, curImage(_origin.curImage)
 		, mCoord(_origin.mCoord)
@@ -45,22 +46,27 @@ namespace m {
 		SetState(_origin.GetState());
 		mAnimator = GetComponent<Animator>();
 	}
-	Unit::Unit() {
-	}
-	Unit::~Unit() {
-	}
-	void Unit::Initialize() {
+	Unit::Unit()
+	{}
+	Unit::~Unit()
+	{}
+	void Unit::Initialize()
+	{
 		GameObject::Initialize();
 	}
-	void Unit::Update() {
+	void Unit::Update()
+	{
 		GameObject::Update();
+
 	}
-	void Unit::Render(HDC hdc) {
+	void Unit::Render(HDC hdc)
+	{
 		GameObject::Render(hdc);
-		
+
 		Vector2 mPos = GetPos();
-		
-		if (nullptr != GetCurImage()) {
+
+		if (nullptr != GetCurImage())
+		{
 			Image* curImage = GetCurImage();
 			mPos += curImage->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
@@ -80,7 +86,8 @@ namespace m {
 
 
 		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpImage) {
+		if (nullptr != hpImage)
+		{
 			mPos += hpImage->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
 			TransparentBlt(hdc
@@ -96,16 +103,18 @@ namespace m {
 				, RGB(255, 0, 255));
 		}
 		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpBack) {
+		if (nullptr != hpBack)
+		{
 			mPos += hpBack->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
-			
+
 			int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
 			int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
 			if (mHp == 0) return;
 			int hpWidth = (hpBack->GetWidth() * 2) / mHp;
 			int hpHeight = hpBack->GetHeight() * 2;
-			for (int i = 0; i < curHp; i++) {
+			for (int i = 0; i < curHp; i++)
+			{
 				SelectGDI p(hdc, BRUSH_TYPE::GREEN);
 				Rectangle(hdc
 					, (int)(px + hpWidth * i)
@@ -114,30 +123,37 @@ namespace m {
 					, (int)(py + hpHeight));
 			}
 		}
-		
-		
-	}
-	void Unit::Release() {
-		GameObject::Release();
-	}
-	void Unit::FireSkill(Vector2 pos, int idx) {
-		curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
-	}
-	void Unit::SetSkill() {
+
 
 	}
-	void Unit::SetSkill(int type) {
+	void Unit::Release()
+	{
+		GameObject::Release();
+	}
+	void Unit::FireSkill(Vector2 pos, int idx)
+	{
+		curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
+	}
+	void Unit::SetSkill()
+	{
+
+	}
+	void Unit::SetSkill(int type)
+	{
 		mSkills.push_back((SKILL_T)type);
 	}
-	void Unit::SetSkill(int idx, SKILL_T type) {
+	void Unit::SetSkill(int idx, SKILL_T type)
+	{
 		mSkills[idx] = type;
 	}
-	SKILL_T Unit::GetSkill(int idx) {
+	SKILL_T Unit::GetSkill(int idx)
+	{
 		return mSkills[idx];
 	}
-	void Unit::ChangePilotSlot() {
-	}
-	Weapon* Unit::ChangeWeaponSlot(int index) {
+	void Unit::ChangePilotSlot()
+	{}
+	Weapon* Unit::ChangeWeaponSlot(int index)
+	{
 		return nullptr;
 	}
 }

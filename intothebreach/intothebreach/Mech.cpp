@@ -19,7 +19,8 @@ namespace m
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
 
-		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++) {
+		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++)
+		{
 			GetMImages()[i] = Resources::Load<Image>(
 				MAKE_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
 				, MAKE_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
@@ -38,47 +39,54 @@ namespace m
 			, Vector2(fWid, fHei)
 			, GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
 			, len
-			, 0.5f
+			, 0.2f
 			, AC_SRC_ALPHA
 		);
 		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		SetState(STATE::Idle);
 	}
-	Mech::Mech(Mech& _origin) 
+	Mech::Mech(Mech& _origin)
 		: mMechType(_origin.mMechType)
 	{
 
 	}
 	Mech::~Mech()
-	{
-	}
-	void Mech::Initialize() {
-	}
+	{}
+	void Mech::Initialize()
+	{}
 	void Mech::Update()
 	{
 		Unit::Update();
-		if (KEY_PRESSED(KEYCODE_TYPE::NUM_1)) {
-			
-		}
-
-		if (KEY_PRESSED(KEYCODE_TYPE::Q)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::Q))
+		{
 			SetState(STATE::Broken);
 		}
-		if (KEY_PRESSED(KEYCODE_TYPE::E)) {
+		if (KEY_PRESSED(KEYCODE_TYPE::E))
+		{
 			SetState(STATE::Idle);
 		}
-		switch (GetState()) {
-		case m::Mech::STATE::Idle:
+		if (Unit::GetCurHp() == 0)
+		{
+			SetState(STATE::Broken);
+		}
+		//else
+		//{
+		//	SetState(STATE::Idle);
+		//}
+		switch (GetState())
+		{
+		case STATE::Idle:
 			idle();
 			break;
-		case m::Mech::STATE::Broken:
+		case STATE::Broken:
 			broken();
 			break;
-		case m::Mech::STATE::Water:
+		case STATE::Water:
 			water();
 			break;
-		case m::Mech::STATE::End:
-
+		case STATE::Emerge:
+			break;
+		case STATE::End:
 			break;
 		default:
 			break;
@@ -92,16 +100,21 @@ namespace m
 	{
 		Unit::Release();
 	}
-	void Mech::idle() {
+	void Mech::idle()
+	{
 		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		SetCurImage(nullptr);
 	}
-	void Mech::broken() {
+	void Mech::broken()
+	{
 		GetAnimator()->Stop();
 		SetCurImage(GetMImages()[(UINT)COMBAT_CONDITION_T::BROKEN]);
 	}
-	void Mech::water() {
+	void Mech::water()
+	{
 		GetAnimator()->Stop();
 		SetCurImage(GetMImages()[(UINT)COMBAT_CONDITION_T::WATER]);
 	}
+	void Mech::emerge()
+	{}
 }

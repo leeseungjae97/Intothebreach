@@ -21,6 +21,8 @@ namespace m {
         virtual void idle() override;
         virtual void broken() override;
         virtual void water() override;
+        virtual void emerge() override;
+
     private:
         ALIENS mAlienType;
     };

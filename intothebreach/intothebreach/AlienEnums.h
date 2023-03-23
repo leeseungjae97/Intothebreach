@@ -1,5 +1,6 @@
 #pragma once
-enum class ALIENS {
+enum class ALIENS
+{
 	Beetle,
 	Blobber,
 	Burrower,
@@ -33,7 +34,8 @@ wstring ALIEN_PATH[(UINT)ALIENS::END]{
 	L"spider",
 };
 
-enum class ALIEN_CONDITION {
+enum class ALIEN_CONDITION
+{
 	IDLE,
 	DEATH,
 	EMERGE,
@@ -86,7 +88,7 @@ m::Vector2 ALIENS_DEATH_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Centipede,
 	{0,0},//Crab,
 	{0,0},//Digger,
-	{41,0},//Firefly,
+	{41,39},//Firefly,
 	{30,48},//Hornet,
 	{0,0},//Jelly,
 	{54,38},//Leaper,
@@ -128,7 +130,9 @@ m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Slime,
 	{0,0},//Spider,
 };
+//
 int ALIENS_APL_COND[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
+	//idle, death, emeger, water
 	{},//Beetle,
 	{},//Blobber,
 	{},//Burrower,
@@ -194,7 +198,8 @@ int ALIEN_HP[(UINT)ALIENS::END]{
 	3,//Slime,
 	3,//Spider,
 };
-wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2) {
+wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2)
+{
 	wstring key = L"";
 
 	key.append(ALIEN_PATH[(UINT)_type]);
@@ -202,7 +207,8 @@ wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2) {
 
 	return key;
 }
-wstring MAKE_ALIEN_PATH(ALIENS _type, ALIEN_CONDITION _type2) {
+wstring MAKE_ALIEN_PATH(ALIENS _type, ALIEN_CONDITION _type2)
+{
 	wstring path = L"..\\Resources\\texture\\alien\\";
 
 	path.append(ALIEN_PATH[(UINT)_type]);

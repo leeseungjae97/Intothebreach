@@ -271,6 +271,9 @@
     <ClInclude Include="SkillEnums.h">
       <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="UnitEnums.h">
+      <Filter>Engine\Common\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">

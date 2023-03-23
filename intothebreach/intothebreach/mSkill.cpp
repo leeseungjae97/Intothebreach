@@ -36,7 +36,7 @@ namespace m {
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
 
-		absD - absMD <= 0 ? endFire = true : endFire = false;
+		absD - absMD <= 0.f ? endFire = true : endFire = false;
 	}
 	void Skill::PreCal() {
 		//object::Restore(this);
@@ -48,15 +48,15 @@ namespace m {
 		fMaxTime = 0.5f;
 
 		offsetHeight = mFinalEdPos.y - mStPos.y;
-		fHeight = 100 - min(mStPos.y, mFinalEdPos.y);
+		fHeight = 100.f - min(mStPos.y, mFinalEdPos.y);
 
 
 		// 낙하에 걸리는 시간
 		// 임의의 중력가속도 = 2 * 거리 / 시간^2
-		gravityAccel = 3.5 * fHeight / (fMaxTime * fMaxTime);
+		gravityAccel = 3.5f * fHeight / (fMaxTime * fMaxTime);
 
 		// 지면 도달 시간 == 속도
-		velocityY =sqrtf(2 * fHeight * gravityAccel);
+		velocityY =sqrtf(2.f * fHeight * gravityAccel);
 
 		float a = gravityAccel;
 
@@ -67,8 +67,8 @@ namespace m {
 
 		// 고도각
 		// 근의 공식에 따라 두개의 (-, +)x가 나옴.
-		maxTheta = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
-		minTheta = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
+		maxTheta = (-b + sqrtf(b * b - 4.f * a * c)) / (2.f * a);
+		minTheta = (-b - sqrtf(b * b - 4.f * a * c)) / (2.f * a);
 
 		// x의 속도
 		// 속도 = 거리 / 고도각.

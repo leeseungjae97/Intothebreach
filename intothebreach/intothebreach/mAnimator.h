@@ -45,7 +45,7 @@ namespace m {
         function<void()>& GetCompleteEvent(const wstring name);
         function<void()>& GetEndEvent(const wstring name);
 
-
+        bool GetStopAnimator() { return stopAnimator; }
 
     private:
         map<wstring, Animation*> mAnimations;
