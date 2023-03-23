@@ -11,14 +11,16 @@ extern m::Application application;
 namespace m {
 	Skill::Skill(SKILL_T _type)
 		: mType(_type) 
+		, endFire(false)
+		, fTime(0)
 	{
 		AddComponent(new Transform);
 		AddComponent(new Animator);
-		endFire = false;
 	}
 	Skill::Skill(Skill& _origin) {
 	}
 	Skill::Skill() 
+		: endFire(false)
 	{
 		AddComponent(new Transform);
 		AddComponent(new Animator);
@@ -37,6 +39,8 @@ namespace m {
 		absD - absMD <= 0 ? endFire = true : endFire = false;
 	}
 	void Skill::PreCal() {
+		//object::Restore(this);
+
 		Missile_vec = mFinalEdPos - mStPos;
 
 		m_fMissile_distance = Missile_vec.Length();

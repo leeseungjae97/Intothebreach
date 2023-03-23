@@ -120,20 +120,20 @@ namespace m {
 	void Unit::Release() {
 		GameObject::Release();
 	}
-	Skill* Unit::FireSkill(Vector2 pos, int idx) {
-		return object::Instantiate(mSkills, this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
+	void Unit::FireSkill(Vector2 pos, int idx) {
+		curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
 	}
 	void Unit::SetSkill() {
 
 	}
-	void Unit::SetSkill(SKILL_T type) {
-		mSkills.push_back(new Skill(type));
+	void Unit::SetSkill(int type) {
+		mSkills.push_back((SKILL_T)type);
 	}
 	void Unit::SetSkill(int idx, SKILL_T type) {
-		mSkills[idx] = new Skill(type);
+		mSkills[idx] = type;
 	}
 	SKILL_T Unit::GetSkill(int idx) {
-		return mSkills[idx]->GetSkillType();
+		return mSkills[idx];
 	}
 	void Unit::ChangePilotSlot() {
 	}

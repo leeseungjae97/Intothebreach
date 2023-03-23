@@ -27,7 +27,6 @@
 #include <mmsystem.h>
 #include <dsound.h>
 #include <dinput.h>
-#include <GdiPlus.h>
 
 using std::vector;
 using std::map;
@@ -40,7 +39,6 @@ using std::function;
 using std::queue;
 
 #pragma comment(lib, "Msimg32.lib")
-#pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "dsound.lib")
 

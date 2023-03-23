@@ -6,6 +6,8 @@
 #include "func.h"
 #include "mSkill.h"
 #include "mUnit.h"
+#include "mApplication.h"
+extern m::Application application;
 namespace m
 {
 	Scene::Scene()
@@ -14,6 +16,7 @@ namespace m
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
+		index = -1;
 		isAttack = false;
 	}
 	Scene::~Scene()
@@ -37,6 +40,13 @@ namespace m
 	}
 	void Scene::Render(HDC hdc)
 	{
+		wchar_t szFloat[500] = {};
+		swprintf_s(szFloat, 500, L"index : %d", index);
+		size_t iLen = wcsnlen_s(szFloat, 500);
+		//left top right bottom
+		RECT rt = { 50, 140, 400, 160 };
+		DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+
 		for (Layer& layer : mLayers)
 		{
 			layer.Render(hdc);
@@ -486,12 +496,7 @@ namespace m
 				Tile* p = mPosTiles[y][x];
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
-						// 스킬 전개.
-						mMouseFollower->FireSkill(p->GetCoord(), index);
-						for (int i = 0; i < effectUnits[(UINT)p->GetCoord().y][(UINT)p->GetCoord().x].size(); i++) {
-							// 현재 
-							effectUnits[(UINT)p->GetCoord().y][(UINT)p->GetCoord().x][i]->Hit(1);
-						}
+						mMouseFollower->FireSkill(p->GetCoord(), index);	
 					}
 				}
 			}
@@ -502,7 +507,6 @@ namespace m
 	void Scene::DrawSkillRangeTile() {
 		if (nullptr == mMouseFollower) return;
 		if (index == -1) return;
-		SKILL_T type = mMouseFollower->GetSkill(index);
 
 		list<Vector2_1>queue;
 
@@ -581,12 +585,12 @@ namespace m
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
 			isAttack = -1;
-			index = -1;
+			//index = -1;
 			if (nullptr != mMouseFollower) {
 				MoveEffectUnit(mMouseFollower);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
-				SetMouseFollower(nullptr);
+				//SetMouseFollower(nullptr);
 			}
 			else {
 				Scene::RobotDrag();
@@ -596,7 +600,11 @@ namespace m
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
 
-		
+		if (index != -1 && nullptr != mMouseFollower->GetCurAttackWeapon() && mMouseFollower->GetCurAttackWeapon()->GetEndFire()) {
+			Skill * p = mMouseFollower->GetCurAttackWeapon();
+			effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x][index]->Hit(1);
+			mMouseFollower->GetCurAttackWeapon()->SetEndFire(false);
+		}
 		if (KEY_UP(KEYCODE_TYPE::NUM_1)) {index = 0;}
 		if (KEY_UP(KEYCODE_TYPE::NUM_2)) {index = 1;}
 		if (KEY_UP(KEYCODE_TYPE::NUM_3)) {index = 2;}

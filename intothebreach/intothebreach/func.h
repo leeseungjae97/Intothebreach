@@ -68,14 +68,14 @@ namespace m::object {
 		return gameObj;
 	}
 
-	static inline Skill* Instantiate(vector<Skill*>& vS, 
-		Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T mType) {
-		Skill* gameObj = new Skill(mType);
+	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type) {
+		Skill* gameObj = new Skill(_type);
+
 		Scene* scene = SceneManager::GetActiveScene();
 
 		gameObj->Initialize();
 		gameObj->SetLayerType(type);
-		gameObj->SetSkillType(mType);
+		gameObj->SetEndCoord(edPos);
 
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
@@ -86,9 +86,11 @@ namespace m::object {
 		return gameObj;
 	}
 
-
 	static void Destory(GameObject* obj) {
 		obj->SetState(GameObject::STATE::Death);
+	}
+	static void Restore(GameObject* obj) {
+		obj->SetState(GameObject::STATE::Idle);
 	}
 	static void DrawText(wstring ar ...) {
 	/*	wchar_t szFloat[50] = {};

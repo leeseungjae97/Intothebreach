@@ -14,14 +14,20 @@ namespace m {
         virtual void Render(HDC hdc) override;
         virtual void Release() override;
 
-        Vector2 GetCurCoord() { return curCoord; }
+        Vector2 GetEndCoord() { return endCoord; }
+        void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
+
         void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
         LAYER_TYPE GetLayerType() { return mLayerType; }
         void PreCal();
         void SetSkillType(SKILL_T _type) { mType = _type; }
         SKILL_T GetSkillType() { return mType; }
         void SetStPos(Vector2 _pos) { mStPos = _pos; }
+
         void SetEndPos(Vector2 _pos) {mFinalEdPos = _pos;}
+        Vector2 GetEndPos() { return mFinalEdPos; }
+        void SetEndFire(bool _endFire) { endFire = _endFire; }
+
         bool GetEndFire() { return endFire; }
         void CalEndFire();
     private:
@@ -51,7 +57,7 @@ namespace m {
 
         SKILL_T mType;
 
-        Vector2 curCoord;
+        Vector2 endCoord;
         Vector2 curPos;
 
         Vector2 mStPos;
