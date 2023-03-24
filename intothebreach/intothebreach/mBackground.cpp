@@ -111,5 +111,17 @@ namespace m {
 	void Background::Release() {
 		GameObject::Release();
 	}
-
+	void Background::SetTex(const wstring& key, const wstring& path, ISLAND_T type)
+	{
+		mImage = Resources::Load<Image>(key, path);
+		mImage->SetOffset(Vector2(ISLAND_OUTLINE_OFFSET[(UINT)type].x, ISLAND_OUTLINE_OFFSET[(UINT)type].y));
+	}
+	void Background::Clear()
+	{
+		mImage = Resources::Load<Image>(mKey, mPath);
+	}
+	Vector2 Background::GetSize()
+	{
+		return Vector2((float)mImage->GetWidth(), (float)mImage->GetHeight());
+	}
 }

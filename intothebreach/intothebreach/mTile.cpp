@@ -32,7 +32,22 @@ namespace m {
 	void Tile::Update() {
 		GameObject::Update();
 	}
-
+	void Tile::SetTileTexture(const wstring& key, const wstring& path)
+	{
+		mTileTex = Resources::Load<Image>(key, path);
+		SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
+	}
+	void Tile::ClearAddETCTiles()
+	{
+		for (int i = 0; i < mETCTexs.size(); i++)
+			mETCTexs[i] = Resources::Load<Image>(SQUARE__KEY, SQUARE__PATH);
+	}
+	void Tile::SetETCTiles(const wstring& key, const wstring& path)
+	{
+		++eTCTexsIdx %= mETCTexs.size();
+		mETCTexs[eTCTexsIdx] = Resources::Load<Image>(key, path);
+		SetScale(Vector2((float)(mETCTexs[eTCTexsIdx]->GetWidth() * 2), (float)(mETCTexs[eTCTexsIdx]->GetHeight() * 2)));
+	}
 	void Tile::Render(HDC hdc) {
 		GameObject::Render(hdc);
 		if(nullptr != mTileTex) {

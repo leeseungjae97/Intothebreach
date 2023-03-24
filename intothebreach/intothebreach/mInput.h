@@ -1,6 +1,5 @@
 #pragma once
 #include "_Engine.h"
-
 namespace m
 {
 	enum class KEYCODE_TYPE

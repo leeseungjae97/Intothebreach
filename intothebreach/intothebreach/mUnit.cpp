@@ -130,9 +130,13 @@ namespace m
 	{
 		GameObject::Release();
 	}
-	void Unit::FireSkill(Vector2 pos, int idx)
+	void Unit::DrawSkill(Vector2 pos, int idx)
 	{
-		curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
+		curAttactSkill = mSkills[idx];
+		//curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
+		//object::Instantiate2(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills, idx);
+		if (nullptr == curAttactSkill)return;
+		curAttactSkill->ReInit(this->GetFinalCoord(), pos);
 	}
 	void Unit::SetSkill()
 	{
@@ -140,16 +144,25 @@ namespace m
 	}
 	void Unit::SetSkill(int type)
 	{
-		mSkills.push_back((SKILL_T)type);
+		//mSkills.push_back((SKILL_T)type);
+		object::Instantiate(mSkills, (SKILL_T)type);
+		//mSkills.push_back(new Skill((SKILL_T)type));
 	}
 	void Unit::SetSkill(int idx, SKILL_T type)
 	{
-		mSkills[idx] = type;
+		//mSkills[idx] = type;
+		//object::Instantiate2(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills, idx);
+		object::Instantiate(mSkills, (SKILL_T)type, idx);
 	}
-	SKILL_T Unit::GetSkill(int idx)
+	Skill* Unit::GetSkill(int idx)
 	{
+		if (mSkills.size() <= idx) return nullptr;
 		return mSkills[idx];
 	}
+	//SKILL_T Unit::GetSkill(int idx)
+	//{
+	//	//return mSkills[idx];
+	//}
 	void Unit::ChangePilotSlot()
 	{}
 	Weapon* Unit::ChangeWeaponSlot(int index)

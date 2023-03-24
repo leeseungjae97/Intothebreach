@@ -21,7 +21,10 @@ namespace m
 				continue;
 
 			if (gameObj->GetState()
-				== GameObject::STATE::Death)
+				== GameObject::STATE::Death
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Invisible)
 				continue;
 
 			gameObj->Initialize();
@@ -34,7 +37,10 @@ namespace m
 			if (gameObj == nullptr)
 				continue;
 			if (gameObj->GetState()
-				== GameObject::STATE::Death)
+				== GameObject::STATE::Death
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Invisible)
 				continue;
 
 			gameObj->Update();
@@ -49,7 +55,10 @@ namespace m
 				continue;
 
 			if (gameObj->GetState()
-				== GameObject::STATE::Death)
+				== GameObject::STATE::Death
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Invisible)
 				continue;
 
 			gameObj->Render(hdc);

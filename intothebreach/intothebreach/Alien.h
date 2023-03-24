@@ -9,7 +9,7 @@ namespace m {
         public Unit {
     public:
 
-        Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type);
+        Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type, int idx);
         Alien(Alien& _origin);
         ~Alien();
 
@@ -25,6 +25,7 @@ namespace m {
 
     private:
         ALIENS mAlienType;
+        int mIdx;
     };
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 #include "mScene.h"
-#include "Mech.h"
 namespace m
 {
+	class Mech;
 	class SelectRobotScene : public Scene
 	{
 	public:

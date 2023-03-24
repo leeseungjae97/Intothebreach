@@ -7,9 +7,11 @@
 #include "mSkill.h"
 #include "mTile.h"
 #include "CommonInclude.h"
-namespace m::object {
+namespace m::object
+{
 	template <typename T>
-	static inline T* Instantiate(LAYER_TYPE type) {
+	static inline T* Instantiate(LAYER_TYPE type)
+	{
 		T* gameObj = new T();
 		Scene* scene = SceneManager::GetActiveScene();
 		scene->AddGameObject(gameObj, type);
@@ -18,8 +20,9 @@ namespace m::object {
 	}
 
 	template <typename T>
-	static inline T* Instantiate(Vector2 pos, LAYER_TYPE type) {
-		
+	static inline T* Instantiate(Vector2 pos, LAYER_TYPE type)
+	{
+
 		T* gameObj = new T();
 		Scene* scene = SceneManager::GetActiveScene();
 		scene->AddGameObject(gameObj, type);
@@ -29,7 +32,8 @@ namespace m::object {
 	}
 
 
-	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type , MECHS mType) {
+	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type, MECHS mType)
+	{
 		Mech* gameObj = new Mech(mType, coord, MECH_MOVE_RANGE[(UINT)mType], MECH_HP[(UINT)mType]);
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -38,13 +42,15 @@ namespace m::object {
 		gameObj->SetFinalPos(gameObj->GetPos());
 		gameObj->GetAnimator()->SetConstant(255);
 		gameObj->SetLayerType(type);
-		if (type == LAYER_TYPE::CLONE) {
+		if (type == LAYER_TYPE::CLONE)
+		{
 			gameObj->SetState(GameObject::STATE::Death);
 			gameObj->GetAnimator()->SetConstant(100);
-			
+
 		}
-		if (type == LAYER_TYPE::PLAYER) {
-			scene->GetMechs().push_back(gameObj);	
+		if (type == LAYER_TYPE::PLAYER)
+		{
+			scene->GetMechs().push_back(gameObj);
 		}
 
 
@@ -52,9 +58,10 @@ namespace m::object {
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType) {
-		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST);
+	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType)
+	{
 		Scene* scene = SceneManager::GetActiveScene();
+		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST, scene->GetAliens().size());
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
@@ -68,7 +75,8 @@ namespace m::object {
 		return gameObj;
 	}
 
-	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type) {
+	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type)
+	{
 		Skill* gameObj = new Skill(_type);
 
 		Scene* scene = SceneManager::GetActiveScene();
@@ -80,35 +88,72 @@ namespace m::object {
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		gameObj->SetStPos(gameObj->GetPos());
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
-		gameObj->PreCal();
+		//gameObj->PreCal();
 
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
+	static inline void Instantiate2(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, vector<Skill*>& vS, int idx)
+	{
+		Skill* gameObj = vS[idx];
+		Scene* scene = SceneManager::GetActiveScene();
 
-	static void Destory(GameObject* obj) {
+		//gameObj->Initialize(type, stPos, edPos, scene->GetPosTiles());
+		gameObj->SetLayerType(type);
+		gameObj->SetEndCoord(edPos);
+
+		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
+		gameObj->SetStPos(gameObj->GetPos());
+		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
+		//gameObj->PreCal();
+	}
+	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type)
+	{
+		Skill* gameObj = new Skill(_type);
+		Scene* scene = SceneManager::GetActiveScene();
+
+		vS.push_back(gameObj);
+		scene->AddGameObject(gameObj, LAYER_TYPE::SKILL);
+
+		return gameObj;
+	}
+	static inline void Instantiate(vector<Skill*>& vS, SKILL_T _type, int idx)
+	{
+		Skill* gameObj = vS[idx];
+	}
+	static void Destory(GameObject* obj)
+	{
 		obj->SetState(GameObject::STATE::Death);
 	}
-	static void Restore(GameObject* obj) {
-		obj->SetState(GameObject::STATE::Idle);
+	static void Visible(GameObject* obj)
+	{
+		obj->SetState(GameObject::STATE::Visibie);
 	}
-	static void DrawText(wstring ar ...) {
-	/*	wchar_t szFloat[50] = {};
-		swprintf_s(szFloat, 50, L"degree : %f", _theta * 180 / PI);
-		size_t iLen = wcsnlen_s(szFloat, 50);
-		RECT rt = { 50, 100, 150, 150 };
-		DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);*/
+	static void Invisible(GameObject* obj)
+	{
+		obj->SetState(GameObject::STATE::Invisible);
 	}
-	
+	static void DrawText(wstring ar ...)
+	{
+		/*	wchar_t szFloat[50] = {};
+			swprintf_s(szFloat, 50, L"degree : %f", _theta * 180 / PI);
+			size_t iLen = wcsnlen_s(szFloat, 50);
+			RECT rt = { 50, 100, 150, 150 };
+			DrawText(hdc, szFloat, iLen, &rt, DT_CENTER | DT_WORDBREAK);*/
+	}
+
 }
-namespace m::bitmap {
-	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap, float _theta, HDC sourceDC) {
+namespace m::bitmap
+{
+	void RotateBitmap(HDC hdc, Vector2 pos, HBITMAP hBitmap, float _theta, HDC sourceDC)
+	{
 		BITMAP bmp;
 		GetObject(hBitmap, sizeof(bmp), &bmp);
 		float angle = _theta * 180.f / PI;
 
 		angle = fmod(angle, 360.0f);
-		if (angle < 0) {
+		if (angle < 0)
+		{
 			angle += 360.0f;
 		}
 		_theta = angle * PI / 180.f;
@@ -140,7 +185,7 @@ namespace m::bitmap {
 
 		SetGraphicsMode(hdc, GM_ADVANCED);
 		SetWorldTransform(hdc, &xform);
-	
+
 		TransparentBlt(hdc,
 			(int)(pos.x),
 			(int)(pos.y),

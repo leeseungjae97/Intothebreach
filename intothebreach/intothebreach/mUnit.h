@@ -25,7 +25,8 @@ namespace m
 		void SetSkill(int type);
 		void SetSkill(int idx, SKILL_T type);
 
-		SKILL_T GetSkill(int idx);
+		//SKILL_T GetSkill(int idx);
+		Skill* GetSkill(int idx);
 
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);
@@ -33,11 +34,11 @@ namespace m
 		void SetCoord(Vector2 _coord) { mCoord = _coord; }
 		void SetFinalPos(Vector2 _pos) { mFinalPos = _pos; }
 		void SetFinalCoord(Vector2 _coord) { mFinalCoord = _coord; }
-
+		void SetCurAttackSkill(Skill* weapon) { curAttactSkill = weapon; }
 		Vector2 GetFinalPos() { return mFinalPos; }
 		Vector2 GetCoord() { return mCoord; }
 		Vector2 GetFinalCoord() { return mFinalCoord; }
-		void FireSkill(Vector2 pos, int idx);
+		void DrawSkill(Vector2 pos, int idx);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
@@ -64,7 +65,7 @@ namespace m
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
 		LAYER_TYPE GetLayerType() { return lType; }
 
-		Skill* GetCurAttackWeapon() { return curAttackWeapon; }
+		Skill* GetCurAttackSkill() { return curAttactSkill; }
 
 		virtual void idle() = 0;
 		virtual void broken() = 0;
@@ -93,8 +94,9 @@ namespace m
 
 		Weapon* mWeapon;
 		Pilot* mPilot;
-		vector<SKILL_T> mSkills;
-		Skill* curAttackWeapon;
+		//vector<SKILL_T> mSkills;
+		vector<Skill*> mSkills;
+		Skill* curAttactSkill;
 		vector<Image*> mImages;
 	};
 }

@@ -1,9 +1,8 @@
 #pragma once
 #include "mEntity.h"
-#include "mGameObject.h"
-
 namespace m
 {
+	class GameObject;
 	class Layer : public Entity
 	{
 	public:
@@ -17,7 +16,8 @@ namespace m
 
 		void AddGameObject(GameObject* gameObj);
 
+		vector<GameObject*>& GetGameObjects() { return mGameObjects; }
 	private:
-		std::vector<GameObject*> mGameObjects;
+		vector<GameObject*> mGameObjects;
 	};
 }

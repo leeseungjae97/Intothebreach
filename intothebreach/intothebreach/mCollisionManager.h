@@ -1,7 +1,6 @@
 #pragma once
-#include "mCollider.h"
-
 namespace m {
+	class Collider;
 	class CollisionManager {
 
 	};

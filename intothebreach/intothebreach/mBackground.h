@@ -1,7 +1,5 @@
 #pragma once
 #include "mGameObject.h"
-#include "mResources.h"
-#include "mImage.h"
 namespace m {
     class Background :
         public GameObject {
@@ -16,14 +14,9 @@ namespace m {
         virtual void Render(HDC hdc);
         virtual void Release();
 
-        Vector2 GetSize() { return Vector2((float)mImage->GetWidth(), (float)mImage->GetHeight()); }
-        void SetTex(const wstring& key, const wstring& path, ISLAND_T type) {
-            mImage = Resources::Load<Image>(key, path);
-            mImage->SetOffset(Vector2(ISLAND_OUTLINE_OFFSET[(UINT)type].x, ISLAND_OUTLINE_OFFSET[(UINT)type].y));
-        }
-        void Clear() {
-            mImage = Resources::Load<Image>(mKey, mPath);
-        }
+        Vector2 GetSize();
+        void SetTex(const wstring& key, const wstring& path, ISLAND_T type);
+        void Clear();
     private :
         Image* mImage;
         wstring mPath;

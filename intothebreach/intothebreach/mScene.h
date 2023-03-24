@@ -1,13 +1,12 @@
 #pragma once
 #include "mEntity.h"
-#include "mLayer.h"
-#include "Mech.h"
-#include "Alien.h"
-#include "mUnit.h"
-#include "mTile.h"
 namespace m
 {
 	class Unit;
+	class Alien;
+	class Mech;
+	class Layer;
+	class Tile;
 	class Building;
 	class Scene : public Entity
 	{
@@ -27,6 +26,7 @@ namespace m
 		virtual void Update();
 		virtual void Render(HDC hdc);
 		virtual void Release();
+		virtual void Destroy();
 
 		virtual void OnEnter() = 0;
 		virtual void OnExit() = 0;
@@ -42,9 +42,7 @@ namespace m
 		void ClearMap();
 		void DrawFootTile();
 
-		Vector2 GetCoordCenterPos(Vector2 _coord) {
-			return mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos();
-		}
+		Vector2 GetCoordCenterPos(Vector2 _coord);
 
 		TILES GetPosTiles() { return mPosTiles; }
 		TILES GetTiles() { return mTiles; }
@@ -64,20 +62,9 @@ namespace m
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
 
-		void SetMouseFollower(Mech* _mM) { 
-			mMouseFollower = _mM; 
-			if(nullptr == _mM) SetAlphaFollower(_mM);
-		}
-		void SetAlphaFollower(Mech* _mM) {
-			if (nullptr != mAlphaFollower) {
-				SetAlphaState(GameObject::STATE::Death);
-			}
-			mAlphaFollower= _mM; 
-		}
-		void SetAlphaState(GameObject::STATE state) {
-			mAlphaFollower->SetState(state);
-		}
-		
+		void SetMouseFollower(Mech* _mM);
+		void SetAlphaFollower(Mech* _mM);
+		void SetAlphaState(GameObject::STATE state);
 
 	private:
 		void SetMap(int y, int x);

@@ -1,12 +1,7 @@
 #pragma once
 #include "mUnit.h"
-#include "mImage.h"
 namespace m
 {
-	class Weapon;
-	class Pilot;
-	class Skill;
-	class Animator;
 	class Mech : public Unit
 	{
 	public:

@@ -46,7 +46,10 @@ namespace m
 	{
 		mActiveScene->Render(hdc);
 	}
-
+	void SceneManager::Destroy()
+	{
+		mActiveScene->Destroy();
+	}
 	void SceneManager::Release()
 	{
 		for (Scene* scene : mScenes)

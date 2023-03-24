@@ -15,6 +15,8 @@ namespace m
 			Water,
 			Death,
 			Emerge,
+			Invisible,
+			Visibie,
 			End,
 		};
 		GameObject(GameObject& other);

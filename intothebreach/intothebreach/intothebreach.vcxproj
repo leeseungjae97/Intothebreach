@@ -184,7 +184,6 @@
     <ClInclude Include="mTitleScene.h" />
     <ClInclude Include="mTransform.h" />
     <ClInclude Include="mImage.h" />
-    <ClInclude Include="mWeapon.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
@@ -223,7 +222,6 @@
     <ClCompile Include="mTransform.cpp" />
     <ClCompile Include="mImage.cpp" />
     <ClCompile Include="mUnit.cpp" />
-    <ClCompile Include="mWeapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc" />

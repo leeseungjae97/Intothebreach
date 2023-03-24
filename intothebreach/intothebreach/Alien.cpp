@@ -3,11 +3,14 @@
 #include "mTransform.h"
 #include "mResources.h"
 #include "mInput.h"
+#include "mScene.h"
+#include "mSceneManager.h"
 namespace m
 {
-	Alien::Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type)
+	Alien::Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type, int idx)
 		: Unit(_coord, _range, _hp, (int)_type)
 		, mAlienType(mType)
+		, mIdx(idx)
 	{
 		vector<Image*> vImage = GetMImages();
 		vImage.resize((UINT)ALIEN_CONDITION::END);
@@ -80,6 +83,14 @@ namespace m
 			idle();
 			break;
 		case STATE::Broken:
+			if (GetAnimator()->GetStopAnimator())
+			{
+				Scene* scene = SceneManager::GetActiveScene();
+				
+				vector<Alien*>::iterator iter = scene->GetAliens().begin();
+				scene->GetAliens().erase(iter + mIdx);
+				SetState(STATE::Death);
+			}
 			broken();
 			break;
 		case STATE::Water:
@@ -117,6 +128,7 @@ namespace m
 	{
 		GetAnimator()->Stop();
 		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::DEATH), false);
+
 		SetCurImage(nullptr);
 	}
 	void Alien::water()

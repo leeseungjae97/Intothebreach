@@ -1,5 +1,4 @@
 #pragma once
-#include "_Engine.h"
 #include "mEntity.h"
 namespace m {
     class Image;

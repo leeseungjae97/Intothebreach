@@ -58,6 +58,7 @@ namespace m
 	{
 		Update();
 		Render();
+		SceneManager::Destroy();
 	}
 
 	void Application::Update()

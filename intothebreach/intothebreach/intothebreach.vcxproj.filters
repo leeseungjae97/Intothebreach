@@ -101,9 +101,6 @@
     <Filter Include="Contents\Attached\Skill">
       <UniqueIdentifier>{e4e3d1e7-95ae-4ab3-b480-1381f50477ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Attached\Weapon">
-      <UniqueIdentifier>{bb37c828-52b4-4b84-991b-3f2a1c7284c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Contents\Attached\Pilot">
       <UniqueIdentifier>{3ef4e0b8-7c56-47a7-bf91-47e82cef58a8}</UniqueIdentifier>
     </Filter>
@@ -216,9 +213,6 @@
     </ClInclude>
     <ClInclude Include="mSceneManager.h">
       <Filter>Engine\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="mWeapon.h">
-      <Filter>Contents\Attached\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="mPilot.h">
       <Filter>Contents\Attached\Pilot</Filter>
@@ -366,9 +360,6 @@
     </ClCompile>
     <ClCompile Include="mSceneManager.cpp">
       <Filter>Engine\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="mWeapon.cpp">
-      <Filter>Contents\Attached\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="mPilot.cpp">
       <Filter>Contents\Attached\Pilot</Filter>

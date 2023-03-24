@@ -1,8 +1,7 @@
 #pragma once
-#include "mScene.h"
-
 namespace m
 {
+	class Scene;
 	class SceneManager
 	{
 	public:
@@ -10,6 +9,7 @@ namespace m
 		static void Update();
 		static void Render(HDC hdc);
 		static void Release();
+		static void Destroy();
 		static void LoadScene(SCENE_TYPE type);
 
 		static Scene* GetActiveScene() { return mActiveScene; }

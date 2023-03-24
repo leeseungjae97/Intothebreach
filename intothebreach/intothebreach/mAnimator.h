@@ -1,8 +1,7 @@
 #pragma once
 #include "mComponent.h"
-#include "mAnimation.h"
-
 namespace m {
+    class Animation;
     class Animator : public Component {
     public:
         struct Event {

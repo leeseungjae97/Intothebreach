@@ -6,7 +6,6 @@ namespace m {
     public:
         Skill(SKILL_T _type);
         Skill(Skill& _origin);
-        Skill();
         ~Skill();
         
         virtual void Initialize() override;
@@ -14,31 +13,34 @@ namespace m {
         virtual void Render(HDC hdc) override;
         virtual void Release() override;
 
+        void ReInit(Vector2 stPos, Vector2 enPos);
+        void Active(HDC hdc);
+        void GuideWire(HDC hdc);
+        //void PreCal();
+
         Vector2 GetEndCoord() { return endCoord; }
         void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
+        void CalEndFire();
+
+        LAYER_TYPE GetLayerType() { return mLayerType; }
+        SKILL_T GetSkillType() { return mType; }
+        Vector2 GetEndPos() { return mFinalEdPos; }
+        bool GetEndFire() { return endFire; }
+        bool GetStFire() { return stFire; }
+        bool GetStartRender(){ return startRender; }
 
         void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
-        LAYER_TYPE GetLayerType() { return mLayerType; }
-        void PreCal();
         void SetSkillType(SKILL_T _type) { mType = _type; }
-        SKILL_T GetSkillType() { return mType; }
-        void SetStPos(Vector2 _pos) { mStPos = _pos; }
-
         void SetEndPos(Vector2 _pos) {mFinalEdPos = _pos;}
-        Vector2 GetEndPos() { return mFinalEdPos; }
+        void SetStPos(Vector2 _pos) { mStPos = _pos; }
         void SetEndFire(bool _endFire) { endFire = _endFire; }
+        void SetStFire(bool _stFire) { stFire = _stFire; }
+        void SetStartRender(bool _sR) { startRender = _sR; }
 
-        bool GetEndFire() { return endFire; }
-        void CalEndFire();
     private:
-        Vector2 Missile_vec;
-
-        float maxHeight;
-
-        float m_fMissile_distance;
-
         bool endFire;
-        bool underAttack;
+        bool stFire;
+        bool startRender;
 
         float offsetHeight;
         float maxTheta;
@@ -50,16 +52,15 @@ namespace m {
         float velocityX;
         float gravityAccel;
 
-        Vector2 prevMPos;
+        float fDistance;
+
         float arcTheta;
 
         LAYER_TYPE mLayerType;
-
         SKILL_T mType;
 
+        Vector2 Missile_vec;
         Vector2 endCoord;
-        Vector2 curPos;
-
         Vector2 mStPos;
         Vector2 mFinalEdPos;
     };
