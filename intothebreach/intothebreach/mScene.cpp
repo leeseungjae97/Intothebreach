@@ -747,7 +747,8 @@ namespace m
 			&& mMouseFollower->GetCurAttackSkill()->GetEndFire())
 		{
 			Skill* p = mMouseFollower->GetCurAttackSkill();
-			effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x][0]->Hit(1);
+			if(effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x].size() != 0)
+				effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x][0]->Hit(1);
 			p->SetEndFire(false);
 			p->SetStFire(false);
 			p->SetStartRender(false);

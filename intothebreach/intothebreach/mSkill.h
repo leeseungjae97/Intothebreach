@@ -37,7 +37,10 @@ namespace m {
         void SetStFire(bool _stFire) { stFire = _stFire; }
         void SetStartRender(bool _sR) { startRender = _sR; }
 
+
     private:
+        float GRAVITY = 9.81 * 0.1f;
+
         bool endFire;
         bool stFire;
         bool startRender;
@@ -51,7 +54,7 @@ namespace m {
         float velocityY;
         float velocityX;
         float gravityAccel;
-
+        
         float fDistance;
 
         float arcTheta;

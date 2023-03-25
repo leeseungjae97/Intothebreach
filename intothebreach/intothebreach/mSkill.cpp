@@ -63,14 +63,14 @@ namespace m {
 		case SKILL_T::ARC:
 		{
 			fTime = 0.f;
-			fMaxTime = 0.5f;
+			fMaxTime = 0.4f;
 			fDistance = (mFinalEdPos - mStPos).Length();
 			offsetHeight = mFinalEdPos.y - mStPos.y;
-			fHeight = 100.f - min(mStPos.y, mFinalEdPos.y);
+			fHeight = 100.f - mStPos.y;
 
 			// 낙하에 걸리는 시간
 			// 임의의 중력가속도 = 2 * 거리 / 시간^2
-			gravityAccel = 3.5f * fHeight / (fMaxTime * fMaxTime);
+			gravityAccel = 2 * fHeight / (fMaxTime * fMaxTime);
 
 			// 지면 도달 시간 == 속도
 			velocityY = sqrtf(2.f * fHeight * gravityAccel);
@@ -80,12 +80,12 @@ namespace m {
 			// 속도 == 최고 높이에서 떨어지는 값.
 			// 반절짜리 라서 2를 곱함.
 			float b = -2 * velocityY;
-			float c = 2 * offsetHeight;
+			float c  = offsetHeight;
 
 			// 고도각
 			// 근의 공식에 따라 두개의 (-, +)x가 나옴.
-			maxTheta = (-b + sqrtf(b * b - 4.f * a * c)) / (2.f * a);
-			minTheta = (-b - sqrtf(b * b - 4.f * a * c)) / (2.f * a);
+			maxTheta = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
+			minTheta = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
 
 			// x의 속도
 			// 속도 = 거리 / 고도각.
@@ -110,7 +110,7 @@ namespace m {
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
 
-		absD - absMD <= 0.f ? endFire = true : endFire = false;
+		diff <= 0.f ? endFire = true : endFire = false;
 	}
 	//void Skill::PreCal() {
 	//	
@@ -225,32 +225,19 @@ namespace m {
 		{
 		case SKILL_T::ARC:
 		{
-			float len = (mFinalEdPos - mStPos).Length() / im->GetWidth();
-			float ft = 0;
-			float mh = (100.f - min(mStPos.y, mFinalEdPos.y));
-			float tg = 3.5f * mh * 1.f * 1.f;
+			Vector2 vec = GetPos();
+			float absD = abs(mFinalEdPos.x - mStPos.x);
+			float absMD = abs(vec.x - mStPos.x);
+			float diff = absD - absMD;
 
-			float _vy = sqrtf(2.f * mh * tg);
-			float _fh = mFinalEdPos.y - mStPos.y;
-			float a = tg;
-
-			// 속도 == 최고 높이에서 떨어지는 값.
-			// 반절짜리 라서 2를 곱함.
-			float b = -2 * _vy;
-			float c = 2 * _fh;
-
-			// 고도각
-			// 근의 공식에 따라 두개의 (-, +)x가 나옴.
-			float _theta = (-b + sqrtf(b * b - 4.f * a * c)) / (2.f * a);
-
-			float _vx = -(mStPos.x - mFinalEdPos.x) / maxTheta;
-			for (; ft <= 1.f; ft += 0.1f)
+			float t = 0;
+			while (diff > 0.f)
 			{
-				//mPos.x = (mStPos.x - velocityX * fTime) /** Time::fDeltaTime()*/;
-				//mPos.y = (mStPos.y - velocityY * fTime - (0.5f * gravityAccel * fTime * fTime)) /** Time::fDeltaTime()*/;
+				t += 0.05f;
+				mPos.x = (mStPos.x - velocityX * t);
+				mPos.y = (mStPos.y -velocityY * t - (0.5f * gravityAccel * t * t));
 
-				mPos.x = mStPos.x - _vx * ft;
-				mPos.y = mStPos.y - _vy * ft - (0.5f * tg * ft * ft);
+				
 
 				TransparentBlt(hdc,
 					(int)(mPos.x),
@@ -262,13 +249,18 @@ namespace m {
 					im->GetWidth(),
 					im->GetHeight(),
 					RGB(255, 0, 255));
+
+				vec = Vector2(mPos.x, mPos.y);
+				absD = abs(mFinalEdPos.x - mStPos.x);
+				absMD = abs(vec.x - mStPos.x);
+				diff = absD - absMD;
 			}
 			
 		}
 			break;
 		case SKILL_T::ST:
 		{
-			int len = fDistance / im->GetWidth();
+			int len = (mFinalEdPos - mStPos).Length() / im->GetWidth() / 2;
 			for (int i = 0; i < len; i++)
 			{
 				mPos.x += Missile_vec.x * im->GetWidth() * 2;
