@@ -35,13 +35,10 @@ namespace m
 		void SetFinalPos(Vector2 _pos) { mFinalPos = _pos; }
 		void SetFinalCoord(Vector2 _coord) { mFinalCoord = _coord; }
 		void SetCurAttackSkill(Skill* weapon) { curAttactSkill = weapon; }
-		Vector2 GetFinalPos() { return mFinalPos; }
-		Vector2 GetCoord() { return mCoord; }
-		Vector2 GetFinalCoord() { return mFinalCoord; }
-		void DrawSkill(Vector2 pos, int idx);
-		void SetHp(int _hp) { mHp = curHp = _hp; }
-		int GetFullHp() { return mHp; }
-		int GetCurHp() { return curHp; }
+		void SetCurImage(Image* m) { curImage = m; }
+		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
+		void SetMIdx(int _idx) { mIdx = _idx; }
+		void SetMove(int _move) { moveRange = _move; }
 
 		void Hit(int damage)
 		{
@@ -53,20 +50,33 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
+		void DrawSkill(Vector2 pos, int idx);
+		void SetHp(int _hp) { mHp = curHp = _hp; }
+		int GetFullHp() { return mHp; }
+		int GetCurHp() { return curHp; }
+		int GetMIdx() { return mIdx; }
 		int GetMove() { return moveRange; }
-		void SetMove(int _move) { moveRange = _move; }
-
+		
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
 
 		Image* GetCurImage() { return curImage; }
-		void SetCurImage(Image* m) { curImage = m; }
-
-		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
+		
 		LAYER_TYPE GetLayerType() { return lType; }
 
 		Skill* GetCurAttackSkill() { return curAttactSkill; }
-
+		Vector2 GetFinalPos() { 
+			if (nullptr == this) return Vector2::Zero;
+			return mFinalPos; 
+		}
+		Vector2 GetCoord() { 
+			if (nullptr == this) return Vector2::Zero;
+			return mCoord; 
+		}
+		Vector2 GetFinalCoord() { 
+			if(nullptr == this) return Vector2::Zero; 
+			return mFinalCoord; 
+		}
 		virtual void idle() = 0;
 		virtual void broken() = 0;
 		virtual void water() = 0;
@@ -88,6 +98,7 @@ namespace m
 		int mHp;
 		int curHp;
 		int moveRange;
+		int mIdx;
 
 		bool endMove;
 		bool endAttack;

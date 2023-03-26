@@ -61,7 +61,8 @@ namespace m::object
 	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST, scene->GetAliens().size());
+		Alien* gameObj = new Alien(mType, coord, ALIEN_MOVE_RANGE[(UINT)mType], ALIEN_HP[(UINT)mType], SKILL_T::ST
+			, scene->GetAliens().size());
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());

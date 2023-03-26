@@ -21,6 +21,7 @@ namespace m
 		, moveRange(_range)
 		, mHp(hp)
 		, curHp(hp)
+		, mIdx(0)
 	{
 		SetSkill(_type);
 		AddComponent(new Animator());

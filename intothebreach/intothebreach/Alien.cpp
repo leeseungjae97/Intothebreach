@@ -86,9 +86,19 @@ namespace m
 			if (GetAnimator()->GetStopAnimator())
 			{
 				Scene* scene = SceneManager::GetActiveScene();
-				
-				vector<Alien*>::iterator iter = scene->GetAliens().begin();
-				scene->GetAliens().erase(iter + mIdx);
+				vector<Alien*> vAs = scene->GetAliens();
+				vector<Alien*>::iterator iter = vAs.begin();
+				while  (iter != vAs.end())
+				{
+					if (*iter == this)
+					{
+						iter = vAs.erase(iter);
+					}
+					else
+					{
+						iter++;
+					}
+				}
 				SetState(STATE::Death);
 			}
 			broken();

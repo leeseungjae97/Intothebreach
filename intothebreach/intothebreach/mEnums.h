@@ -28,14 +28,15 @@ enum class SCENE_TYPE
 enum class LAYER_TYPE
 {
 	BACKGROUND,
-	UI,
 	TILE,
 	TILE_HEAD,
-	EFFECT,
+	STRUCT,
 	MONSTER,
 	PLAYER,
 	CLONE,
+	EFFECT,
 	SKILL,
+	UI,
 	END,
 };
 enum class PLAYERINFO_TYPE {

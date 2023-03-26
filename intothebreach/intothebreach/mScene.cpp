@@ -21,6 +21,7 @@ namespace m
 		mLayers.resize((UINT)LAYER_TYPE::END);
 		index = -1;
 		isAttack = false;
+		firing = false;
 	}
 	Scene::~Scene()
 	{
@@ -143,19 +144,19 @@ namespace m
 		stTile->SetPos(mTiles[3][3]->GetCenterPos());
 		mStruturesTiles[3][3] = stTile;
 
-		AddGameObject(stTile, LAYER_TYPE::TILE);
+		AddGameObject(stTile, LAYER_TYPE::STRUCT);
 
 		Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
 		stTile1->SetPos(mTiles[1][2]->GetCenterPos());
 		mStruturesTiles[1][2] = stTile1;
 
-		AddGameObject(stTile1, LAYER_TYPE::TILE);
+		AddGameObject(stTile1, LAYER_TYPE::STRUCT);
 
 		Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
 		stTile2->SetPos(mTiles[2][0]->GetCenterPos());
 		mStruturesTiles[2][0] = stTile2;
 
-		AddGameObject(stTile2, LAYER_TYPE::TILE);
+		AddGameObject(stTile2, LAYER_TYPE::STRUCT);
 
 		SetMap(0, 0);
 	}
@@ -240,6 +241,7 @@ namespace m
 	/// </summary>
 	void Scene::DrawMoveDirectionTile()
 	{
+		if (firing) return;
 		for (int y = 0; y < mPosTiles.size(); y++)
 		{
 			for (int x = 0; x < mPosTiles[y].size(); x++)
@@ -438,6 +440,7 @@ namespace m
 	{
 		for (UINT _i = 0; _i < mAliens.size(); _i++)
 		{
+			if (nullptr == mAliens[_i] || mAliens[_i]->GetFinalCoord() == Vector2::Zero) continue;
 			Vector2 mCoord = mAliens[_i]->GetFinalCoord();
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MONSTER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(100);
@@ -460,6 +463,7 @@ namespace m
 	/// </summary>
 	void Scene::DrawMoveRangeTile()
 	{
+		if (firing) return;
 		int moveLimit = mMouseFollower->GetMove();
 
 		list<Vector2_1>queue;
@@ -612,14 +616,73 @@ namespace m
 			{
 				//if (skill_range_map[y][x] != MOVE) continue;
 				Tile* p = mPosTiles[y][x];
+
+				if (p->GetCoord() == mMouseFollower->GetFinalCoord()) continue;
+				if (skill_range_map[y][x] != MOVE) continue;
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
-					mMouseFollower->DrawSkill(p->GetCoord(), index);
-					mMouseFollower->GetCurAttackSkill()->SetStartRender(true);
-					if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+					Vector2 endPos = Vector2::Zero;
+					if (mMouseFollower->GetSkill(index)->GetSkillType()
+						== SKILL_T::ST)
 					{
-						mMouseFollower->GetCurAttackSkill()->SetStFire(true);
+						int st = 0;
+						int end = 0;
+						bool cY = false;
+						if (p->GetCoord().x > mMouseFollower->GetCoord().x)
+						{
+							st = mMouseFollower->GetCoord().x;
+							end = TILE_X - 1;
+							endPos = Vector2(end, p->GetCoord().y);
+						}
+						if (p->GetCoord().x < mMouseFollower->GetCoord().x)
+						{
+							st = mMouseFollower->GetCoord().x;
+							end = 0;
+							endPos = Vector2(end, p->GetCoord().y);
+						}
+						if (p->GetCoord().y > mMouseFollower->GetCoord().y)
+						{
+							st = mMouseFollower->GetCoord().y;
+							end = TILE_Y - 1;
+							endPos = Vector2(p->GetCoord().x, end);
+							cY = true;
+						}
+						if (p->GetCoord().y < mMouseFollower->GetCoord().y)
+						{
+							st = mMouseFollower->GetCoord().y;
+							end = 0;
+							endPos = Vector2(p->GetCoord().x, end);
+							cY = true;
+						}
+						// effectUnit에서 자기자신을 카운터하는것을 막기위해 -1, +1
+						// end == 0일때도 for문 하나에서 처리하기위해 swap
+						if (end == 0)
+						{
+							int t = st - 1;
+							st = end;
+							end = t;
+						}
+						else st ++;
+						for (int i = st; i < end; i++)
+						{
+							if(cY && effectUnits[i][(int)mMouseFollower->GetCoord().x].size() !=0)
+							{
+								endPos = Vector2(p->GetCoord().x, i);
+								break;
+							}
+							if (!cY && effectUnits[(int)mMouseFollower->GetCoord().y][i].size() != 0)
+							{
+								endPos = Vector2(i, p->GetCoord().y);
+								break;
+							}
+						}
 					}
+					else // ARC
+					{
+						endPos = p->GetCoord();
+					}
+					mMouseFollower->DrawSkill(endPos, index);
+					mMouseFollower->GetCurAttackSkill()->SetStartRender(true);
 				}
 			}
 		}
@@ -638,6 +701,8 @@ namespace m
 		pathQueue.push_back(Vector2_1(stPos, 0, -1));
 
 		SetMap(0, 0);
+
+		// right, up, down, left
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 
 		bool find = false;
@@ -654,20 +719,31 @@ namespace m
 				float dy = now.coord.y + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
-				if (skill_range_map[(int)dy][(int)dx] == MOVE) continue;
+				if (skill_range_map[(int)dy][(int)dx] != 0) continue;
+				if (mMouseFollower->GetSkill(index)->GetSkillType() == SKILL_T::ST)
+				{
+					if (map[(int)dy][(int)dx] != 0)
+					{
+						continue;
+					}
+				}
 				bool rangeCheck = false;
+
+				// 스킬 반경 설정
 				for (int _i = 0; _i < 4; _i++)
 				{
 					if (stPos.x + direct[_i][0] == dx
 						&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
 				}
-
+				// 4방향체크
 				if ((stPos.y != dy && stPos.x == dx)
 					|| (stPos.x != dx && stPos.y == dy))
 				{
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+					
+					if (mMouseFollower->GetSkill(index)->GetSkillType() != SKILL_T::ST 
+						&& rangeCheck) continue;
 
-					if (rangeCheck) continue;
 					mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
 					skill_range_map[(int)dy][(int)dx] = MOVE;
 					mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
@@ -691,6 +767,14 @@ namespace m
 	void Scene::MoveMech()
 	{
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
+		if (index != -1
+			&& nullptr != mMouseFollower
+			&& nullptr != mMouseFollower->GetCurAttackSkill()
+			&& mMouseFollower->GetCurAttackSkill()->GetStFire())
+		{
+			Scene::CheckSkillDirection(mMouseFollower->GetCurAttackSkill()->GetPos());
+		}
+
 		if (nullptr != mMouseFollower)
 		{
 			if (isAttack == -1)
@@ -705,26 +789,33 @@ namespace m
 			}
 			Scene::CheckMouseOutOfMapRange();
 		}
-
-		if (KEY_DOWN(KEYCODE_TYPE::RBTN) && nullptr != mMouseFollower)
+		if (KEY_PRESSED(KEYCODE_TYPE::RBTN)
+			&& nullptr != mMouseFollower
+			&& nullptr != mMouseFollower->GetCurAttackSkill()
+			&& !mMouseFollower->GetCurAttackSkill()->GetStFire())
 		{
-			if(index != -1 ) mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+			if (index != -1) mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 			isAttack = -1;
 			index = -1;
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+			firing = false;
+
 			SetMouseFollower(nullptr);
 		}
 
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+		if (KEY_PRESSED(KEYCODE_TYPE::LBTN))
 		{
+			if (index != -1)
+			{
+				mMouseFollower->GetCurAttackSkill()->SetStFire(true);
+				firing = true;
+				index = -1;
+			}
 			isAttack = -1;
 			
-			if (nullptr != mMouseFollower 
-				&& nullptr != mMouseFollower->GetCurAttackSkill()
-				&& !mMouseFollower->GetCurAttackSkill()->GetStFire())
+			if (nullptr != mMouseFollower)
 			{
-				//mMouseFollower->GetSkill(index)->SetStartRender(false);
 				MoveEffectUnit(mMouseFollower);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
@@ -735,26 +826,32 @@ namespace m
 			{
 				Scene::RobotDrag();
 			}
-			
+
 		}
 
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
 
-		if (index != -1 
-			&& nullptr != mMouseFollower 
+
+		// Skill의 이동이 끝나면.
+		if (index != -1
+			&& nullptr != mMouseFollower
 			&& nullptr != mMouseFollower->GetCurAttackSkill()
 			&& mMouseFollower->GetCurAttackSkill()->GetEndFire())
 		{
 			Skill* p = mMouseFollower->GetCurAttackSkill();
-			if(effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x].size() != 0)
+			if (effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x].size() != 0)
 				effectUnits[(UINT)p->GetEndCoord().y][(UINT)p->GetEndCoord().x][0]->Hit(1);
+			firing = false;
 			p->SetEndFire(false);
 			p->SetStFire(false);
 			p->SetStartRender(false);
 			SetMouseFollower(nullptr);
 			index = -1;
 		}
+		// 공격 중일때 키입력 안받게.
+		if (firing) return;
+
 		if (KEY_UP(KEYCODE_TYPE::NUM_1)) { index = 0; }
 		if (KEY_UP(KEYCODE_TYPE::NUM_2)) { index = 1; }
 		if (KEY_UP(KEYCODE_TYPE::NUM_3)) { index = 2; }
@@ -762,18 +859,56 @@ namespace m
 			|| KEY_UP(KEYCODE_TYPE::NUM_2)
 			|| KEY_UP(KEYCODE_TYPE::NUM_3))
 		{
+			if (isAttack == 1 && nullptr != mMouseFollower) 
+				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+
 			isAttack *= -1;
 			if (nullptr != mMouseFollower)
 			{
 				GetAlphaFollower()->SetState(GameObject::STATE::Death);
 			}
+
 		}
 
+	}
+	void Scene::CheckSkillDirection(Vector2 curSkillPos)
+	{
+		if (index != -1
+			&& nullptr != mMouseFollower->GetCurAttackSkill()
+			&& mMouseFollower->GetCurAttackSkill()->GetStFire())
+		{
+			Vector2 pos = mMouseFollower->GetCurAttackSkill()->GetPos();
+			Vector2 scale = mMouseFollower->GetCurAttackSkill()->GetScale();
+			Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
+			for (int y = 0; y < mPosTiles.size(); y++)
+			{
+				for (int x = 0; x < mPosTiles[y].size(); x++)
+				{
+					Tile* p = mPosTiles[y][x];
+					if (p->GetCoord() == mMouseFollower->GetCoord()) continue;
+					if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos)
+						&& effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x].size() != 0)
+					{
+						for (int i = 0; i < effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x].size(); i++)
+						{
+							effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x][i]->Hit(1);
+						}
+						Skill* sp = mMouseFollower->GetCurAttackSkill();
+						sp->SetEndFire(true);
+						sp->SetStartRender(false);
+						SetMouseFollower(nullptr);
+						index = -1;
+						return;
+					}
+				}
+			}
+		}
 	}
 	void Scene::MoveEffectUnit(Unit* unit)
 	{
 		Vector2 idx = unit->GetFinalCoord();
 		Vector2 nIdx = unit->GetCoord();
+
 		vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
 		for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
 		{
@@ -781,6 +916,7 @@ namespace m
 			{
 				effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
 				effectUnits[(UINT)nIdx.y][(UINT)nIdx.x].push_back(unit);
+				unit->SetMIdx(effectUnits[(UINT)nIdx.y][(UINT)nIdx.x].size() - 1);
 			}
 		}
 	}
@@ -792,6 +928,7 @@ namespace m
 		{
 			Vector2 idx = ((Unit*)obj)->GetCoord();
 			effectUnits[(UINT)idx.y][(UINT)idx.x].push_back(dynamic_cast<Unit*>(obj));
+			((Unit*)obj)->SetMIdx(effectUnits[(UINT)idx.y][(UINT)idx.x].size() - 1);
 		}
 	}
 	Vector2 Scene::GetCoordCenterPos(Vector2 _coord)

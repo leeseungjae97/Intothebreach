@@ -58,6 +58,7 @@ namespace m
 		void ActiveSkill();
 		void ClearSkillRangeMap();
 		void MoveEffectUnit(Unit* unit);
+		void CheckSkillDirection(Vector2 curSkillPos);
 
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
@@ -85,16 +86,17 @@ namespace m
 		BUILDINGS mStruturesTiles;
 
 		vector<Vector2_1> pathQueue;
-
+		Vector2 endSkillPosQueue[4];
+		vector<Vector2> ll;
 		vector<Mech*> mMechs;
 		vector<Alien*> mAliens;
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
 
-		int isAttack;
-		int index;
-		int finalIndex;
+		int isAttack;			// 스킬 선택 후 조준 중 일때. -1 = idle, 1 = 조준
+		int index;				// 선택 스킬
+		bool firing;			// 스킬이 이동 중일 때.
 		int map[TILE_Y][TILE_X]{};
 		int skill_range_map[TILE_Y][TILE_X]{};
 	};
