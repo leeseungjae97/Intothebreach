@@ -21,7 +21,8 @@ namespace m
 		, moveRange(_range)
 		, mHp(hp)
 		, curHp(hp)
-		, mIdx(0)
+		, unitIdx(0)
+		, skillIdx(-1)
 	{
 		SetSkill(_type);
 		AddComponent(new Animator());
@@ -131,28 +132,36 @@ namespace m
 	{
 		GameObject::Release();
 	}
-	void Unit::DrawSkill(Vector2 pos, int idx)
+	bool Unit::CheckSkillFiring()
 	{
-		curAttactSkill = mSkills[idx];
-		//curAttackWeapon = object::Instantiate(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills[idx]);
-		//object::Instantiate2(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills, idx);
+		if (nullptr == this) return false;
+		if (nullptr == curAttactSkill) return false;
+
+		if (curAttactSkill->GetEndFire()
+			&& !curAttactSkill->GetStartFire()) return false;
+
+		if (!curAttactSkill->GetEndFire()
+			&& !curAttactSkill->GetStartFire()) return false;
+
+		if (!curAttactSkill->GetEndFire()
+			&& curAttactSkill->GetStartFire()) return true;
+	}
+	
+	void Unit::DrawSkill(Vector2 pos)
+	{
+		curAttactSkill = mSkills[skillIdx];
+		if (pos == Vector2::Zero) return;
 		if (nullptr == curAttactSkill)return;
 		curAttactSkill->ReInit(this->GetFinalCoord(), pos);
 	}
 	void Unit::SetSkill()
-	{
-
-	}
+	{}
 	void Unit::SetSkill(int type)
 	{
-		//mSkills.push_back((SKILL_T)type);
 		object::Instantiate(mSkills, (SKILL_T)type);
-		//mSkills.push_back(new Skill((SKILL_T)type));
 	}
 	void Unit::SetSkill(int idx, SKILL_T type)
 	{
-		//mSkills[idx] = type;
-		//object::Instantiate2(this->GetFinalCoord(), pos, LAYER_TYPE::SKILL, mSkills, idx);
 		object::Instantiate(mSkills, (SKILL_T)type, idx);
 	}
 	Skill* Unit::GetSkill(int idx)
@@ -160,6 +169,7 @@ namespace m
 		if (mSkills.size() <= idx) return nullptr;
 		return mSkills[idx];
 	}
+	void Unit::SetSkillIdx(int _idx) { skillIdx = _idx; }
 	//SKILL_T Unit::GetSkill(int idx)
 	//{
 	//	//return mSkills[idx];
@@ -169,5 +179,12 @@ namespace m
 	Weapon* Unit::ChangeWeaponSlot(int index)
 	{
 		return nullptr;
+	}
+	void Unit::SetCurAttackSkill()
+	{
+		assert(this);
+		if (skillIdx == -1) return;
+
+		curAttactSkill = mSkills[skillIdx];
 	}
 }

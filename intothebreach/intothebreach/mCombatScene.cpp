@@ -55,6 +55,8 @@ namespace m {
 	void CombatScene::Update() {
 		Scene::Update();
 		Scene::MoveMech();
+		Scene::MoveSkill();
+		Scene::CheckNumInput();
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);
 		}

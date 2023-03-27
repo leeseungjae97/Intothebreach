@@ -5,17 +5,28 @@ wstring WEAPONS_FOLDER_PATH[3]{
 	L"PlayerWeapons"
 };
 
-enum class SKILL_T {
+enum class SKILL_T
+{
 	ARC,
 	ST,
 	END,
 };
 
 
-enum class SKILL_N {
+enum class SKILL_N
+{
 	range,
 	machtank,
 	punch,
+	END,
+};
+enum class SKILL_FUNC
+{
+	PUSH,
+	CHAIN,
+	FIRE,
+	ICE,
+
 	END,
 };
 wstring SKILL_PATH[(UINT)SKILL_N::END]{
@@ -23,7 +34,8 @@ wstring SKILL_PATH[(UINT)SKILL_N::END]{
 	L"shot_mechtank_",
 	L"punch1_",
 };
-enum class SKILL_DIR {
+enum class SKILL_DIR
+{
 	R,
 	L,
 	U,
@@ -65,24 +77,29 @@ int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//science,
 	(int)SKILL_T::ST,//tele,
 };
-int** MAKE_SKILL_RANGE(SKILL_T skill) {
+int** MAKE_SKILL_RANGE(SKILL_T skill)
+{
 	return nullptr;
 }
-wstring MAKE_SKILL_KEY(SKILL_T skill, SKILL_DIR dir) {
+wstring MAKE_SKILL_KEY(SKILL_T skill, SKILL_DIR dir)
+{
 	wstring key = L"";
 
 	key.append(SKILL_PATH[(UINT)skill]);
-	if (dir != SKILL_DIR::NONE) {
+	if (dir != SKILL_DIR::NONE)
+	{
 		key.append(SKILL_DIR_PATH[(UINT)dir]);
 	}
 
 	return key;
 };
-wstring MAKE_SKILL_PATH(SKILL_T skill, SKILL_DIR dir) {
+wstring MAKE_SKILL_PATH(SKILL_T skill, SKILL_DIR dir)
+{
 	wstring path = L"..\\Resources\\texture\\effect\\";
 
 	path.append(SKILL_PATH[(UINT)skill]);
-	if (dir != SKILL_DIR::NONE) {
+	if (dir != SKILL_DIR::NONE)
+	{
 		path.append(SKILL_DIR_PATH[(UINT)dir]);
 	}
 	path.append(L".bmp");

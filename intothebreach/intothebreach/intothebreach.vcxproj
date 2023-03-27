@@ -144,6 +144,8 @@
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
     <ClInclude Include="mSkill.h" />
+    <ClInclude Include="mSkill_Arc.h" />
+    <ClInclude Include="mSkill_St.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="mUnit.h" />
     <ClInclude Include="Resource.h" />
@@ -216,6 +218,8 @@
     <ClCompile Include="mSceneManager.cpp" />
     <ClCompile Include="mSelectLandScene.cpp" />
     <ClCompile Include="mSkill.cpp" />
+    <ClCompile Include="mSkill_Arc.cpp" />
+    <ClCompile Include="mSkill_St.cpp" />
     <ClCompile Include="mTile.cpp" />
     <ClCompile Include="mTime.cpp" />
     <ClCompile Include="mTitleScene.cpp" />

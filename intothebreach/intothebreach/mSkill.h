@@ -15,11 +15,12 @@ namespace m
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
-		void ReInit(Vector2 stPos, Vector2 enPos);
-		void Active(HDC hdc);
-		void GuideWire(HDC hdc);
-		//void PreCal();
+		virtual void ReInit(Vector2 stPos, Vector2 enPos);
+		virtual void Active(HDC hdc);
+		virtual void GuideWire(HDC hdc);
 
+
+		virtual void CheckDirection();
 		Vector2 GetEndCoord() { return endCoord; }
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
 		void CalEndFire();
@@ -29,29 +30,29 @@ namespace m
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		bool GetEndFire()
 		{
-			if (nullptr == this) return false;
 			return endFire;
 		}
-		bool GetStFire()
+		bool GetStartFire()
 		{
-			if (nullptr == this) return false;
 			return stFire;
 		}
-		bool GetStartRender() { return startRender; }
-
+		bool GetStartRender() { 
+			return startRender; 
+		}
+		
 		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
 		void SetSkillType(SKILL_T _type) { mType = _type; }
 		void SetRealPos(Vector2 _pos) { ; }
 		void SetEndPos(Vector2 _pos) { mFinalEdPos = _pos; }
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
 		void SetEndFire(bool _endFire) { endFire = _endFire; }
-		void SetStFire(bool _stFire) { stFire = _stFire; }
+		void SetStartFire(bool _stFire) { stFire = _stFire; }
 		void SetStartRender(bool _sR) { 
 			startRender = _sR; 
 		}
 
 
-	private:
+	protected:
 		float GRAVITY = 9.81 * 0.1f;
 
 		bool endFire;

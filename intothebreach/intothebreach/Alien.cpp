@@ -85,20 +85,6 @@ namespace m
 		case STATE::Broken:
 			if (GetAnimator()->GetStopAnimator())
 			{
-				Scene* scene = SceneManager::GetActiveScene();
-				vector<Alien*> vAs = scene->GetAliens();
-				vector<Alien*>::iterator iter = vAs.begin();
-				while  (iter != vAs.end())
-				{
-					if (*iter == this)
-					{
-						iter = vAs.erase(iter);
-					}
-					else
-					{
-						iter++;
-					}
-				}
 				SetState(STATE::Death);
 			}
 			broken();

@@ -40,6 +40,7 @@
 #define KEY_PRESSED(KEY)	m::KEY_STATE::PRESSED == m::Input::GetKeyState(KEY)
 #define KEY_DOWN(KEY)		m::KEY_STATE::DOWN == m::Input::GetKeyState(KEY)
 #define KEY_UP(KEY)			m::KEY_STATE::UP == m::Input::GetKeyState(KEY)
+#define KEY_CLICKED(KEY)	m::Input::GetKeyClicked(KEY)
 
 #define SQUARE__PATH		L"..\\Resources\\texture\\terrain\\tile_square.bmp"
 #define SQUARE__KEY			L"square"

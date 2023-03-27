@@ -34,11 +34,12 @@ namespace m
 		void SetCoord(Vector2 _coord) { mCoord = _coord; }
 		void SetFinalPos(Vector2 _pos) { mFinalPos = _pos; }
 		void SetFinalCoord(Vector2 _coord) { mFinalCoord = _coord; }
-		void SetCurAttackSkill(Skill* weapon) { curAttactSkill = weapon; }
+		void SetCurAttackSkill();
 		void SetCurImage(Image* m) { curImage = m; }
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
-		void SetMIdx(int _idx) { mIdx = _idx; }
-		void SetMove(int _move) { moveRange = _move; }
+		void SetUnitIdx(int _idx) { unitIdx = _idx; }
+		void SetMoveRange(int _move) { moveRange = _move; }
+		void SetSkillIdx(int _idx);
 
 		void Hit(int damage)
 		{
@@ -50,32 +51,33 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
-		void DrawSkill(Vector2 pos, int idx);
+		void DrawSkill(Vector2 pos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
-		int GetMIdx() { return mIdx; }
-		int GetMove() { return moveRange; }
-		
+		int GetUnitIdx() { return unitIdx; }
+		int GetSkillIdx() { return skillIdx; }
+		int GetMoveRange() { return moveRange; }
+		bool CheckSkillFiring();
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
 
 		Image* GetCurImage() { return curImage; }
-		
+
 		LAYER_TYPE GetLayerType() { return lType; }
 
 		Skill* GetCurAttackSkill() { return curAttactSkill; }
-		Vector2 GetFinalPos() { 
-			if (nullptr == this) return Vector2::Zero;
-			return mFinalPos; 
+		Vector2 GetFinalPos()
+		{
+			return mFinalPos;
 		}
-		Vector2 GetCoord() { 
-			if (nullptr == this) return Vector2::Zero;
-			return mCoord; 
+		Vector2 GetCoord()
+		{
+			return mCoord;
 		}
-		Vector2 GetFinalCoord() { 
-			if(nullptr == this) return Vector2::Zero; 
-			return mFinalCoord; 
+		Vector2 GetFinalCoord()
+		{
+			return mFinalCoord;
 		}
 		virtual void idle() = 0;
 		virtual void broken() = 0;
@@ -98,7 +100,8 @@ namespace m
 		int mHp;
 		int curHp;
 		int moveRange;
-		int mIdx;
+		int unitIdx;
+		int skillIdx;
 
 		bool endMove;
 		bool endAttack;

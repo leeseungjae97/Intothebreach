@@ -25,6 +25,7 @@ namespace m
 		DOWN,
 		PRESSED,
 		UP,
+		CLICKED,
 		NONE,
 	};
 
@@ -36,12 +37,17 @@ namespace m
 			KEYCODE_TYPE key;
 			KEY_STATE state;
 			bool bPressed;
+			bool bClicked;
 		};
 
 		static void Initialize();
 		static void Update();
 		static void Render(HDC hdc);
 
+		inline static bool GetKeyClicked(KEYCODE_TYPE keyCode)
+		{
+			return mKeys[(UINT)keyCode].bClicked;
+		}
 		inline static KEY_STATE GetKeyState(KEYCODE_TYPE keyCode)
 		{
 			return mKeys[(UINT)keyCode].state;
@@ -52,5 +58,7 @@ namespace m
 	private:
 		static vector<Key> mKeys;
 		static Vector2 mCurMousePos;
+		static float keyDelay;
+		static float pKeyDelay;
 	};
 }

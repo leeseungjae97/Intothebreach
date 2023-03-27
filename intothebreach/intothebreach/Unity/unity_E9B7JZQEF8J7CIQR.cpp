@@ -89,6 +89,12 @@
 #include "E:\intothebreach\intothebreach\intothebreach\mSkill.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mSkill_Arc.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mSkill_St.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mTile.cpp"
 
 

@@ -32,6 +32,7 @@ namespace m
 		virtual void OnExit() = 0;
 
 	public:
+		void MoveSkill();
 		void MoveMech();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
@@ -41,6 +42,7 @@ namespace m
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
 		void DrawFootTile();
+		void CheckNumInput();
 
 		Vector2 GetCoordCenterPos(Vector2 _coord);
 
@@ -48,7 +50,7 @@ namespace m
 		TILES GetTiles() { return mTiles; }
 		vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
-
+		vector<Unit*>& GetEffectUnit(int _y, int _x) { return effectUnits[_y][_x]; }
 
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
@@ -58,7 +60,7 @@ namespace m
 		void ActiveSkill();
 		void ClearSkillRangeMap();
 		void MoveEffectUnit(Unit* unit);
-		void CheckSkillDirection(Vector2 curSkillPos);
+		//void CheckSkillDirection();
 
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
@@ -94,9 +96,6 @@ namespace m
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
 
-		int isAttack;			// 스킬 선택 후 조준 중 일때. -1 = idle, 1 = 조준
-		int index;				// 선택 스킬
-		bool firing;			// 스킬이 이동 중일 때.
 		int map[TILE_Y][TILE_X]{};
 		int skill_range_map[TILE_Y][TILE_X]{};
 	};

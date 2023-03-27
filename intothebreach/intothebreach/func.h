@@ -5,6 +5,8 @@
 #include "mAnimator.h"
 #include "mTransform.h"
 #include "mSkill.h"
+#include "mSkill_Arc.h"
+#include "mSkill_St.h"
 #include "mTile.h"
 #include "CommonInclude.h"
 namespace m::object
@@ -108,9 +110,28 @@ namespace m::object
 		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
 		//gameObj->PreCal();
 	}
+
 	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type)
 	{
-		Skill* gameObj = new Skill(_type);
+		Skill* gameObj = nullptr;
+		switch (_type)
+		{
+		case SKILL_T::ARC:
+		{
+			gameObj = new Skill_Arc(_type);
+		}
+			break;
+		case SKILL_T::ST:
+		{
+			gameObj = new Skill_St(_type);
+		}
+			break;
+		case SKILL_T::END:
+			break;
+		default:
+			break;
+		}
+		
 		Scene* scene = SceneManager::GetActiveScene();
 
 		vS.push_back(gameObj);
