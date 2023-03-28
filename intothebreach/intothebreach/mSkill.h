@@ -18,8 +18,8 @@ namespace m
 		virtual void ReInit(Vector2 stPos, Vector2 enPos);
 		virtual void Active(HDC hdc);
 		virtual void GuideWire(HDC hdc);
-
-
+		virtual void PushUnit();
+		virtual void DrawPushTile();
 		virtual void CheckDirection();
 		Vector2 GetEndCoord() { return endCoord; }
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
@@ -48,6 +48,10 @@ namespace m
 		void SetEndFire(bool _endFire) { endFire = _endFire; }
 		void SetStartFire(bool _stFire) { stFire = _stFire; }
 		void SetStartRender(bool _sR) { 
+			if (!_sR)
+			{
+				int a = 0;
+			}
 			startRender = _sR; 
 		}
 

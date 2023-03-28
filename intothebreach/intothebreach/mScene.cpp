@@ -6,7 +6,7 @@
 #include "Mech.h"
 #include "Alien.h"
 #include "mSkill.h"
-
+#include "mSelectGDI.h"
 #include "mApplication.h"
 #include "func.h"
 #include "mInput.h"
@@ -87,12 +87,12 @@ namespace m
 	}
 	void Scene::Render(HDC hdc)
 	{
-		wchar_t szFloat[500] = {};
-		swprintf_s(szFloat, 500, L"isFire : %d", mMouseFollower->CheckSkillFiring());
-		size_t iLen = wcsnlen_s(szFloat, 500);
-		//left top right bottom
-		RECT rt = { 50, 140, 400, 160 };
-		DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+		//wchar_t szFloat[500] = {};
+		//swprintf_s(szFloat, 500, L"isFire : %d", mMouseFollower->CheckSkillFiring());
+		//size_t iLen = wcsnlen_s(szFloat, 500);
+		////left top right bottom
+		//RECT rt = { 50, 140, 400, 160 };
+		//DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
 
 		for (Layer& layer : mLayers)
 		{
@@ -298,7 +298,7 @@ namespace m
 						directQue.push_back(Vector2(now.coord.x, now.coord.y));
 					}
 
-					ARROW_T type = (ARROW_T)0;
+					MOVE_ARROW_T type = (MOVE_ARROW_T)0;
 
 					Vector2 coord = Vector2::Zero;
 					Vector2 nCoord = Vector2::Zero;
@@ -315,50 +315,50 @@ namespace m
 							// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
 							if (coord.y != nCoord.y)
 							{
-								type = ARROW_T::ARROW_D_U;
+								type = MOVE_ARROW_T::ARROW_D_U;
 								if (coord.y < nCoord.y)
 								{
-									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_D;
-									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_D;
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_L_D;
 								}
 								if (coord.y > nCoord.y)
 								{
-									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_R_U;
-									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = ARROW_T::ARROW_COR_L_U;
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_R_U;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_L_U;
 								}
 							}
 							else if (coord.x != nCoord.x)
 							{
-								type = ARROW_T::ARROW_L_R;
+								type = MOVE_ARROW_T::ARROW_L_R;
 								if (coord.x < nCoord.x)
 								{
-									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_D;
-									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_R_U;
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_R_U;
 								}
 								if (coord.x > nCoord.x)
 								{
-									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_D;
-									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = ARROW_T::ARROW_COR_L_U;
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_L_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_L_U;
 								}
 							}
 							if (coord == prevCoord)
 							{
-								if (coord.x < nCoord.x) type = ARROW_T::ARROW_ST_L;
-								if (coord.x > nCoord.x) type = ARROW_T::ARROW_ST_R;
-								if (coord.y < nCoord.y) type = ARROW_T::ARROW_ST_U;
-								if (coord.y > nCoord.y) type = ARROW_T::ARROW_ST_D;
+								if (coord.x < nCoord.x) type = MOVE_ARROW_T::ARROW_ST_L;
+								if (coord.x > nCoord.x) type = MOVE_ARROW_T::ARROW_ST_R;
+								if (coord.y < nCoord.y) type = MOVE_ARROW_T::ARROW_ST_U;
+								if (coord.y > nCoord.y) type = MOVE_ARROW_T::ARROW_ST_D;
 							}
 						}
 						if (mVec.size() > 1 && coord == curCoord)
 						{
-							if (mVec[mVec.size() - 2].x < curCoord.x) type = ARROW_T::ARROW_R;
-							if (mVec[mVec.size() - 2].x > curCoord.x) type = ARROW_T::ARROW_L;
-							if (mVec[mVec.size() - 2].y < curCoord.y) type = ARROW_T::ARROW_D;
-							if (mVec[mVec.size() - 2].y > curCoord.y) type = ARROW_T::ARROW_U;
+							if (mVec[mVec.size() - 2].x < curCoord.x) type = MOVE_ARROW_T::ARROW_R;
+							if (mVec[mVec.size() - 2].x > curCoord.x) type = MOVE_ARROW_T::ARROW_L;
+							if (mVec[mVec.size() - 2].y < curCoord.y) type = MOVE_ARROW_T::ARROW_D;
+							if (mVec[mVec.size() - 2].y > curCoord.y) type = MOVE_ARROW_T::ARROW_U;
 						}
 						if (coord.x < 0 || coord.y < 0) continue;
-						mArrowTiles[(int)coord.y][(int)coord.x]->SetTileTexture(MAKE_ARROW_TILE_KEY(type),
-							MAKE_ARROW_TILE_PATH(type));
+						mArrowTiles[(int)coord.y][(int)coord.x]->SetTileTexture(MAKE_MOVE_ARROW_TILE_KEY(type),
+							MAKE_MOVE_ARROW_TILE_PATH(type));
 					}
 				}
 			}
@@ -369,9 +369,30 @@ namespace m
 	/// </summary>
 	void Scene::CheckMouseOutOfMapRange()
 	{
-		if (MOUSE_POS < mPosTiles[0][0]->GetPos() 
-			|| MOUSE_POS  > mPosTiles[7][7]->GetPos())
+
+		Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
+
+		Vector2 bigRhombusDownPos(
+			mPosTiles[0][7]->GetPos().x + mPosTiles[0][7]->GetScale().x,
+			mPosTiles[7][7]->GetPos().y + mPosTiles[7][7]->GetScale().y);
+
+		Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
+		//SelectGDI b(application.GetHdc(), BRUSH_TYPE::HOLLOW);
+		//SelectGDI p(application.GetHdc(), PEN_TYPE::RED);
+		//Rectangle(application.GetHdc(), bigRhombusPos.x, bigRhombusPos.y, bigRhombusDownPos.x, bigRhombusDownPos.y);
+
+
+
+		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, MOUSE_POS))
 		{
+			//wchar_t szFloat[500] = {};
+			//swprintf_s(szFloat, 500, L"pos : %f %f\nscale : %f %f"
+			//	, bigRhombusPos.x, bigRhombusPos.y, bigRhombusScale.x, bigRhombusScale.y);
+			//size_t iLen = wcsnlen_s(szFloat, 500);
+			////left top right bottom
+			//RECT rt = { 50, 140, 400, 180 };
+			//DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+			//mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 		}
@@ -421,6 +442,7 @@ namespace m
 							mMechs[_i]->SetMove(true);
 							SetMouseFollower(mMechs[_i]);
 							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetMechType()));
+							break;
 						}
 					}
 				}
@@ -633,15 +655,19 @@ namespace m
 			{
 				//if (skill_range_map[y][x] != MOVE) continue;
 				Tile* p = mPosTiles[y][x];
-
+				//if (skill_range_map[y][x] != MOVE)
+				//{
+				//	mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+				//	continue;
+				//}
 				if (p->GetCoord() == mMouseFollower->GetFinalCoord()) continue;
-				if (skill_range_map[y][x] != MOVE)
-				{
-					mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
-					continue;
-				}
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
+					if (skill_range_map[(int)p->GetCoord().y][(int)p->GetCoord().x] != MOVE)
+					{
+						mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+						continue;
+					}
 
 					if (mMouseFollower->GetCurAttackSkill()->GetSkillType()
 						== SKILL_T::ST)
@@ -698,6 +724,7 @@ namespace m
 						== SKILL_T::ARC)
 					{
 						endCoord = p->GetCoord();
+						break;
 					}
 				}
 			}
@@ -798,6 +825,7 @@ namespace m
 			{
 				mMouseFollower->SetMove(true);
 				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+
 				mMouseFollower->SetSkillIdx(-1);
 			}
 			else // 이동이 취소되고 공격가능상태로
@@ -806,12 +834,12 @@ namespace m
 				mMouseFollower->SetMove(false);
 			}
 		}
-	
+
 	}
 	void Scene::MoveSkill()
 	{
-		if (nullptr == mMouseFollower 
-			|| mMouseFollower->GetMove() 
+		if (nullptr == mMouseFollower
+			|| mMouseFollower->GetMove()
 			|| nullptr == mMouseFollower->GetCurAttackSkill()) return;
 
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
@@ -828,20 +856,19 @@ namespace m
 
 		Scene::DrawSkillRangeTile();
 		Scene::ActiveSkill();
+		//Scene::CheckMouseOutOfMapRange();
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& !mMouseFollower->GetCurAttackSkill()->GetStartFire())
 		{
 			mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 			mMouseFollower->SetMove(true);
-
-			//SetMouseFollower(nullptr);
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 		{
-			
-			if ( mMouseFollower->GetCurAttackSkill()->GetStartRender())
+
+			if (mMouseFollower->GetCurAttackSkill()->GetStartRender())
 			{
 				if (mMouseFollower->GetCurAttackSkill()->GetEndCoord() != Vector2::Zero)
 				{
@@ -859,18 +886,8 @@ namespace m
 		}
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 
-
-		//if (nullptr != mMouseFollower
-		//	&& nullptr != mMouseFollower->GetCurAttackSkill()
-		//	&& mMouseFollower->GetCurAttackSkill()->GetStartFire())
-		//{
-		//	mMouseFollower->GetCurAttackSkill()->CheckDirection();
-		//}
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
-
-		// 공격 중일때 키입력 안받게.
-		//if (mMouseFollower->CheckSkillFiring()) return;
 
 		if (nullptr != mMouseFollower)
 		{
@@ -879,13 +896,6 @@ namespace m
 				Scene::DrawMoveRangeTile();
 				Scene::DrawMoveDirectionTile();
 			}
-			//if (mMouseFollower->GetSkillIdx() != -1) //스킬이 선택되었다면
-			//{
-			//	// 스킬의 범위 출력
-			//	Scene::DrawSkillRangeTile();
-			//	// 선택된 스킬을 현재스킬로
-			//	Scene::ActiveSkill();
-			//}
 			Scene::CheckMouseOutOfMapRange();
 		}
 
@@ -893,7 +903,6 @@ namespace m
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& nullptr != mMouseFollower)
 		{
-			//mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 
@@ -904,21 +913,10 @@ namespace m
 		{
 			if (nullptr != mMouseFollower)
 			{
-				//if (nullptr != mMouseFollower->GetCurAttackSkill()
-				//	&& mMouseFollower->GetCurAttackSkill()->GetStartRender())
-				//{
-				//	if (mMouseFollower->GetCurAttackSkill()->GetEndCoord() != Vector2::Zero)
-				//	{
-				//		mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
-				//		mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
-				//	}
-				//}
-				
 				MoveEffectUnit(mMouseFollower);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
 				SetMouseFollower(nullptr);
-				
 			}
 			else
 			{
@@ -926,62 +924,25 @@ namespace m
 			}
 		}
 	}
-	/// <summary>
-	/// mPosTiles위에서 curSkillPos의 진행 방향에 걸리는 Unit 및 상호작용 가능한 타일 확인.
-	/// </summary>
-	/// <param name="curSkillPos"></param>
-	//void Scene::CheckSkillDirection()
-	//{
-		//Vector2 pos = mMouseFollower->GetCurAttackSkill()->GetPos();
-		//Vector2 scale = mMouseFollower->GetCurAttackSkill()->GetScale();
-		//Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
+	void Scene::MoveEffectUnit(Unit* unit, Vector2 _coord)
+	{
+		Vector2 idx = unit->GetFinalCoord();
 
-		//for (int y = 0; y < mPosTiles.size(); y++)
-		//{
-		//	for (int x = 0; x < mPosTiles[y].size(); x++)
-		//	{
-		//		Tile* p = mPosTiles[y][x];
-		//		if (p->GetCoord() == mMouseFollower->GetCoord()) continue;
-
-		//		if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
-		//		{
-		//			mPosTiles[(int)p->GetCoord().y][(int)p->GetCoord().x]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
-		//				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_r));
-		//		}
-
-		//		if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
-		//		{
-		//			Skill* sp = mMouseFollower->GetCurAttackSkill();
-		//			if (effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x].size() != 0)
-		//			{
-		//				for (int i = 0; i < effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x].size(); i++)
-		//				{
-		//					effectUnits[(int)p->GetCoord().y][(int)p->GetCoord().x][i]->Hit(1);
-		//				}
-		//				sp = mMouseFollower->GetCurAttackSkill();
-		//				sp->SetEndFire(true);
-		//				sp->SetStFire(false);
-		//				sp->SetStartRender(false);
-		//				//mMouseFollower->SetSkillIdx(-1);
-		//				//mMouseFollower->SetCurAttackSkill(nullptr);
-		//				SetMouseFollower(nullptr);
-		//				return;
-		//			}
-		//			if (p->GetCoord() == sp->GetEndCoord())
-		//			{
-		//				sp->SetEndFire(true);
-		//				sp->SetStFire(false);
-		//				sp->SetStartRender(false);
-		//				//mMouseFollower->SetSkillIdx(-1);
-		//				//mMouseFollower->SetCurAttackSkill(nullptr);
-		//				SetMouseFollower(nullptr);
-		//				return;
-		//			}
-
-		//		}
-		//	}
-		//}
-	//}
+		vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
+		for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
+		{
+			if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit)
+			{
+				effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
+				effectUnits[(int)_coord.y][(int)_coord.x].push_back(unit);
+				unit->SetUnitIdx(effectUnits[(int)_coord.y][(int)_coord.x].size() - 1);
+			}
+		}
+		unit->SetPos(mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos());
+		unit->SetCoord(_coord);
+		unit->SetFinalCoord(unit->GetCoord());
+		unit->SetFinalPos(unit->GetPos());
+	}
 	void Scene::MoveEffectUnit(Unit* unit)
 	{
 		Vector2 idx = unit->GetFinalCoord();

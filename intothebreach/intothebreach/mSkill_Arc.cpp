@@ -15,6 +15,7 @@ namespace m
 	}
 	void Skill_Arc::Initialize()
 	{
+		object::Visible(this);
 		fTime = 0.f;
 		fMaxTime = 0.4f;
 		fDistance = (mFinalEdPos - mStPos).Length();
@@ -99,7 +100,7 @@ namespace m
 		Vector2 mPos = mStPos;
 		Image* im = Resources::Load<Image>(L"line", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
-		Vector2 vec = GetPos();
+		Vector2 vec = mStPos;
 		float absD = abs(mFinalEdPos.x - mStPos.x);
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
@@ -110,8 +111,6 @@ namespace m
 			t += 0.05f;
 			mPos.x = (mStPos.x - velocityX * t);
 			mPos.y = (mStPos.y - velocityY * t - (0.5f * gravityAccel * t * t));
-
-
 
 			TransparentBlt(hdc,
 				(int)(mPos.x),
@@ -134,21 +133,40 @@ namespace m
 	{
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
-
-		Mech* unit = scene->GetMouseFollower();
+		// right, up, down, left
+		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size() != 0)
 		{
 			for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
 			{
 				scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)[i]->Hit(1);
+				
 			}
 			SetEndFire(false);
 			SetStartFire(false);
-			//SetStartRender(true);
-			SetEndCoord(Vector2::Zero);
-			//scene->SetMouseFollower(nullptr);
-			return;
+			PushUnit(scene);
 		}
-			
+		else if (endFire)
+		{
+			SetEndFire(false);
+			SetStartFire(false);
+			PushUnit(scene);
+			/*for (int i = 0; i < 4; i++)
+			{
+				int dy = GetEndCoord().y + direct[i][0];
+				int dx = GetEndCoord().x + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= TILE_X - 1 || dy >= TILE_Y - 1) continue;
+				if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
+				for (int i = 0; i < scene->GetEffectUnit(dy, dx).size(); i++)
+				{
+					Unit* unit = scene->GetEffectUnit(dy, dx)[i];
+					int _dy = dy + direct[i][0];
+					int _dx = dx + direct[i][1];
+					if (_dx < 0 || _dy < 0 || _dx >= TILE_X - 1 || _dy >= TILE_Y - 1) continue;
+					scene->MoveEffectUnit(unit, Vector2((float)_dy, (float)_dx));
+				}
+			}*/
+		}
 	}
 }

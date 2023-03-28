@@ -75,6 +75,62 @@ enum class MOVE_TILE_T {
 	square_g_d,
 	END
 };
+enum class ARROW_TILE_T
+{
+	arrow_right,
+	arrow_up,
+	arrow_down,
+	arrow_left,
+	arrow_y_right,
+	arrow_y_up,
+	arrow_y_down,
+	arrow_y_left,
+	arrow_g_right,
+	arrow_g_up,
+	arrow_g_down,
+	arrow_g_left,
+	arrow_h_right,
+	arrow_h_up,
+	arrow_h_down,
+	arrow_h_left,
+	END
+};
+wstring ARROW_TILE_PATH[(UINT)ARROW_TILE_T::END]{
+	L"arrow_right",
+	L"arrow_up",
+	L"arrow_down",
+	L"arrow_left",
+	L"arrow_y_right",
+	L"arrow_y_up",
+	L"arrow_y_down",
+	L"arrow_y_left",
+	L"arrow_g_right",
+	L"arrow_g_up",
+	L"arrow_g_down",
+	L"arrow_g_left",
+	L"arrow_h_right",
+	L"arrow_h_up",
+	L"arrow_h_down",
+	L"arrow_h_left",
+};
+wstring MAKE_ARROW_TILE_KEY(ARROW_TILE_T _type)
+{
+	wstring key = L"";
+
+	key.append(ARROW_TILE_PATH[(UINT)_type]);
+
+	return key;
+}
+wstring MAKE_ARROW_TILE_PATH(ARROW_TILE_T _type)
+{
+	wstring path = L"..\\Resources\\texture\\combat\\";
+
+	path.append(ARROW_TILE_PATH[(UINT)_type]);
+
+	path.append(L".bmp");
+
+	return path;
+}
 wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square",
 	L"square_g",
@@ -89,7 +145,6 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_g_u",
 	L"square_line_g_d",
 };
-
 wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
 	wstring key = L"";
 
@@ -107,7 +162,7 @@ wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
 
 	return path;
 }
-enum class ARROW_T {
+enum class MOVE_ARROW_T {
 	ARROW_D_U,
 	ARROW_L_R,
 	ARROW_L,
@@ -125,7 +180,7 @@ enum class ARROW_T {
 
 	END
 };
-wstring ARROW_PATH[(UINT)ARROW_T::END]{
+wstring MOVE_ARROW_PATH[(UINT)MOVE_ARROW_T::END]{
 	L"movearrow_du",
 	L"movearrow_lr",
 	L"movearrow_l",
@@ -142,17 +197,17 @@ wstring ARROW_PATH[(UINT)ARROW_T::END]{
 	L"movearrow_cap_r",
 
 };
-wstring MAKE_ARROW_TILE_KEY(ARROW_T _type) {
+wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type) {
 	wstring key = L"";
 
-	key.append(ARROW_PATH[(UINT)_type]);
+	key.append(MOVE_ARROW_PATH[(UINT)_type]);
 
 	return key;
 }
-wstring MAKE_ARROW_TILE_PATH(ARROW_T _type) {
-	wstring path = L"..\\Resources\\texture\\combat\\move\\";
+wstring MAKE_MOVE_ARROW_TILE_PATH(MOVE_ARROW_T _type) {
+	wstring path = L"..\\Resources\\texture\\combat\\";
 
-	path.append(ARROW_PATH[(UINT)_type]);
+	path.append(MOVE_ARROW_PATH[(UINT)_type]);
 
 	path.append(L".bmp");
 

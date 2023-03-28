@@ -15,6 +15,7 @@ namespace m {
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, stFire(false)
+		, startRender(false)
 		, fTime(0)
 		, offsetHeight(0)
 		, maxTheta(0)
@@ -38,6 +39,7 @@ namespace m {
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, stFire(false)
+		, startRender(false)
 		, fTime(_origin.fTime)
 		, offsetHeight(_origin.offsetHeight)
 		, maxTheta(_origin.maxTheta)
@@ -57,7 +59,6 @@ namespace m {
 	Skill::~Skill() {
 	}
 	void Skill::Initialize() {
-		object::Visible(this);
 	}
 	void Skill::CalEndFire() {
 		Vector2 vec = GetPos();
@@ -84,13 +85,63 @@ namespace m {
 		SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		SetStPos(GetPos());
 		SetEndPos(scene->GetPosTiles()[(int)enPos.y][(int)enPos.x]->GetCenterPos());
-		this->Initialize();
 	}
 	void Skill::Active(HDC hdc)
 	{
 	}
 	void Skill::GuideWire(HDC hdc)
 	{
+	}
+	void Skill::DrawPushTile()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		Scene::TILES tiles = scene->GetPosTiles();
+		// right, up, down, left
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		for (int i = 0; i < 4; i++)
+		{
+			int dy = GetEndCoord().y + direct[i][0];
+			int dx = GetEndCoord().x + direct[i][1];
+			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
+			if (scene->GetEffectUnit(dy, dx).size() != 0)
+			{
+				i += 4;
+				tiles[dy][dx]->SetTileTexture(
+					MAKE_ARROW_TILE_KEY((ARROW_TILE_T)i)
+					, MAKE_ARROW_TILE_PATH((ARROW_TILE_T)i)
+				);
+			}
+			else
+			{
+				tiles[dy][dx]->SetTileTexture(
+					MAKE_ARROW_TILE_KEY((ARROW_TILE_T)i)
+					, MAKE_ARROW_TILE_PATH((ARROW_TILE_T)i)
+				);
+			}
+			
+			
+		}
+	}
+	void Skill::PushUnit()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		for (int i = 0; i < 4; i++)
+		{
+			int dy = GetEndCoord().y + direct[i][0];
+			int dx = GetEndCoord().x + direct[i][1];
+
+			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
+			if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
+			for (int _i = 0; _i < scene->GetEffectUnit(dy, dx).size(); _i++)
+			{
+				Unit* unit = scene->GetEffectUnit(dy, dx)[_i];
+				int _dy = dy + direct[i][0];
+				int _dx = dx + direct[i][1];
+				if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
+				scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
+			}
+		}
 	}
 	void Skill::Render(HDC hdc) {
 

@@ -60,6 +60,7 @@ namespace m
 		void ActiveSkill();
 		void ClearSkillRangeMap();
 		void MoveEffectUnit(Unit* unit);
+		void MoveEffectUnit(Unit* unit, Vector2 _coord);
 		//void CheckSkillDirection();
 
 		Mech* GetMouseFollower() { return mMouseFollower; }

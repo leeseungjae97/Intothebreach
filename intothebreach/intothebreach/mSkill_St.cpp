@@ -74,6 +74,7 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
+
 		TransparentBlt(hdc,
 			(int)(mPos.x),
 			(int)(mPos.y),
@@ -140,22 +141,14 @@ namespace m
 						}
 						SetEndFire(false);
 						SetStartFire(false);
-						SetStartRender(false);
-						//scene->SetMouseFollower(nullptr);
-						//SetEndCoord(Vector2::Zero);
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
 						SetEndFire(false);
 						SetStartFire(false);
-						SetStartRender(false);
-						//scene->SetMouseFollower(nullptr);
-						//SetEndCoord(Vector2::Zero);
 						return;
 					}
-
-
 				}
 			}
 		}
