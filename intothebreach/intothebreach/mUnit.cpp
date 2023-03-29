@@ -15,6 +15,7 @@ namespace m
 		, mAnimator(nullptr)
 		, endMove(false)
 		, endAttack(false)
+		, drag(false)
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::One)
@@ -59,7 +60,6 @@ namespace m
 	void Unit::Update()
 	{
 		GameObject::Update();
-
 	}
 	void Unit::Render(HDC hdc)
 	{
@@ -145,8 +145,8 @@ namespace m
 
 		if (!curAttactSkill->GetEndFire()
 			&& curAttactSkill->GetStartFire()) return true;
+		return false;
 	}
-	
 	void Unit::DrawSkill(Vector2 pos)
 	{
 		curAttactSkill = mSkills[skillIdx];
@@ -158,7 +158,7 @@ namespace m
 	{}
 	void Unit::SetSkill(int type)
 	{
-		object::Instantiate(mSkills, (SKILL_T)type);
+		object::Instantiate(mSkills, (SKILL_T)type, this);
 	}
 	void Unit::SetSkill(int idx, SKILL_T type)
 	{

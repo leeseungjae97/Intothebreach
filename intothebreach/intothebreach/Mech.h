@@ -19,13 +19,8 @@ namespace m
 		virtual void water() override;
 		virtual void emerge() override;
 
-		bool GetMove() {
-			return move; 
-		}
-		void SetMove(bool _move) { move = _move; }
 		MECHS GetMechType() { return mMechType; }
 	private:
 		MECHS mMechType;
-		bool move;
 	};
 }

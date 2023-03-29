@@ -6,8 +6,8 @@
 #include "func.h"
 namespace m
 {
-	Skill_Arc::Skill_Arc(SKILL_T _type)
-		: Skill(_type)
+	Skill_Arc::Skill_Arc(SKILL_T _type, Unit* onwer)
+		: Skill(_type, onwer)
 	{
 	}
 	Skill_Arc::~Skill_Arc()
@@ -47,9 +47,9 @@ namespace m
 	}
 	void Skill_Arc::Update()
 	{
-		GameObject::Update();
+		Skill::Update();
 		Vector2 mPos = GetPos();
-		if (stFire)
+		if (startFire)
 		{
 			fTime += Time::fDeltaTime();
 			Vector2 prevMPos = mPos;
@@ -69,8 +69,8 @@ namespace m
 	void Skill_Arc::Render(HDC hdc)
 	{
 		if (!startRender) return;
-		if (endFire) stFire = false;
-		if (stFire)
+		if (endFire) startFire = false;
+		if (startFire)
 		{
 			Active(hdc);
 		}
@@ -128,13 +128,15 @@ namespace m
 			absMD = abs(vec.x - mStPos.x);
 			diff = absD - absMD;
 		}
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		Skill::DrawPushTile(direct, 4);
 	}
 	void Skill_Arc::CheckDirection()
 	{
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		// right, up, down, left
-		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size() != 0)
 		{
 			for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
@@ -142,15 +144,16 @@ namespace m
 				scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)[i]->Hit(1);
 				
 			}
+			
 			SetEndFire(false);
 			SetStartFire(false);
-			PushUnit(scene);
+			PushUnit(direct, 4);
 		}
 		else if (endFire)
 		{
 			SetEndFire(false);
 			SetStartFire(false);
-			PushUnit(scene);
+			PushUnit(direct, 4);
 			/*for (int i = 0; i < 4; i++)
 			{
 				int dy = GetEndCoord().y + direct[i][0];

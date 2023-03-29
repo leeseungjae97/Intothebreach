@@ -24,7 +24,10 @@ namespace m
 				== GameObject::STATE::Death
 				||
 				gameObj->GetState()
-				== GameObject::STATE::Invisible)
+				== GameObject::STATE::Invisible
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Delete)
 				continue;
 
 			gameObj->Initialize();
@@ -40,7 +43,10 @@ namespace m
 				== GameObject::STATE::Death
 				||
 				gameObj->GetState()
-				== GameObject::STATE::Invisible)
+				== GameObject::STATE::Invisible
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Delete)
 				continue;
 
 			gameObj->Update();
@@ -58,7 +64,10 @@ namespace m
 				== GameObject::STATE::Death
 				||
 				gameObj->GetState()
-				== GameObject::STATE::Invisible)
+				== GameObject::STATE::Invisible
+				||
+				gameObj->GetState()
+				== GameObject::STATE::Delete)
 				continue;
 
 			gameObj->Render(hdc);

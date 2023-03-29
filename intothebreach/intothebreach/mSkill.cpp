@@ -10,11 +10,12 @@
 #include "mSceneManager.h"
 extern m::Application application;
 namespace m {
-	Skill::Skill(SKILL_T _type)
+	Skill::Skill(SKILL_T _type, Unit* onwer)
 		: mType(_type) 
+		, mOnwer(onwer)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
-		, stFire(false)
+		, startFire(false)
 		, startRender(false)
 		, fTime(0)
 		, offsetHeight(0)
@@ -38,7 +39,7 @@ namespace m {
 		: mType(_origin.mType)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
-		, stFire(false)
+		, startFire(false)
 		, startRender(false)
 		, fTime(_origin.fTime)
 		, offsetHeight(_origin.offsetHeight)
@@ -72,9 +73,32 @@ namespace m {
 	void Skill::CheckDirection()
 	{
 	}
+	void Skill::ClearPushTile()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		//if (scene->GetBackTiles().size() == 0) return;
+		for (int i = 0; i < scene->GetBackTiles().size(); i++)
+		{
+			scene->GetBackTiles()[i]->SetState(GameObject::STATE::Delete);
+		}
+
+		scene->GetBackTiles().clear();
+	}
+	bool Skill::CheckSkillFiring()
+	{
+		if (endFire && startFire) return false;
+		if (!endFire && !startFire) return false;
+		if (!endFire && startFire)
+		{
+			ClearPushTile();
+			return true;
+		}
+		return false;
+	}
+
 	void Skill::Update() {
 		GameObject::Update();
-		
+		CheckSkillFiring();
 	}
 	void Skill::ReInit(Vector2 stPos, Vector2 enPos)
 	{
@@ -92,41 +116,40 @@ namespace m {
 	void Skill::GuideWire(HDC hdc)
 	{
 	}
-	void Skill::DrawPushTile()
+	void Skill::DrawPushTile(float (*direct)[2], int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Scene::TILES tiles = scene->GetPosTiles();
+
+		ClearPushTile();
 		// right, up, down, left
-		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < size; i++)
 		{
 			int dy = GetEndCoord().y + direct[i][0];
 			int dx = GetEndCoord().x + direct[i][1];
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
+
+			ARROW_TILE_T _type = ARROW_TILE_T::arrow_down;
+			
 			if (scene->GetEffectUnit(dy, dx).size() != 0)
-			{
-				i += 4;
-				tiles[dy][dx]->SetTileTexture(
-					MAKE_ARROW_TILE_KEY((ARROW_TILE_T)i)
-					, MAKE_ARROW_TILE_PATH((ARROW_TILE_T)i)
-				);
-			}
+				_type = (ARROW_TILE_T)(i + 4);
 			else
-			{
-				tiles[dy][dx]->SetTileTexture(
-					MAKE_ARROW_TILE_KEY((ARROW_TILE_T)i)
-					, MAKE_ARROW_TILE_PATH((ARROW_TILE_T)i)
-				);
-			}
-			
-			
+				_type = (ARROW_TILE_T)(i);
+
+			Tile* tile = new Tile(Vector2(dx, dy));
+			tile->SetPos(scene->GetPosTiles()[dy][dx]->GetCenterPos());
+
+			tile->SetTileTexture(
+				MAKE_ARROW_TILE_KEY(_type)
+				, MAKE_ARROW_TILE_PATH(_type)
+			);
+			scene->GetBackTiles().push_back(tile);
+			scene->AddGameObject(tile, LAYER_TYPE::TILE);
 		}
 	}
-	void Skill::PushUnit()
+	void Skill::PushUnit(float(*direct)[2], int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < size; i++)
 		{
 			int dy = GetEndCoord().y + direct[i][0];
 			int dx = GetEndCoord().x + direct[i][1];

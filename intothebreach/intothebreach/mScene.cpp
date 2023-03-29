@@ -43,6 +43,7 @@ namespace m
 	{
 		vector<GameObject*> deleteGameObjects = {};
 		vector<Alien*>::iterator iter = mAliens.begin();
+
 		while (iter != mAliens.end())
 		{
 			if ((*iter)->GetState() == GameObject::STATE::Death)
@@ -64,7 +65,9 @@ namespace m
 			for (vector<GameObject*>::iterator iter = gameObjects.begin()
 				; iter != gameObjects.end(); )
 			{
-				if ((*iter)->GetState() == GameObject::STATE::Death)
+				if ((*iter)->GetState() == GameObject::STATE::Death
+					|| 
+					(*iter)->GetState() == GameObject::STATE::Delete)
 				{
 					deleteGameObjects.push_back((*iter));
 					iter = gameObjects.erase(iter);
@@ -392,7 +395,10 @@ namespace m
 			////left top right bottom
 			//RECT rt = { 50, 140, 400, 180 };
 			//DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
-			//mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+			if (!mMouseFollower->GetMove())
+			{
+				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+			}
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 		}
@@ -439,7 +445,7 @@ namespace m
 						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord())
 						{
 							if (mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
-							mMechs[_i]->SetMove(true);
+							//mMechs[_i]->SetMove(true);
 							SetMouseFollower(mMechs[_i]);
 							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetMechType()));
 							break;
@@ -555,10 +561,10 @@ namespace m
 
 
 
-		DrawOutLineTile();
+		DrawOutLineTile((int)MOVE_TILE_T::square_g_l);
 	}
 	//// 이동범위 경계선 그리기
-	void Scene::DrawOutLineTile()
+	void Scene::DrawOutLineTile(int _type)
 	{
 		for (int y = 0; y < mPosTiles.size(); y++)
 		{
@@ -567,29 +573,29 @@ namespace m
 				if (mPosTiles[y][x]->GetTileType() == TILE_T::MOVE_RANGE)
 				{
 					// x,y 타일 주변 4방향으로 검사해서 MOVE tile이 아니면 외곽선 추가.
-					if (y + 1 < mPosTiles.size()
-						&& mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
-					{
-						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_d)
-							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_d));
-					}
-					if (y - 1 >= 0
-						&& mPosTiles[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
-					{
-						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_u)
-							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_u));
-					}
 					if (x - 1 >= 0
 						&& mPosTiles[y][x - 1]->GetTileType() != TILE_T::MOVE_RANGE)
 					{
-						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_l)
-							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_l));
+						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY((MOVE_TILE_T)_type)
+							, MAKE_MOVE_TILE_PATH((MOVE_TILE_T)_type));
 					}
 					if (x + 1 < mPosTiles[y].size()
 						&& mPosTiles[y][x + 1]->GetTileType() != TILE_T::MOVE_RANGE)
 					{
-						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g_r)
-							, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g_r));
+						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY((MOVE_TILE_T)(_type + 1))
+							, MAKE_MOVE_TILE_PATH((MOVE_TILE_T)(_type + 1)));
+					}
+					if (y - 1 >= 0
+						&& mPosTiles[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY((MOVE_TILE_T)(_type + 2))
+							, MAKE_MOVE_TILE_PATH((MOVE_TILE_T)(_type + 2)));
+					}
+					if (y + 1 < mPosTiles.size()
+						&& mPosTiles[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY((MOVE_TILE_T)(_type + 3))
+							, MAKE_MOVE_TILE_PATH((MOVE_TILE_T)(_type + 3)));
 					}
 
 
@@ -653,13 +659,7 @@ namespace m
 		{
 			for (int x = 0; x < mPosTiles[y].size(); x++)
 			{
-				//if (skill_range_map[y][x] != MOVE) continue;
 				Tile* p = mPosTiles[y][x];
-				//if (skill_range_map[y][x] != MOVE)
-				//{
-				//	mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
-				//	continue;
-				//}
 				if (p->GetCoord() == mMouseFollower->GetFinalCoord()) continue;
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
@@ -753,7 +753,6 @@ namespace m
 		bool find = false;
 
 		int idx = -1;
-		int b = 0;
 		while (!queue.empty())
 		{
 			Vector2_1 now = queue.front();
@@ -794,7 +793,7 @@ namespace m
 				}
 			}
 		}
-		int a = 0;
+		DrawOutLineTile((int)MOVE_TILE_T::square_r_l);
 	}
 
 	void Scene::Release()
@@ -842,10 +841,6 @@ namespace m
 			|| mMouseFollower->GetMove()
 			|| nullptr == mMouseFollower->GetCurAttackSkill()) return;
 
-		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
-
-		Scene::HighlightTile();
-
 		if (mMouseFollower->GetCurAttackSkill()->GetStartFire())
 		{
 			mMouseFollower->GetCurAttackSkill()->CheckDirection();
@@ -853,10 +848,9 @@ namespace m
 
 		if (mMouseFollower->CheckSkillFiring()) return;
 
-
-		Scene::DrawSkillRangeTile();
 		Scene::ActiveSkill();
-		//Scene::CheckMouseOutOfMapRange();
+		Scene::DrawSkillRangeTile();
+		Scene::CheckMouseOutOfMapRange();
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& !mMouseFollower->GetCurAttackSkill()->GetStartFire())
@@ -872,10 +866,31 @@ namespace m
 			{
 				if (mMouseFollower->GetCurAttackSkill()->GetEndCoord() != Vector2::Zero)
 				{
+					// 공격.
 					mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
 					mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
+					moveSave.clear();
 				}
 			}
+		}
+	}
+	void Scene::DrawTile()
+	{
+		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
+
+		Scene::DrawFootTile();
+		Scene::HighlightTile();
+	}
+	void Scene::UndoMove()
+	{
+		if (moveSave.size() != 0)
+		{
+			Mech* mech = mMechs[moveSave[moveSave.size() - 1].mechIdx];
+			mech->SetCoord(Vector2(moveSave[moveSave.size() - 1].coord));
+			mech->SetFinalCoord(mech->GetCoord());
+			mech->SetPos(Vector2(moveSave[moveSave.size() - 1].pos));
+			mech->SetFinalPos(mech->GetPos());
+			moveSave.pop_back();
 		}
 	}
 	void Scene::MoveMech()
@@ -884,10 +899,6 @@ namespace m
 		{
 			if (!mMouseFollower->GetMove()) return;
 		}
-		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
-
-		Scene::DrawFootTile();
-		Scene::HighlightTile();
 
 		if (nullptr != mMouseFollower)
 		{
@@ -899,6 +910,14 @@ namespace m
 			Scene::CheckMouseOutOfMapRange();
 		}
 
+		if (KEY_DOWN(KEYCODE_TYPE::LSHIFT))
+		{
+			Scene::UndoMove();
+		}
+		if (KEY_DOWN(KEYCODE_TYPE::SPACE))
+		{
+			// TODO: TURN END
+		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& nullptr != mMouseFollower)
@@ -914,6 +933,8 @@ namespace m
 			if (nullptr != mMouseFollower)
 			{
 				MoveEffectUnit(mMouseFollower);
+				moveSave.push_back(Vector2_2(mMouseFollower->GetFinalCoord(), mMouseFollower->GetFinalPos(), mMouseFollower->GetMechIdx()));
+				mMouseFollower->SetEndMove(true);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
 				SetMouseFollower(nullptr);

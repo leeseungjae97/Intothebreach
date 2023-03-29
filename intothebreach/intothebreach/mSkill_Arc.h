@@ -6,7 +6,7 @@ namespace m
         public Skill
     {
     public:
-        Skill_Arc(SKILL_T _type);
+        Skill_Arc(SKILL_T _type, Unit* onwer);
         ~Skill_Arc();
 
         virtual void Initialize() override;

@@ -38,8 +38,11 @@ namespace m
 		void SetCurImage(Image* m) { curImage = m; }
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
 		void SetUnitIdx(int _idx) { unitIdx = _idx; }
+		void SetMechIdx(int _idx) { mechIdx = _idx; }
 		void SetMoveRange(int _move) { moveRange = _move; }
 		void SetSkillIdx(int _idx);
+		void SetMove(bool _move) { move = _move; }
+		void SetEndMove(bool _endMove) { endMove = _endMove; }
 
 		void Hit(int damage)
 		{
@@ -56,9 +59,12 @@ namespace m
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
 		int GetUnitIdx() { return unitIdx; }
+		int GetMechIdx() { return mechIdx; }
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
 		bool CheckSkillFiring();
+		bool GetMove() { return move; }
+		bool GetEndMove() { return endMove; }
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
 
@@ -97,21 +103,25 @@ namespace m
 		Vector2 mFinalCoord;
 		Vector2 mFinalPos;
 
-		int mHp;
-		int curHp;
-		int moveRange;
-		int unitIdx;
-		int skillIdx;
+		int mHp;			// 전체 hp
+		int curHp;			// 현재 hp
+		int moveRange;		// 로봇 타입의 enum으로 가져온 이동거리
+		int unitIdx;		// effecUnit vector에 들어갈 index
+		int mechIdx;		// Scene의 Mechs vector에 들어갈 index
+		int skillIdx;		// 사용할 스킬 index
 
-		bool endMove;
-		bool endAttack;
+		bool drag;			//
+		bool endMove;		//
+		bool endAttack;		// 공격을 마치면
+		bool move;			// 공격에서 이동으로 넘갈때 사용.
+							// 이 값을 통해 공격과 이동의 분기가 나뉨.
 
-		Weapon* mWeapon;
-		Pilot* mPilot;
+		Weapon* mWeapon;	// 미사용
+		Pilot* mPilot;		// 미사용
 		//vector<SKILL_T> mSkills;
 		vector<Skill*> mSkills;
 		Skill* curAttactSkill;
-		vector<Image*> mImages;
+		vector<Image*> mImages; // 전체 이미지
 	};
 }
 

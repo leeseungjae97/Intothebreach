@@ -54,6 +54,7 @@ namespace m {
 	}
 	void CombatScene::Update() {
 		Scene::Update();
+		Scene::DrawTile();
 		Scene::MoveMech();
 		Scene::MoveSkill();
 		Scene::CheckNumInput();

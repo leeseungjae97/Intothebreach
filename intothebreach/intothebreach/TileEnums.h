@@ -73,6 +73,10 @@ enum class MOVE_TILE_T {
 	square_g_r,
 	square_g_u,
 	square_g_d,
+	square_r_l,
+	square_r_r,
+	square_r_u,
+	square_r_d,
 	END
 };
 enum class ARROW_TILE_T
@@ -96,22 +100,22 @@ enum class ARROW_TILE_T
 	END
 };
 wstring ARROW_TILE_PATH[(UINT)ARROW_TILE_T::END]{
+	L"arrow_off_right",
+	L"arrow_off_up",
+	L"arrow_off_down",
+	L"arrow_off_left",
 	L"arrow_right",
 	L"arrow_up",
 	L"arrow_down",
 	L"arrow_left",
-	L"arrow_y_right",
-	L"arrow_y_up",
-	L"arrow_y_down",
-	L"arrow_y_left",
-	L"arrow_g_right",
-	L"arrow_g_up",
-	L"arrow_g_down",
-	L"arrow_g_left",
-	L"arrow_h_right",
-	L"arrow_h_up",
-	L"arrow_h_down",
-	L"arrow_h_left",
+	L"arrow_guard_right",
+	L"arrow_guard_up",
+	L"arrow_guard_down",
+	L"arrow_guard_left",
+	L"arrow_hit_right",
+	L"arrow_hit_up",
+	L"arrow_hit_down",
+	L"arrow_hit_left",
 };
 wstring MAKE_ARROW_TILE_KEY(ARROW_TILE_T _type)
 {
@@ -144,6 +148,10 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_g_r",
 	L"square_line_g_u",
 	L"square_line_g_d",
+	L"square_line_r_l",
+	L"square_line_r_r",
+	L"square_line_r_u",
+	L"square_line_r_d",
 };
 wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
 	wstring key = L"";
@@ -205,7 +213,7 @@ wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type) {
 	return key;
 }
 wstring MAKE_MOVE_ARROW_TILE_PATH(MOVE_ARROW_T _type) {
-	wstring path = L"..\\Resources\\texture\\combat\\";
+	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
 	path.append(MOVE_ARROW_PATH[(UINT)_type]);
 

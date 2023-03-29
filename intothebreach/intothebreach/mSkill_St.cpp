@@ -5,8 +5,8 @@
 #include "mResources.h"
 namespace m
 {
-	Skill_St::Skill_St(SKILL_T _type)
-		: Skill(_type)
+	Skill_St::Skill_St(SKILL_T _type, Unit* onwer)
+		: Skill(_type, onwer)
 	{
 	}
 	Skill_St::~Skill_St()
@@ -22,9 +22,9 @@ namespace m
 	}
 	void Skill_St::Update()
 	{
-		GameObject::Update();
+		Skill::Update();
 		Vector2 mPos = GetPos();
-		if (stFire)
+		if (startFire)
 		{
 			mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
 			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
@@ -40,8 +40,8 @@ namespace m
 	void Skill_St::Render(HDC hdc)
 	{
 		if (!startRender) return;
-		if (endFire) stFire = false;
-		if (stFire)
+		if (endFire) startFire = false;
+		if (startFire)
 		{
 			Active(hdc);
 		}

@@ -53,6 +53,8 @@ namespace m::object
 		if (type == LAYER_TYPE::PLAYER)
 		{
 			scene->GetMechs().push_back(gameObj);
+			gameObj->SetMechIdx(scene->GetMechs().size() - 1);
+			gameObj->SetMove(true);
 		}
 
 
@@ -78,11 +80,11 @@ namespace m::object
 		return gameObj;
 	}
 
-	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type)
+	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type, Unit* unit)
 	{
-		Skill* gameObj = new Skill(_type);
-
 		Scene* scene = SceneManager::GetActiveScene();
+		Skill* gameObj = new Skill(_type, unit);
+
 
 		gameObj->Initialize();
 		gameObj->SetLayerType(type);
@@ -96,34 +98,20 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline void Instantiate2(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, vector<Skill*>& vS, int idx)
-	{
-		Skill* gameObj = vS[idx];
-		Scene* scene = SceneManager::GetActiveScene();
 
-		//gameObj->Initialize(type, stPos, edPos, scene->GetPosTiles());
-		gameObj->SetLayerType(type);
-		gameObj->SetEndCoord(edPos);
-
-		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
-		gameObj->SetStPos(gameObj->GetPos());
-		gameObj->SetEndPos(scene->GetPosTiles()[(int)edPos.y][(int)edPos.x]->GetCenterPos());
-		//gameObj->PreCal();
-	}
-
-	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type)
+	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type, Unit* unit)
 	{
 		Skill* gameObj = nullptr;
 		switch (_type)
 		{
 		case SKILL_T::ARC:
 		{
-			gameObj = new Skill_Arc(_type);
+			gameObj = new Skill_Arc(_type, unit);
 		}
 			break;
 		case SKILL_T::ST:
 		{
-			gameObj = new Skill_St(_type);
+			gameObj = new Skill_St(_type, unit);
 		}
 			break;
 		case SKILL_T::END:
