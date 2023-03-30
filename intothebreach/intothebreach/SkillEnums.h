@@ -77,6 +77,22 @@ int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//science,
 	(int)SKILL_T::ST,//tele,
 };
+int ALIEN_BASIC_WEAPON[(UINT)ALIENS::END]{
+	(int)SKILL_T::ST,//Beetle,
+	(int)SKILL_T::ST,//Blobber,
+	(int)SKILL_T::ST,//Burrower,
+	(int)SKILL_T::ST,//Centipede,
+	(int)SKILL_T::ARC,//Crab,
+	(int)SKILL_T::ST,//Digger,
+	(int)SKILL_T::ST,//Firefly,
+	(int)SKILL_T::ST,//Hornet,
+	(int)SKILL_T::ST,//Jelly,
+	(int)SKILL_T::ST,//Leaper,
+	(int)SKILL_T::ST,//Scarab,
+	(int)SKILL_T::ST,//Scorpion,
+	(int)SKILL_T::ST,//Slime,
+	(int)SKILL_T::ARC,//Spider,
+};
 int** MAKE_SKILL_RANGE(SKILL_T skill)
 {
 	return nullptr;

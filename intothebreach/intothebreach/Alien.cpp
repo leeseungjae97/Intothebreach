@@ -7,14 +7,17 @@
 #include "mSceneManager.h"
 namespace m
 {
-	Alien::Alien(ALIENS mType, Vector2 _coord, int _range, int _hp, SKILL_T _type, int idx)
-		: Unit(_coord, _range, _hp, (int)_type)
+	Alien::Alien(ALIENS mType, Vector2 _coord, int idx)
+		: Unit(_coord
+			, ALIEN_MOVE_RANGE[(UINT)mType]
+			, ALIEN_HP[(UINT)mType]
+			, ALIEN_BASIC_WEAPON[(UINT)mType]
+		)
 		, mAlienType(mType)
 		, mIdx(idx)
 	{
 		vector<Image*> vImage = GetMImages();
 		vImage.resize((UINT)ALIEN_CONDITION::END);
-
 
 		for (UINT i = 0; i < (UINT)ALIEN_CONDITION::END; i++)
 		{
@@ -43,6 +46,9 @@ namespace m
 		}
 		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
 		SetState(STATE::Idle);
+
+		SetSkillIdx(0);
+		SetCurAttackSkill();
 	}
 	Alien::Alien(Alien& _origin)
 		: mAlienType(_origin.mAlienType)

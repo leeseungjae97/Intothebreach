@@ -19,6 +19,8 @@ namespace m
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
+		playerTurn = true;
+		curAttackAlien = 0;
 	}
 	Scene::~Scene()
 	{
@@ -66,7 +68,7 @@ namespace m
 				; iter != gameObjects.end(); )
 			{
 				if ((*iter)->GetState() == GameObject::STATE::Death
-					|| 
+					||
 					(*iter)->GetState() == GameObject::STATE::Delete)
 				{
 					deleteGameObjects.push_back((*iter));
@@ -288,16 +290,16 @@ namespace m
 					list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
 
-					while (!pathQueue.empty() && now.coord != curCoord)
+					while (!mechPathQueue.empty() && now.coord != curCoord)
 					{
-						now = pathQueue.back();
-						pathQueue.pop_back();
+						now = mechPathQueue.back();
+						mechPathQueue.pop_back();
 					}
 					directQue.push_back(Vector2(now.coord.x, now.coord.y));
 
-					while (!pathQueue.empty() && now.coord != prevCoord)
+					while (!mechPathQueue.empty() && now.coord != prevCoord)
 					{
-						now = pathQueue[now.parentIdx];
+						now = mechPathQueue[now.parentIdx];
 						directQue.push_back(Vector2(now.coord.x, now.coord.y));
 					}
 
@@ -516,7 +518,7 @@ namespace m
 
 		Vector2 stPos = mMouseFollower->GetFinalCoord();
 		queue.push_back(Vector2_1(stPos, 0, -1));
-		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+		mechPathQueue.push_back(Vector2_1(stPos, 0, -1));
 
 		SetMap(0, 0);
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
@@ -547,7 +549,7 @@ namespace m
 
 
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
-				pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				mechPathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
 				if (map[(int)dy][(int)dx] == MECH
 					|| map[(int)dy][(int)dx] == ALIEN) continue;
@@ -616,7 +618,7 @@ namespace m
 			for (int x = 0; x < mPosTiles[y].size(); x++)
 			{
 				ClearMap();
-				pathQueue.clear();
+				mechPathQueue.clear();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
@@ -743,7 +745,7 @@ namespace m
 
 		Vector2 stPos = mMouseFollower->GetFinalCoord();
 		queue.push_back(Vector2_1(stPos, 0, -1));
-		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+		mechPathQueue.push_back(Vector2_1(stPos, 0, -1));
 
 		SetMap(0, 0);
 
@@ -835,6 +837,51 @@ namespace m
 		}
 
 	}
+	void Scene::MoveAlienSkill()
+	{
+		if (playerTurn) return;
+
+		bool n = false;
+		for (int i = 0; i < mMechs.size(); i++)
+			if (mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
+		if (!n) return;
+
+		if (mAliens.size() == curAttackAlien) return;
+
+		Alien* curAlien = mAliens[curAttackAlien];
+
+		if (nullptr != curAlien->GetCurAttackSkill()
+			&& curAlien->GetCurAttackSkill()->GetStartFire())
+		{
+			curAlien->GetCurAttackSkill()->CheckDirection();
+		}
+
+		if (curAlien->GetCurAttackSkill()->CheckSkillFiring()) return;
+
+
+		if (curAlien->GetEndAttack())
+		{
+			curAlien->GetCurAttackSkill()->SetStartRender(false);
+			curAlien->GetCurAttackSkill()->SetStartFire(false);
+			curAlien->GetCurAttackSkill()->SetEndFire(false);
+			curAlien->SetEndAttack(false);
+			curAttackAlien++;
+			return;
+		}
+
+		Vector2 attackCoord = Vector2::Zero;
+
+		if (attackCoord != Vector2::Zero)
+		{
+			curAlien->SetSkillIdx(0);
+			curAlien->SetCurAttackSkill();
+			curAlien->SetEndAttack(true);
+			curAlien->DrawSkill(attackCoord);
+			curAlien->GetCurAttackSkill()->SetStartRender(true);
+			curAlien->GetCurAttackSkill()->SetStartFire(true);
+			//curAlien->GetCurAttackSkill()->SetEndFire(false);
+		}
+	}
 	void Scene::MoveSkill()
 	{
 		if (nullptr == mMouseFollower
@@ -886,6 +933,7 @@ namespace m
 		if (moveSave.size() != 0)
 		{
 			Mech* mech = mMechs[moveSave[moveSave.size() - 1].mechIdx];
+			mech->SetEndMove(false);
 			mech->SetCoord(Vector2(moveSave[moveSave.size() - 1].coord));
 			mech->SetFinalCoord(mech->GetCoord());
 			mech->SetPos(Vector2(moveSave[moveSave.size() - 1].pos));
@@ -893,8 +941,235 @@ namespace m
 			moveSave.pop_back();
 		}
 	}
+	bool Scene::AlienAttackCheck(Vector2 _alienCoord)
+	{
+		Alien* curAlien = mAliens[curAttackAlien];
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = _alienCoord;
+		queue.push_back(Vector2_1(stPos, 0, -1));
+
+		SetMap(0, 0);
+
+		// right, up, down, left
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+		Vector2 attackCoord = Vector2::Zero;
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+				if (skill_range_map[(int)dy][(int)dx] != 0) continue;
+				if (curAlien->GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
+				{
+					// 발견.
+					if (map[(int)dy][(int)dx] == MECH)
+					{
+						if (effectUnits[(int)dy][(int)dx][0]->GetState() == GameObject::STATE::Broken)
+						{
+							continue;
+						}
+						attackCoord.y = dy;
+						attackCoord.x = dx;
+						find = true;
+						break;
+					}
+
+				}
+				//bool rangeCheck = false;
+
+				// 스킬 반경 설정
+				//for (int _i = 0; _i < 4; _i++)
+				//{
+				//	if (stPos.x + direct[_i][0] == dx
+				//		&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
+				//}
+				// 4방향체크
+				if ((stPos.y != dy && stPos.x == dx)
+					|| (stPos.x != dx && stPos.y == dy))
+				{
+					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+					//if (curAlien->GetCurAttackSkill()->GetSkillType() != SKILL_T::ST
+					//	&& rangeCheck) continue;
+				}
+			}
+			if (find) break;
+		}
+
+		
+	}
+	void Scene::AlienMoveCheck()
+	{
+		//Alien* curAlien = mAliens[curAttackAlien];
+
+		//int moveLimit = curAlien->GetMoveRange();
+
+		//list<Vector2_1>queue;
+
+		//Vector2 stPos = curAlien->GetFinalCoord();
+		//queue.push_back(Vector2_1(stPos, 0, -1));
+
+		//SetMap(0, 0);
+		//float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		//bool find = false;
+
+		//int idx = -1;
+		//while (!queue.empty())
+		//{
+		//	Vector2_1 now = queue.front();
+		//	queue.pop_front();
+		//	idx++;
+		//	for (int i = 0; i < 4; i++)
+		//	{
+		//		float dx = now.coord.x + direct[i][0];
+		//		float dy = now.coord.y + direct[i][1];
+
+		//		if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+		//		if (stPos.x == dx
+		//			&& stPos.y == dy) continue;
+		//		if (map[(int)dy][(int)dx] == BUILDING) continue;
+		//		if (map[(int)dy][(int)dx] == MOVE) continue;
+		//		if (now.level >= moveLimit)
+		//		{
+		//			find = true;
+		//			break;
+		//		}
+		//		queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+		//		if (map[(int)dy][(int)dx] == MECH
+		//			|| map[(int)dy][(int)dx] == ALIEN) continue;
+		//		mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
+		//		map[(int)dy][(int)dx] = MOVE;
+		//		mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
+		//			, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
+		//	}
+		//	if (find) break;
+		//}
+		//DrawOutLineTile((int)MOVE_TILE_T::square_g_l);
+	}
+	void Scene::AlienMapCheck()
+	{
+		Alien* curAlien = mAliens[curAttackAlien];
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = curAlien->GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+
+		SetMap(0, 0);
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+				if (stPos.x == dx
+					&& stPos.y == dy) continue;
+				if (map[(int)dy][(int)dx] == BUILDING) continue;
+				if (map[(int)dy][(int)dx] == MOVE) continue;
+				if (map[(int)dy][(int)dx] == ALIEN) continue;
+
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+				//if (map[(int)dy][(int)dx] == MECH)
+				//{
+				//	curAlien->SetTargetCoord(Vector2(dx, dy));
+				//	find = true;
+				//	break;
+				//}
+				AlienAttackCheck(Vector2(dx, dy));
+
+				map[(int)dy][(int)dx] = MOVE;
+			}
+			if (find) break;
+		}
+	}
+	void Scene::MoveAlien()
+	{
+		if (playerTurn) return;
+
+		for (int i = 0; i < mMechs.size(); i++)
+			if (mMechs[i]->GetEndMove()) return;
+
+		Alien* curAlien = mAliens[curAttackAlien];
+
+		int moveLimit = curAlien->GetMoveRange();
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = curAlien->GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+
+		SetMap(0, 0);
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+				if (stPos.x == dx
+					&& stPos.y == dy) continue;
+				if (map[(int)dy][(int)dx] == BUILDING) continue;
+				if (map[(int)dy][(int)dx] == MOVE) continue;
+				if (now.level >= moveLimit)
+				{
+					find = true;
+					break;
+				}
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+				if (map[(int)dy][(int)dx] == MECH
+					|| map[(int)dy][(int)dx] == ALIEN) continue;
+				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
+				map[(int)dy][(int)dx] = MOVE;
+				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_g)
+					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_g));
+			}
+			if (find) break;
+		}
+		DrawOutLineTile((int)MOVE_TILE_T::square_g_l);
+	}
 	void Scene::MoveMech()
 	{
+		if (KEY_DOWN(KEYCODE_TYPE::SPACE))
+		{
+			if (!playerTurn) playerTurn = true;
+			else playerTurn = false;
+			// TODO: TURN END
+		}
+
 		if (nullptr != mMouseFollower)
 		{
 			if (!mMouseFollower->GetMove()) return;
@@ -913,10 +1188,6 @@ namespace m
 		if (KEY_DOWN(KEYCODE_TYPE::LSHIFT))
 		{
 			Scene::UndoMove();
-		}
-		if (KEY_DOWN(KEYCODE_TYPE::SPACE))
-		{
-			// TODO: TURN END
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)

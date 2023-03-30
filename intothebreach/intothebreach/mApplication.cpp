@@ -1,3 +1,4 @@
+#include "Resource.h"
 #include "mApplication.h"
 #include "mSceneManager.h"
 #include "mTime.h"
@@ -29,20 +30,21 @@ namespace m
 		mHeight = 720;
 
 		RECT rect = { 0, 0, (LONG)mWidth, (LONG)mHeight };
-		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);
+		//AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);
 
-		SetWindowPos(mHwnd
-			, nullptr
-			, 100
-			, 50
-			, rect.right - rect.left
-			, rect.bottom - rect.top
-			, 0);
+		//SetWindowPos(mHwnd
+		//	, nullptr
+		//	, 0
+		//	, 0
+		//	, rect.right - rect.left
+		//	, rect.bottom - rect.top
+		//	, 0);
 
-		ShowWindow(mHwnd, true);
+		//ShowWindow(mHwnd, true);
 
 		mBackBuffer = CreateCompatibleBitmap(mHdc, mWidth, mHeight);
 		mBackHdc = CreateCompatibleDC(mHdc);
+		mMenuBar = LoadMenu(nullptr, MAKEINTRESOURCE(IDI_CLIENT));
 
 		HBITMAP hOldBit = (HBITMAP)SelectObject(mBackHdc, mBackBuffer);
 		DeleteObject(hOldBit);
@@ -52,6 +54,8 @@ namespace m
 		Input::Initialize();
 		SceneManager::Initialize();
 		Camera::Initialize();
+
+		SetMenuBar(false);
 	}
 
 	void Application::Run()
@@ -60,7 +64,22 @@ namespace m
 		Render();
 		SceneManager::Destroy();
 	}
+	void Application::SetMenuBar(bool power)
+	{
+		SetMenu(mHwnd, mMenuBar);
 
+		RECT rect = { 0, 0, mWidth , mHeight };
+		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, power);
+
+		// 윈도우 크기 변경및 출력 설정
+		SetWindowPos(mHwnd
+			, nullptr, 0, 0
+			, rect.right - rect.left
+			, rect.bottom - rect.top
+			, 0);
+
+		ShowWindow(mHwnd, true);
+	}
 	void Application::Update()
 	{
 		Time::Update();

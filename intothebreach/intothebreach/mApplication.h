@@ -13,6 +13,7 @@ namespace m
 		void Update();
 		void Render();
 
+		void SetMenuBar(bool power);
 		
 		UINT GetResolutionWidth() { return mWidth; }
 		UINT GetResolutionHeight() { return mHeight; }
@@ -30,6 +31,7 @@ namespace m
 		HDC mHdc;
 		HBITMAP mBackBuffer;
 		HDC	mBackHdc;
+		HMENU mMenuBar;
 
 		UINT mWidth;
 		UINT mHeight;

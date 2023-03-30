@@ -41,6 +41,13 @@ namespace m
 	public:
 		void MoveSkill();
 		void MoveMech();
+
+		void MoveAlienSkill();
+		void MoveAlien();
+		bool AlienAttackCheck(Vector2 _alienCoord);
+		void AlienMoveCheck();
+		void AlienMapCheck();
+
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
@@ -81,6 +88,8 @@ namespace m
 		void SetAlphaFollower(Mech* _mM);
 		void SetAlphaState(GameObject::STATE state);
 
+
+
 	private:
 		void SetMap(int y, int x);
 
@@ -101,13 +110,17 @@ namespace m
 
 		BUILDINGS mStruturesTiles;
 
-		vector<Vector2_1> pathQueue;
+		vector<Vector2_1> mechPathQueue;
+
 		vector<Mech*> mMechs;
 		vector<Alien*> mAliens;
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
 
+		bool playerTurn;
+
+		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// ¿Ãµø BFS ∏ 
 		int skill_range_map[TILE_Y][TILE_X]{};	// Ω∫≈≥ BFS ∏ 
 	};

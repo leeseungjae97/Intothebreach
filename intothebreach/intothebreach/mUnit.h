@@ -43,6 +43,7 @@ namespace m
 		void SetSkillIdx(int _idx);
 		void SetMove(bool _move) { move = _move; }
 		void SetEndMove(bool _endMove) { endMove = _endMove; }
+		void SetEndAttack(bool _endAttack) { endAttack = _endAttack; }
 
 		void Hit(int damage)
 		{
@@ -65,6 +66,8 @@ namespace m
 		bool CheckSkillFiring();
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
+		bool GetEndAttack() { return endAttack; }
+
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
 

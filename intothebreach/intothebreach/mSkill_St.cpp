@@ -113,11 +113,15 @@ namespace m
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Scene::TILES mPosTiles = scene->GetPosTiles();
-		Mech* unit = scene->GetMouseFollower();
+		Unit* unit = nullptr;
 		Vector2 pos = GetPos();
 		Vector2 scale = GetScale();
 		Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
 
+		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER)
+		{
+			unit = GetOwner();
+		}else unit = scene->GetMouseFollower();
 		for (int y = 0; y < mPosTiles.size(); y++)
 		{
 			for (int x = 0; x < mPosTiles[y].size(); x++)
@@ -141,12 +145,14 @@ namespace m
 						}
 						SetEndFire(false);
 						SetStartFire(false);
+						SetStartRender(false);
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
 						SetEndFire(false);
 						SetStartFire(false);
+						SetStartRender(false);
 						return;
 					}
 				}
