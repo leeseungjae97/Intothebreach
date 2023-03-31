@@ -91,7 +91,7 @@ namespace m
 		Vector2 mPos = mStPos;
 		Image* im = Resources::Load<Image>(L"line", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
-		int len = (mFinalEdPos - mStPos).Length() / im->GetWidth() / 2;
+		int len = (int)(mFinalEdPos - mStPos).Length() / im->GetWidth() / 2;
 		for (int i = 0; i < len; i++)
 		{
 			mPos.x += Missile_vec.x * im->GetWidth() * 2;
@@ -117,11 +117,27 @@ namespace m
 		Vector2 pos = GetPos();
 		Vector2 scale = GetScale();
 		Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
+		Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
+
+		Vector2 bigRhombusDownPos(
+			mPosTiles[0][7]->GetPos().x + mPosTiles[0][7]->GetScale().x,
+			mPosTiles[7][7]->GetPos().y + mPosTiles[7][7]->GetScale().y);
+
+		Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
+
+		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, rPos))
+		{
+			SetEndFire(false);
+			SetStartFire(false);
+			SetStartRender(false);
+			return;
+		}
 
 		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER)
 		{
 			unit = GetOwner();
 		}else unit = scene->GetMouseFollower();
+
 		for (int y = 0; y < mPosTiles.size(); y++)
 		{
 			for (int x = 0; x < mPosTiles[y].size(); x++)

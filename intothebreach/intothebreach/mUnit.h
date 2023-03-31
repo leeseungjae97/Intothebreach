@@ -45,6 +45,13 @@ namespace m
 		void SetEndMove(bool _endMove) { endMove = _endMove; }
 		void SetEndAttack(bool _endAttack) { endAttack = _endAttack; }
 
+		void ClearSkillRangeMap();
+		void DrawOutLineTile(int _type);
+		void DrawSkillRangeTile();
+		void ActiveSkill();
+		void DrawMoveRangeTile();
+		void DrawMoveDirectionTile();
+
 		void Hit(int damage)
 		{
 			if (curHp < damage) curHp = 0;
@@ -67,6 +74,9 @@ namespace m
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
 		bool GetEndAttack() { return endAttack; }
+		
+		int GetSkillMap(int y, int x) { return skill_range_map[y][x]; }
+		void SetSkillMap(int y, int x, int num) { skill_range_map[y][x] = num; }
 
 		vector<Image*>& GetMImages() { return mImages; }
 		Animator* GetAnimator() { return mAnimator; }
@@ -122,9 +132,12 @@ namespace m
 		Weapon* mWeapon;	// 미사용
 		Pilot* mPilot;		// 미사용
 		//vector<SKILL_T> mSkills;
+		vector<Vector2_1> pathQueue;
 		vector<Skill*> mSkills;
 		Skill* curAttactSkill;
 		vector<Image*> mImages; // 전체 이미지
+
+		int skill_range_map[TILE_Y][TILE_X]{};	// 스킬 BFS 맵
 	};
 }
 

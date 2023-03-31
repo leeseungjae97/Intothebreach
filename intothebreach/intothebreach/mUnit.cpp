@@ -6,6 +6,7 @@
 #include "mSelectGDI.h"
 #include "mSkill.h"
 #include "func.h"
+#include "mInput.h"
 namespace m
 {
 	Unit::Unit(Vector2 _coord, int _range, int hp, int _type)
@@ -60,6 +61,7 @@ namespace m
 	void Unit::Update()
 	{
 		GameObject::Update();
+		pathQueue.clear();
 	}
 	void Unit::Render(HDC hdc)
 	{
@@ -132,6 +134,421 @@ namespace m
 	{
 		GameObject::Release();
 	}
+	void Unit::DrawMoveDirectionTile()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		if (CheckSkillFiring()) return;
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				Tile* p = scene->GetPosTile(y, x);
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+				{
+
+					// 이동가능 거리 인지 확인
+					if (scene->GetMap(y, x) == MECH)
+					{
+						if (GetCoord().x != x &&
+							GetCoord().y != y)
+						{
+							continue;
+						}
+					}
+					if (GetFinalCoord() == GetCoord()) continue;
+					if (scene->GetMap(y, x) != MOVE)
+					{
+						scene->SetAlphaState(GameObject::STATE::Death);
+						continue;
+					}
+
+					Vector2 prevCoord = GetFinalCoord();
+					Vector2 curCoord = GetCoord();
+
+					scene->SetAlphaState(GameObject::STATE::Idle);
+
+					list<Vector2> directQue;
+					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
+
+					while (!pathQueue.empty() && now.coord != curCoord)
+					{
+						now = pathQueue.back();
+						pathQueue.pop_back();
+					}
+					directQue.push_back(Vector2(now.coord.x, now.coord.y));
+
+					while (!pathQueue.empty() && now.coord != prevCoord)
+					{
+						now = pathQueue[now.parentIdx];
+						directQue.push_back(Vector2(now.coord.x, now.coord.y));
+					}
+
+					MOVE_ARROW_T type = (MOVE_ARROW_T)0;
+
+					Vector2 coord = Vector2::Zero;
+					Vector2 nCoord = Vector2::Zero;
+
+					vector<Vector2> mVec;
+					while (!directQue.empty())
+					{
+						coord = directQue.back();
+						mVec.push_back(Vector2(coord.x, coord.y));
+						directQue.pop_back();
+						if (!directQue.empty())
+						{
+							nCoord = directQue.back();
+							// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
+							if (coord.y != nCoord.y)
+							{
+								type = MOVE_ARROW_T::ARROW_D_U;
+								if (coord.y < nCoord.y)
+								{
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_L_D;
+								}
+								if (coord.y > nCoord.y)
+								{
+									if (mVec.size() > 1 && coord.x < mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_R_U;
+									if (mVec.size() > 1 && coord.x > mVec[mVec.size() - 2].x) type = MOVE_ARROW_T::ARROW_COR_L_U;
+								}
+							}
+							else if (coord.x != nCoord.x)
+							{
+								type = MOVE_ARROW_T::ARROW_L_R;
+								if (coord.x < nCoord.x)
+								{
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_R_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_R_U;
+								}
+								if (coord.x > nCoord.x)
+								{
+									if (mVec.size() > 1 && coord.y < mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_L_D;
+									if (mVec.size() > 1 && coord.y > mVec[mVec.size() - 2].y) type = MOVE_ARROW_T::ARROW_COR_L_U;
+								}
+							}
+							if (coord == prevCoord)
+							{
+								if (coord.x < nCoord.x) type = MOVE_ARROW_T::ARROW_ST_L;
+								if (coord.x > nCoord.x) type = MOVE_ARROW_T::ARROW_ST_R;
+								if (coord.y < nCoord.y) type = MOVE_ARROW_T::ARROW_ST_U;
+								if (coord.y > nCoord.y) type = MOVE_ARROW_T::ARROW_ST_D;
+							}
+						}
+						if (mVec.size() > 1 && coord == curCoord)
+						{
+							if (mVec[mVec.size() - 2].x < curCoord.x) type = MOVE_ARROW_T::ARROW_R;
+							if (mVec[mVec.size() - 2].x > curCoord.x) type = MOVE_ARROW_T::ARROW_L;
+							if (mVec[mVec.size() - 2].y < curCoord.y) type = MOVE_ARROW_T::ARROW_D;
+							if (mVec[mVec.size() - 2].y > curCoord.y) type = MOVE_ARROW_T::ARROW_U;
+						}
+						if (coord.x < 0 || coord.y < 0) continue;
+						scene->SetArrowTiles((int)coord.y, (int)coord.x, type);
+					}
+				}
+			}
+		}
+	}
+	void Unit::DrawMoveRangeTile()
+	{
+		//if (mMouseFollower->CheckSkillFiring()) return;
+		Scene* scene = SceneManager::GetActiveScene();
+		if (GetLayerType() == LAYER_TYPE::MONSTER && scene->GetPlayerTurn()) return;
+		if (CheckSkillFiring()) return;
+		int moveLimit = GetMoveRange();
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+
+		scene->SetMap();
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= TILE_X || dy >= TILE_Y) continue;
+				if (stPos.x == dx
+					&& stPos.y == dy) continue;
+				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) == MOVE) continue;
+				if (now.level >= moveLimit)
+				{
+					find = true;
+					break;
+				}
+
+
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				if (GetLayerType() == LAYER_TYPE::PLAYER)
+					pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+				if (scene->GetMap((int)dy, (int)dx) == MECH
+					|| scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				
+				scene->SetMap((int)dy, (int)dx, MOVE);
+				scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+			}
+			if (find) break;
+		}
+		DrawOutLineTile((int)MOVE_TILE_T::square_g_l);
+	}
+	void Unit::DrawOutLineTile(int _type)
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				if (scene->GetPosTiles()[y][x]->GetTileType() == TILE_T::MOVE_RANGE)
+				{
+					// x,y 타일 주변 4방향으로 검사해서 MOVE tile이 아니면 외곽선 추가.
+					if (x - 1 >= 0
+						&& scene->GetPosTiles()[y][x - 1]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						scene->SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type));
+					}
+					if (x + 1 < scene->GetPosTiles()[y].size()
+						&& scene->GetPosTiles()[y][x + 1]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						scene->SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 1));
+					}
+					if (y - 1 >= 0
+						&& scene->GetPosTiles()[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						scene->SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 2));
+					}
+					if (y + 1 < scene->GetPosTiles().size()
+						&& scene->GetPosTiles()[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						scene->SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 3));
+					}
+				}
+			}
+		}
+	}
+	void Unit::ClearSkillRangeMap()
+	{
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				skill_range_map[y][x] = 0;
+			}
+		}
+	}
+	void Unit::ActiveSkill()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		Vector2 endCoord = Vector2::Minus;
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				Tile* p = scene->GetPosTiles()[y][x];
+				if (p->GetCoord() == GetFinalCoord()) continue;
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+				{
+					if (skill_range_map[(int)p->GetCoord().y][(int)p->GetCoord().x] != MOVE)
+					{
+						GetCurAttackSkill()->SetStartRender(false);
+						continue;
+					}
+
+					if (GetCurAttackSkill()->GetSkillType()
+						== SKILL_T::ST)
+					{
+						int st = 0;
+						int end = 0;
+						int IDVar = 1;
+						bool cY = false;
+						if (p->GetCoord().x > GetCoord().x)
+						{
+							st = (int)GetCoord().x + 1;
+							end = TILE_X - 1;
+							endCoord = Vector2((float)end, p->GetCoord().y);
+						}
+						if (p->GetCoord().x < GetCoord().x)
+						{
+							st = (int)GetCoord().x - 1;
+							end = 0;
+							endCoord = Vector2((float)end, p->GetCoord().y);
+						}
+						if (p->GetCoord().y > GetCoord().y)
+						{
+							st = (int)GetCoord().y + 1;
+							end = TILE_Y - 1;
+							endCoord = Vector2(p->GetCoord().x, (float)end);
+							cY = true;
+						}
+						if (p->GetCoord().y < GetCoord().y)
+						{
+							st = (int)GetCoord().y - 1;
+							end = 0;
+							endCoord = Vector2(p->GetCoord().x, (float)end);
+							cY = true;
+						}
+						if (end == 0)
+						{
+							IDVar *= -1;
+						}
+						for (int i = st; i != end; i += IDVar)
+						{
+							if (cY && scene->GetEffectUnit(i, (int)GetCoord().x).size() != 0)
+							{
+								endCoord = Vector2(p->GetCoord().x, (float)i);
+								break;
+							}
+							if (!cY && scene->GetEffectUnit((int)GetCoord().y, i).size() != 0)
+							{
+								endCoord = Vector2((float)i, p->GetCoord().y);
+								break;
+							}
+						}
+					}
+					if (GetCurAttackSkill()->GetSkillType()
+						== SKILL_T::ARC)
+					{
+						endCoord = p->GetCoord();
+						break;
+					}
+				}
+			}
+		}
+		if (endCoord != Vector2::Minus)
+		{
+			DrawSkill(endCoord);
+			GetCurAttackSkill()->SetStartRender(true);
+		}
+		// 공격완료하면 clear
+		ClearSkillRangeMap();
+	}
+	//void Unit::DrawSkillRangeTile()
+	//{
+	//	list<Vector2_1>queue;
+
+	//	Vector2 stPos = GetFinalCoord();
+	//	queue.push_back(Vector2_1(stPos, 0, -1));
+	//	mechPathQueue.push_back(Vector2_1(stPos, 0, -1));
+
+	//	SetMap();
+
+	//	// right, up, down, left
+	//	float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+	//	bool find = false;
+
+	//	int idx = -1;
+	//	while (!queue.empty())
+	//	{
+	//		Vector2_1 now = queue.front();
+	//		queue.pop_front();
+	//		idx++;
+	//		for (int i = 0; i < 4; i++)
+	//		{
+	//			float dx = now.coord.x + direct[i][0];
+	//			float dy = now.coord.y + direct[i][1];
+
+	//			if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
+	//			if (skill_range_map[(int)dy][(int)dx] != 0) continue;
+	//			if (mMouseFollower->GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
+	//			{
+	//				if (map[(int)dy][(int)dx] != 0) continue;
+	//			}
+	//			bool rangeCheck = false;
+
+	//			// 스킬 반경 설정
+	//			for (int _i = 0; _i < 4; _i++)
+	//			{
+	//				if (stPos.x + direct[_i][0] == dx
+	//					&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
+	//			}
+	//			// 4방향체크
+	//			if ((stPos.y != dy && stPos.x == dx)
+	//				|| (stPos.x != dx && stPos.y == dy))
+	//			{
+	//				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+	//				if (mMouseFollower->GetCurAttackSkill()->GetSkillType() != SKILL_T::ST
+	//					&& rangeCheck) continue;
+
+	//				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
+	//				skill_range_map[(int)dy][(int)dx] = MOVE;
+	//				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
+	//					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_r));
+	//			}
+	//		}
+	//	}
+	//	DrawOutLineTile((int)MOVE_TILE_T::square_r_l);
+	//}
+	void Unit::DrawSkillRangeTile()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		list<Vector2_1>queue;
+
+		Vector2 stPos = GetFinalCoord();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		pathQueue.push_back(Vector2_1(stPos, 0, -1));
+
+		scene->SetMap();
+
+		// right, up, down, left
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
+				if (skill_range_map[(int)dy][(int)dx] != 0) continue;
+				if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
+				{
+					if (scene->GetMap((int)dy, (int)dx) != 0) continue;
+				}
+				bool rangeCheck = false;
+
+				// 스킬 반경 설정
+				for (int _i = 0; _i < 4; _i++)
+				{
+					if (stPos.x + direct[_i][0] == dx
+						&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
+				}
+				// 4방향체크
+				if ((stPos.y != dy && stPos.x == dx)
+					|| (stPos.x != dx && stPos.y == dy))
+				{
+					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+
+					if (GetCurAttackSkill()->GetSkillType() != SKILL_T::ST
+						&& rangeCheck) continue;
+
+					skill_range_map[(int)dy][(int)dx] = MOVE;
+					scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+				}
+			}
+		}
+		DrawOutLineTile((int)MOVE_TILE_T::square_r_l);
+	}
 	bool Unit::CheckSkillFiring()
 	{
 		if (nullptr == this) return false;
@@ -150,7 +567,7 @@ namespace m
 	void Unit::DrawSkill(Vector2 pos)
 	{
 		curAttactSkill = mSkills[skillIdx];
-		if (pos == Vector2::Zero) return;
+		if (pos == Vector2::Minus) return;
 		if (nullptr == curAttactSkill)return;
 		curAttactSkill->ReInit(this->GetFinalCoord(), pos);
 	}

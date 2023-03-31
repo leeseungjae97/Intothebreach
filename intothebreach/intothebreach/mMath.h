@@ -134,6 +134,18 @@ namespace m {
 		}
     };
 
+    struct Vector2_1
+    {
+        Vector2 coord;
+        int level;
+        int parentIdx;
+    };
+    struct Vector2_2
+    {
+        Vector2 coord;
+        Vector2 pos;
+        int mechIdx;
+    };
 	typedef Vector2 Pos;
 	typedef Vector2 Size;
 

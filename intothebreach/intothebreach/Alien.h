@@ -23,13 +23,20 @@ namespace m {
         virtual void water() override;
         virtual void emerge() override;
 
+        bool AlienMoveToAttackCheck(Vector2 _alienCoord, int curAlien);
+        void AlienMoveCheck(int& curAlien);
+        void AlienMapCheck(int curAlien);
+
         void SetTargetCoord(Vector2 _coord) { tarGetCoord = _coord; }
         Vector2 GetTargetCoord() { return tarGetCoord; }
+        void SetFinalMoveCoord(Vector2 _coord) { finalMoveCoord = _coord; }
+        Vector2 GetFinalMoveCoord() { return finalMoveCoord; }
 
     private:
         ALIENS mAlienType;
         Vector2 tarGetCoord;
-        vector<Scene::Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
+        Vector2 finalMoveCoord;
+        vector<Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
 
         int mIdx;
     };

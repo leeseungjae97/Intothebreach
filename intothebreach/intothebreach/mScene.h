@@ -14,18 +14,7 @@ namespace m
 		typedef vector<vector<Tile*>> TILES;
 		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
-		struct Vector2_1
-		{
-			Vector2 coord;
-			int level;
-			int parentIdx;
-		};
-		struct Vector2_2
-		{
-			Vector2 coord;
-			Vector2 pos;
-			int mechIdx;
-		};
+	
 		Scene();
 		virtual ~Scene();
 
@@ -43,16 +32,15 @@ namespace m
 		void MoveMech();
 
 		void MoveAlienSkill();
-		void MoveAlien();
-		bool AlienAttackCheck(Vector2 _alienCoord);
-		void AlienMoveCheck();
-		void AlienMapCheck();
+		//bool AlienMoveToAttackCheck(Vector2 _alienCoord);
+		//void AlienMoveCheck();
+		//void AlienMapCheck();
 
+		//void DrawSkillRangeTile();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
 		void HighlightTile();
-		void DrawSkillRangeTile();
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
 		void DrawFootTile();
@@ -63,23 +51,30 @@ namespace m
 		Vector2 GetCoordCenterPos(Vector2 _coord);
 
 		TILES& GetPosTiles() { return mPosTiles; }
+		Tile* GetPosTile(int y, int x) { return mPosTiles[y][x]; };
 		TILES& GetTiles() { return mTiles; }
 		TILES& GetArrowTiles() { return mArrowTiles; }
+		TILES& GetBoundaryTiles() { return mBoundaryTiles; }
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
 		vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
-		vector<Unit*>& GetEffectUnit(int _y, int _x) { return effectUnits[_y][_x]; }
+		vector<Unit*>& GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
-		void DrawMoveRangeTile();
-		void DrawMoveDirectionTile();
-		void DrawOutLineTile(int _type);
+		//void DrawMoveRangeTile(Unit* unit);
+		//void DrawOutLineTile(int _type);
+		//void ActiveSkill();
+		//void ClearSkillRangeMap();
+		//void DrawMoveDirectionTile();
 		void CheckMouseOutOfMapRange();
+		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
+		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
 		void RobotDrag();
-		void ActiveSkill();
-		void ClearSkillRangeMap();
 		void MoveEffectUnit(Unit* unit);
 		void MoveEffectUnit(Unit* unit, Vector2 _coord);
-		//void CheckSkillDirection();
+		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);
+
+
+		bool GetPlayerTurn() { return playerTurn; }
 
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
@@ -87,11 +82,13 @@ namespace m
 		void SetMouseFollower(Mech* _mM);
 		void SetAlphaFollower(Mech* _mM);
 		void SetAlphaState(GameObject::STATE state);
+		void SetPlayerTurn(bool _playerTurn) { playerTurn = _playerTurn; }
+
+		int GetMap(int y, int x) { return map[y][x]; }
+		void SetMap(int y, int x, int value) { map[y][x] = value; }
+		void SetMap();
 
 
-
-	private:
-		void SetMap(int y, int x);
 
 	private:
 		vector<Layer> mLayers;
@@ -110,7 +107,8 @@ namespace m
 
 		BUILDINGS mStruturesTiles;
 
-		vector<Vector2_1> mechPathQueue;
+		//vector<Vector2_1> mechPathQueue;
+		//vector<Vector2_1> alienPathQueue;
 
 		vector<Mech*> mMechs;
 		vector<Alien*> mAliens;
@@ -122,6 +120,5 @@ namespace m
 
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// ¿Ãµø BFS ∏ 
-		int skill_range_map[TILE_Y][TILE_X]{};	// Ω∫≈≥ BFS ∏ 
 	};
 }

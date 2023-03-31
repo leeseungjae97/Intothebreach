@@ -4,6 +4,8 @@
 #include "mResources.h"
 #include "mInput.h"
 #include "mScene.h"
+#include "mSkill.h"
+#include "mTile.h"
 #include "mSceneManager.h"
 namespace m
 {
@@ -111,6 +113,169 @@ namespace m
 			break;
 		default:
 			break;
+		}
+	}
+	bool Alien::AlienMoveToAttackCheck(Vector2 _alienCoord, int curAlien)
+	{
+		if (mIdx != curAlien) return false;
+		Scene* scene = SceneManager::GetActiveScene();
+		ClearSkillRangeMap();
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = _alienCoord;
+		queue.push_back(Vector2_1(stPos, 0, -1));
+
+		scene->SetMap();
+
+		// right, up, down, left
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		//Vector2 attackCoord = Vector2::Zero;
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= TILE_X - 1|| dy >= TILE_Y - 1) continue;
+				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
+				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				if ((stPos.y != dy && stPos.x == dx)
+					|| (stPos.x != dx && stPos.y == dy))
+				{
+					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+					SetSkillMap((int)dy, (int)dx, MOVE);
+					if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
+					{
+						// ¹ß°ß.
+						if (scene->GetMap((int)dy, (int)dx) == MECH)
+						{
+							if (scene->GetEffectUnit((int)dy, (int)dx)[0]->GetState() == GameObject::STATE::Broken)
+							{
+								continue;
+							}
+							SetTargetCoord(Vector2(dx, dy));
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	void Alien::AlienMoveCheck(int& curAlien)
+	{
+		if (mIdx != curAlien) return;
+
+		Scene* scene = SceneManager::GetActiveScene();
+		int moveLimit = GetMoveRange();
+
+		if (alienPathQueue.size() == 0)
+		{
+			//curAlien->DrawSkill(curAlien->GetTargetCoord());
+			//curAlien->GetCurAttackSkill()->SetStartRender(true);
+			return;
+		}
+
+		vector<Vector2> directQue;
+		Vector2_1 now = alienPathQueue.back();
+
+		while (now.coord != GetCoord())
+		{
+			directQue.push_back(Vector2(now.coord.x, now.coord.y));
+			now = alienPathQueue[now.parentIdx];
+		}
+		alienPathQueue.clear();
+
+		if (directQue.size() == 0) return;
+
+		if (moveLimit >= directQue.size()) moveLimit = 0;
+
+		Vector2 _coord = directQue[moveLimit > 0 ? moveLimit : 0];
+		Vector2 _pos = scene->GetPosTiles()[(int)_coord.y][(int)_coord.x]->GetCenterPos();
+
+		scene->MoveEffectUnit(this, _coord);
+		SetPos(_pos);
+		SetFinalPos(_pos);
+		SetCoord(_coord);
+		SetFinalCoord(_coord);
+
+		if (GetFinalMoveCoord() == _coord)
+		{
+			DrawSkill(GetTargetCoord());
+			GetCurAttackSkill()->SetStartRender(true);
+		}
+
+		curAlien++;
+		if (curAlien >= scene->GetAliens().size())
+		{
+			scene->SetPlayerTurn(true);
+			curAlien = 0;
+		}
+	}
+	void Alien::AlienMapCheck(int curAlien)
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		alienPathQueue.clear();
+		DrawMoveRangeTile();
+		int moveLimit = GetMoveRange();
+
+		list<Vector2_1>queue;
+
+		Vector2 stPos = GetFinalCoord();
+
+		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y), curAlien))
+		{
+			scene->SetPosTiles((int)stPos.y, (int)stPos.x
+				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+			SetFinalMoveCoord(Vector2(stPos.x, stPos.y));
+			return;
+		}
+
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		alienPathQueue.push_back(Vector2_1(stPos, 0, -1));
+		scene->SetMap();
+		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+
+		bool find = false;
+
+		int idx = -1;
+		while (!queue.empty())
+		{
+			Vector2_1 now = queue.front();
+			queue.pop_front();
+			idx++;
+			for (int i = 0; i < 4; i++)
+			{
+				float dx = now.coord.x + direct[i][0];
+				float dy = now.coord.y + direct[i][1];
+
+				if (dx < 0 || dy < 0 || dx >= TILE_X - 1 || dy >= TILE_Y - 1) continue;
+				if (stPos.x == dx
+					&& stPos.y == dy) continue;
+				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+
+				if (AlienMoveToAttackCheck(Vector2(dx, dy), curAlien))
+				{
+					scene->SetPosTiles((int)stPos.y, (int)stPos.x
+						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					SetFinalMoveCoord(Vector2(dx, dy));
+					find = true;
+				}
+
+				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				alienPathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				if (find) break;
+			}
+			if (find) break;
 		}
 	}
 	void Alien::Render(HDC hdc)

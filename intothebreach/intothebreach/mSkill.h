@@ -18,9 +18,10 @@ namespace m
 		virtual void ReInit(Vector2 stPos, Vector2 enPos);
 		virtual void Active(HDC hdc);
 		virtual void GuideWire(HDC hdc);
-		virtual void PushUnit(float(*direct)[2], int size);
+		virtual void PushUnit(int(*direct)[2], int size);
 		virtual void CheckDirection();
-		void DrawPushTile(float (*direct)[2], int size);
+		
+		void DrawPushTile(int (*direct)[2], int size);
 		void ClearPushTile();
 		Vector2 GetEndCoord() { return endCoord; }
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }

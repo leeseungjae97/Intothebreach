@@ -45,8 +45,8 @@ namespace m {
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 
 		Mech* mech1 = object::Instantiate(Vector2(0, 0), LAYER_TYPE::PLAYER, MECHS::artillery);
-		Mech* mech2 = object::Instantiate(Vector2(0, 7), LAYER_TYPE::PLAYER, MECHS::tank);
-		Mech* mech3 = object::Instantiate(Vector2(7, 0), LAYER_TYPE::PLAYER, MECHS::punch);
+		//Mech* mech2 = object::Instantiate(Vector2(0, 7), LAYER_TYPE::PLAYER, MECHS::tank);
+		//Mech* mech3 = object::Instantiate(Vector2(7, 0), LAYER_TYPE::PLAYER, MECHS::punch);
 
 		Alien* alien1 = object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, ALIENS::Hornet);
 		Alien* alien2 = object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, ALIENS::Leaper);
@@ -58,7 +58,7 @@ namespace m {
 		Scene::MoveMech();
 		Scene::MoveSkill();
 		Scene::CheckNumInput();
-		Scene::AlienAttackCheck();
+		Scene::MoveAlienSkill();
 		//Scene::MoveAlien();
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);

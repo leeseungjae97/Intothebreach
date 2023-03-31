@@ -116,7 +116,7 @@ namespace m {
 	void Skill::GuideWire(HDC hdc)
 	{
 	}
-	void Skill::DrawPushTile(float (*direct)[2], int size)
+	void Skill::DrawPushTile(int (*direct)[2], int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -124,8 +124,8 @@ namespace m {
 		// right, up, down, left
 		for (int i = 0; i < size; i++)
 		{
-			int dy = GetEndCoord().y + direct[i][0];
-			int dx = GetEndCoord().x + direct[i][1];
+			int dy = (int)GetEndCoord().y + direct[i][0];
+			int dx = (int)GetEndCoord().x + direct[i][1];
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 
 			ARROW_TILE_T _type = ARROW_TILE_T::arrow_down;
@@ -135,7 +135,7 @@ namespace m {
 			else
 				_type = (ARROW_TILE_T)(i);
 
-			Tile* tile = new Tile(Vector2(dx, dy));
+			Tile* tile = new Tile(Vector2((float)dx, (float)dy));
 			tile->SetPos(scene->GetPosTiles()[dy][dx]->GetCenterPos());
 
 			tile->SetTileTexture(
@@ -146,21 +146,21 @@ namespace m {
 			scene->AddGameObject(tile, LAYER_TYPE::TILE);
 		}
 	}
-	void Skill::PushUnit(float(*direct)[2], int size)
+	void Skill::PushUnit(int (*direct)[2], int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		for (int i = 0; i < size; i++)
 		{
-			int dy = GetEndCoord().y + direct[i][0];
-			int dx = GetEndCoord().x + direct[i][1];
+			int dy = (int)GetEndCoord().y + direct[i][0];
+			int dx = (int)GetEndCoord().x + direct[i][1];
 
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 			if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
 			for (int _i = 0; _i < scene->GetEffectUnit(dy, dx).size(); _i++)
 			{
 				Unit* unit = scene->GetEffectUnit(dy, dx)[_i];
-				int _dy = dy + direct[i][0];
-				int _dx = dx + direct[i][1];
+				int _dy = (int)dy + direct[i][0];
+				int _dx = (int)dx + direct[i][1];
 				if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
 				scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
 			}

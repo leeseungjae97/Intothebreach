@@ -128,7 +128,7 @@ namespace m
 			absMD = abs(vec.x - mStPos.x);
 			diff = absD - absMD;
 		}
-		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		Skill::DrawPushTile(direct, 4);
 	}
 	void Skill_Arc::CheckDirection()
@@ -136,7 +136,7 @@ namespace m
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		// right, up, down, left
-		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size() != 0)
 		{
 			for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
