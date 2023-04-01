@@ -33,8 +33,8 @@ namespace m
 		HDC	mBackHdc;
 		HMENU mMenuBar;
 
-		UINT mWidth;
-		UINT mHeight;
+		LONG mWidth;
+		LONG mHeight;
 
 		Vector2 mPos;
 		HBRUSH	m_arrBrush[(UINT)BRUSH_TYPE::END];

@@ -36,8 +36,12 @@ namespace m::object
 
 	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type, MECHS mType)
 	{
-		Mech* gameObj = new Mech(mType, coord, MECH_MOVE_RANGE[(UINT)mType], MECH_HP[(UINT)mType]);
 		Scene* scene = SceneManager::GetActiveScene();
+		Mech* gameObj 
+			= new Mech(mType, coord
+				, MECH_MOVE_RANGE[(UINT)mType]
+				, MECH_HP[(UINT)mType]
+				, scene->GetMechs().size());
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
@@ -53,7 +57,7 @@ namespace m::object
 		if (type == LAYER_TYPE::PLAYER)
 		{
 			scene->GetMechs().push_back(gameObj);
-			gameObj->SetMechIdx(scene->GetMechs().size() - 1);
+			//gameObj->SetMIdx(scene->GetMechs().size() - 1);
 			gameObj->SetMove(true);
 		}
 
@@ -167,12 +171,12 @@ namespace m::bitmap
 		}
 		_theta = angle * PI / 180.f;
 
-		wchar_t szFloat[500] = {};
-		swprintf_s(szFloat, 500, L"angle : %f, theta : %f", _theta * 180.f / PI, _theta);
-		size_t iLen = wcsnlen_s(szFloat, 500);
-		//left top right bottom
-		RECT rt = { 50, 120, 400, 140 };
-		DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
+		//wchar_t szFloat[500] = {};
+		//swprintf_s(szFloat, 500, L"angle : %f, theta : %f", _theta * 180.f / PI, _theta);
+		//size_t iLen = wcsnlen_s(szFloat, 500);
+		////left top right bottom
+		//RECT rt = { 50, 120, 400, 140 };
+		//DrawText(hdc, szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
 
 		float cos_ang = cos(_theta);
 		float sin_ang = sin(_theta);

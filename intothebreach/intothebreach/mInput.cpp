@@ -24,8 +24,6 @@ namespace m
 
 	vector<Input::Key> Input::mKeys;
 	m::Vector2 Input::mCurMousePos;
-	float Input::keyDelay = 0.f;
-	float Input::pKeyDelay = 1.f;
 	void Input::Initialize()
 	{
 		for (UINT i = 0; i < (UINT)KEYCODE_TYPE::END; i++)
@@ -34,7 +32,6 @@ namespace m
 			keyInfo.key = (KEYCODE_TYPE)i;
 			keyInfo.state = KEY_STATE::NONE;
 			keyInfo.bPressed = false;
-			keyInfo.bClicked = false;
 			mKeys.push_back(keyInfo);
 		}
 	}
@@ -46,15 +43,6 @@ namespace m
 		if (NULL != hwnd) {
 
 			for (UINT i = 0; i < (UINT)KEYCODE_TYPE::END; i++) {
-				if (GetAsyncKeyState(ASCII[i]) & 0x8001)
-				{
-					mKeys[i].bClicked += pKeyDelay;
-					pKeyDelay *= -1;
-				}
-				//if (GetAsyncKeyState(ASCII[i]) & 0x0001)
-				//{
-				//	mKeys[i].bClicked = false;
-				//}
 				if (GetAsyncKeyState(ASCII[i]) & 0x8000) {
 					
 					// 이전 프레임에도 눌려 있었다

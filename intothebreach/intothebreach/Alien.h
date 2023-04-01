@@ -9,7 +9,7 @@ namespace m {
         public Unit {
     public:
 
-        Alien(ALIENS mType, Vector2 _coord, int idx);
+        Alien(ALIENS mType, Vector2 _coord, size_t idx);
         Alien(Alien& _origin);
         ~Alien();
 
@@ -37,8 +37,6 @@ namespace m {
         Vector2 tarGetCoord;
         Vector2 finalMoveCoord;
         vector<Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
-
-        int mIdx;
     };
 }
 

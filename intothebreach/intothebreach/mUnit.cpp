@@ -9,7 +9,7 @@
 #include "mInput.h"
 namespace m
 {
-	Unit::Unit(Vector2 _coord, int _range, int hp, int _type)
+	Unit::Unit(Vector2 _coord, int _range, int hp, int _type, size_t idx)
 		: mPilot(nullptr)
 		, mWeapon(nullptr)
 		, curImage(nullptr)
@@ -25,6 +25,7 @@ namespace m
 		, curHp(hp)
 		, unitIdx(0)
 		, skillIdx(-1)
+		, mIdx(idx)
 	{
 		SetSkill(_type);
 		AddComponent(new Animator());
@@ -428,70 +429,13 @@ namespace m
 		}
 		if (endCoord != Vector2::Minus)
 		{
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
 			DrawSkill(endCoord);
 			GetCurAttackSkill()->SetStartRender(true);
 		}
 		// 공격완료하면 clear
 		ClearSkillRangeMap();
 	}
-	//void Unit::DrawSkillRangeTile()
-	//{
-	//	list<Vector2_1>queue;
-
-	//	Vector2 stPos = GetFinalCoord();
-	//	queue.push_back(Vector2_1(stPos, 0, -1));
-	//	mechPathQueue.push_back(Vector2_1(stPos, 0, -1));
-
-	//	SetMap();
-
-	//	// right, up, down, left
-	//	float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-
-	//	bool find = false;
-
-	//	int idx = -1;
-	//	while (!queue.empty())
-	//	{
-	//		Vector2_1 now = queue.front();
-	//		queue.pop_front();
-	//		idx++;
-	//		for (int i = 0; i < 4; i++)
-	//		{
-	//			float dx = now.coord.x + direct[i][0];
-	//			float dy = now.coord.y + direct[i][1];
-
-	//			if (dx < 0 || dy < 0 || dx >= mTiles[0].size() || dy >= mTiles.size()) continue;
-	//			if (skill_range_map[(int)dy][(int)dx] != 0) continue;
-	//			if (mMouseFollower->GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
-	//			{
-	//				if (map[(int)dy][(int)dx] != 0) continue;
-	//			}
-	//			bool rangeCheck = false;
-
-	//			// 스킬 반경 설정
-	//			for (int _i = 0; _i < 4; _i++)
-	//			{
-	//				if (stPos.x + direct[_i][0] == dx
-	//					&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
-	//			}
-	//			// 4방향체크
-	//			if ((stPos.y != dy && stPos.x == dx)
-	//				|| (stPos.x != dx && stPos.y == dy))
-	//			{
-	//				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
-
-	//				if (mMouseFollower->GetCurAttackSkill()->GetSkillType() != SKILL_T::ST
-	//					&& rangeCheck) continue;
-
-	//				mPosTiles[(int)dy][(int)dx]->SetTileType(TILE_T::MOVE_RANGE);
-	//				skill_range_map[(int)dy][(int)dx] = MOVE;
-	//				mPosTiles[(int)dy][(int)dx]->SetTileTexture(MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_r)
-	//					, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_r));
-	//			}
-	//		}
-	//	}
-	//	DrawOutLineTile((int)MOVE_TILE_T::square_r_l);
-	//}
 	void Unit::DrawSkillRangeTile()
 	{
 		Scene* scene = SceneManager::GetActiveScene();

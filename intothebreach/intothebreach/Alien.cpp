@@ -9,14 +9,14 @@
 #include "mSceneManager.h"
 namespace m
 {
-	Alien::Alien(ALIENS mType, Vector2 _coord, int idx)
+	Alien::Alien(ALIENS mType, Vector2 _coord, size_t idx)
 		: Unit(_coord
 			, ALIEN_MOVE_RANGE[(UINT)mType]
 			, ALIEN_HP[(UINT)mType]
 			, ALIEN_BASIC_WEAPON[(UINT)mType]
+			, idx
 		)
 		, mAlienType(mType)
-		, mIdx(idx)
 	{
 		vector<Image*> vImage = GetMImages();
 		vImage.resize((UINT)ALIEN_CONDITION::END);
@@ -117,7 +117,7 @@ namespace m
 	}
 	bool Alien::AlienMoveToAttackCheck(Vector2 _alienCoord, int curAlien)
 	{
-		if (mIdx != curAlien) return false;
+		if (GetMIdx() != curAlien) return false;
 		Scene* scene = SceneManager::GetActiveScene();
 		ClearSkillRangeMap();
 
@@ -172,7 +172,7 @@ namespace m
 	}
 	void Alien::AlienMoveCheck(int& curAlien)
 	{
-		if (mIdx != curAlien) return;
+		if (GetMIdx() != curAlien) return;
 
 		Scene* scene = SceneManager::GetActiveScene();
 		int moveLimit = GetMoveRange();

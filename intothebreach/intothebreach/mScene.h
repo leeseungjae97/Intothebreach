@@ -31,12 +31,8 @@ namespace m
 		void MoveSkill();
 		void MoveMech();
 
-		void MoveAlienSkill();
-		//bool AlienMoveToAttackCheck(Vector2 _alienCoord);
-		//void AlienMoveCheck();
-		//void AlienMapCheck();
+		void AlienAlgorithm();
 
-		//void DrawSkillRangeTile();
 		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
@@ -45,10 +41,8 @@ namespace m
 		void ClearMap();
 		void DrawFootTile();
 		void CheckNumInput();
-		void DrawTile();
+		
 		void UndoMove();
-
-		Vector2 GetCoordCenterPos(Vector2 _coord);
 
 		TILES& GetPosTiles() { return mPosTiles; }
 		Tile* GetPosTile(int y, int x) { return mPosTiles[y][x]; };
@@ -60,11 +54,6 @@ namespace m
 		vector<Alien*>& GetAliens() { return mAliens; }
 		vector<Unit*>& GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
-		//void DrawMoveRangeTile(Unit* unit);
-		//void DrawOutLineTile(int _type);
-		//void ActiveSkill();
-		//void ClearSkillRangeMap();
-		//void DrawMoveDirectionTile();
 		void CheckMouseOutOfMapRange();
 		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
 		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
@@ -87,7 +76,8 @@ namespace m
 		int GetMap(int y, int x) { return map[y][x]; }
 		void SetMap(int y, int x, int value) { map[y][x] = value; }
 		void SetMap();
-
+	private:
+		void drawTile();
 
 
 	private:
@@ -106,9 +96,6 @@ namespace m
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
 
 		BUILDINGS mStruturesTiles;
-
-		//vector<Vector2_1> mechPathQueue;
-		//vector<Vector2_1> alienPathQueue;
 
 		vector<Mech*> mMechs;
 		vector<Alien*> mAliens;

@@ -106,7 +106,7 @@ namespace m
 	}
 
 	/// <summary>
-	/// 타일 전체 생성
+	/// 타일 전체 생성 
 	/// 나중에 타일을 저장하면 불러올때
 	/// 각 타일에 대한 처리 해주어야됨
 	/// </summary>
@@ -415,34 +415,34 @@ namespace m
 	}
 	void Scene::CheckNumInput()
 	{
-		if (nullptr == mMouseFollower) return;
-		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { mMouseFollower->SetSkillIdx(0); }
-		if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { mMouseFollower->SetSkillIdx(1); }
-		if (KEY_DOWN(KEYCODE_TYPE::NUM_3)) { mMouseFollower->SetSkillIdx(2); }
-		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)
-			|| KEY_DOWN(KEYCODE_TYPE::NUM_2)
-			|| KEY_DOWN(KEYCODE_TYPE::NUM_3))
-		{
-			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
-			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+		//if (nullptr == mMouseFollower) return;
+		//if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { mMouseFollower->SetSkillIdx(0); }
+		//if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { mMouseFollower->SetSkillIdx(1); }
+		//if (KEY_DOWN(KEYCODE_TYPE::NUM_3)) { mMouseFollower->SetSkillIdx(2); }
+		//if (KEY_DOWN(KEYCODE_TYPE::NUM_1)
+		//	|| KEY_DOWN(KEYCODE_TYPE::NUM_2)
+		//	|| KEY_DOWN(KEYCODE_TYPE::NUM_3))
+		//{
+		//	mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+		//	mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 
-			if (!mMouseFollower->GetMove()) // 공격이 취소되고 이동가능상태로
-			{
-				mMouseFollower->SetMove(true);
-				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+		//	if (!mMouseFollower->GetMove()) // 공격이 취소되고 이동가능상태로
+		//	{
+		//		mMouseFollower->SetMove(true);
+		//		mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 
-				mMouseFollower->SetSkillIdx(-1);
-			}
-			else // 이동이 취소되고 공격가능상태로
-			{
-				mMouseFollower->SetCurAttackSkill();
-				mMouseFollower->SetMove(false);
-			}
-		}
-
+		//		mMouseFollower->SetSkillIdx(-1);
+		//	}
+		//	else // 이동이 취소되고 공격가능상태로
+		//	{
+		//		mMouseFollower->SetCurAttackSkill();
+		//		mMouseFollower->SetMove(false);
+		//	}
+		//}
 	}
-	void Scene::MoveAlienSkill()
+	void Scene::AlienAlgorithm()
 	{
+
 		if (playerTurn) return;
 
 		bool n = false;
@@ -523,7 +523,7 @@ namespace m
 			}
 		}
 	}
-	void Scene::DrawTile()
+	void Scene::drawTile()
 	{
 		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 
@@ -545,6 +545,7 @@ namespace m
 	}
 	void Scene::MoveMech()
 	{
+		drawTile();
 		if (KEY_DOWN(KEYCODE_TYPE::SPACE))
 		{
 			if (!playerTurn) playerTurn = true;
@@ -586,7 +587,7 @@ namespace m
 			if (nullptr != mMouseFollower)
 			{
 				MoveEffectUnit(mMouseFollower);
-				moveSave.push_back(Vector2_2(mMouseFollower->GetFinalCoord(), mMouseFollower->GetFinalPos(), mMouseFollower->GetMechIdx()));
+				moveSave.push_back(Vector2_2(mMouseFollower->GetFinalCoord(), mMouseFollower->GetFinalPos(), mMouseFollower->GetMIdx()));
 				mMouseFollower->SetEndMove(true);
 				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
@@ -644,11 +645,6 @@ namespace m
 			}
 		}
 	}
-	void Scene::SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type)
-	{
-		mArrowTiles[_y][_x]->SetTileTexture(MAKE_MOVE_ARROW_TILE_KEY(_type),
-			MAKE_MOVE_ARROW_TILE_PATH(_type));
-	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{
 		mLayers[(UINT)layer].AddGameObject(obj);
@@ -660,9 +656,10 @@ namespace m
 			((Unit*)obj)->SetUnitIdx(effectUnits[(UINT)idx.y][(UINT)idx.x].size() - 1);
 		}
 	}
-	Vector2 Scene::GetCoordCenterPos(Vector2 _coord)
+	void Scene::SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type)
 	{
-		return mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos();
+		mArrowTiles[_y][_x]->SetTileTexture(MAKE_MOVE_ARROW_TILE_KEY(_type),
+			MAKE_MOVE_ARROW_TILE_PATH(_type));
 	}
 	void Scene::SetAlphaState(GameObject::STATE state)
 	{

@@ -13,8 +13,8 @@
 #include "func.h"
 namespace m
 {
-	Mech::Mech(MECHS _mech, Vector2 _coord, int _range, int _hp)
-		: Unit(_coord, _range, _hp, BASIC_WEAPON[(UINT)_mech])
+	Mech::Mech(MECHS _mech, Vector2 _coord, int _range, int _hp, size_t idx)
+		: Unit(_coord, _range, _hp, BASIC_WEAPON[(UINT)_mech], idx)
 		, mMechType(_mech)
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
@@ -51,11 +51,13 @@ namespace m
 
 	}
 	Mech::~Mech()
-	{}
+	{
+	}
 	void Mech::Initialize()
 	{}
 	void Mech::Update()
 	{
+		CheckNumInput();
 		Unit::Update();
 		if (KEY_PRESSED(KEYCODE_TYPE::Q))
 		{
@@ -99,6 +101,35 @@ namespace m
 	void Mech::Release()
 	{
 		Unit::Release();
+	}
+	void Mech::CheckNumInput()
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		if (nullptr == scene->GetMouseFollower()) return;
+		if (scene->GetMouseFollower()->GetMIdx() != GetMIdx()) return;
+		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { SetSkillIdx(0); }
+		if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { SetSkillIdx(1); }
+		if (KEY_DOWN(KEYCODE_TYPE::NUM_3)) { SetSkillIdx(2); }
+		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)
+			|| KEY_DOWN(KEYCODE_TYPE::NUM_2)
+			|| KEY_DOWN(KEYCODE_TYPE::NUM_3))
+		{
+			SetPos(GetFinalPos());
+			SetCoord(GetFinalCoord());
+
+			if (!GetMove()) // 공격이 취소되고 이동가능상태로
+			{
+				SetMove(true);
+				GetCurAttackSkill()->SetStartRender(false);
+
+				SetSkillIdx(-1);
+			}
+			else // 이동이 취소되고 공격가능상태로
+			{
+				SetCurAttackSkill();
+				SetMove(false);
+			}
+		}
 	}
 	void Mech::idle()
 	{

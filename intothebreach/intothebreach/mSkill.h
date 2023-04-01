@@ -59,7 +59,7 @@ namespace m
 
 
 	protected:
-		float GRAVITY = 9.81 * 0.1f;
+		float GRAVITY = 9.81f * 0.1f;
 
 		bool endFire;
 		bool startFire;
@@ -78,11 +78,13 @@ namespace m
 		float fDistance;
 
 		float arcTheta;
+		float theta;
 
 		LAYER_TYPE mLayerType;
 		SKILL_T mType;
 		Unit* mOnwer;
 		Vector2 Missile_vec;
+		Vector2 Missile_vec2;
 		Vector2 endCoord;
 		Vector2 mStPos;
 		Vector2 mFinalEdPos;

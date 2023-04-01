@@ -19,7 +19,12 @@ namespace m
         virtual void GuideWire(HDC hdc) override;
         virtual void CheckDirection();
     private:
-
+        float m_fMissile_distance;
+        Vector2 Missile_vec;
+        Vector2 curPos;
+        float arcXMaxTime;
+        float arcYMaxTime;
+        float maxHeight;
     };
 
 }

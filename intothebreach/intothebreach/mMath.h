@@ -144,7 +144,7 @@ namespace m {
     {
         Vector2 coord;
         Vector2 pos;
-        int mechIdx;
+        size_t mechIdx;
     };
 	typedef Vector2 Pos;
 	typedef Vector2 Size;

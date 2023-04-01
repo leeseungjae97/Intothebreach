@@ -11,7 +11,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Unit(Vector2 _coord, int _range, int hp, int type);
+		Unit(Vector2 _coord, int _range, int hp, int type, size_t idx);
 		Unit(Unit& _origin);
 		Unit();
 		~Unit();
@@ -25,11 +25,9 @@ namespace m
 		void SetSkill(int type);
 		void SetSkill(int idx, SKILL_T type);
 
-		//SKILL_T GetSkill(int idx);
-		Skill* GetSkill(int idx);
-
 		void ChangePilotSlot();
 		Weapon* ChangeWeaponSlot(int index);
+		Skill* GetSkill(int idx);
 
 		void SetCoord(Vector2 _coord) { mCoord = _coord; }
 		void SetFinalPos(Vector2 _pos) { mFinalPos = _pos; }
@@ -37,8 +35,8 @@ namespace m
 		void SetCurAttackSkill();
 		void SetCurImage(Image* m) { curImage = m; }
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
-		void SetUnitIdx(int _idx) { unitIdx = _idx; }
-		void SetMechIdx(int _idx) { mechIdx = _idx; }
+		void SetUnitIdx(size_t _idx) { unitIdx = _idx; }
+		void SetMIdx(int _idx) { mIdx = _idx; }
 		void SetMoveRange(int _move) { moveRange = _move; }
 		void SetSkillIdx(int _idx);
 		void SetMove(bool _move) { move = _move; }
@@ -62,12 +60,12 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
+		size_t GetMIdx() { return mIdx; }
 		void DrawSkill(Vector2 pos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
-		int GetUnitIdx() { return unitIdx; }
-		int GetMechIdx() { return mechIdx; }
+		size_t GetUnitIdx() { return unitIdx; }
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
 		bool CheckSkillFiring();
@@ -119,8 +117,8 @@ namespace m
 		int mHp;			// 전체 hp
 		int curHp;			// 현재 hp
 		int moveRange;		// 로봇 타입의 enum으로 가져온 이동거리
-		int unitIdx;		// effecUnit vector에 들어갈 index
-		int mechIdx;		// Scene의 Mechs vector에 들어갈 index
+		size_t unitIdx;		// effecUnit vector에 들어갈 index
+		size_t mIdx;		// Scene의 Mechs vector에 들어갈 index
 		int skillIdx;		// 사용할 스킬 index
 
 		bool drag;			//
