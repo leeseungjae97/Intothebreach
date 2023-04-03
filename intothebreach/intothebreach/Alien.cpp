@@ -6,6 +6,7 @@
 #include "mScene.h"
 #include "mSkill.h"
 #include "mTile.h"
+#include "mTime.h"
 #include "mSceneManager.h"
 namespace m
 {
@@ -18,6 +19,10 @@ namespace m
 		)
 		, mAlienType(mType)
 	{
+		finalMoveCoord = Vector2::Minus;
+		moveCnt = 1;
+
+
 		vector<Image*> vImage = GetMImages();
 		vImage.resize((UINT)ALIEN_CONDITION::END);
 
@@ -172,34 +177,47 @@ namespace m
 	}
 	void Alien::AlienMoveCheck(int& curAlien)
 	{
-		if (GetMIdx() != curAlien) return;
+		if (GetFinalMoveCoord() == Vector2::Minus) return;
 
+		moveDelay += Time::fDeltaTime();
+		if (moveDelay >= 0.3f)
+		{
+			moveDelay = 0.f;
+		}
+		else return;
 		Scene* scene = SceneManager::GetActiveScene();
+
 		int moveLimit = GetMoveRange();
+		
 
-		if (alienPathQueue.size() == 0)
+		Vector2_1 iter = alienPathQueue.back();
+
+		if (directQueue.size() == 0)
 		{
-			//curAlien->DrawSkill(curAlien->GetTargetCoord());
-			//curAlien->GetCurAttackSkill()->SetStartRender(true);
-			return;
+			while (iter.parentIdx != alienPathQueue.front().parentIdx)
+			{
+				directQueue.push_back(Vector2_1(iter));
+				iter = alienPathQueue[iter.parentIdx];
+			}
 		}
 
-		vector<Vector2> directQue;
-		Vector2_1 now = alienPathQueue.back();
+		//if (subTargetCoord.coord == Vector2::Minus)
+		//{
+		//	if (directQueue.size() > moveLimit)
+		//	{
+		//		subTargetCoord = directQueue[moveLimit - 1];
+		//	}
+		//	else
+		//	{
+		//		subTargetCoord = directQueue[directQueue.size() - 1];
+		//	}
+		//}
+		
+		Vector2_1 curCoord = directQueue[directQueue.size() - moveCnt];
+		moveCnt++;
 
-		while (now.coord != GetCoord())
-		{
-			directQue.push_back(Vector2(now.coord.x, now.coord.y));
-			now = alienPathQueue[now.parentIdx];
-		}
-		alienPathQueue.clear();
-
-		if (directQue.size() == 0) return;
-
-		if (moveLimit >= directQue.size()) moveLimit = 0;
-
-		Vector2 _coord = directQue[moveLimit > 0 ? moveLimit : 0];
-		Vector2 _pos = scene->GetPosTiles()[(int)_coord.y][(int)_coord.x]->GetCenterPos();
+		Vector2 _coord = curCoord.coord;
+		Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
 
 		scene->MoveEffectUnit(this, _coord);
 		SetPos(_pos);
@@ -207,25 +225,29 @@ namespace m
 		SetCoord(_coord);
 		SetFinalCoord(_coord);
 
+		
+		if (moveCnt > moveLimit)
+		{
+			directQueue.clear();
+			moveCnt = 1;
+			curAlien++;
+		}
 		if (GetFinalMoveCoord() == _coord)
 		{
 			DrawSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
-		}
-
-		curAlien++;
-		if (curAlien >= scene->GetAliens().size())
-		{
-			scene->SetPlayerTurn(true);
-			curAlien = 0;
+			directQueue.clear();
+			moveCnt = 1;
+			curAlien++;
 		}
 	}
 	void Alien::AlienMapCheck(int curAlien)
 	{
-		Scene* scene = SceneManager::GetActiveScene();
+		/*if (alienPathQueue.size() != 0) return;*/
 		alienPathQueue.clear();
-		DrawMoveRangeTile();
-		int moveLimit = GetMoveRange();
+		Scene* scene = SceneManager::GetActiveScene();
+
+		if(moveCnt == 1) DrawMoveRangeTile();
 
 		list<Vector2_1>queue;
 
@@ -247,6 +269,7 @@ namespace m
 		bool find = false;
 
 		int idx = -1;
+		
 		while (!queue.empty())
 		{
 			Vector2_1 now = queue.front();
@@ -258,25 +281,38 @@ namespace m
 				float dy = now.coord.y + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx >= TILE_X - 1 || dy >= TILE_Y - 1) continue;
+
+				//if (abs(dx - stPos.x) >= moveLimit 
+				//	|| abs(dy - stPos.y) >= moveLimit) continue;
+
 				if (stPos.x == dx
 					&& stPos.y == dy) continue;
 				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
 				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				if (searchMap[(int)dy][(int)dx] == MOVE) continue;
 
 				if (AlienMoveToAttackCheck(Vector2(dx, dy), curAlien))
 				{
-					scene->SetPosTiles((int)stPos.y, (int)stPos.x
-						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					scene->SetPosTiles((int)dy, (int)dx
+							, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));
 					find = true;
 				}
 
+				searchMap[(int)dy][(int)dx] = MOVE;
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 				alienPathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 				if (find) break;
 			}
 			if (find) break;
 		}
+		// 공격할 대상을 찾지 못했을때.
+		if (!find)
+		{
+			int randIdx = rand() % pathQueue.size();
+			SetFinalMoveCoord(pathQueue[randIdx].coord);
+		}
+		ClearSearchMap();
 	}
 	void Alien::Render(HDC hdc)
 	{

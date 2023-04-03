@@ -189,7 +189,7 @@ namespace m::bitmap
 		xform.eM12 = sin_ang;
 		xform.eM21 = -sin_ang;
 		xform.eM22 = cos_ang;
-		xform.eDx = pos.x - cos_ang * pos.x + sin_ang * pos.y;
+		xform.eDx = pos.x - cos_ang * pos.x + sin_ang * pos.y + bmp.bmWidth * 2;
 		xform.eDy = pos.y - sin_ang * pos.x - cos_ang * pos.y;
 		//xform.eDx = 0;
 		//xform.eDy = 0;

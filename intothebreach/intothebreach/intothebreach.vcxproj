@@ -141,12 +141,14 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="IslandEnums.h" />
+    <ClInclude Include="mButton.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
     <ClInclude Include="mSkill.h" />
     <ClInclude Include="mSkill_Arc.h" />
     <ClInclude Include="mSkill_St.h" />
     <ClInclude Include="mTile.h" />
+    <ClInclude Include="mUI.h" />
     <ClInclude Include="mUnit.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SkillEnums.h" />
@@ -190,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="mButton.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mCollisionManager.cpp" />
@@ -225,6 +228,7 @@
     <ClCompile Include="mTitleScene.cpp" />
     <ClCompile Include="mTransform.cpp" />
     <ClCompile Include="mImage.cpp" />
+    <ClCompile Include="mUI.cpp" />
     <ClCompile Include="mUnit.cpp" />
   </ItemGroup>
   <ItemGroup>

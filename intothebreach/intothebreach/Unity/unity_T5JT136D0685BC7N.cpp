@@ -5,6 +5,9 @@
 #include "E:\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mButton.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mCamera.cpp"
 
 
@@ -108,6 +111,9 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mImage.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mUI.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mUnit.cpp"

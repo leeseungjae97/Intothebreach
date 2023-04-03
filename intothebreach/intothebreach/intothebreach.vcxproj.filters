@@ -65,9 +65,6 @@
     <Filter Include="Contents\Scene\IntroScene">
       <UniqueIdentifier>{659f8fea-b2b1-49df-b120-63131ebbb39e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Contents\Background">
-      <UniqueIdentifier>{5c697d02-3d51-473b-930a-0bd8296d5b05}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{615ef8ec-47b3-4764-b0d0-014f4863e2ef}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,15 @@
     </Filter>
     <Filter Include="Contents\Attached\Skill\St">
       <UniqueIdentifier>{b3c7f6e8-f816-4ee9-9e17-7518abcf38bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\UI">
+      <UniqueIdentifier>{8b73e896-1c7b-4842-b389-2523892b9bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\UI\Background">
+      <UniqueIdentifier>{5c697d02-3d51-473b-930a-0bd8296d5b05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\UI\Button">
+      <UniqueIdentifier>{764d50ac-eb2d-4c3a-ac4f-9dfaee9fa7b5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -189,9 +195,6 @@
     </ClInclude>
     <ClInclude Include="mSelectLandScene.h">
       <Filter>Contents\Scene\SelectLandScene</Filter>
-    </ClInclude>
-    <ClInclude Include="mBackground.h">
-      <Filter>Contents\Background</Filter>
     </ClInclude>
     <ClInclude Include="mSelectGDI.h">
       <Filter>Engine\Module</Filter>
@@ -280,6 +283,13 @@
     <ClInclude Include="mSkill_St.h">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClInclude>
+    <ClInclude Include="mUI.h">
+      <Filter>Contents\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="mBackground.h">
+      <Filter>Contents\UI\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="mButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -346,9 +356,6 @@
     <ClCompile Include="mSelectLandScene.cpp">
       <Filter>Contents\Scene\SelectLandScene</Filter>
     </ClCompile>
-    <ClCompile Include="mBackground.cpp">
-      <Filter>Contents\Background</Filter>
-    </ClCompile>
     <ClCompile Include="mSelectGDI.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -409,5 +416,12 @@
     <ClCompile Include="mSkill_St.cpp">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClCompile>
+    <ClCompile Include="mUI.cpp">
+      <Filter>Contents\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="mBackground.cpp">
+      <Filter>Contents\UI\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="mButton.cpp" />
   </ItemGroup>
 </Project>

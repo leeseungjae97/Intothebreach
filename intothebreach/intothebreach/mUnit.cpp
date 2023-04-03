@@ -135,6 +135,12 @@ namespace m
 	{
 		GameObject::Release();
 	}
+	void Unit::ClearSearchMap()
+	{
+		for (int y = 0; y < TILE_Y; y++)
+			for (int x = 0; x < TILE_X; x++)
+				searchMap[y][x] = 0;
+	}
 	void Unit::DrawMoveDirectionTile()
 	{
 		Scene* scene = SceneManager::GetActiveScene();
@@ -253,7 +259,7 @@ namespace m
 	{
 		//if (mMouseFollower->CheckSkillFiring()) return;
 		Scene* scene = SceneManager::GetActiveScene();
-		if (GetLayerType() == LAYER_TYPE::MONSTER && scene->GetPlayerTurn()) return;
+		//if (GetLayerType() == LAYER_TYPE::MONSTER && scene->GetPlayerTurn()) return;
 		if (CheckSkillFiring()) return;
 		int moveLimit = GetMoveRange();
 
@@ -292,8 +298,8 @@ namespace m
 
 
 				queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
-				if (GetLayerType() == LAYER_TYPE::PLAYER)
-					pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
+				//if (GetLayerType() == LAYER_TYPE::PLAYER)
+				pathQueue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
 				if (scene->GetMap((int)dy, (int)dx) == MECH
 					|| scene->GetMap((int)dy, (int)dx) == ALIEN) continue;

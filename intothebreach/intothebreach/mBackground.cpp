@@ -1,8 +1,7 @@
 #include "mBackground.h"
 #include "mResources.h"
-#include "mTransform.h"
-#include "mApplication.h"
 #include "mSelectGDI.h"
+#include "mApplication.h"
 #include "mCamera.h"
 extern m::Application application;
 namespace m {
@@ -10,21 +9,17 @@ namespace m {
 		, const wstring& path
 		, int _sizeUp
 		, bool _full
-		, bool _isCenter
+		, int _direction
 		, bool _alphaCheck
-		
+
 	)
-		: mImage(nullptr)
-		, mPath(path)
-		, mKey(key)
-		, mSizeUp(_sizeUp)
-		, mIsFull(_full)
-		, mIsCenter(_isCenter)
-		, mAlpha(_alphaCheck)
+		: UI(key
+			, path
+			, _sizeUp
+			, _full
+			, _direction
+			, _alphaCheck)
 	{
-		AddComponent(new Transform());
-		if (mKey.empty() && mPath.empty()) return;
-		mImage = Resources::Load<Image>(mKey, mPath);
 	}
 	Background::~Background() {
 	}
@@ -37,41 +32,81 @@ namespace m {
 	}
 
 	void Background::Render(HDC hdc) {
-		GameObject::Render(hdc);
+		//GameObject::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
 
 		UINT iWidth;
 		UINT iHeight;
-		if (mImage == nullptr) {
+		if (mImage == nullptr)
+		{
 			SelectGDI tmp(hdc, BRUSH_TYPE::CUSTOM_BLACK);
 			Rectangle(hdc, 0, 0, application.GetResolutionWidth()
 				, application.GetResolutionHeight());
 		}
-		else {
-			if (mIsFull) {
+		else
+		{
+			if (mIsFull)
+			{
 				iWidth = application.GetResolutionWidth();
 				iHeight = application.GetResolutionHeight();
 			}
-			else {
+			else
+			{
 				iWidth = mImage->GetWidth();
 				iHeight = mImage->GetHeight();
 			}
-			if (mSizeUp != 0) {
+
+			if (mSizeUp != 0)
+			{
 				iWidth *= mSizeUp;
 				iHeight *= mSizeUp;
 			}
 
-			if (mIsCenter) {
+			if (mDir & CENTER)
+			{
 				mPos.x = (float)application.GetResolutionWidth() / 2;
 				mPos.y = (float)application.GetResolutionHeight() / 2;
 				mPos.x -= iWidth / 2;
 				mPos.y -= iHeight / 2;
 			}
+			if (mDir & BOTTOM)
+			{
+				if (!cutPos)
+					mPos.y = (float)application.GetResolutionHeight();
+
+				mPos.y -= iHeight;
+			}
+			if (mDir & RIGHT)
+			{
+				if (!cutPos)
+					mPos.x = (float)application.GetResolutionWidth();
+
+				mPos.x -= iWidth;
+				mPos.x += (float)application.GetResolutionWidth() / 2;
+			}
+			if (mDir & TOP)
+			{
+				if (!cutPos)
+					mPos.y = (float)0;
+
+				mPos.y += 10;
+			}
+			if (mDir & LEFT)
+			{
+				if (!cutPos)
+					mPos.x = (float)0;
+
+				mPos.x += 10;
+			}
 			mPos += mImage->GetOffset();
 			SetScale(Vector2((float)iWidth, (float)iHeight));
-			mPos = Camera::CalculatePos(mPos);
-			if (mAlpha) {
+			if (effectCamera)
+			{
+				mPos = Camera::CalculatePos(mPos);
+			}
+			if (mAlpha)
+			{
 				BLENDFUNCTION func = {};
 				func.BlendOp = AC_SRC_OVER;
 				func.BlendFlags = 0;
@@ -91,7 +126,8 @@ namespace m {
 					, (int)(mImage->GetHeight())
 					, func);
 			}
-			else {
+			else
+			{
 				TransparentBlt(hdc
 					, (int)(mPos.x)
 					, (int)(mPos.y)
@@ -104,24 +140,9 @@ namespace m {
 					, (int)(mImage->GetHeight())
 					, RGB(255, 0, 255));
 			}
-			
 		}
-		
 	}
 	void Background::Release() {
 		GameObject::Release();
-	}
-	void Background::SetTex(const wstring& key, const wstring& path, ISLAND_T type)
-	{
-		mImage = Resources::Load<Image>(key, path);
-		mImage->SetOffset(Vector2(ISLAND_OUTLINE_OFFSET[(UINT)type].x, ISLAND_OUTLINE_OFFSET[(UINT)type].y));
-	}
-	void Background::Clear()
-	{
-		mImage = Resources::Load<Image>(mKey, mPath);
-	}
-	Vector2 Background::GetSize()
-	{
-		return Vector2((float)mImage->GetWidth(), (float)mImage->GetHeight());
 	}
 }

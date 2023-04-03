@@ -8,6 +8,7 @@
 #include "mSkill.h"
 #include "mSelectGDI.h"
 #include "mApplication.h"
+#include "mBackground.h"
 #include "func.h"
 #include "mInput.h"
 extern m::Application application;
@@ -20,6 +21,7 @@ namespace m
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
 		playerTurn = true;
+		firstUpdate = true;
 		curAttackAlien = 0;
 	}
 	Scene::~Scene()
@@ -450,7 +452,12 @@ namespace m
 			if (mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
 		if (!n) return;
 
-		if (mAliens.size() == curAttackAlien) return;
+		if (mAliens.size() <= curAttackAlien)
+		{
+			curAttackAlien = 0;
+			SetPlayerTurn(true);
+			return;
+		}
 
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (nullptr != curAlien->GetCurAttackSkill()
@@ -480,8 +487,13 @@ namespace m
 		}
 
 		curAlien->AlienMapCheck(curAttackAlien);
-
 		curAlien->AlienMoveCheck(curAttackAlien);
+		//curAttackAlien++;
+
+		if (KEY_PRESSED(KEYCODE_TYPE::M))
+		{
+			
+		}
 	}
 	void Scene::MoveSkill()
 	{
@@ -648,6 +660,8 @@ namespace m
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{
 		mLayers[(UINT)layer].AddGameObject(obj);
+		if (layer == LAYER_TYPE::BACKGROUND)
+			mBacks.push_back(dynamic_cast<Background*>(obj));
 
 		if (nullptr != dynamic_cast<Unit*>(obj) && layer != LAYER_TYPE::CLONE)
 		{

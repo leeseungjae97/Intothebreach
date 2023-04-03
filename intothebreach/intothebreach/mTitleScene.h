@@ -15,7 +15,7 @@ namespace m {
 		virtual void OnExit() override;
 
 	private:
-
+		float scrollSpeed;
 	};
 }
 

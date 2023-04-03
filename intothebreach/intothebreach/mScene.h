@@ -8,6 +8,7 @@ namespace m
 	class Layer;
 	class Tile;
 	class Building;
+	class Background;
 	class Scene : public Entity
 	{
 	public:
@@ -64,7 +65,7 @@ namespace m
 
 
 		bool GetPlayerTurn() { return playerTurn; }
-
+		bool GetFirstUpdate() { return firstUpdate; }
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
 
@@ -72,6 +73,7 @@ namespace m
 		void SetAlphaFollower(Mech* _mM);
 		void SetAlphaState(GameObject::STATE state);
 		void SetPlayerTurn(bool _playerTurn) { playerTurn = _playerTurn; }
+		void SetFirstUpdate(bool _isFirstUpdate) { firstUpdate = _isFirstUpdate; }
 
 		int GetMap(int y, int x) { return map[y][x]; }
 		void SetMap(int y, int x, int value) { map[y][x] = value; }
@@ -79,9 +81,15 @@ namespace m
 	private:
 		void drawTile();
 
+	protected:
+		vector<Background*> mBacks;
 
 	private:
 		vector<Layer> mLayers;
+		
+		bool firstUpdate;
+
+
 		TILES mTiles;				// 기본 타일(땅)
 		TILES mPosTiles;			// 타일 위 타일 (이동 반경, 스킬 반경)
 		TILES mPosOutLineTiles;		// 타일 외곽선 타일 Highlight
@@ -104,7 +112,6 @@ namespace m
 		Mech* mAlphaFollower;
 
 		bool playerTurn;
-
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// 이동 BFS 맵
 	};

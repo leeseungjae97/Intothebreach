@@ -15,11 +15,11 @@ namespace m {
 	InLandScene::~InLandScene() {
 	}
 	void InLandScene::Initialize() {
-		Background* b = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, true);
+		Background* b = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
 
 		AddGameObject(b, LAYER_TYPE::BACKGROUND);
 
-		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2 , false, true);
+		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2 , false, CENTER);
 		b0->SetPos(Vector2(100.f, 100.f));
 		AddGameObject(b0, LAYER_TYPE::BACKGROUND);
 		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mType];

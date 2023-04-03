@@ -14,12 +14,12 @@ namespace m {
 	SelectLandScene::~SelectLandScene() {
 	}
 	void SelectLandScene::Initialize() {
-		Background* b1 = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, true);
+		Background* b1 = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 
 		for (int i = 0; i < (UINT)ISLAND_T::END; i++) {
-			Background* p = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, false);
-			Background* l = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, false);
+			Background* p = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, DEFAULT);
+			Background* l = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, DEFAULT);
 			p->SetPos(Vector2(ISLANDS_POS[i].x, ISLANDS_POS[i].y));
 			l->SetPos(Vector2(ISLANDS_POS[i].x, ISLANDS_POS[i].y));
 			AddGameObject(p, LAYER_TYPE::BACKGROUND);

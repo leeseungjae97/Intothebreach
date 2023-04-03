@@ -1,5 +1,12 @@
 #pragma once
 
+#define RIGHT				0x01
+#define LEFT				0x02
+#define TOP					0x04
+#define BOTTOM				0x08
+#define CENTER				0x10
+#define DEFAULT				0x00
+
 #define RIGHT_NUM			0
 #define UP_NUM				1
 #define DOWN_NUM			2

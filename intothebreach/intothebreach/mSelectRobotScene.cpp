@@ -27,14 +27,12 @@ namespace m
 		AddGameObject(b0, LAYER_TYPE::BACKGROUND);
 
 		Background* b1 = new Background(L"selectRobotBg1"
-			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, true);
+			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_background.bmp", 0, false, CENTER);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 
 		/*mMech = new Mech(MECHS::artillery, Vector2(0,0));
 		mMech->SetPos(Vector2(100.f, 100.f));
 		AddGameObject(mMech, LAYER_TYPE::PLAYER);*/
-
-		Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 2.0f);
 
 	}
 
