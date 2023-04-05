@@ -3,21 +3,25 @@
 #include "mMath.h"
 #include "mCamera.h"
 #include "mImage.h"
-m::Button::Button(const wstring& key
-	, const wstring& path
+#include "mResources.h"
+#include "mSceneManager.h"
+m::Button::Button(const wstring& inner
+	, const wstring& background
 	, int _sizeUp
 	, bool _full
 	, int _direction
 	, bool _alphaCheck)
-	: UI(key
-		, path
+	: UI(background
+		, background
 		, _sizeUp
 		, _full
 		, _direction
 		, _alphaCheck)
+	, btnName(inner)
 {
 	SetCutPos(true);
 	SetEC(false);
+	textAlpha = 0;
 }
 
 m::Button::~Button()
@@ -33,14 +37,23 @@ void m::Button::Update()
 	GameObject::Update();
 	if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
 	{
-
+		if (KEY_UP(KEYCODE_TYPE::LBTN))
+		{
+			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
+			//;
+		}
+		if(mSize.x <= 400.f) mSize.x += 50.f;
+	}
+	else
+	{
+		if (mSize.x > 300.f) mSize.x -= 50.f;
 	}
 }
 
 void m::Button::Render(HDC hdc)
 {
 	Vector2 mPos = GetPos();
-
 	if (mAlpha)
 	{
 		BLENDFUNCTION func = {};
@@ -49,21 +62,11 @@ void m::Button::Render(HDC hdc)
 		func.AlphaFormat = AC_SRC_OVER;
 		func.SourceConstantAlpha = 125;
 
-		HFONT font, old;
-		font = CreateFont(20, 0, 0, 0, 0, 0, 0, 0, HANGEUL_CHARSET, 3, 2, 1,
-			VARIABLE_PITCH | FF_ROMAN, L"궁서");
-		old =(HFONT)SelectObject(hdc, font);
-		TextOut(hdc, 50, 50, L"게임시작", lstrlen(L"게임시작"));
-		SetBkColor(hdc, RGB(255, 0, 255));
-		SetBkMode(hdc, TRANSPARENT);
-		SelectObject(hdc, old);
-		DeleteObject(font);
-
 		AlphaBlend(hdc
 			, (int)(mPos.x)
 			, (int)(mPos.y)
-			, (int)(300.f)
-			, (int)(mImage->GetHeight() / 2)
+			, (int)(mSize.x)
+			, (int)(mSize.y)
 			, mImage->GetHdc()
 			, 0
 			, 0
@@ -84,6 +87,29 @@ void m::Button::Render(HDC hdc)
 			, (int)(mImage->GetWidth())
 			, (int)(mImage->GetHeight())
 			, RGB(255, 0, 255));
+	}
+	
+	if (bText)
+	{
+		Image* im = Resources::Load<Image>(btnName, btnName);
+		BLENDFUNCTION func = {};
+		func.BlendOp = AC_SRC_OVER;
+		func.BlendFlags = 0;
+		func.AlphaFormat = AC_SRC_ALPHA;
+		if(bTextAlpha) func.SourceConstantAlpha = textAlpha;
+		else func.SourceConstantAlpha = 255;
+
+		AlphaBlend(hdc
+			, (int)(mPos.x)
+			, (int)(mPos.y)
+			, (int)(im->GetWidth())
+			, (int)(im->GetHeight())
+			, im->GetHdc()
+			, 0
+			, 0
+			, (int)(im->GetWidth())
+			, (int)(im->GetHeight())
+			, func);
 	}
 }
 

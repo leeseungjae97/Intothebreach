@@ -15,6 +15,7 @@ namespace m
 
 	public:
 		void SetTileTexture(const wstring& key, const wstring& path);
+		void SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, float fConstant = 0, bool alpha = false);
 		void SetTileType(TILE_T _type){mTileType = _type;}
 		TILE_T GetTileType(){return mTileType;}
 		void InitETCTiles(int _size) { mETCTexs.resize(_size); }
@@ -26,10 +27,12 @@ namespace m
 	private:
 		virtual void Update() override;
 		virtual void Render(HDC hdc) override;
+		virtual void Initialize() override;
 
 	private:
 		vector<Image*> mETCTexs;
 		Image* mTileTex;
+		Animator* mAnimator;
 		TILE_T      mTileType;
 		Vector2     mCoord;
 

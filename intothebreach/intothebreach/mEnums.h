@@ -8,7 +8,7 @@
 #include "TileEnums.h"
 #include "StructureEnums.h"
 #include "SkillEnums.h"
-
+#include "UIEnums.h"
 enum class SCENE_TYPE
 {
 	IN_LAND0,

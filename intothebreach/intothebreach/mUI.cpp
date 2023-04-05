@@ -26,6 +26,8 @@ namespace m
 		AddComponent(new Transform());
 		if (mKey.empty() && mPath.empty()) return;
 		mImage = Resources::Load<Image>(mKey, mPath);
+
+		mSize = Vector2::Zero;
 	}
 	UI::~UI()
 	{

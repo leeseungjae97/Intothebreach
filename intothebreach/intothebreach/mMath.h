@@ -122,10 +122,12 @@ namespace m {
 		}
 
 		float Length() {
+            if (x == 0 && y == 0) return 0.f;
 			return sqrt(x * x + y * y);
 		}
 
 		Vector2& Normalize() {
+            if (x == 0 && y == 0) return Vector2::Zero;
 			float length = Length();
 			x /= length;
 			y /= length;

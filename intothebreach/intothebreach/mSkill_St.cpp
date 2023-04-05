@@ -52,9 +52,9 @@ namespace m
 	}
 	void Skill_St::Release()
 	{}
-	void Skill_St::ReInit(Vector2 stPos, Vector2 enPos)
+	void Skill_St::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		Skill::ReInit(stPos, enPos);
+		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
 	void Skill_St::Active(HDC hdc)
@@ -89,9 +89,12 @@ namespace m
 	void Skill_St::GuideWire(HDC hdc)
 	{
 		Vector2 mPos = mStPos;
-		Image* im = Resources::Load<Image>(L"line", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
+		Image* im;
+		if(mOnwer->GetLayerType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
+		else im = Resources::Load<Image>(L"dot", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
-		int len = (int)(mFinalEdPos - mStPos).Length() / im->GetWidth() / 2;
+		float diff = (GetGuideLinePos() - mStPos).Length();
+		float len = diff / im->GetWidth() / 2.f;
 		for (int i = 0; i < len; i++)
 		{
 			mPos.x += Missile_vec.x * im->GetWidth() * 2;
@@ -108,6 +111,13 @@ namespace m
 				im->GetHeight(),
 				RGB(255, 0, 255));
 		}
+
+		Scene* scene = SceneManager::GetActiveScene();
+		scene->SetPosTiles(endCoord.y, endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+
+		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+		//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 	}
 	void Skill_St::CheckDirection()
 	{

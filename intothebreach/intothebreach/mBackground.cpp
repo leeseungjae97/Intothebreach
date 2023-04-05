@@ -20,6 +20,9 @@ namespace m {
 			, _direction
 			, _alphaCheck)
 	{
+		iConstant = -1;
+		idVar = 1;
+		idDir = 1;
 	}
 	Background::~Background() {
 	}
@@ -65,10 +68,14 @@ namespace m {
 
 			if (mDir & CENTER)
 			{
-				mPos.x = (float)application.GetResolutionWidth() / 2;
-				mPos.y = (float)application.GetResolutionHeight() / 2;
-				mPos.x -= iWidth / 2;
-				mPos.y -= iHeight / 2;
+				if (!cutPos)
+				{
+					mPos.x = (float)application.GetResolutionWidth() / 2;
+					mPos.y = (float)application.GetResolutionHeight() / 2;
+					mPos.x -= iWidth / 2;
+					mPos.y -= iHeight / 2;
+				}
+				
 			}
 			if (mDir & BOTTOM)
 			{
@@ -90,30 +97,34 @@ namespace m {
 				if (!cutPos)
 					mPos.y = (float)0;
 
-				mPos.y += 10;
+				mPos.y += 30;
 			}
 			if (mDir & LEFT)
 			{
 				if (!cutPos)
 					mPos.x = (float)0;
 
-				mPos.x += 10;
+				mPos.x += 50;
 			}
 			mPos += mImage->GetOffset();
 			SetScale(Vector2((float)iWidth, (float)iHeight));
 			if (effectCamera)
-			{
 				mPos = Camera::CalculatePos(mPos);
-			}
+
 			if (mAlpha)
 			{
 				BLENDFUNCTION func = {};
 				func.BlendOp = AC_SRC_OVER;
 				func.BlendFlags = 0;
 				func.AlphaFormat = mAlpha;
-				func.SourceConstantAlpha = 125;
+				if (bBlink)
+				{
+					iConstant += idVar * idDir;
+				}
+				if (iConstant >= 255 || iConstant <= 0) idDir *= -1;
+				if(iConstant != -1 ) func.SourceConstantAlpha = iConstant;
+				else func.SourceConstantAlpha = 125;
 
-				mPos = Camera::CalculatePos(mPos);
 				AlphaBlend(hdc
 					, (int)(mPos.x)
 					, (int)(mPos.y)

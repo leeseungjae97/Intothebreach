@@ -1,5 +1,6 @@
 #pragma once
-enum class TILE_HEAD_T {
+enum class TILE_HEAD_T
+{
 	ground,
 	forest,
 	building,
@@ -18,7 +19,8 @@ wstring TILE_HEAD_PATH[(UINT)TILE_HEAD_T::END]{
 	L"mountain_0",
 	L"mountain_0_broken",
 };
-enum class TILE_T {
+enum class TILE_T
+{
 	GREEN,
 	SAND,
 	SNOW,
@@ -40,7 +42,8 @@ wstring TILE_PATH[(UINT)TILE_T::END]{
    L"cave\\",
    L""
 };
-wstring MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2) {
+wstring MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2)
+{
 	wstring key = L"";
 
 	key.append(TILE_PATH[(UINT)_type]);
@@ -49,7 +52,8 @@ wstring MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2) {
 
 	return key;
 }
-wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
+wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2)
+{
 	wstring path = L"..\\Resources\\texture\\terrain\\";
 
 	path.append(TILE_PATH[(UINT)_type]);
@@ -60,7 +64,8 @@ wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2) {
 	return path;
 }
 
-enum class MOVE_TILE_T {
+enum class MOVE_TILE_T
+{
 	square,
 	square_g,
 	square_r,
@@ -153,7 +158,8 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_r_u",
 	L"square_line_r_d",
 };
-wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
+wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type)
+{
 	wstring key = L"";
 
 	key.append(MOVE_TILE_PATH[(UINT)_type]);
@@ -161,7 +167,8 @@ wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type) {
 
 	return key;
 }
-wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
+wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type)
+{
 	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
 	path.append(MOVE_TILE_PATH[(UINT)_type]);
@@ -170,7 +177,8 @@ wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type) {
 
 	return path;
 }
-enum class MOVE_ARROW_T {
+enum class MOVE_ARROW_T
+{
 	ARROW_D_U,
 	ARROW_L_R,
 	ARROW_L,
@@ -205,17 +213,87 @@ wstring MOVE_ARROW_PATH[(UINT)MOVE_ARROW_T::END]{
 	L"movearrow_cap_r",
 
 };
-wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type) {
+wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type)
+{
 	wstring key = L"";
 
 	key.append(MOVE_ARROW_PATH[(UINT)_type]);
 
 	return key;
 }
-wstring MAKE_MOVE_ARROW_TILE_PATH(MOVE_ARROW_T _type) {
+wstring MAKE_MOVE_ARROW_TILE_PATH(MOVE_ARROW_T _type)
+{
 	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
 	path.append(MOVE_ARROW_PATH[(UINT)_type]);
+
+	path.append(L".bmp");
+
+	return path;
+};
+enum class COMBAT_TILE_T
+{
+	pb,
+	pb_y,
+	pb_g,
+	fire1,
+	END,
+};
+enum class COMBAT_ANIM_TILE_T
+{
+	warning_sprite,
+	END,
+};
+m::Vector2 COMBAT_ANIM_TIME_OFFSET[(UINT)COMBAT_ANIM_TILE_T::END]{
+	{30, 23},
+};
+wstring COMBAT_ANIM_TILE_PATH[(UINT)COMBAT_ANIM_TILE_T::END]{
+	L"warningstripes",
+};
+wstring MAKE_COMBAT_ANIM_TILE_KEY(COMBAT_ANIM_TILE_T _type)
+{
+	wstring key = L"";
+
+	key.append(COMBAT_ANIM_TILE_PATH[(UINT)_type]);
+
+	return key;
+}
+wstring MAKE_COMBAT_ANIM_TILE_PATH(COMBAT_ANIM_TILE_T _type)
+{
+	wstring path = L"..\\Resources\\texture\\combat\\";
+
+	path.append(COMBAT_ANIM_TILE_PATH[(UINT)_type]);
+
+	path.append(L".bmp");
+
+	return path;
+};
+m::Vector2 COMBAT_ANIM_TILE_SIZE[(UINT)COMBAT_ANIM_TILE_T::END]{
+
+};
+UINT COMBAT_ANIM_TILE_LEN[(UINT)COMBAT_ANIM_TILE_T::END]
+{
+	6,
+};
+wstring COMBAT_TILE_PATH[(UINT)COMBAT_TILE_T::END]{
+	L"push_box",
+	L"push_box_y",
+	L"push_box_g",
+	L"fire_sprite4"
+};
+wstring MAKE_COMBAT_TILE_KEY(COMBAT_TILE_T _type)
+{
+	wstring key = L"";
+
+	key.append(COMBAT_TILE_PATH[(UINT)_type]);
+
+	return key;
+}
+wstring MAKE_COMBAT_TILE_PATH(COMBAT_TILE_T _type)
+{
+	wstring path = L"..\\Resources\\texture\\combat\\";
+
+	path.append(COMBAT_TILE_PATH[(UINT)_type]);
 
 	path.append(L".bmp");
 

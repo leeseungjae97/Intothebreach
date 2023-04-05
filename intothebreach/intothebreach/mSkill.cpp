@@ -100,7 +100,7 @@ namespace m {
 		GameObject::Update();
 		CheckSkillFiring();
 	}
-	void Skill::ReInit(Vector2 stPos, Vector2 enPos)
+	void Skill::ReInit(Vector2 stPos, Vector2 enPos, Vector2 guideLinePos, SKILL_T _type)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -109,6 +109,11 @@ namespace m {
 		SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		SetStPos(GetPos());
 		SetEndPos(scene->GetPosTiles()[(int)enPos.y][(int)enPos.x]->GetCenterPos());
+		if (_type == SKILL_T::ST)
+		{
+			SetGuideLinePos(scene->GetPosTiles()[(int)guideLinePos.y][(int)guideLinePos.x]->GetPos());
+			SetGuideLineCoord(guideLinePos);
+		}
 	}
 	void Skill::Active(HDC hdc)
 	{

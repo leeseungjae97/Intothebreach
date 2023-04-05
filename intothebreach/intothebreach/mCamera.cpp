@@ -29,11 +29,12 @@ namespace m
 		mLookPosition = (mResolution / 2.0f);
 		mCurLookPosition = (mResolution / 2.0f);
 		mPrevLookPosition = (mResolution / 2.0f);
+		speed = 0.f;
 		mCutton = Image::Create(L"Cutton", (UINT)mResolution.x, (UINT)mResolution.y);
 	}
 	void Camera::Update()
 	{
-		if (mTarget)
+		if (nullptr != mTarget)
 		{
 			if (mTarget->IsDead())
 			{
@@ -61,8 +62,8 @@ namespace m
 		{
 			mLookPosition.x += Time::fDeltaTime() * 500.0f;
 		}
-
 		CalDiff();
+		CheckEffectEnd();
 	}
 	void Camera::Render(HDC hdc)
 	{
@@ -112,6 +113,31 @@ namespace m
 			mCurLookPosition = mLookPosition;
 		}
 
+		//if (!mEffectQueue.empty())
+		//{
+		//	EffectInfo& info = mEffectQueue.front();
+		//	info.time += Time::fDeltaTime();
+		//	float ratio = (info.time / info.duration);
+
+		//	if (ratio >= 1.0f)
+		//	{
+		//		ratio = 1.0f;
+		//		mEffectQueue.pop();
+		//	}
+
+
+		//	if (CAMERA_EFFECT_TYPE::Fade_In == info.effect)
+		//		mCuttonAlpha = 1.0f - ratio;
+		//	else if (CAMERA_EFFECT_TYPE::Fade_Out == info.effect)
+		//		mCuttonAlpha = ratio;
+		//	else
+		//		mCuttonAlpha = 0.0f;
+		//}
+		mDistance = mCurLookPosition - (mResolution / 2.0f);
+		mPrevLookPosition = mCurLookPosition;
+	}
+	void Camera::CheckEffectEnd()
+	{
 		if (!mEffectQueue.empty())
 		{
 			EffectInfo& info = mEffectQueue.front();
@@ -124,16 +150,15 @@ namespace m
 				mEffectQueue.pop();
 			}
 
-
 			if (CAMERA_EFFECT_TYPE::Fade_In == info.effect)
 				mCuttonAlpha = 1.0f - ratio;
 			else if (CAMERA_EFFECT_TYPE::Fade_Out == info.effect)
 				mCuttonAlpha = ratio;
 			else
+			{
 				mCuttonAlpha = 0.0f;
+			}
 		}
-		mDistance = mCurLookPosition - (mResolution / 2.0f);
-		mPrevLookPosition = mCurLookPosition;
 	}
 	void Camera::Release()
 	{

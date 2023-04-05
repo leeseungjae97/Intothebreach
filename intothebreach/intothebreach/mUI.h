@@ -20,7 +20,10 @@ namespace m{
 		virtual void Release();
 		float GetWidth();
 		float GetHeight();
-		Vector2 GetSize() { return Vector2(GetWidth(), GetHeight()); }
+		Vector2 GetSize() { 
+			if (mSize != Vector2::Zero) return mSize;
+			return Vector2(GetWidth(), GetHeight()); 
+		}
 		void SetSize(Vector2 _size) {mSize = _size;}
 		void SetTex(const wstring& key, const wstring& path, ISLAND_T type);
 		void Clear();
@@ -28,6 +31,7 @@ namespace m{
 		void SetCutPos(bool _cp) { cutPos = _cp; }
 		void SetEC(bool _ec) { effectCamera = _ec; }
 		void SetAlpha(bool _mA) { mAlpha = _mA; }
+
 	protected:
 		Image* mImage;
 		wstring mPath;

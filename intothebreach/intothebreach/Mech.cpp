@@ -43,6 +43,7 @@ namespace m
 			, AC_SRC_ALPHA
 		);
 		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+
 		SetState(STATE::Idle);
 	}
 	Mech::Mech(Mech& _origin)
@@ -126,6 +127,9 @@ namespace m
 			}
 			else // 이동이 취소되고 공격가능상태로
 			{
+				if(scene->GetAlphaFollower())
+					scene->GetAlphaFollower()->SetState(GameObject::STATE::Death);
+
 				SetCurAttackSkill();
 				SetMove(false);
 			}

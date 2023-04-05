@@ -17,6 +17,25 @@ namespace m {
 		Background* b1 = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
 
+		Background* water = new Background(L"water", L"..\\Resources\\texture\\ui\\selectLand\\watertile.bmp", 0, false);
+
+		UINT _x = (UINT)(application.GetResolutionWidth() / water->GetWidth());
+		UINT _y = (UINT)(application.GetResolutionHeight() / water->GetHeight());
+
+		delete water;
+		for (UINT y = 0; y <= _y; y++)
+		{
+			for (UINT x = 0; x <= _x; x++)
+			{
+				Background* w_ = new Background(L"water", L"..\\Resources\\texture\\ui\\selectLand\\watertile.bmp", 0, false);
+				w_->SetCutPos(true);
+				w_->SetAlpha(true);
+				w_->SetAlphaConstant(50);
+				w_->SetPos(Vector2(w_->GetWidth() * x, w_->GetHeight() * y));
+				AddGameObject(w_, LAYER_TYPE::BACKGROUND);
+			}
+		}
+
 		for (int i = 0; i < (UINT)ISLAND_T::END; i++) {
 			Background* p = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, DEFAULT);
 			Background* l = new Background(MAKE_ISLAND_KEY((ISLAND_T)i), MAKE_ISLAND_PATH((ISLAND_T)i), 2, false, DEFAULT);

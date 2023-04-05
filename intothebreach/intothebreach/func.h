@@ -50,8 +50,9 @@ namespace m::object
 		gameObj->SetLayerType(type);
 		if (type == LAYER_TYPE::CLONE)
 		{
-			gameObj->SetState(GameObject::STATE::Death);
+			gameObj->SetState(GameObject::STATE::Invisible);
 			gameObj->GetAnimator()->SetConstant(100);
+			//gameObj->GetAnimator()->
 
 		}
 		if (type == LAYER_TYPE::PLAYER)

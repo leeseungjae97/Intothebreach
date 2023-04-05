@@ -173,6 +173,7 @@
     <ClInclude Include="mLayer.h" />
     <ClInclude Include="mMath.h" />
     <ClInclude Include="TileEnums.h" />
+    <ClInclude Include="UIEnums.h" />
     <ClInclude Include="UnitEnums.h" />
     <ClInclude Include="_Engine.h" />
     <ClInclude Include="mPilot.h" />

@@ -23,7 +23,7 @@ namespace m {
         virtual void water() override;
         virtual void emerge() override;
 
-        bool AlienMoveToAttackCheck(Vector2 _alienCoord, int curAlien);
+        bool AlienMoveToAttackCheck(Vector2 _alienCoord);
         void AlienMoveCheck(int& curAlien);
         void AlienMapCheck(int curAlien);
 

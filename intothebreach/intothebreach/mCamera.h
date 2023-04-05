@@ -26,7 +26,12 @@ namespace m {
 		static void SetTarget(GameObject* _obj) { mTarget = _obj; }
 		static Vector2 GetRealPos(Vector2 _vRenderPos) { return _vRenderPos + mDistance; }
 		static void MoveCamera(Vector2 pos) { mLookPosition = pos; }
-
+		static void CheckEffectEnd();
+		static void SetMoveTime(float _time) { 
+			m_fAcctime = 0;
+			m_fTime = _time; 
+		}
+		static Vector2 GetCurPos() { return mCurLookPosition; }
 		static void Release();
 
 		static bool SetLookAt(Vector2 pos);

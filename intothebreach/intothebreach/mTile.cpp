@@ -1,6 +1,9 @@
 #include "mTile.h"
 #include "mImage.h"
 #include "mCamera.h"
+#include "mAnimator.h"
+#include "mResources.h"
+#include "mComponent.h"
 namespace m {
 	Tile::Tile(Vector2 _coord)
 		: mTileTex(nullptr)
@@ -9,6 +12,29 @@ namespace m {
 		, mConstant(50)
 	{
 		AddComponent(new Transform());
+		AddComponent(new Animator());
+		mAnimator = GetComponent<Animator>();
+
+		for (int i = 0; i < (int)COMBAT_ANIM_TILE_T::END; i++)
+		{
+			UINT len = COMBAT_ANIM_TILE_LEN[(UINT)i];
+
+			Image* im = Resources::Load<Image>(MAKE_COMBAT_ANIM_TILE_KEY((COMBAT_ANIM_TILE_T)i)
+				, MAKE_COMBAT_ANIM_TILE_PATH((COMBAT_ANIM_TILE_T)i));
+
+			float fWid = im->GetWidth() / len;
+			float fHei = im->GetHeight();
+			mAnimator->CreateAnimation(
+				MAKE_COMBAT_ANIM_TILE_KEY((COMBAT_ANIM_TILE_T)i)
+				, im
+				, Vector2(Vector2::Zero)
+				, Vector2(fWid, fHei)
+				, COMBAT_ANIM_TIME_OFFSET[(UINT)i]
+				, len
+				, 0.2f
+				, AC_SRC_ALPHA
+			);
+		}
 	}
 	Tile::Tile()
 		: mTileTex(nullptr)
@@ -17,6 +43,7 @@ namespace m {
 		, mConstant(50)
 	{
 		AddComponent(new Transform());
+		AddComponent(new Animator());
 		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
 	}
 	Tile::Tile(int m)
@@ -29,13 +56,23 @@ namespace m {
 	}
 	Tile::~Tile() {
 	}
+	void Tile::Initialize()
+	{
+	}
 	void Tile::Update() {
 		GameObject::Update();
 	}
 	void Tile::SetTileTexture(const wstring& key, const wstring& path)
 	{
+		mAnimator->Stop();
 		mTileTex = Resources::Load<Image>(key, path);
 		SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
+	}
+	void Tile::SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, float fConstant, bool alpha)
+	{
+		mTileTex = nullptr;
+		if (alpha) mAnimator->SetConstant(fConstant);
+		mAnimator->Play(MAKE_COMBAT_ANIM_TILE_KEY(_type), true);
 	}
 	void Tile::ClearAddETCTiles()
 	{

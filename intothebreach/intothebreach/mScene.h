@@ -57,6 +57,8 @@ namespace m
 
 		void CheckMouseOutOfMapRange();
 		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
+		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, float fContant);
+		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2);
 		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
 		void RobotDrag();
 		void MoveEffectUnit(Unit* unit);

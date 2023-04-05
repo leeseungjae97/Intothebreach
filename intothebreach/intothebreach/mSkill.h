@@ -15,7 +15,7 @@ namespace m
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
 
-		virtual void ReInit(Vector2 stPos, Vector2 enPos);
+		virtual void ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T _type);
 		virtual void Active(HDC hdc);
 		virtual void GuideWire(HDC hdc);
 		virtual void PushUnit(int(*direct)[2], int size);
@@ -31,6 +31,8 @@ namespace m
 		LAYER_TYPE GetLayerType() { return mLayerType; }
 		SKILL_T GetSkillType() { return mType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
+		Vector2 GetGuideLinePos() { return guideLinePos; }
+		Vector2 GetGuideLineCoord() { return guideLineCoord; }
 		bool GetEndFire()
 		{
 			return endFire;
@@ -48,6 +50,8 @@ namespace m
 		void SetRealPos(Vector2 _pos) { ; }
 		void SetEndPos(Vector2 _pos) { mFinalEdPos = _pos; }
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
+		void SetGuideLinePos(Vector2 _glp) { guideLinePos = _glp; }
+		void SetGuideLineCoord(Vector2 _glc) { guideLineCoord = _glc; }
 		void SetEndFire(bool _endFire) { endFire = _endFire; }
 		void SetStartFire(bool _stFire) { 
 			startFire = _stFire; 
@@ -83,6 +87,8 @@ namespace m
 		LAYER_TYPE mLayerType;
 		SKILL_T mType;
 		Unit* mOnwer;
+		Vector2 guideLinePos;
+		Vector2 guideLineCoord;
 		Vector2 Missile_vec;
 		Vector2 Missile_vec2;
 		Vector2 endCoord;

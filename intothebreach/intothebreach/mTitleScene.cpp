@@ -22,19 +22,28 @@ namespace m {
 		Background* b5 = new Background(L"title5", L"..\\Resources\\texture\\ui\\title\\title_large.bmp", 2, false, TOP | LEFT);
 		Background* b6 = new Background(L"backTitle",L"..\\Resources\\texture\\ui\\title\\calibration.bmp", 0, true, DEFAULT);
 
-		Button* btn1 = new Button(L"btn1", L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
-		btn1->SetAlpha(true);
-		btn1->SetPos(Vector2(1.f, 200.f));
+		float yPos = 210.f;
+		for (int i = 0; i < 5; i++)
+		{
+			Button* btn = new Button(UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
+			btn->SetText(true);
+			btn->SetAlpha(true);
+			btn->SetMoveScene(SCENE_TYPE::SELECT_ROBOT);
+			btn->UseTextAlpha(true);
+			btn->SetPos(Vector2(-300.f, yPos));
+			btn->SetSize(Vector2(300.f, 45.f));
+			yPos += 52.f;
 
+			AddGameObject(btn, LAYER_TYPE::UI);
+			btns.push_back(btn);
+		}
 
 		b4->SetCutPos(true);
 		b4->SetEC(true);
 		b4->SetPos(Vector2((float)application.GetResolutionWidth() * 2 
 			, (float)application.GetResolutionHeight()));
 
-		//b5->SetEC(true);
 		b5->SetPos(Vector2(0, 0));
-		//b5->SetCutPos(true);
 
 		b6->SetState(GameObject::STATE::Invisible);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
@@ -44,7 +53,6 @@ namespace m {
 		AddGameObject(b5, LAYER_TYPE::BACKGROUND);
 		AddGameObject(b6, LAYER_TYPE::BACKGROUND);
 
-		AddGameObject(btn1, LAYER_TYPE::UI);
 		scrollSpeed = 100.f;
 		Scene::Initialize();
 	}
@@ -63,12 +71,35 @@ namespace m {
 				mBacks[2]->SetPos(Vector2(mBacks[2]->GetPos().x - (scrollSpeed + 350.f) * Time::fDeltaTime(), mBacks[2]->GetPos().y));
 				scrollSpeed -= 2.f;
 				//Camera::SetLookAt(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight() / 2));
-				
+			}
+			else
+			{
+				for (int i = 0; i < btns.size();i++)
+				{
+					if (btns[i]->GetPos().x >= 1.f)
+					{
+						if (btns[i]->GetTextAlpha() + 10 < 255) btns[i]->SetTextAlpha(btns[i]->GetTextAlpha() + 10);
+						btns[i]->SetPos(Vector2(1.f, btns[i]->GetPos().y));
+						continue;
+					}
+					if (i != 0)
+					{
+						if (btns[i - 1]->GetPos().x > -150.f)
+						{
+							btns[i]->SetPos(Vector2(btns[i]->GetPos().x + 500.f * Time::fDeltaTime(), btns[i]->GetPos().y));
+						}
+					}
+					else
+					{
+						btns[i]->SetPos(Vector2(btns[i]->GetPos().x + 500.f * Time::fDeltaTime(), btns[i]->GetPos().y));
+					}
+					
+				}
 			}
 		}
 		else
 		{
-			//mBacks[5]->SetState(GameObject::STATE::Visibie);
+			mBacks[5]->SetState(GameObject::STATE::Visibie);
 		}
 		
 		
@@ -83,7 +114,10 @@ namespace m {
 		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() /2));
 	}
 	void TitleScene::OnExit() {
-		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
+		for (int i = 0; i < btns.size(); i++)
+			btns[i]->SetTextAlpha(255);
+
+		//Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 		SetFirstUpdate(false);
 	}
 }

@@ -14,7 +14,16 @@ namespace m {
         virtual void Render(HDC hdc);
         virtual void Release();
 
+        void SetAlphaConstant(int _a) { iConstant = _a; }
+        int GetAlphaConstant() { return iConstant; }
+
+        void SetBlink(bool _b) { bBlink = _b; }
+
     private :
+        int iConstant;
+        int idDir;
+        int idVar;
+        bool bBlink;
     };
 
 }

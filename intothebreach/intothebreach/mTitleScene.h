@@ -1,6 +1,7 @@
 #pragma once
 #include "mScene.h"
 namespace m {
+	class Button;
 	class TitleScene : public Scene {
 	public:
 		TitleScene();
@@ -16,6 +17,7 @@ namespace m {
 
 	private:
 		float scrollSpeed;
+		vector<Button*> btns;
 	};
 }
 

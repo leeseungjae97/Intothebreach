@@ -68,9 +68,9 @@ namespace m
 	{
 		if (!startRender) return;
 		if (endFire) startFire = false;
-		Active(hdc);
 		if (startFire)
 		{
+			Active(hdc);
 		}
 		else
 		{
@@ -80,9 +80,9 @@ namespace m
 	void Skill_Arc::Release()
 	{
 	}
-	void Skill_Arc::ReInit(Vector2 stPos, Vector2 enPos)
+	void Skill_Arc::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		Skill::ReInit(stPos, enPos);
+		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
 	void Skill_Arc::Active(HDC hdc)
@@ -96,7 +96,7 @@ namespace m
 	void Skill_Arc::GuideWire(HDC hdc)
 	{
 		Vector2 mPos = mStPos;
-		Image* im = Resources::Load<Image>(L"line", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
+		Image* im = Resources::Load<Image>(L"dot", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
 		Vector2 vec = mStPos;
 		float absD = abs(mFinalEdPos.x - mStPos.x);

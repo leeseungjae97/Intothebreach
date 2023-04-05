@@ -6,6 +6,9 @@
 #include "mEndingScene.h"
 #include "mIntroScene.h"
 #include "mInLandScene.h"
+#include "mCamera.h"
+#include "mApplication.h"
+extern m::Application application;
 namespace m
 {	
 	std::vector<Scene*> SceneManager::mScenes = {};
@@ -66,10 +69,14 @@ namespace m
 	void SceneManager::LoadScene(SCENE_TYPE type) {
 		// «ˆ¿Áæ¿
 		mActiveScene->OnExit();
-
-		// ¥Ÿ¿Ωæ¿
+		//if (Camera::CheckEffectEnd())
+		//{
+		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
+		//}
 		mActiveScene = mScenes[(UINT)type];
 		mActiveScene->OnEnter();
+		// ¥Ÿ¿Ωæ¿
+		
 	}
 
 }

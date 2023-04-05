@@ -94,13 +94,6 @@ namespace m
 	}
 	void Scene::Render(HDC hdc)
 	{
-		wchar_t szFloat[500] = {};
-		swprintf_s(szFloat, 500, L"playerTurn : %d", playerTurn);
-		size_t iLen = wcsnlen_s(szFloat, 500);
-		//left top right bottom
-		RECT rt = { 50, 140, 400, 160 };
-		DrawText(application.GetHdc(), szFloat, iLen, &rt, DT_LEFT | DT_WORDBREAK);
-
 		for (Layer& layer : mLayers)
 		{
 			layer.Render(hdc);
@@ -263,6 +256,7 @@ namespace m
 			}
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+			SetAlphaState(GameObject::STATE::Invisible);
 		}
 		for (int y = 0; y < mPosTiles.size(); y++)
 		{
@@ -463,8 +457,6 @@ namespace m
 		if (nullptr != curAlien->GetCurAttackSkill()
 			&& curAlien->GetCurAttackSkill()->GetStartRender())
 		{
-			curAlien->SetSkillIdx(0);
-			curAlien->SetCurAttackSkill();
 			curAlien->SetEndAttack(true);
 			curAlien->GetCurAttackSkill()->SetStartFire(true);
 			//curAlien->GetCurAttackSkill()->SetEndFire(false);
@@ -477,14 +469,14 @@ namespace m
 
 		if (curAlien->GetCurAttackSkill()->CheckSkillFiring()) return;
 
-		if (curAlien->GetEndAttack())
-		{
-			curAlien->GetCurAttackSkill()->SetStartRender(false);
-			curAlien->GetCurAttackSkill()->SetStartFire(false);
-			curAlien->GetCurAttackSkill()->SetEndFire(false);
-			curAlien->SetEndAttack(false);
-			return;
-		}
+		//if (curAlien->GetEndAttack())
+		//{
+		//	curAlien->GetCurAttackSkill()->SetStartRender(false);
+		//	curAlien->GetCurAttackSkill()->SetStartFire(false);
+		//	curAlien->GetCurAttackSkill()->SetEndFire(false);
+		//	curAlien->SetEndAttack(false);
+		//	return;
+		//}
 
 		curAlien->AlienMapCheck(curAttackAlien);
 		curAlien->AlienMoveCheck(curAttackAlien);
@@ -508,7 +500,7 @@ namespace m
 
 		if (mMouseFollower->CheckSkillFiring()) return;
 
-		mMouseFollower->ActiveSkill();
+		mMouseFollower->ActiveSkill(MOUSE_POS);
 		mMouseFollower->DrawSkillRangeTile();
 
 		Scene::CheckMouseOutOfMapRange();
@@ -636,6 +628,17 @@ namespace m
 		mPosTiles[_y][_x]->SetTileTexture(MAKE_MOVE_TILE_KEY(_type2)
 			, MAKE_MOVE_TILE_PATH(_type2));
 	}
+	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, float fContant)
+	{
+		mPosTiles[_y][_x]->SetTileType(_type1);
+		mPosTiles[_y][_x]->SetCombatTileAnimator(_type2, fContant, true);
+	}
+	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2)
+	{
+		mPosTiles[_y][_x]->SetTileType(_type1);
+		mPosTiles[_y][_x]->SetTileTexture(MAKE_COMBAT_TILE_KEY(_type2)
+			, MAKE_COMBAT_TILE_PATH(_type2));
+	}
 	void Scene::SetBoundaryTiles(int y, int x, MOVE_TILE_T _type)
 	{
 		mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(_type)
@@ -684,8 +687,7 @@ namespace m
 	{
 		if (nullptr != mAlphaFollower)
 		{
-			object::Destory(GetAlphaFollower());
-			//SetAlphaState(GameObject::STATE::Death);
+			SetAlphaState(GameObject::STATE::Death);
 		}
 		mAlphaFollower = _mM;
 	}

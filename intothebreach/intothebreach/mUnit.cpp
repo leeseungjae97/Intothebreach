@@ -165,14 +165,14 @@ namespace m
 					if (GetFinalCoord() == GetCoord()) continue;
 					if (scene->GetMap(y, x) != MOVE)
 					{
-						scene->SetAlphaState(GameObject::STATE::Death);
+						scene->SetAlphaState(GameObject::STATE::Invisible);
 						continue;
 					}
 
 					Vector2 prevCoord = GetFinalCoord();
 					Vector2 curCoord = GetCoord();
 
-					scene->SetAlphaState(GameObject::STATE::Idle);
+					scene->SetAlphaState(GameObject::STATE::Visibie);
 
 					list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
@@ -303,7 +303,7 @@ namespace m
 
 				if (scene->GetMap((int)dy, (int)dx) == MECH
 					|| scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
-				
+
 				scene->SetMap((int)dy, (int)dx, MOVE);
 				scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 			}
@@ -355,17 +355,18 @@ namespace m
 			}
 		}
 	}
-	void Unit::ActiveSkill()
+	void Unit::ActiveSkill(Vector2 otherPos)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Vector2 endCoord = Vector2::Minus;
+		Vector2 drawGuideLineEndCoord = Vector2::Minus;
 		for (int y = 0; y < TILE_Y; y++)
 		{
 			for (int x = 0; x < TILE_X; x++)
 			{
 				Tile* p = scene->GetPosTiles()[y][x];
 				if (p->GetCoord() == GetFinalCoord()) continue;
-				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), otherPos))
 				{
 					if (skill_range_map[(int)p->GetCoord().y][(int)p->GetCoord().x] != MOVE)
 					{
@@ -410,6 +411,7 @@ namespace m
 						{
 							IDVar *= -1;
 						}
+						drawGuideLineEndCoord = endCoord;
 						for (int i = st; i != end; i += IDVar)
 						{
 							if (cY && scene->GetEffectUnit(i, (int)GetCoord().x).size() != 0)
@@ -422,6 +424,9 @@ namespace m
 								endCoord = Vector2((float)i, p->GetCoord().y);
 								break;
 							}
+
+							if (cY)drawGuideLineEndCoord = Vector2(p->GetCoord().x, (float)i);
+							else drawGuideLineEndCoord = Vector2((float)i, p->GetCoord().y);
 						}
 					}
 					if (GetCurAttackSkill()->GetSkillType()
@@ -436,7 +441,11 @@ namespace m
 		if (endCoord != Vector2::Minus)
 		{
 			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
-			DrawSkill(endCoord);
+			//Scene* scene = SceneManager::GetActiveScene();
+			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			DrawSkill(endCoord, drawGuideLineEndCoord);
 			GetCurAttackSkill()->SetStartRender(true);
 		}
 		// 공격완료하면 clear
@@ -473,7 +482,12 @@ namespace m
 				if (skill_range_map[(int)dy][(int)dx] != 0) continue;
 				if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
 				{
-					if (scene->GetMap((int)dy, (int)dx) != 0) continue;
+
+					if (scene->GetMap((int)dy, (int)dx) != 0)
+					{
+						skill_range_map[(int)dy][(int)dx] = MOVE;
+						continue;
+					}
 				}
 				bool rangeCheck = false;
 
@@ -484,8 +498,9 @@ namespace m
 						&& stPos.y + direct[_i][1] == dy) rangeCheck = true;
 				}
 				// 4방향체크
-				if ((stPos.y != dy && stPos.x == dx)
-					|| (stPos.x != dx && stPos.y == dy))
+				//if ((stPos.y != dy && stPos.x == dx)
+				//	|| (stPos.x != dx && stPos.y == dy))
+				if (stPos.y == dy || stPos.x == dx)
 				{
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
@@ -494,6 +509,7 @@ namespace m
 
 					skill_range_map[(int)dy][(int)dx] = MOVE;
 					scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					//scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
 				}
 			}
 		}
@@ -514,12 +530,12 @@ namespace m
 			&& curAttactSkill->GetStartFire()) return true;
 		return false;
 	}
-	void Unit::DrawSkill(Vector2 pos)
+	void Unit::DrawSkill(Vector2 pos, Vector2 guideLinePos)
 	{
 		curAttactSkill = mSkills[skillIdx];
 		if (pos == Vector2::Minus) return;
 		if (nullptr == curAttactSkill)return;
-		curAttactSkill->ReInit(this->GetFinalCoord(), pos);
+		curAttactSkill->ReInit(this->GetFinalCoord(), pos, guideLinePos, curAttactSkill->GetSkillType());
 	}
 	void Unit::SetSkill()
 	{}

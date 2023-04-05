@@ -46,7 +46,7 @@ namespace m
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
-		void ActiveSkill();
+		void ActiveSkill(Vector2 otherPos);
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 
@@ -61,7 +61,7 @@ namespace m
 			else curHp += repair;
 		}
 		size_t GetMIdx() { return mIdx; }
-		void DrawSkill(Vector2 pos);
+		void DrawSkill(Vector2 pos, Vector2 guideLinePos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
