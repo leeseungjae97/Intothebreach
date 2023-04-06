@@ -22,6 +22,7 @@ namespace m {
         virtual void broken() override;
         virtual void water() override;
         virtual void emerge() override;
+        virtual void ActiveSkill(Vector2 otherPos) override;
 
         bool AlienMoveToAttackCheck(Vector2 _alienCoord);
         void AlienMoveCheck(int& curAlien);

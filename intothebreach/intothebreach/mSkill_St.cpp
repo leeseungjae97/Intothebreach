@@ -61,7 +61,6 @@ namespace m
 	{
 		Vector2 mPos = GetPos();
 
-		
 		SKILL_DIR dir = SKILL_DIR::D;
 		if (mStPos < mFinalEdPos)
 			dir = SKILL_DIR::R;
@@ -73,6 +72,7 @@ namespace m
 		if (mStPos.x > mFinalEdPos.x
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
+
 		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
 
 		TransparentBlt(hdc,

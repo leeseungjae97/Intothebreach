@@ -20,6 +20,7 @@ namespace m
 		virtual void Update() override;
 		virtual void Render(HDC hdc) override;
 		virtual void Release() override;
+		virtual void ActiveSkill(Vector2 otherPos);
 
 		void SetSkill();
 		void SetSkill(int type);
@@ -46,7 +47,7 @@ namespace m
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
-		void ActiveSkill(Vector2 otherPos);
+		
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 

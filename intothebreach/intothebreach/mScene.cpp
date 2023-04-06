@@ -438,7 +438,6 @@ namespace m
 	}
 	void Scene::AlienAlgorithm()
 	{
-
 		if (playerTurn) return;
 
 		bool n = false;
@@ -480,6 +479,7 @@ namespace m
 
 		curAlien->AlienMapCheck(curAttackAlien);
 		curAlien->AlienMoveCheck(curAttackAlien);
+
 		//curAttackAlien++;
 
 		if (KEY_PRESSED(KEYCODE_TYPE::M))
@@ -489,6 +489,13 @@ namespace m
 	}
 	void Scene::MoveSkill()
 	{
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			if (mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
+			//mAliens[i]->AlienMoveToAttackCheck(mAliens[i]->GetCoord());
+			mAliens[i]->ActiveSkill(mAliens[i]->GetTargetCoord());
+		}
+
 		if (nullptr == mMouseFollower
 			|| mMouseFollower->GetMove()
 			|| nullptr == mMouseFollower->GetCurAttackSkill()) return;

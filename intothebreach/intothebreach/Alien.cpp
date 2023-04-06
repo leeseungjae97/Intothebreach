@@ -150,20 +150,22 @@ namespace m
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1|| dy > TILE_Y - 1) continue;
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
-				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
-				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
-				//if ((stPos.y != dy && stPos.x == dx)
-				//	|| (stPos.x != dx && stPos.y == dy))
+				//if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				//if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
 				if (stPos.x == dx || stPos.y == dy)
 				{
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
-					//scene->SetPosTiles((int)dy, (int)dx
-					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetSkillMap((int)dy, (int)dx, MOVE);
-					GetCurAttackSkill()->SetGuideLinePos(
-						scene->GetPosTile((int)dy, (int)dx)->GetCenterPos() 
-					);
-					GetCurAttackSkill()->SetGuideLineCoord(Vector2(dx, dy));
+
+					if (!scene->GetPlayerTurn())
+					{
+						GetCurAttackSkill()->SetGuideLinePos(
+							scene->GetPosTile((int)dy, (int)dx)->GetCenterPos()
+						);
+						GetCurAttackSkill()->SetGuideLineCoord(Vector2(dx, dy));
+					}
+					scene->SetPosTiles((int)dy, (int)dx
+						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					if (scene->GetMap((int)dy, (int)dx) == MECH)
 					{
 						for (int i = 0; i < scene->GetEffectUnit((int)dy, (int)dx).size(); i++)
@@ -172,9 +174,11 @@ namespace m
 								scene->GetEffectUnit((int)dy, (int)dx)[i]->GetState() != GameObject::STATE::Broken)
 							{
 								//GetCurAttackSkill()->SetGuideLinePos();
-								SetTargetCoord(Vector2(dx, dy));
-								
-								return true;
+								if (!scene->GetPlayerTurn())
+								{
+									SetTargetCoord(Vector2(dx, dy));
+									return true;
+								}
 							}
 						}
 					}
@@ -234,13 +238,115 @@ namespace m
 		}
 		if (GetFinalMoveCoord() == _coord)
 		{
-			DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
+			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
+			ActiveSkill(GetTargetCoord());
 			//ActiveSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
 		}
+	}
+	void Alien::ActiveSkill(Vector2 otherPos)
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		Vector2 endCoord = Vector2::Minus;
+		Vector2 drawGuideLineEndCoord = Vector2::Minus;
+		//scene->SetPosTiles((int)otherPos.y, (int)otherPos.x
+		//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+		//if (skill_range_map[(int)otherPos.y][(int)otherPos.x] != MOVE)
+		//{
+		//	return;
+		//}
+		if (GetCurAttackSkill()->GetSkillType()
+			== SKILL_T::ST)
+		{
+			int st = 0;
+			int end = 0;
+			int IDVar = 1;
+			bool cY = false;
+			if (otherPos.x > GetCoord().x)
+			{
+				st = (int)GetCoord().x + 1;
+				end = TILE_X - 1;
+				endCoord = Vector2((float)end, otherPos.y);
+			}
+			if (otherPos.x < GetCoord().x)
+			{
+				st = (int)GetCoord().x - 1;
+				end = 0;
+				endCoord = Vector2((float)end, otherPos.y);
+			}
+			if (otherPos.y > GetCoord().y)
+			{
+				st = (int)GetCoord().y + 1;
+				end = TILE_Y - 1;
+				endCoord = Vector2(otherPos.x, (float)end);
+				cY = true;
+			}
+			if (otherPos.y < GetCoord().y)
+			{
+				st = (int)GetCoord().y - 1;
+				end = 0;
+				endCoord = Vector2(otherPos.x, (float)end);
+				cY = true;
+			}
+			
+			if (end == 0)
+			{
+				IDVar *= -1;
+			}
+			drawGuideLineEndCoord = endCoord;
+			for (int i = st; i != end; i += IDVar)
+			{
+				if (cY && scene->GetEffectUnit(i, (int)GetCoord().x).size() != 0)
+				{
+					endCoord = Vector2(otherPos.x, (float)i);
+					break;
+				}
+				if (!cY && scene->GetEffectUnit((int)GetCoord().y, i).size() != 0)
+				{
+					endCoord = Vector2((float)i, otherPos.y);
+					break;
+				}
+
+				if (cY)drawGuideLineEndCoord = Vector2(otherPos.x, (float)i);
+				else drawGuideLineEndCoord = Vector2((float)i, otherPos.y);
+			}
+		}
+		if (GetCurAttackSkill()->GetSkillType()
+			== SKILL_T::ARC)
+		{
+			endCoord = otherPos;
+		}
+		if (endCoord != Vector2::Minus)
+		{
+			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+
+			scene->SetPosTiles((int)drawGuideLineEndCoord.y, (int)drawGuideLineEndCoord.x
+				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
+			//Scene* scene = SceneManager::GetActiveScene();
+			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			if (!scene->GetPlayerTurn())
+			{
+				DrawSkill(endCoord, drawGuideLineEndCoord);
+				//GetCurAttackSkill()->SetStartRender(true);
+			}
+			else
+			{
+				Vector2 pos = scene->GetPosTile(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x)->GetPos();
+				GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
+				GetCurAttackSkill()->SetGuideLinePos(pos);
+			}
+
+			
+		}
+		// 공격완료하면 clear
+		ClearSkillRangeMap();
 	}
 	void Alien::AlienMapCheck(int curAlien)
 	{
@@ -250,12 +356,12 @@ namespace m
 		ClearSearchMap();
 		Scene* scene = SceneManager::GetActiveScene();
 
-		if(moveCnt == 1) DrawMoveRangeTile();
+		if(moveCnt == 1 && !scene->GetPlayerTurn()) DrawMoveRangeTile();
 
 		list<Vector2_1>queue;
-
+		
 		Vector2 stPos = GetFinalCoord();
-
+		
 		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y)))
 		{
 			scene->SetPosTiles((int)stPos.y, (int)stPos.x
@@ -264,9 +370,10 @@ namespace m
 			return;
 		}
 
+		scene->SetMap();
 		queue.push_back(Vector2_1(stPos, 0, -1));
 		alienPathQueue.push_back(Vector2_1(stPos, 0, -1));
-		scene->SetMap();
+
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 
 		bool find = false;
@@ -296,9 +403,13 @@ namespace m
 
 				if (AlienMoveToAttackCheck(Vector2(dx, dy)))
 				{
-					//scene->SetPosTiles((int)dy, (int)dx
-					//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-					SetFinalMoveCoord(Vector2(dx, dy));
+					if (!scene->GetPlayerTurn())
+					{	
+						scene->SetPosTiles((int)dy, (int)dx
+							, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+						SetFinalMoveCoord(Vector2(dx, dy));
+					}
+						
 					find = true;
 				}
 
