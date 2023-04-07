@@ -48,6 +48,51 @@ wstring SKILL_DIR_PATH[(UINT)SKILL_DIR::NONE]{
 	L"U",
 	L"D",
 };
+int WEAPON_PUSH_DIR[(UINT)MECHS::END]{
+	1,//electrice,
+	1,//flame,
+	1,//guard,
+	1,//judo,
+	1,//laser,
+	1,//leap,
+	1,//punch,
+
+	1,//charge,
+	1,//jet,
+	1,//mirror,
+	1,//tank,
+	1,//unstable,
+	1,//wall,
+
+	4,//artillery,
+	4,//dstrike,
+	4,//ice,
+	4,//ignite,
+	4,//rockart,
+	4,//rocket,
+
+	0,//grav,
+	0,//nano,
+	0,//pulse,
+	0,//science,
+	0,//tele,
+};
+int ALIEN_WEAPON_PUSH_DIR[(UINT)ALIENS::END]{
+	1,//Beetle,
+	0,//Blobber,
+	0,//Burrower,
+	0,//Centipede,
+	0,//Crab,
+	0,//Digger,
+	0,//Firefly,
+	0,//Hornet,
+	0,//Jelly,
+	0,//Leaper,
+	0,//Scarab,
+	0,//Scorpion,
+	0,//Slime,
+	0,//Spider,
+};
 int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//electrice,
 	(int)SKILL_T::ST,//flame,
@@ -93,10 +138,6 @@ int ALIEN_BASIC_WEAPON[(UINT)ALIENS::END]{
 	(int)SKILL_T::ST,//Slime,
 	(int)SKILL_T::ARC,//Spider,
 };
-int** MAKE_SKILL_RANGE(SKILL_T skill)
-{
-	return nullptr;
-}
 wstring MAKE_SKILL_KEY(SKILL_T skill, SKILL_DIR dir)
 {
 	wstring key = L"";

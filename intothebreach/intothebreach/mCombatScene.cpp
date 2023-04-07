@@ -10,6 +10,7 @@
 #include "mTile.h"
 #include "Mech.h"
 #include "func.h"
+#include "Building.h"
 #include "Alien.h"
 #include "mSkill.h"
 extern m::Application application;
@@ -58,6 +59,26 @@ namespace m {
 		Alien* alien1 = object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, ALIENS::Hornet);
 		Alien* alien2 = object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, ALIENS::Leaper);
 		Alien* alien3 = object::Instantiate(Vector2(5, 3), LAYER_TYPE::MONSTER, ALIENS::Firefly);
+
+		Building* stTile1 = object::Instantiate(Vector2(3, 3), LAYER_TYPE::STRUCT, STRUCTURES::Mountain);
+		Building* stTile2 = object::Instantiate(Vector2(1, 2), LAYER_TYPE::STRUCT, STRUCTURES::Mountain);
+		Building* stTile3 = object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::Mountain);
+		//stTile->SetPos(mTiles[3][3]->GetCenterPos());
+		//mStruturesTiles[3][3] = stTile;
+
+		//AddGameObject(stTile, LAYER_TYPE::STRUCT);
+
+		//Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
+		//stTile1->SetPos(mTiles[1][2]->GetCenterPos());
+		//mStruturesTiles[1][2] = stTile1;
+
+		//AddGameObject(stTile1, LAYER_TYPE::STRUCT);
+
+		//Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
+		//stTile2->SetPos(mTiles[2][0]->GetCenterPos());
+		//mStruturesTiles[2][0] = stTile2;
+
+		//AddGameObject(stTile2, LAYER_TYPE::STRUCT);
 	}
 	void CombatScene::Update() {
 		Scene::Update();

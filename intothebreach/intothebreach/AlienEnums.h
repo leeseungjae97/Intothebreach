@@ -199,7 +199,7 @@ int ALIEN_HP[(UINT)ALIENS::END]{
 	3,//Spider,
 };
 
-wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2)
+wstring MAKE_UNIT_KEY(ALIENS _type, ALIEN_CONDITION _type2)
 {
 	wstring key = L"";
 
@@ -208,7 +208,7 @@ wstring MAKE_ALIEN_KEY(ALIENS _type, ALIEN_CONDITION _type2)
 
 	return key;
 }
-wstring MAKE_ALIEN_PATH(ALIENS _type, ALIEN_CONDITION _type2)
+wstring MAKE_UNIT_PATH(ALIENS _type, ALIEN_CONDITION _type2)
 {
 	wstring path = L"..\\Resources\\texture\\alien\\";
 

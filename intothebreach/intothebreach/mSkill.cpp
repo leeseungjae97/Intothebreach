@@ -81,8 +81,9 @@ namespace m {
 		{
 			scene->GetBackTiles()[i]->SetState(GameObject::STATE::Delete);
 		}
-
 		scene->GetBackTiles().clear();
+
+		//Safe_Delete_X_Vec(scene->GetBackTiles());
 	}
 	bool Skill::CheckSkillFiring()
 	{
@@ -111,7 +112,7 @@ namespace m {
 		SetEndPos(scene->GetPosTiles()[(int)enPos.y][(int)enPos.x]->GetCenterPos());
 		if (_type == SKILL_T::ST)
 		{
-			SetGuideLinePos(scene->GetPosTiles()[(int)guideLinePos.y][(int)guideLinePos.x]->GetPos());
+			SetGuideLinePos(scene->GetPosTiles()[(int)guideLinePos.y][(int)guideLinePos.x]->GetCenterPos());
 			SetGuideLineCoord(guideLinePos);
 		}
 	}
@@ -121,54 +122,143 @@ namespace m {
 	void Skill::GuideWire(HDC hdc)
 	{
 	}
-	void Skill::DrawPushTile(int (*direct)[2], int size)
+	//void Skill::DrawPushTile(int (*direct)[2], int size)
+	//{
+	//	Scene* scene = SceneManager::GetActiveScene();
+	//	ClearPushTile();
+	//	// right, up, down, left
+	//	for (int i = 0; i < size; i++)
+	//	{
+	//		int dy = (int)GetEndCoord().y + direct[i][0];
+	//		int dx = (int)GetEndCoord().x + direct[i][1];
+	//		if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
+	//		ARROW_TILE_T _type = ARROW_TILE_T::arrow_down;
+	//		
+	//		//if (scene->GetEffectUnit(dy, dx).size() != 0)
+	//		//	_type = (ARROW_TILE_T)(i + 4);
+	//		//else
+	//		//	_type = (ARROW_TILE_T)(i);
+	//		// 
+	//		//if (scene->GetEffectUnit(dy, dx).size() != 0)
+	//		if (scene->GetEffectUnit(dy, dx) != nullptr)
+	//			_type = (ARROW_TILE_T)(i + 4);
+	//		else
+	//			_type = (ARROW_TILE_T)(i);
+	//		Tile* tile = new Tile(Vector2((float)dx, (float)dy));
+	//		tile->SetPos(scene->GetPosTiles()[dy][dx]->GetCenterPos());
+	//		tile->SetTileTexture(
+	//			MAKE_TILE_KEY(_type)
+	//			, MAKE_TILE_PATH(_type)
+	//		);
+	//		scene->GetBackTiles().push_back(tile);
+	//		scene->AddGameObject(tile, LAYER_TYPE::TILE);
+	//	}
+	//}
+	void Skill::DrawPushTile(ARROW_TILE_T *arrows, int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 
 		ClearPushTile();
-		// right, up, down, left
 		for (int i = 0; i < size; i++)
 		{
-			int dy = (int)GetEndCoord().y + direct[i][0];
-			int dx = (int)GetEndCoord().x + direct[i][1];
+			int dy = 0;
+			int dx = 0;
+			if (GetSkillType() == SKILL_T::ARC)
+			{
+				dy = (int)GetEndCoord().y + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;
+				dx = (int)GetEndCoord().x + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
+
+			}
+			if (GetSkillType() == SKILL_T::ST)
+			{
+				dy = (int)GetEndCoord().y;
+				dx = (int)GetEndCoord().x;
+			}
+
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 
-			ARROW_TILE_T _type = ARROW_TILE_T::arrow_down;
-			
-			if (scene->GetEffectUnit(dy, dx).size() != 0)
-				_type = (ARROW_TILE_T)(i + 4);
+			ARROW_TILE_T _type = arrows[i];
+			ARROW_ETC_T _type2;
+
+			//if (scene->GetEffectUnit(dy, dx).size() != 0)
+			if (scene->GetEffectUnit(dy, dx) != nullptr)
+			{
+				_type = (ARROW_TILE_T)((UINT)arrows[i] + 4);
+				_type2 = ARROW_ETC_T::push_y_box;
+			}
 			else
-				_type = (ARROW_TILE_T)(i);
+			{
+				_type = arrows[i];
+				_type2 = ARROW_ETC_T::push_box;
+			}
+
+			//if (scene->GetEffectUnit(dy, dx).size() != 0)
+			//	_type = (ARROW_TILE_T)(i + 4);
+			//else
+			//	_type = (ARROW_TILE_T)(i);
+			Tile* pushBox = new Tile(Vector2((float)dx, (float)dy));
+			pushBox->SetPos(scene->GetPosTiles()[dy][dx]->GetPos());
+			pushBox->SetTileTexture(MAKE_TILE_KEY(_type2), MAKE_TILE_PATH(_type2));
+			//pushBox->SetTileType(TILE_T::MOVE_RANGE);
+			//pushBox->SetSourceConstantAlpha(200);
 
 			Tile* tile = new Tile(Vector2((float)dx, (float)dy));
-			tile->SetPos(scene->GetPosTiles()[dy][dx]->GetCenterPos());
+			tile->SetPos(scene->GetPosTiles()[dy][dx]->GetPos());
+			//tile->SetTileType(TILE_T::MOVE_RANGE);
+			//tile->SetSourceConstantAlpha(200);
 
 			tile->SetTileTexture(
-				MAKE_ARROW_TILE_KEY(_type)
-				, MAKE_ARROW_TILE_PATH(_type)
+				MAKE_TILE_KEY(_type)
+				, MAKE_TILE_PATH(_type)
+				, ARROW_TILE_OFFSET[(UINT)_type]
 			);
+
 			scene->GetBackTiles().push_back(tile);
-			scene->AddGameObject(tile, LAYER_TYPE::TILE);
+			scene->GetBackTiles().push_back(pushBox);
+
+			scene->AddGameObject(pushBox, LAYER_TYPE::TILE);
+			scene->AddGameObject(tile, LAYER_TYPE::TILE_HEAD);
 		}
 	}
-	void Skill::PushUnit(int (*direct)[2], int size)
+	void Skill::PushUnit(ARROW_TILE_T* arrows, int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		for (int i = 0; i < size; i++)
 		{
-			int dy = (int)GetEndCoord().y + direct[i][0];
-			int dx = (int)GetEndCoord().x + direct[i][1];
+			int dy = 0;
+			int dx = 0;
+			if (GetSkillType() == SKILL_T::ARC)
+			{
+				dy = (int)GetEndCoord().y + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;
+				dx = (int)GetEndCoord().x + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
+
+			}
+			if (GetSkillType() == SKILL_T::ST)
+			{
+				dy = (int)GetEndCoord().y;
+				dx = (int)GetEndCoord().x;
+			}
 
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
-			if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
-			for (int _i = 0; _i < scene->GetEffectUnit(dy, dx).size(); _i++)
-			{
-				Unit* unit = scene->GetEffectUnit(dy, dx)[_i];
-				int _dy = (int)dy + direct[i][0];
-				int _dx = (int)dx + direct[i][1];
-				if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
-				scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
-			}
+			if (nullptr == scene->GetEffectUnit(dy, dx)) continue;
+			
+			Unit* unit = scene->GetEffectUnit(dy, dx);
+
+			int _dy = (int)dy + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;
+			int _dx = (int)dx + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
+
+			if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
+			scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
+
+			//if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
+			//for (int _i = 0; _i < scene->GetEffectUnit(dy, dx).size(); _i++)
+			//{
+			//	Unit* unit = scene->GetEffectUnit(dy, dx)[_i];
+			//	int _dy = (int)dy + direct[i][0];
+			//	int _dx = (int)dx + direct[i][1];
+			//	if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
+			//	scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
+			//}
 		}
 	}
 	void Skill::Render(HDC hdc) {

@@ -67,6 +67,22 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
+	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType)
+	{
+		Scene* scene = SceneManager::GetActiveScene();
+		Building* gameObj = new Building(_sType, coord, scene->GetStructuresTiles().size());
+
+		gameObj->Initialize();
+		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
+		gameObj->SetFinalPos(gameObj->GetPos());
+		gameObj->GetAnimator()->SetConstant(255);
+		gameObj->SetLayerType(type);
+
+		scene->GetStructuresTiles().push_back(gameObj);
+
+		scene->AddGameObject(gameObj, type);
+		return gameObj;
+	}
 	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();

@@ -357,7 +357,7 @@ wstring MECH_S_PATH[(UINT)MECH_T::END]{
    L"range\\",
    L"science\\"
 };
-wstring MAKE_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
+wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring key = L"";
 	int _type = MECHS_T_HT[(UINT)_mech];
 
@@ -371,7 +371,7 @@ wstring MAKE_MECH_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 
 	return key;
 };
-wstring MAKE_MECH_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
+wstring MAKE_UNIT_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring path = L"..\\Resources\\texture\\player\\";
 	int _type = MECHS_T_HT[(UINT)_mech];
 

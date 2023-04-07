@@ -33,6 +33,7 @@ namespace m {
         void SetFinalMoveCoord(Vector2 _coord) { finalMoveCoord = _coord; }
         Vector2 GetFinalMoveCoord() { return finalMoveCoord; }
 
+        ALIENS GetAlienType() { return mAlienType; }
     private:
         ALIENS mAlienType;
         int moveCnt;

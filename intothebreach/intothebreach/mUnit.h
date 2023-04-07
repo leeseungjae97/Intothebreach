@@ -13,6 +13,7 @@ namespace m
 	public:
 		Unit(Vector2 _coord, int _range, int hp, int type, size_t idx);
 		Unit(Unit& _origin);
+		Unit(Vector2 _coord);
 		Unit();
 		~Unit();
 
@@ -36,7 +37,7 @@ namespace m
 		void SetCurAttackSkill();
 		void SetCurImage(Image* m) { curImage = m; }
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
-		void SetUnitIdx(size_t _idx) { unitIdx = _idx; }
+		void SetUnitCoord(Vector2 _coord) { unitCoord = _coord; }
 		void SetMIdx(int _idx) { mIdx = _idx; }
 		void SetMoveRange(int _move) { moveRange = _move; }
 		void SetSkillIdx(int _idx);
@@ -66,7 +67,7 @@ namespace m
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
-		size_t GetUnitIdx() { return unitIdx; }
+		Vector2 GetUnitIdx() { return unitCoord; }
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
 		bool CheckSkillFiring();
@@ -128,7 +129,7 @@ namespace m
 		int mHp;			// 전체 hp
 		int curHp;			// 현재 hp
 		int moveRange;		// 로봇 타입의 enum으로 가져온 이동거리
-		size_t unitIdx;		// effecUnit vector에 들어갈 index
+		Vector2 unitCoord;		// effecUnit vector에 들어갈 Vector
 		size_t mIdx;		// Scene의 Mechs vector에 들어갈 index
 		int skillIdx;		// 사용할 스킬 index
 

@@ -30,8 +30,8 @@ namespace m
 		{
 			if (ALIENS_APL_COND[(UINT)mType][i] != 1) continue;
 			vImage[i] = Resources::Load<Image>(
-				MAKE_ALIEN_KEY(mAlienType, (ALIEN_CONDITION)i)
-				, MAKE_ALIEN_PATH(mAlienType, (ALIEN_CONDITION)i));
+				MAKE_UNIT_KEY(mAlienType, (ALIEN_CONDITION)i)
+				, MAKE_UNIT_PATH(mAlienType, (ALIEN_CONDITION)i));
 			if (nullptr == vImage[i]) continue;
 			vImage[i]->SetOffset(ALIEN_OFFSET[(UINT)mAlienType]);
 		}
@@ -41,7 +41,7 @@ namespace m
 			UINT len = (UINT)((float)vImage[(int)i]->GetWidth() / size.x);
 
 			GetAnimator()->CreateAnimation(
-				MAKE_ALIEN_KEY(mAlienType, (ALIEN_CONDITION)i)
+				MAKE_UNIT_KEY(mAlienType, (ALIEN_CONDITION)i)
 				, vImage[i]
 				, Vector2(Vector2::Zero)
 				, Vector2(size.x, size.y)
@@ -51,7 +51,7 @@ namespace m
 				, AC_SRC_OVER
 			);
 		}
-		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
 		SetState(STATE::Idle);
 
 		SetSkillIdx(0);
@@ -98,6 +98,7 @@ namespace m
 		case STATE::Broken:
 			if (GetAnimator()->GetStopAnimator())
 			{
+				//SceneManager::GetActiveScene()->RemoveEffectUnit(this);
 				SetState(STATE::Death);
 			}
 			broken();
@@ -113,7 +114,7 @@ namespace m
 			}
 			emerge();
 		}
-			break;
+		break;
 		case STATE::End:
 			break;
 		default:
@@ -122,8 +123,8 @@ namespace m
 	}
 	bool Alien::AlienMoveToAttackCheck(Vector2 _alienCoord)
 	{
-		
 		Scene* scene = SceneManager::GetActiveScene();
+
 		ClearSkillRangeMap();
 
 		list<Vector2_1>queue;
@@ -131,7 +132,7 @@ namespace m
 		Vector2 stPos = _alienCoord;
 		queue.push_back(Vector2_1(stPos, 0, -1));
 
-		scene->SetMap();
+		//scene->SetMap();
 
 		// right, up, down, left
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
@@ -148,39 +149,56 @@ namespace m
 				float dx = now.coord.x + direct[i][0];
 				float dy = now.coord.y + direct[i][1];
 
-				if (dx < 0 || dy < 0 || dx > TILE_X - 1|| dy > TILE_Y - 1) continue;
+				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
-				//if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
-				//if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
 				if (stPos.x == dx || stPos.y == dy)
 				{
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 					SetSkillMap((int)dy, (int)dx, MOVE);
 
-					if (!scene->GetPlayerTurn())
+					//if (!scene->GetPlayerTurn())
+					//{
+					//	GetCurAttackSkill()->SetGuideLinePos(
+					//		scene->GetPosTile((int)dy, (int)dx)->GetCenterPos()
+					//	);
+					//	GetCurAttackSkill()->SetGuideLineCoord(Vector2(dx, dy));
+					//}
+					//scene->SetPosTiles((int)dy, (int)dx
+					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					if (scene->GetEffectUnit((int)dy, (int)dx) != nullptr)
 					{
-						GetCurAttackSkill()->SetGuideLinePos(
-							scene->GetPosTile((int)dy, (int)dx)->GetCenterPos()
-						);
-						GetCurAttackSkill()->SetGuideLineCoord(Vector2(dx, dy));
-					}
-					scene->SetPosTiles((int)dy, (int)dx
-						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-					if (scene->GetMap((int)dy, (int)dx) == MECH)
-					{
-						for (int i = 0; i < scene->GetEffectUnit((int)dy, (int)dx).size(); i++)
+						//if (!scene->GetPlayerTurn())
+						//{
+						//	SetTargetCoord(Vector2(dx, dy));
+						//	return true;
+						//}
+						
+						if (scene->GetEffectUnit((int)dy, (int)dx)->GetLayerType() == LAYER_TYPE::PLAYER &&
+							scene->GetEffectUnit((int)dy, (int)dx)->GetState() != GameObject::STATE::Broken)
 						{
-							if (scene->GetEffectUnit((int)dy, (int)dx)[i]->GetLayerType() == LAYER_TYPE::PLAYER &&
-								scene->GetEffectUnit((int)dy, (int)dx)[i]->GetState() != GameObject::STATE::Broken)
+							//GetCurAttackSkill()->SetGuideLinePos();
+							if (!scene->GetPlayerTurn())
 							{
-								//GetCurAttackSkill()->SetGuideLinePos();
-								if (!scene->GetPlayerTurn())
-								{
-									SetTargetCoord(Vector2(dx, dy));
-									return true;
-								}
+								SetTargetCoord(Vector2(dx, dy));
+								return true;
 							}
 						}
+
+						//for (int i = 0; i < scene->GetMap((int)dy, (int)dx).size(); i++)
+						//{
+						//	if (scene->GetEffectUnit((int)dy, (int)dx)[i]->GetLayerType() == LAYER_TYPE::PLAYER &&
+						//		scene->GetEffectUnit((int)dy, (int)dx)[i]->GetState() != GameObject::STATE::Broken)
+						//	{
+						//		//GetCurAttackSkill()->SetGuideLinePos();
+						//		if (!scene->GetPlayerTurn())
+						//		{
+						//			SetTargetCoord(Vector2(dx, dy));
+						//			return true;
+						//		}
+						//	}
+						//}
 					}
 				}
 			}
@@ -200,12 +218,11 @@ namespace m
 		Scene* scene = SceneManager::GetActiveScene();
 
 		int moveLimit = GetMoveRange();
-		
 
-		Vector2_1 iter = Vector2_1(GetFinalMoveCoord(), 0 ,0);
 
-		if(alienPathQueue.size() != 0 ) iter = alienPathQueue.back();
-		
+		Vector2_1 iter = Vector2_1(GetFinalMoveCoord(), 0, 0);
+
+		if (alienPathQueue.size() != 0) iter = alienPathQueue.back();
 
 		if (directQueue.size() == 0 && alienPathQueue.size() != 0)
 		{
@@ -216,20 +233,21 @@ namespace m
 			}
 		}
 		Vector2_1 curCoord = iter;
-		if(directQueue.size() != 0)
+		if (directQueue.size() != 0)
 			curCoord = directQueue[directQueue.size() - moveCnt];
 
 		moveCnt++;
 
 		Vector2 _coord = curCoord.coord;
-		Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
+		//Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
 
 		scene->MoveEffectUnit(this, _coord);
-		SetPos(_pos);
-		SetFinalPos(_pos);
-		SetCoord(_coord);
-		SetFinalCoord(_coord);
-		
+
+		//SetPos(_pos);
+		//SetFinalPos(_pos);
+		//SetCoord(_coord);
+		//SetFinalCoord(_coord);
+
 		if (moveCnt > moveLimit)
 		{
 			directQueue.clear();
@@ -253,7 +271,7 @@ namespace m
 		Vector2 endCoord = Vector2::Minus;
 		Vector2 drawGuideLineEndCoord = Vector2::Minus;
 		//scene->SetPosTiles((int)otherPos.y, (int)otherPos.x
-		//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+		//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 		//if (skill_range_map[(int)otherPos.y][(int)otherPos.x] != MOVE)
 		//{
 		//	return;
@@ -269,81 +287,83 @@ namespace m
 			{
 				st = (int)GetCoord().x + 1;
 				end = TILE_X - 1;
-				endCoord = Vector2((float)end, otherPos.y);
+				endCoord = Vector2((float)end, GetCoord().y);
 			}
 			if (otherPos.x < GetCoord().x)
 			{
 				st = (int)GetCoord().x - 1;
 				end = 0;
-				endCoord = Vector2((float)end, otherPos.y);
+				endCoord = Vector2((float)end, GetCoord().y);
 			}
 			if (otherPos.y > GetCoord().y)
 			{
 				st = (int)GetCoord().y + 1;
 				end = TILE_Y - 1;
-				endCoord = Vector2(otherPos.x, (float)end);
+				endCoord = Vector2(GetCoord().x, (float)end);
 				cY = true;
 			}
 			if (otherPos.y < GetCoord().y)
 			{
 				st = (int)GetCoord().y - 1;
 				end = 0;
-				endCoord = Vector2(otherPos.x, (float)end);
+				endCoord = Vector2(GetCoord().x, (float)end);
 				cY = true;
 			}
-			
+
 			if (end == 0)
 			{
-				IDVar *= -1;
+				IDVar = -1;
 			}
-			drawGuideLineEndCoord = endCoord;
-			for (int i = st; i != end; i += IDVar)
+			for (int i = st; i != end + IDVar; i += IDVar)
 			{
-				if (cY && scene->GetEffectUnit(i, (int)GetCoord().x).size() != 0)
+				if (cY && scene->GetEffectUnit(i, (int)GetCoord().x) != nullptr)
 				{
-					endCoord = Vector2(otherPos.x, (float)i);
+					endCoord = Vector2(GetCoord().x, (float)i);
 					break;
 				}
-				if (!cY && scene->GetEffectUnit((int)GetCoord().y, i).size() != 0)
+				if (!cY && scene->GetEffectUnit((int)GetCoord().y, i) != nullptr)
 				{
-					endCoord = Vector2((float)i, otherPos.y);
+					endCoord = Vector2((float)i, GetCoord().y);
 					break;
 				}
 
 				if (cY)drawGuideLineEndCoord = Vector2(otherPos.x, (float)i);
 				else drawGuideLineEndCoord = Vector2((float)i, otherPos.y);
 			}
+			if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
+			if (endCoord != Vector2::Minus)
+			{
+				//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+
+				//if(GetCurAttackSkill()->GetStartRender())
+				//	scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				//		, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+				//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
+				//Scene* scene = SceneManager::GetActiveScene();
+				//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				//if (!scene->GetPlayerTurn())
+				//{
+				//	
+				//	//GetCurAttackSkill()->SetStartRender(true);
+				//}
+				//else
+				//{
+				//	Vector2 pos = scene->GetPosTile(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x)->GetPos();
+				//	GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
+				//	GetCurAttackSkill()->SetGuideLinePos(pos);
+				//}
+				DrawSkill(endCoord, drawGuideLineEndCoord);
+			}
 		}
 		if (GetCurAttackSkill()->GetSkillType()
 			== SKILL_T::ARC)
 		{
 			endCoord = otherPos;
-		}
-		if (endCoord != Vector2::Minus)
-		{
-			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 
-			scene->SetPosTiles((int)drawGuideLineEndCoord.y, (int)drawGuideLineEndCoord.x
-				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
-			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
-			//Scene* scene = SceneManager::GetActiveScene();
-			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			if (!scene->GetPlayerTurn())
-			{
-				DrawSkill(endCoord, drawGuideLineEndCoord);
-				//GetCurAttackSkill()->SetStartRender(true);
-			}
-			else
-			{
-				Vector2 pos = scene->GetPosTile(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x)->GetPos();
-				GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
-				GetCurAttackSkill()->SetGuideLinePos(pos);
-			}
-
-			
+			DrawSkill(endCoord, Vector2(0, 0));
 		}
 		// 공격완료하면 clear
 		ClearSkillRangeMap();
@@ -356,30 +376,30 @@ namespace m
 		ClearSearchMap();
 		Scene* scene = SceneManager::GetActiveScene();
 
-		if(moveCnt == 1 && !scene->GetPlayerTurn()) DrawMoveRangeTile();
+		if (moveCnt == 1 && !scene->GetPlayerTurn()) DrawMoveRangeTile();
 
 		list<Vector2_1>queue;
-		
+
 		Vector2 stPos = GetFinalCoord();
-		
+		scene->SetMap();
+		queue.push_back(Vector2_1(stPos, 0, -1));
+		alienPathQueue.push_back(Vector2_1(stPos, 0, -1));
+
 		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y)))
 		{
-			scene->SetPosTiles((int)stPos.y, (int)stPos.x
-				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+			//scene->SetPosTiles((int)stPos.y, (int)stPos.x
+			//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 			SetFinalMoveCoord(Vector2(stPos.x, stPos.y));
 			return;
 		}
 
-		scene->SetMap();
-		queue.push_back(Vector2_1(stPos, 0, -1));
-		alienPathQueue.push_back(Vector2_1(stPos, 0, -1));
 
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 
 		bool find = false;
 
 		int idx = -1;
-		
+
 		while (!queue.empty())
 		{
 			Vector2_1 now = queue.front();
@@ -404,12 +424,12 @@ namespace m
 				if (AlienMoveToAttackCheck(Vector2(dx, dy)))
 				{
 					if (!scene->GetPlayerTurn())
-					{	
-						scene->SetPosTiles((int)dy, (int)dx
-							, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					{
+						//scene->SetPosTiles((int)dy, (int)dx
+						//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 						SetFinalMoveCoord(Vector2(dx, dy));
 					}
-						
+
 					find = true;
 				}
 
@@ -437,13 +457,13 @@ namespace m
 	}
 	void Alien::idle()
 	{
-		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
 		SetCurImage(nullptr);
 	}
 	void Alien::broken()
 	{
 		GetAnimator()->Stop();
-		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::DEATH), false);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::DEATH), false);
 
 		SetCurImage(nullptr);
 	}
@@ -455,7 +475,7 @@ namespace m
 	void Alien::emerge()
 	{
 		GetAnimator()->Stop();
-		GetAnimator()->Play(MAKE_ALIEN_KEY(mAlienType, ALIEN_CONDITION::EMERGE), false);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::EMERGE), false);
 		SetCurImage(nullptr);
 	}
 }

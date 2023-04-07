@@ -53,16 +53,18 @@ namespace m
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
 		vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
-		vector<Unit*>& GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
+		vector<Building*>& GetStructuresTiles() {return mStruturesTiles;}
+		Unit* GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
 		void CheckMouseOutOfMapRange();
 		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
-		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, float fContant);
+		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, BYTE fContant);
 		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2);
 		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
 		void RobotDrag();
 		void MoveEffectUnit(Unit* unit);
 		void MoveEffectUnit(Unit* unit, Vector2 _coord);
+		void RemoveEffectUnit(Vector2 _coord);
 		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);
 
 
@@ -101,12 +103,11 @@ namespace m
 		TILES mEnemyEmerge;
 		vector<Tile*> mBackTiles;			// 기타 타일들 (그리지 않고 저장공간 용도로만 사용)
 
-		vector<Unit*> effectUnits[TILE_Y][TILE_X];
+		Unit* effectUnits[TILE_Y][TILE_X];
 
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
 
-		BUILDINGS mStruturesTiles;
-
+		vector<Building*> mStruturesTiles;
 		vector<Mech*> mMechs;
 		vector<Alien*> mAliens;
 

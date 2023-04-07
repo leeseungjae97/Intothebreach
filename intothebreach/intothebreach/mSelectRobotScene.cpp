@@ -66,7 +66,7 @@ namespace m
 		{
 			lights[i] = new Background(L"light", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_lights.bmp", 2, false);
 			lights[i]->SetCutPos(true);
-			lights[i]->SetAlphaConstant(50.f);
+			lights[i]->SetAlphaConstant(50);
 			lights[i]->SetPos(Vector2(_x, _y));
 			lights[i]->SetAlpha(true);
 			lights[i]->SetBlink(true);
@@ -79,14 +79,14 @@ namespace m
 
 		Background* line = new Background(L"line", L"..\\Resources\\texture\\ui\\selectRobot\\waterbg_transition.bmp", 2, false); 
 		line->SetCutPos(true);
-		line->SetPos(Vector2(0, application.GetResolutionHeight()));
+		line->SetPos(Vector2(0, (float)application.GetResolutionHeight()));
 		line->SetEC(true);
 
 		AddGameObject(line, LAYER_TYPE::BACKGROUND);
 
 		swapFake = new Background(L"sf", L"..\\Resources\\texture\\ui\\selectRobot\\shot.bmp", 0, false);
 		swapFake->SetCutPos(true);
-		swapFake->SetPos(Vector2(0, line->GetHeight() * 2 + application.GetResolutionHeight()));
+		swapFake->SetPos(Vector2(0, (float)(line->GetHeight() * 2 + application.GetResolutionHeight())));
 		swapFake->SetEC(true);
 
 		AddGameObject(swapFake, LAYER_TYPE::BACKGROUND);
@@ -102,9 +102,9 @@ namespace m
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 		{
 			Camera::SetMoveTime(1.f);
-			Camera::SetLookAt(Vector2(application.GetResolutionWidth() / 2, swapFake->GetPos().y + swapFake->GetHeight() / 2));
+			Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
 		}
-		if (Camera::GetCurPos() == Vector2(application.GetResolutionWidth() / 2, swapFake->GetPos().y + swapFake->GetHeight() / 2))
+		if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
 		{
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}

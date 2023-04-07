@@ -8,6 +8,7 @@ enum class TILE_HEAD_T
 	building_collapse,
 	mountain,
 	mountain_broken,
+	mountain_explode,
 	END,
 };
 wstring TILE_HEAD_PATH[(UINT)TILE_HEAD_T::END]{
@@ -18,6 +19,15 @@ wstring TILE_HEAD_PATH[(UINT)TILE_HEAD_T::END]{
 	L"building_collapse",
 	L"mountain_0",
 	L"mountain_0_broken",
+	L"mountain_explode",
+};
+m::Vector2 TILE_OFFSET[(UINT)TILE_HEAD_T::END]{
+	//{47.f, -18.f},
+	{47.f, -18.f},
+	{47.f, -18.f},
+	{47.f, -18.f},
+	{47.f, -18.f},
+	{47.f, -18.f},
 };
 enum class TILE_T
 {
@@ -63,6 +73,19 @@ wstring MAKE_TILE_PATH(TILE_T _type, TILE_HEAD_T _type2)
 
 	return path;
 }
+enum class ARROW_ETC_T
+{
+	push_box,
+	push_y_box,
+	END,
+};
+wstring ARROW_ETC_PATH[(UINT)ARROW_ETC_T::END]{
+	L"push_box_g",
+	L"push_box_y",
+};
+
+wstring MAKE_TILE_KEY(ARROW_ETC_T _type){ return ARROW_ETC_PATH[(UINT)_type]; }
+wstring MAKE_TILE_PATH(ARROW_ETC_T _type){ return L"..\\Resources\\texture\\combat\\" + ARROW_ETC_PATH[(UINT)_type] + L".bmp"; }
 
 enum class MOVE_TILE_T
 {
@@ -104,6 +127,12 @@ enum class ARROW_TILE_T
 	arrow_h_left,
 	END
 };
+m::Vector2 DIRECTION_[4]{
+	{1, 0},
+	{0, -1},
+	{0, 1},
+	{-1, 0},
+};
 wstring ARROW_TILE_PATH[(UINT)ARROW_TILE_T::END]{
 	L"arrow_off_right",
 	L"arrow_off_up",
@@ -122,7 +151,43 @@ wstring ARROW_TILE_PATH[(UINT)ARROW_TILE_T::END]{
 	L"arrow_hit_down",
 	L"arrow_hit_left",
 };
-wstring MAKE_ARROW_TILE_KEY(ARROW_TILE_T _type)
+m::Vector2 ARROW_TILE_OFFSET[(UINT)ARROW_TILE_T::END]{
+	{30.f, 25.f},//{8.f , 8.f},//L"arrow_off_right",
+	{30.f, -25.f},//{0, -40.f},//L"arrow_off_up",
+	{-30.f, 25.f},//{-58.f, 5.f},//L"arrow_off_down",
+	{-30.f, -25.f},//{-55.f, -45.f},//L"arrow_off_left",
+	{30.f, 25.f},//L"arrow_right",
+	{30.f, -25.f},//L"arrow_up",
+	{-30.f, 25.f},//L"arrow_down",
+	{-30.f, -25.f},//L"arrow_left",
+	{30.f, 25.f},//L"arrow_guard_right",
+	{30.f, -25.f},//L"arrow_guard_up",
+	{-30.f, 25.f},//L"arrow_guard_down",
+	{-30.f, -25.f},//L"arrow_guard_left",
+	{30.f, 25.f},//L"arrow_hit_right",
+	{30.f, -25.f},//L"arrow_hit_up",
+	{-30.f, 25.f},//L"arrow_hit_down",
+	{-30.f, -25.f},//L"arrow_hit_left",
+};
+m::Vector2 ARROW_TILE_DIRECTION[(UINT)ARROW_TILE_T::END]{
+	DIRECTION_[RIGHT_NUM],//L"arrow_off_right",
+	DIRECTION_[UP_NUM],//L"arrow_off_up",
+	DIRECTION_[DOWN_NUM],//L"arrow_off_down",
+	DIRECTION_[LEFT_NUM],//L"arrow_off_left",
+	DIRECTION_[RIGHT_NUM],//L"arrow_right",
+	DIRECTION_[UP_NUM],//L"arrow_up",
+	DIRECTION_[DOWN_NUM],//L"arrow_down",
+	DIRECTION_[LEFT_NUM],//L"arrow_left",
+	DIRECTION_[RIGHT_NUM],//L"arrow_guard_right",
+	DIRECTION_[UP_NUM],//L"arrow_guard_up",
+	DIRECTION_[DOWN_NUM],//L"arrow_guard_down",
+	DIRECTION_[LEFT_NUM],//L"arrow_guard_left",
+	DIRECTION_[RIGHT_NUM],//L"arrow_hit_right",
+	DIRECTION_[UP_NUM],//L"arrow_hit_up",
+	DIRECTION_[DOWN_NUM],//L"arrow_hit_down",
+	DIRECTION_[LEFT_NUM],//L"arrow_hit_left",
+};
+wstring MAKE_TILE_KEY(ARROW_TILE_T _type)
 {
 	wstring key = L"";
 
@@ -130,7 +195,7 @@ wstring MAKE_ARROW_TILE_KEY(ARROW_TILE_T _type)
 
 	return key;
 }
-wstring MAKE_ARROW_TILE_PATH(ARROW_TILE_T _type)
+wstring MAKE_TILE_PATH(ARROW_TILE_T _type)
 {
 	wstring path = L"..\\Resources\\texture\\combat\\";
 
@@ -158,7 +223,7 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_r_u",
 	L"square_line_r_d",
 };
-wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type)
+wstring MAKE_TILE_KEY(MOVE_TILE_T _type)
 {
 	wstring key = L"";
 
@@ -167,7 +232,7 @@ wstring MAKE_MOVE_TILE_KEY(MOVE_TILE_T _type)
 
 	return key;
 }
-wstring MAKE_MOVE_TILE_PATH(MOVE_TILE_T _type)
+wstring MAKE_TILE_PATH(MOVE_TILE_T _type)
 {
 	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
@@ -213,7 +278,7 @@ wstring MOVE_ARROW_PATH[(UINT)MOVE_ARROW_T::END]{
 	L"movearrow_cap_r",
 
 };
-wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type)
+wstring MAKE_TILE_KEY(MOVE_ARROW_T _type)
 {
 	wstring key = L"";
 
@@ -221,7 +286,7 @@ wstring MAKE_MOVE_ARROW_TILE_KEY(MOVE_ARROW_T _type)
 
 	return key;
 }
-wstring MAKE_MOVE_ARROW_TILE_PATH(MOVE_ARROW_T _type)
+wstring MAKE_TILE_PATH(MOVE_ARROW_T _type)
 {
 	wstring path = L"..\\Resources\\texture\\combat\\move\\";
 
@@ -250,7 +315,7 @@ m::Vector2 COMBAT_ANIM_TIME_OFFSET[(UINT)COMBAT_ANIM_TILE_T::END]{
 wstring COMBAT_ANIM_TILE_PATH[(UINT)COMBAT_ANIM_TILE_T::END]{
 	L"warningstripes",
 };
-wstring MAKE_COMBAT_ANIM_TILE_KEY(COMBAT_ANIM_TILE_T _type)
+wstring MAKE_TILE_KEY(COMBAT_ANIM_TILE_T _type)
 {
 	wstring key = L"";
 
@@ -258,7 +323,7 @@ wstring MAKE_COMBAT_ANIM_TILE_KEY(COMBAT_ANIM_TILE_T _type)
 
 	return key;
 }
-wstring MAKE_COMBAT_ANIM_TILE_PATH(COMBAT_ANIM_TILE_T _type)
+wstring MAKE_TILE_PATH(COMBAT_ANIM_TILE_T _type)
 {
 	wstring path = L"..\\Resources\\texture\\combat\\";
 
@@ -281,7 +346,7 @@ wstring COMBAT_TILE_PATH[(UINT)COMBAT_TILE_T::END]{
 	L"push_box_g",
 	L"fire_sprite4"
 };
-wstring MAKE_COMBAT_TILE_KEY(COMBAT_TILE_T _type)
+wstring MAKE_TILE_KEY(COMBAT_TILE_T _type)
 {
 	wstring key = L"";
 
@@ -289,7 +354,7 @@ wstring MAKE_COMBAT_TILE_KEY(COMBAT_TILE_T _type)
 
 	return key;
 }
-wstring MAKE_COMBAT_TILE_PATH(COMBAT_TILE_T _type)
+wstring MAKE_TILE_PATH(COMBAT_TILE_T _type)
 {
 	wstring path = L"..\\Resources\\texture\\combat\\";
 

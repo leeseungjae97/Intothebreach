@@ -116,9 +116,9 @@ namespace m
 		mPosOutLineTiles.resize(iY, vector<Tile*>());
 		mBoundaryTiles.resize(iY, vector<Tile*>());
 		mArrowTiles.resize(iY, vector<Tile*>());
-		mStruturesTiles.resize(iY, vector<Building*>());
 		mEffectedTiles.resize(iY, vector<Tile*>());
 		mEnemyEmerge.resize(iY, vector<Tile*>());
+		//mStruturesTiles.resize(iY, vector<Building*>());
 		for (int y = 0; y < iY; y++)
 		{
 			mTiles[y].resize(iX);
@@ -126,7 +126,7 @@ namespace m
 			mPosOutLineTiles[y].resize(iX);
 			mBoundaryTiles[y].resize(iX);
 			mArrowTiles[y].resize(iX);
-			mStruturesTiles[y].resize(iX);
+			//mStruturesTiles[y].resize(iX);
 			mEffectedTiles[y].resize(iX);
 			mEnemyEmerge[y].resize(iX);
 		}
@@ -151,24 +151,7 @@ namespace m
 			}
 		}
 		MakeVariTile(iY, iX);
-		Building* stTile = new Building(STRUCTURES_T::Mountain, mTiles[3][3]->GetCoord());
-		stTile->SetPos(mTiles[3][3]->GetCenterPos());
-		mStruturesTiles[3][3] = stTile;
-
-		AddGameObject(stTile, LAYER_TYPE::STRUCT);
-
-		Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
-		stTile1->SetPos(mTiles[1][2]->GetCenterPos());
-		mStruturesTiles[1][2] = stTile1;
-
-		AddGameObject(stTile1, LAYER_TYPE::STRUCT);
-
-		Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
-		stTile2->SetPos(mTiles[2][0]->GetCenterPos());
-		mStruturesTiles[2][0] = stTile2;
-
-		AddGameObject(stTile2, LAYER_TYPE::STRUCT);
-
+		
 		SetMap();
 	}
 	/// <summary>
@@ -187,7 +170,7 @@ namespace m
 				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
 				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
-				Building* stTile = new Building(STRUCTURES_T::C_Building, mTiles[y][x]->GetCoord());
+				//Building* stTile = new Building(STRUCTURES_T::C_Building, mTiles[y][x]->GetCoord());
 
 				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				posTile->SetPos(mTiles[y][x]->GetPos());
@@ -200,10 +183,10 @@ namespace m
 				mPosTiles[y][x] = posTile;
 				mBoundaryTiles[y][x] = etcTile;
 				mArrowTiles[y][x] = awTile;
-				mStruturesTiles[y][x] = stTile;
+				//mStruturesTiles[y][x] = stTile;
 
 				AddGameObject(etcTile, LAYER_TYPE::TILE);
-				AddGameObject(stTile, LAYER_TYPE::TILE);
+				//AddGameObject(stTile, LAYER_TYPE::TILE);
 				AddGameObject(awTile, LAYER_TYPE::TILE);
 				AddGameObject(posTile, LAYER_TYPE::TILE);
 
@@ -224,7 +207,6 @@ namespace m
 
 	/// <summary>
 	/// 표기했던 이동가능거리 초기화.
-	/// 메카의 위치(FinalPos)가 바뀌면 불러옴.
 	/// </summary>
 	void Scene::ClearMap()
 	{
@@ -313,15 +295,20 @@ namespace m
 	}
 	void Scene::SetMap()
 	{
-		for (int y = 0; y < mStruturesTiles.size(); y++)
+		//for (int y = 0; y < mStruturesTiles.size(); y++)
+		//{
+		//	for (int x = 0; x < mStruturesTiles[y].size(); x++)
+		//	{
+		//		if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain)
+		//		{
+		//			map[y][x] = BUILDING;
+		//		}
+		//	}
+		//}
+		for (int i = 0; i < mStruturesTiles.size(); i++)
 		{
-			for (int x = 0; x < mStruturesTiles[y].size(); x++)
-			{
-				if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain)
-				{
-					map[y][x] = BUILDING;
-				}
-			}
+			Vector2 mp = mStruturesTiles[i]->GetFinalCoord();
+			map[(int)mp.y][(int)mp.x] = BUILDING;
 		}
 		for (int i = 0; i < mMechs.size(); i++)
 		{
@@ -343,8 +330,8 @@ namespace m
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MONSTER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(100);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
-				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_gy)
-				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_gy));
+				MAKE_TILE_KEY(MOVE_TILE_T::square_gy)
+				, MAKE_TILE_PATH(MOVE_TILE_T::square_gy));
 		}
 		for (UINT _i = 0; _i < mMechs.size(); _i++)
 		{
@@ -352,8 +339,8 @@ namespace m
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::PLAYER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(150);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
-				MAKE_MOVE_TILE_KEY(MOVE_TILE_T::square_b)
-				, MAKE_MOVE_TILE_PATH(MOVE_TILE_T::square_b));
+				MAKE_TILE_KEY(MOVE_TILE_T::square_b)
+				, MAKE_TILE_PATH(MOVE_TILE_T::square_b));
 		}
 	}
 	/// <summary>
@@ -400,6 +387,10 @@ namespace m
 	}
 	void Scene::Release()
 	{
+		Safe_Delete_X_Vec(mBacks);
+		Safe_Delete_X_Vec(mBackTiles);
+		Safe_Delete_X_Vec(mStruturesTiles);
+
 		Safe_Delete_Y_Vec(mTiles);
 		Safe_Delete_Y_Vec(mPosTiles);
 		Safe_Delete_Y_Vec(mPosOutLineTiles);
@@ -407,7 +398,6 @@ namespace m
 		Safe_Delete_Y_Vec(mArrowTiles);
 		Safe_Delete_Y_Vec(mEnemyEmerge);
 		Safe_Delete_Y_Vec(mEffectedTiles);
-		Safe_Delete_Y_Vec(mStruturesTiles);
 	}
 	void Scene::CheckNumInput()
 	{
@@ -453,6 +443,7 @@ namespace m
 		}
 
 		Alien* curAlien = mAliens[curAttackAlien];
+		if (curAlien->GetState() == GameObject::STATE::Death) return;
 		if (nullptr != curAlien->GetCurAttackSkill()
 			&& curAlien->GetCurAttackSkill()->GetStartRender())
 		{
@@ -481,16 +472,17 @@ namespace m
 		curAlien->AlienMoveCheck(curAttackAlien);
 
 		//curAttackAlien++;
-
-		if (KEY_PRESSED(KEYCODE_TYPE::M))
-		{
-			
-		}
 	}
 	void Scene::MoveSkill()
 	{
 		for (int i = 0; i < mAliens.size(); i++)
 		{
+			//if (mAliens[i]->GetFinalMoveCoord() != Vector2::Minus)
+			//{
+			//	SetPosTiles((int)mAliens[i]->GetFinalMoveCoord().y, (int)mAliens[i]->GetFinalMoveCoord().x
+			//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+			//}
+
 			if (mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
 			//mAliens[i]->AlienMoveToAttackCheck(mAliens[i]->GetCoord());
 			mAliens[i]->ActiveSkill(mAliens[i]->GetTargetCoord());
@@ -548,6 +540,9 @@ namespace m
 			Mech* mech = mMechs[moveSave[moveSave.size() - 1].mechIdx];
 			mech->SetEndMove(false);
 			mech->SetCoord(Vector2(moveSave[moveSave.size() - 1].coord));
+
+			MoveEffectUnit(mech);
+
 			mech->SetFinalCoord(mech->GetCoord());
 			mech->SetPos(Vector2(moveSave[moveSave.size() - 1].pos));
 			mech->SetFinalPos(mech->GetPos());
@@ -557,7 +552,7 @@ namespace m
 	void Scene::MoveMech()
 	{
 		drawTile();
-		if (KEY_DOWN(KEYCODE_TYPE::SPACE))
+		if (KEY_UP(KEYCODE_TYPE::SPACE))
 		{
 			if (!playerTurn) playerTurn = true;
 			else playerTurn = false;
@@ -613,29 +608,52 @@ namespace m
 	void Scene::MoveEffectUnit(Unit* unit, Vector2 _coord)
 	{
 		Vector2 idx = unit->GetFinalCoord();
-
-		vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
-		for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
-		{
-			if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit)
-			{
-				effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
-				effectUnits[(int)_coord.y][(int)_coord.x].push_back(unit);
-				unit->SetUnitIdx(effectUnits[(int)_coord.y][(int)_coord.x].size() - 1);
-			}
-		}
+		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]) return;
+		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = unit;
+		effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
+		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
+		//{
+		//	if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit)
+		//	{
+		//		effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
+		//		effectUnits[(int)_coord.y][(int)_coord.x].push_back(unit);
+		//		unit->SetUnitIdx(effectUnits[(int)_coord.y][(int)_coord.x].size() - 1);
+		//	}
+		//}
 		unit->SetPos(mPosTiles[(int)_coord.y][(int)_coord.x]->GetCenterPos());
 		unit->SetCoord(_coord);
 		unit->SetFinalCoord(unit->GetCoord());
 		unit->SetFinalPos(unit->GetPos());
 	}
+	void Scene::MoveEffectUnit(Unit* unit)
+	{
+		Vector2 idx = unit->GetFinalCoord();
+		Vector2 nIdx = unit->GetCoord();
+		effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		effectUnits[(UINT)nIdx.y][(UINT)nIdx.x] = unit;
+		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
+		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
+		//{
+		//	if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit)
+		//	{
+		//		effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
+		//		effectUnits[(int)_coord.y][(int)_coord.x].push_back(unit);
+		//		unit->SetUnitIdx(effectUnits[(int)_coord.y][(int)_coord.x].size() - 1);
+		//	}
+		//}
+		//unit->SetPos(mPosTiles[(int)nIdx.y][(int)nIdx.x]->GetCenterPos());
+		//unit->SetCoord(nIdx);
+		//unit->SetFinalCoord(unit->GetCoord());
+		//unit->SetFinalPos(unit->GetPos());
+	}
 	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2)
 	{
 		mPosTiles[_y][_x]->SetTileType(_type1);
-		mPosTiles[_y][_x]->SetTileTexture(MAKE_MOVE_TILE_KEY(_type2)
-			, MAKE_MOVE_TILE_PATH(_type2));
+		mPosTiles[_y][_x]->SetTileTexture(MAKE_TILE_KEY(_type2)
+			, MAKE_TILE_PATH(_type2));
 	}
-	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, float fContant)
+	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, BYTE fContant)
 	{
 		mPosTiles[_y][_x]->SetTileType(_type1);
 		mPosTiles[_y][_x]->SetCombatTileAnimator(_type2, fContant, true);
@@ -643,29 +661,13 @@ namespace m
 	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2)
 	{
 		mPosTiles[_y][_x]->SetTileType(_type1);
-		mPosTiles[_y][_x]->SetTileTexture(MAKE_COMBAT_TILE_KEY(_type2)
-			, MAKE_COMBAT_TILE_PATH(_type2));
+		mPosTiles[_y][_x]->SetTileTexture(MAKE_TILE_KEY(_type2)
+			, MAKE_TILE_PATH(_type2));
 	}
 	void Scene::SetBoundaryTiles(int y, int x, MOVE_TILE_T _type)
 	{
-		mBoundaryTiles[y][x]->SetETCTiles(MAKE_MOVE_TILE_KEY(_type)
-			, MAKE_MOVE_TILE_PATH(_type));
-	}
-	void Scene::MoveEffectUnit(Unit* unit)
-	{
-		Vector2 idx = unit->GetFinalCoord();
-		Vector2 nIdx = unit->GetCoord();
-
-		vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
-		for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
-		{
-			if (effectUnits[(UINT)idx.y][(UINT)idx.x][i] == unit)
-			{
-				effectUnits[(UINT)idx.y][(UINT)idx.x].erase(iter + i);
-				effectUnits[(UINT)nIdx.y][(UINT)nIdx.x].push_back(unit);
-				unit->SetUnitIdx(effectUnits[(UINT)nIdx.y][(UINT)nIdx.x].size() - 1);
-			}
-		}
+		mBoundaryTiles[y][x]->SetETCTiles(MAKE_TILE_KEY(_type)
+			, MAKE_TILE_PATH(_type));
 	}
 	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
 	{
@@ -676,14 +678,18 @@ namespace m
 		if (nullptr != dynamic_cast<Unit*>(obj) && layer != LAYER_TYPE::CLONE)
 		{
 			Vector2 idx = ((Unit*)obj)->GetCoord();
-			effectUnits[(UINT)idx.y][(UINT)idx.x].push_back(dynamic_cast<Unit*>(obj));
-			((Unit*)obj)->SetUnitIdx(effectUnits[(UINT)idx.y][(UINT)idx.x].size() - 1);
+			effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
+			((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
+	}
+	void Scene::RemoveEffectUnit(Vector2 _coord)
+	{
+
 	}
 	void Scene::SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type)
 	{
-		mArrowTiles[_y][_x]->SetTileTexture(MAKE_MOVE_ARROW_TILE_KEY(_type),
-			MAKE_MOVE_ARROW_TILE_PATH(_type));
+		mArrowTiles[_y][_x]->SetTileTexture(MAKE_TILE_KEY(_type),
+			MAKE_TILE_PATH(_type));
 	}
 	void Scene::SetAlphaState(GameObject::STATE state)
 	{

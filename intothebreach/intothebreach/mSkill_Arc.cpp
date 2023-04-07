@@ -44,6 +44,11 @@ namespace m
 	}
 	void Skill_Arc::Update()
 	{
+		if (mOnwer->GetState() == GameObject::STATE::Death
+			||
+			mOnwer->GetState() == GameObject::STATE::Invisible
+			||
+			mOnwer->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		
@@ -66,6 +71,11 @@ namespace m
 	}
 	void Skill_Arc::Render(HDC hdc)
 	{
+		if (mOnwer->GetState() == GameObject::STATE::Death
+			||
+			mOnwer->GetState() == GameObject::STATE::Invisible
+			||
+			mOnwer->GetState() == GameObject::STATE::Broken) return;
 		if (!startRender) return;
 		if (endFire) startFire = false;
 		if (startFire)
@@ -82,6 +92,11 @@ namespace m
 	}
 	void Skill_Arc::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
+		if (mOnwer->GetState() == GameObject::STATE::Death
+			||
+			mOnwer->GetState() == GameObject::STATE::Invisible
+			||
+			mOnwer->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
@@ -131,30 +146,36 @@ namespace m
 		}
 
 		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		Skill::DrawPushTile(direct, 4);
+		ARROW_TILE_T arrows[4] = {ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down
+			, ARROW_TILE_T::arrow_up, ARROW_TILE_T::arrow_left};
+		//Skill::DrawPushTile(direct, 4);
+		Skill::DrawPushTile(arrows, 4);
 	}
 	void Skill_Arc::CheckDirection()
 	{
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		// right, up, down, left
-		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size() != 0)
+		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down
+			, ARROW_TILE_T::arrow_up, ARROW_TILE_T::arrow_left };
+		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x) != nullptr)
 		{
-			for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
-			{
-				scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)[i]->Hit(1);
-			}
+			//for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
+			//{
+			//	scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)[i]->Hit(1);
+			//}
+			scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)->Hit(1);
 			
 			SetEndFire(false);
 			SetStartFire(false);
-			PushUnit(direct, 4);
+			PushUnit(arrows, 4);
 		}
 		else if (endFire)
 		{
 			SetEndFire(false);
 			SetStartFire(false);
-			PushUnit(direct, 4);
+			PushUnit(arrows, 4);
 		}
 	}
 }

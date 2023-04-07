@@ -20,10 +20,10 @@ namespace m
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::One)
+		, unitCoord(Vector2::One)
 		, moveRange(_range)
 		, mHp(hp)
 		, curHp(hp)
-		, unitIdx(0)
 		, skillIdx(-1)
 		, mIdx(idx)
 	{
@@ -49,6 +49,26 @@ namespace m
 		, moveRange(_origin.moveRange)
 	{
 		SetState(_origin.GetState());
+		mAnimator = GetComponent<Animator>();
+	}
+	Unit::Unit(Vector2 _coord)
+		: mPilot(nullptr)
+		, mCoord(_coord)
+		, mFinalCoord(_coord)
+		, mWeapon(nullptr)
+		, curImage(nullptr)
+		, mAnimator(nullptr)
+		, endMove(false)
+		, endAttack(false)
+		, drag(false)
+		, mFinalPos(Vector2::One)
+		, unitCoord(Vector2::One)
+		, mHp(0)
+		, curHp(0)
+
+	{
+		AddComponent(new Animator());
+		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
 	}
 	Unit::Unit()
@@ -108,7 +128,7 @@ namespace m
 				, RGB(255, 0, 255));
 		}
 		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpBack)
+		if (nullptr != hpBack  || 0 != mHp )
 		{
 			mPos += hpBack->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
@@ -288,8 +308,7 @@ namespace m
 				if (dx < 0 || dy < 0 || dx >= TILE_X || dy >= TILE_Y) continue;
 				if (stPos.x == dx
 					&& stPos.y == dy) continue;
-				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
-				if (scene->GetMap((int)dy, (int)dx) == MOVE) continue;
+				if (scene->GetMap((int)dy, (int)dx) != 0) continue;
 				if (now.level >= moveLimit)
 				{
 					find = true;
@@ -303,7 +322,7 @@ namespace m
 
 				if (scene->GetMap((int)dy, (int)dx) == MECH
 					|| scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
-
+				//if (nullptr != scene->GetEffectUnit((int)dy, (int)dx)) continue;
 				scene->SetMap((int)dy, (int)dx, MOVE);
 				scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 			}
@@ -411,15 +430,14 @@ namespace m
 						{
 							IDVar *= -1;
 						}
-						drawGuideLineEndCoord = endCoord;
-						for (int i = st; i != end; i += IDVar)
+						for (int i = st; i != end + IDVar; i += IDVar)
 						{
-							if (cY && scene->GetEffectUnit(i, (int)GetCoord().x).size() != 0)
+							if (cY && nullptr != scene->GetEffectUnit(i, (int)GetCoord().x) )
 							{
 								endCoord = Vector2(p->GetCoord().x, (float)i);
 								break;
 							}
-							if (!cY && scene->GetEffectUnit((int)GetCoord().y, i).size() != 0)
+							if (!cY && nullptr != scene->GetEffectUnit((int)GetCoord().y, i))
 							{
 								endCoord = Vector2((float)i, p->GetCoord().y);
 								break;
@@ -438,6 +456,7 @@ namespace m
 				}
 			}
 		}
+		if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
 		if (endCoord != Vector2::Minus)
 		{
 			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
@@ -480,15 +499,7 @@ namespace m
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (skill_range_map[(int)dy][(int)dx] != 0) continue;
-				if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
-				{
 
-					if (scene->GetMap((int)dy, (int)dx) != 0)
-					{
-						skill_range_map[(int)dy][(int)dx] = MOVE;
-						continue;
-					}
-				}
 				bool rangeCheck = false;
 
 				// 스킬 반경 설정
@@ -502,6 +513,17 @@ namespace m
 				//	|| (stPos.x != dx && stPos.y == dy))
 				if (stPos.y == dy || stPos.x == dx)
 				{
+
+					if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ST)
+					{
+
+						if (scene->GetMap((int)dy, (int)dx) != 0)
+						{
+							skill_range_map[(int)dy][(int)dx] = MOVE;
+							continue;
+						}
+					}
+
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
 					if (GetCurAttackSkill()->GetSkillType() != SKILL_T::ST

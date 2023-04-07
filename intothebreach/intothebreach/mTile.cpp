@@ -19,13 +19,13 @@ namespace m {
 		{
 			UINT len = COMBAT_ANIM_TILE_LEN[(UINT)i];
 
-			Image* im = Resources::Load<Image>(MAKE_COMBAT_ANIM_TILE_KEY((COMBAT_ANIM_TILE_T)i)
-				, MAKE_COMBAT_ANIM_TILE_PATH((COMBAT_ANIM_TILE_T)i));
+			Image* im = Resources::Load<Image>(MAKE_TILE_KEY((COMBAT_ANIM_TILE_T)i)
+				, MAKE_TILE_PATH((COMBAT_ANIM_TILE_T)i));
 
-			float fWid = im->GetWidth() / len;
-			float fHei = im->GetHeight();
+			float fWid = (float)im->GetWidth() / len;
+			float fHei = (float)im->GetHeight();
 			mAnimator->CreateAnimation(
-				MAKE_COMBAT_ANIM_TILE_KEY((COMBAT_ANIM_TILE_T)i)
+				MAKE_TILE_KEY((COMBAT_ANIM_TILE_T)i)
 				, im
 				, Vector2(Vector2::Zero)
 				, Vector2(fWid, fHei)
@@ -44,15 +44,8 @@ namespace m {
 	{
 		AddComponent(new Transform());
 		AddComponent(new Animator());
+		mAnimator = GetComponent<Animator>();
 		SetScale(Vector2(TILE_SIZE_X * 2, TILE_SIZE_Y * 2));
-	}
-	Tile::Tile(int m)
-		: mTileTex(nullptr)
-		, mCoord(Vector2::One) 
-		, eTCTexsIdx(0)
-		, mConstant(50)
-	{
-		AddComponent(new Transform());
 	}
 	Tile::~Tile() {
 	}
@@ -66,13 +59,21 @@ namespace m {
 	{
 		mAnimator->Stop();
 		mTileTex = Resources::Load<Image>(key, path);
+		//mTileTex->SetOffset();
 		SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
 	}
-	void Tile::SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, float fConstant, bool alpha)
+	void Tile::SetTileTexture(const wstring& key, const wstring& path, Vector2 offset)
+	{
+		mAnimator->Stop();
+		mTileTex = Resources::Load<Image>(key, path);
+		mTileTex->SetOffset(offset);
+		SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
+	}
+	void Tile::SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant, bool alpha)
 	{
 		mTileTex = nullptr;
 		if (alpha) mAnimator->SetConstant(fConstant);
-		mAnimator->Play(MAKE_COMBAT_ANIM_TILE_KEY(_type), true);
+		mAnimator->Play(MAKE_TILE_KEY(_type), true);
 	}
 	void Tile::ClearAddETCTiles()
 	{
@@ -94,7 +95,7 @@ namespace m {
 
 			Vector2 vRenderPos = Camera::CalculatePos(GetPos());
 			Vector2 vScale = GetScale();
-
+			vRenderPos += mTileTex->GetOffset();
 			if (TILE_T::MOVE_RANGE == mTileType) {
 				BLENDFUNCTION func = {};
 				func.BlendOp = AC_SRC_OVER;

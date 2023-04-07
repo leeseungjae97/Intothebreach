@@ -22,8 +22,8 @@ namespace m
 		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++)
 		{
 			GetMImages()[i] = Resources::Load<Image>(
-				MAKE_MECH_KEY(mMechType, (COMBAT_CONDITION_T)i)
-				, MAKE_MECH_PATH(mMechType, (COMBAT_CONDITION_T)i));
+				MAKE_UNIT_KEY(mMechType, (COMBAT_CONDITION_T)i)
+				, MAKE_UNIT_PATH(mMechType, (COMBAT_CONDITION_T)i));
 			if (nullptr == GetMImages()[i]) continue;
 			GetMImages()[i]->SetOffset(MECHS_OFFSET[(UINT)mMechType]);
 		}
@@ -33,7 +33,7 @@ namespace m
 		float fWid = (float)(GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / len);
 
 		GetAnimator()->CreateAnimation(
-			MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
+			MAKE_UNIT_KEY(mMechType, COMBAT_CONDITION_T::IDLE)
 			, GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]
 			, Vector2(Vector2::Zero)
 			, Vector2(fWid, fHei)
@@ -42,7 +42,7 @@ namespace m
 			, 0.2f
 			, AC_SRC_ALPHA
 		);
-		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 
 		SetState(STATE::Idle);
 	}
@@ -137,7 +137,7 @@ namespace m
 	}
 	void Mech::idle()
 	{
-		GetAnimator()->Play(MAKE_MECH_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY(mMechType, COMBAT_CONDITION_T::IDLE), true);
 		SetCurImage(nullptr);
 	}
 	void Mech::broken()
