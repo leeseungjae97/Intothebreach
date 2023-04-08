@@ -131,12 +131,12 @@ namespace m
 
 		Scene* scene = SceneManager::GetActiveScene();
 
-		scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-		if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER)
-		{
-			//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-			//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
-		}
+		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+		//if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER)
+		//{
+		//	//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+		//	//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+		//}
 
 
 		//if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER 

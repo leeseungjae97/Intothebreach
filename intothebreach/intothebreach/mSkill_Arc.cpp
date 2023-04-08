@@ -145,7 +145,7 @@ namespace m
 			diff = absD - absMD;
 		}
 
-		int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
+		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		ARROW_TILE_T arrows[4] = {ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down
 			, ARROW_TILE_T::arrow_up, ARROW_TILE_T::arrow_left};
 		//Skill::DrawPushTile(direct, 4);

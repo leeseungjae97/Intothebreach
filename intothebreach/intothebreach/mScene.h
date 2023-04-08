@@ -40,6 +40,7 @@ namespace m
 		void HighlightTile();
 		void ClearMTiles(TILE_T _type, TILE_HEAD_T _hT);
 		void ClearMap();
+		void ClearBackTiles();
 		void DrawFootTile();
 		void CheckNumInput();
 		

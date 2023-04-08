@@ -111,7 +111,7 @@ namespace m
 
 
 		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpImage)
+		if (nullptr != hpImage && 0 != mHp)
 		{
 			mPos += hpImage->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
@@ -128,7 +128,7 @@ namespace m
 				, RGB(255, 0, 255));
 		}
 		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpBack  || 0 != mHp )
+		if (nullptr != hpBack  && 0 != mHp )
 		{
 			mPos += hpBack->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
@@ -148,7 +148,10 @@ namespace m
 					, (int)(py + hpHeight));
 			}
 		}
-
+		if (bStructure)
+		{
+			// TODO building. energy status
+		}
 
 	}
 	void Unit::Release()
@@ -302,8 +305,8 @@ namespace m
 			idx++;
 			for (int i = 0; i < 4; i++)
 			{
-				float dx = now.coord.x + direct[i][0];
-				float dy = now.coord.y + direct[i][1];
+				float dy = now.coord.y + direct[i][0];
+				float dx = now.coord.x + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx >= TILE_X || dy >= TILE_Y) continue;
 				if (stPos.x == dx
@@ -494,8 +497,8 @@ namespace m
 			idx++;
 			for (int i = 0; i < 4; i++)
 			{
-				float dx = now.coord.x + direct[i][0];
-				float dy = now.coord.y + direct[i][1];
+				float dy = now.coord.y + direct[i][0];
+				float dx = now.coord.x + direct[i][1]; 
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (skill_range_map[(int)dy][(int)dx] != 0) continue;

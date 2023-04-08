@@ -146,8 +146,8 @@ namespace m
 			idx++;
 			for (int i = 0; i < 4; i++)
 			{
-				float dx = now.coord.x + direct[i][0];
-				float dy = now.coord.y + direct[i][1];
+				float dy = now.coord.y + direct[i][0];
+				float dx = now.coord.x + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
@@ -181,9 +181,9 @@ namespace m
 							//GetCurAttackSkill()->SetGuideLinePos();
 							if (!scene->GetPlayerTurn())
 							{
-								SetTargetCoord(Vector2(dx, dy));
-								return true;
 							}
+							SetTargetCoord(Vector2(dx, dy));
+							return true;
 						}
 
 						//for (int i = 0; i < scene->GetMap((int)dy, (int)dx).size(); i++)
@@ -247,6 +247,8 @@ namespace m
 		//SetFinalPos(_pos);
 		//SetCoord(_coord);
 		//SetFinalCoord(_coord);
+		scene->SetPosTiles((int)GetFinalMoveCoord().y, (int)GetFinalMoveCoord().x
+			, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 
 		if (moveCnt > moveLimit)
 		{
@@ -270,8 +272,7 @@ namespace m
 		Scene* scene = SceneManager::GetActiveScene();
 		Vector2 endCoord = Vector2::Minus;
 		Vector2 drawGuideLineEndCoord = Vector2::Minus;
-		//scene->SetPosTiles((int)otherPos.y, (int)otherPos.x
-		//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+
 		//if (skill_range_map[(int)otherPos.y][(int)otherPos.x] != MOVE)
 		//{
 		//	return;
@@ -316,12 +317,14 @@ namespace m
 			}
 			for (int i = st; i != end + IDVar; i += IDVar)
 			{
-				if (cY && scene->GetEffectUnit(i, (int)GetCoord().x) != nullptr)
+				if (cY 
+					&& scene->GetEffectUnit(i, (int)GetCoord().x) != nullptr)
 				{
 					endCoord = Vector2(GetCoord().x, (float)i);
 					break;
 				}
-				if (!cY && scene->GetEffectUnit((int)GetCoord().y, i) != nullptr)
+				if (!cY 
+					&& scene->GetEffectUnit((int)GetCoord().y, i) != nullptr)
 				{
 					endCoord = Vector2((float)i, GetCoord().y);
 					break;
@@ -336,9 +339,9 @@ namespace m
 				//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
 				//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 
-				//if(GetCurAttackSkill()->GetStartRender())
-				//	scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-				//		, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+				if(GetCurAttackSkill()->GetStartRender())
+					scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+						, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
 				//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
 				//Scene* scene = SceneManager::GetActiveScene();
 				//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
@@ -407,8 +410,8 @@ namespace m
 			idx++;
 			for (int i = 0; i < 4; i++)
 			{
-				float dx = now.coord.x + direct[i][0];
-				float dy = now.coord.y + direct[i][1];
+				float dy = now.coord.y + direct[i][0];
+				float dx = now.coord.x + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 
@@ -427,8 +430,9 @@ namespace m
 					{
 						//scene->SetPosTiles((int)dy, (int)dx
 						//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-						SetFinalMoveCoord(Vector2(dx, dy));
+						
 					}
+					SetFinalMoveCoord(Vector2(dx, dy));
 
 					find = true;
 				}

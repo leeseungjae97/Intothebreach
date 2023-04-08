@@ -30,9 +30,6 @@
 #define SCIENCES_			10
 #define CYBORGS_			3
 
-#define MECH_IDLE_SIZE_X	44
-#define MECH_IDLE_SIZE_Y	34
-
 #define ISLANDS				5
 
 #define TILE_SIZE_X			56.f

@@ -76,7 +76,7 @@ namespace m {
 	void Skill::ClearPushTile()
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		//if (scene->GetBackTiles().size() == 0) return;
+		if (scene->GetBackTiles().size() == 0) return;
 		for (int i = 0; i < scene->GetBackTiles().size(); i++)
 		{
 			scene->GetBackTiles()[i]->SetState(GameObject::STATE::Delete);
@@ -91,7 +91,7 @@ namespace m {
 		if (!endFire && !startFire) return false;
 		if (!endFire && startFire)
 		{
-			ClearPushTile();
+			//ClearPushTile();
 			return true;
 		}
 		return false;
@@ -158,6 +158,7 @@ namespace m {
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 
+		//scene->ClearBackTiles();
 		ClearPushTile();
 		for (int i = 0; i < size; i++)
 		{

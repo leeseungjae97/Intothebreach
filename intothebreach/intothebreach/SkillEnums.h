@@ -85,7 +85,7 @@ int ALIEN_WEAPON_PUSH_DIR[(UINT)ALIENS::END]{
 	0,//Crab,
 	0,//Digger,
 	0,//Firefly,
-	0,//Hornet,
+	1,//Hornet,
 	0,//Jelly,
 	0,//Leaper,
 	0,//Scarab,

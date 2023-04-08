@@ -218,7 +218,15 @@ namespace m
 			}
 		}
 	}
-
+	void Scene::ClearBackTiles()
+	{
+		if (mBackTiles.size() == 0) return;
+		for (int i = 0; i < mBackTiles.size(); i++)
+		{
+			mBackTiles[i]->SetState(GameObject::STATE::Delete);
+		}
+		mBackTiles.clear();
+	}
 	void Scene::CheckMouseOutOfMapRange()
 	{
 		Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
@@ -475,6 +483,9 @@ namespace m
 	}
 	void Scene::MoveSkill()
 	{
+		if (!playerTurn) return;
+
+
 		for (int i = 0; i < mAliens.size(); i++)
 		{
 			//if (mAliens[i]->GetFinalMoveCoord() != Vector2::Minus)
@@ -551,11 +562,27 @@ namespace m
 	}
 	void Scene::MoveMech()
 	{
+		if (!playerTurn) return;
 		drawTile();
 		if (KEY_UP(KEYCODE_TYPE::SPACE))
 		{
 			if (!playerTurn) playerTurn = true;
-			else playerTurn = false;
+			else
+			{
+				playerTurn = false;
+				if (nullptr != mMouseFollower)
+				{
+					mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+					mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
+					
+					if (nullptr != mMouseFollower->GetCurAttackSkill())
+					{
+						mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+					}
+
+					SetMouseFollower(nullptr);
+				}
+			}
 			// TODO: TURN END
 		}
 

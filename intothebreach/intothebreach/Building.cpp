@@ -11,19 +11,22 @@ namespace m {
 		, mType(_type)
 	{
 		AddComponent(new Transform());	
+		
 		GetMImages().resize((UINT)STRUCTURES::END);
 		for (UINT i = 0; i < (UINT)STRUCTURES_CONDITION_T::END; i++)
 		{
-			GetMImages()[i] = Resource::Load<Image>(
+			GetMImages()[i] = Resources::Load<Image>(
 				MAKE_UNIT_KEY(_type, (STRUCTURES_CONDITION_T)i)
 				,MAKE_UNIT_PATH(_type, (STRUCTURES_CONDITION_T)i)
 				);
 
 			if (nullptr == GetMImages()[i])continue;
-			//GetMImages()[i]->SetOffset();
+			GetMImages()[i]->SetOffset(STRUCTURES_OFFSET[(UINT)_type]);
 		}
 
 
+		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::On]);
+		SetState(GameObject::STATE::Idle);
 		//Image* im;
 		//if (_type == STRUCTURES::Mountain) {
 		//	im =Resources::Load<Image>(L"testMoutain", L"..\\Resources\\texture\\terrain\\green\\mountain_0.bmp");
@@ -39,39 +42,25 @@ namespace m {
 
 	}
 	void Building::Update() {
-		GameObject::Update();
+		Unit::Update();
 	}
 	void Building::Render(HDC hdc) {
-		GameObject::Render(hdc);
-		Vector2 mPos = GetPos();
-		//mPos += GetCurImage()->GetOffset();
-		Vector2 mScale = GetScale();
-		//TransparentBlt(hdc
-		//	, (int)(mPos.x - mScale.x / 2.f)
-		//	, (int)(mPos.y - mScale.y / 2.f)
-		//	, (int)(mScale.x)
-		//	, (int)(mScale.y)
-		//	, GetCurImage()->GetHdc()
-		//	, 0
-		//	, 0
-		//	, (int)(GetCurImage()->GetWidth())
-		//	, (int)(GetCurImage()->GetHeight())
-		//	, RGB(255, 0, 255));
+		Unit::Render(hdc);
 	}
 	void Building::idle()
 	{
-		GetMImages()[(UINT)STRUCTURES_CONDITION_T::On];
+		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::On]);
 	}
 	void Building::broken()
 	{
-		GetMImages()[(UINT)STRUCTURES_CONDITION_T::Broken];
+		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::Broken]);
 	}
 	void Building::water()
 	{
-		GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off];
+		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off]);
 	}
 	void Building::emerge()
 	{
-		GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off];
+		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off]);
 	}
 }

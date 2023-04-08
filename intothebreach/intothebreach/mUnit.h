@@ -62,6 +62,7 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
+		void SetStructure(bool _b) { bStructure = _b; }
 		size_t GetMIdx() { return mIdx; }
 		void DrawSkill(Vector2 pos, Vector2 guideLinePos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
@@ -138,6 +139,7 @@ namespace m
 		bool endAttack;		// 공격을 마치면
 		bool move;			// 공격에서 이동으로 넘갈때 사용.
 							// 이 값을 통해 공격과 이동의 분기가 나뉨.
+		bool bStructure;
 
 		Weapon* mWeapon;	// 미사용
 		Pilot* mPilot;		// 미사용
