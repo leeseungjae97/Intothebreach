@@ -42,13 +42,6 @@ namespace m {
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
-		Tile* testT = new Tile(Vector2(0, 0));
-		testT->SetPos(Vector2(20, 20));
-		testT->SetTileType(TILE_T::MOVE_RANGE);
-		testT->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 50, true);
-
-		AddGameObject(testT, LAYER_TYPE::TILE);
-		
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 

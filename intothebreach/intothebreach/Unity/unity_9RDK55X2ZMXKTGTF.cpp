@@ -26,6 +26,9 @@
 #include "E:\intothebreach\intothebreach\intothebreach\mCollider.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mEffect.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mEndingScene.cpp"
 
 
@@ -39,6 +42,9 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mPlayerInfo.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mPunch.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mSelectGDI.cpp"

@@ -16,14 +16,15 @@ namespace m
 		void SetTileTexture(const wstring& key, const wstring& path);
 		void SetTileTexture(const wstring& key, const wstring& path, Vector2 offset);
 		void SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant = 0, bool alpha = false);
-		void SetTileType(TILE_T _type){mTileType = _type;}
-		TILE_T GetTileType(){return mTileType;}
+		void SetTileType(TILE_T _type) { mTileType = _type; }
+		TILE_T GetTileType() { return mTileType; }
 		void InitETCTiles(int _size) { mETCTexs.resize(_size); }
 		void ClearAddETCTiles();
 		void SetETCTiles(const wstring& key, const wstring& path);
-		void SetSourceConstantAlpha(BYTE _constant){mConstant = _constant;}
+		void SetSourceConstantAlpha(BYTE _constant) { mConstant = _constant; }
 		Vector2 GetCoord() { return mCoord; }
-		Vector2 GetCenterPos(){
+		Vector2 GetCenterPos()
+		{
 			if (nullptr == mTileTex)
 			{
 				return Vector2(GetPos().x + 28.f, GetPos().y + 22.f);

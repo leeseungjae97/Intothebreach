@@ -6,13 +6,14 @@
 #include "func.h"
 #include "mApplication.h"
 #include "mImage.h"
+#include "mUnit.h"
 #include "mResources.h"
 #include "mSceneManager.h"
 extern m::Application application;
 namespace m {
-	Skill::Skill(SKILL_T _type, Unit* onwer)
+	Skill::Skill(SKILL_T _type, Unit* owner)
 		: mType(_type) 
-		, mOnwer(onwer)
+		, mOwner(owner)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, startFire(false)
@@ -34,6 +35,7 @@ namespace m {
 	{
 		AddComponent(new Transform);
 		AddComponent(new Animator);
+		skillAnimator = GetComponent<Animator>();
 	}
 	Skill::Skill(Skill& _origin) 
 		: mType(_origin.mType)
@@ -56,22 +58,44 @@ namespace m {
 		, mStPos(_origin.mStPos)
 		, mFinalEdPos(_origin.mFinalEdPos)
 	{
+		int a = 0;
 	}
 	Skill::~Skill() {
+		int a = 0;
 	}
 	void Skill::Initialize() {
 	}
 	void Skill::CalEndFire() {
+		if (endFire)
+		{
+			int a = 0;
+		}
 		Vector2 vec = GetPos();
+		//if (vec.x == mStPos.x) return;
+
 		float absD = abs(mFinalEdPos.x - mStPos.x);
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
 
 		if (mStPos == Vector2::Zero || mFinalEdPos == Vector2::One) endFire = false;
 		else diff <= 0.f ? endFire = true : endFire = false;
+		if (endFire)
+		{
+			int a = 0;
+		}
 	}
 	void Skill::CheckDirection()
 	{
+
+	}
+	void Skill::HitEffect(HDC hdc)
+	{
+		if (mOwner->GetCoord().y < guideLineCoord.y) iDir = DOWN_NUM;
+		if (mOwner->GetCoord().y > guideLineCoord.y) iDir = UP_NUM;
+		if (mOwner->GetCoord().x < guideLineCoord.x) iDir = RIGHT_NUM;
+		if (mOwner->GetCoord().x > guideLineCoord.x) iDir = LEFT_NUM;
+
+
 	}
 	void Skill::ClearPushTile()
 	{
@@ -80,6 +104,7 @@ namespace m {
 		for (int i = 0; i < scene->GetBackTiles().size(); i++)
 		{
 			scene->GetBackTiles()[i]->SetState(GameObject::STATE::Delete);
+			scene->GetBackTiles()[i] = nullptr;
 		}
 		scene->GetBackTiles().clear();
 
@@ -99,7 +124,6 @@ namespace m {
 
 	void Skill::Update() {
 		GameObject::Update();
-		CheckSkillFiring();
 	}
 	void Skill::ReInit(Vector2 stPos, Vector2 enPos, Vector2 guideLinePos, SKILL_T _type)
 	{
@@ -157,9 +181,6 @@ namespace m {
 	void Skill::DrawPushTile(ARROW_TILE_T *arrows, int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-
-		//scene->ClearBackTiles();
-		ClearPushTile();
 		for (int i = 0; i < size; i++)
 		{
 			int dy = 0;
@@ -198,12 +219,14 @@ namespace m {
 			//else
 			//	_type = (ARROW_TILE_T)(i);
 			Tile* pushBox = new Tile(Vector2((float)dx, (float)dy));
+			//pushBox->SetTileType(TILE_T::MOVE_RANGE);
 			pushBox->SetPos(scene->GetPosTiles()[dy][dx]->GetPos());
 			pushBox->SetTileTexture(MAKE_TILE_KEY(_type2), MAKE_TILE_PATH(_type2));
 			//pushBox->SetTileType(TILE_T::MOVE_RANGE);
 			//pushBox->SetSourceConstantAlpha(200);
 
 			Tile* tile = new Tile(Vector2((float)dx, (float)dy));
+			//tile->SetTileType(TILE_T::MOVE_RANGE);
 			tile->SetPos(scene->GetPosTiles()[dy][dx]->GetPos());
 			//tile->SetTileType(TILE_T::MOVE_RANGE);
 			//tile->SetSourceConstantAlpha(200);

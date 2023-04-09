@@ -250,18 +250,18 @@ namespace m
 		scene->SetPosTiles((int)GetFinalMoveCoord().y, (int)GetFinalMoveCoord().x
 			, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 
-		if (moveCnt > moveLimit)
-		{
-			directQueue.clear();
-			moveCnt = 1;
-			curAlien++;
-		}
 		if (GetFinalMoveCoord() == _coord)
 		{
 			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
 			ActiveSkill(GetTargetCoord());
 			//ActiveSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
+			directQueue.clear();
+			moveCnt = 1;
+			curAlien++;
+		}
+		if (moveCnt > moveLimit)
+		{
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
@@ -388,6 +388,7 @@ namespace m
 		queue.push_back(Vector2_1(stPos, 0, -1));
 		alienPathQueue.push_back(Vector2_1(stPos, 0, -1));
 
+		
 		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y)))
 		{
 			//scene->SetPosTiles((int)stPos.y, (int)stPos.x
@@ -428,10 +429,10 @@ namespace m
 				{
 					if (!scene->GetPlayerTurn())
 					{
-						//scene->SetPosTiles((int)dy, (int)dx
-						//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 						
 					}
+					scene->SetPosTiles((int)dy, (int)dx
+						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));
 
 					find = true;

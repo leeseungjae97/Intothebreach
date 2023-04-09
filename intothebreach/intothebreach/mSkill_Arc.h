@@ -19,6 +19,8 @@ namespace m
         virtual void GuideWire(HDC hdc) override;
         virtual void CheckDirection();
     private:
+        float m_curTime = 0;
+        float m_curZ = 0;
     };
 
 }

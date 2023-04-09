@@ -116,8 +116,8 @@ namespace m
 		mPosOutLineTiles.resize(iY, vector<Tile*>());
 		mBoundaryTiles.resize(iY, vector<Tile*>());
 		mArrowTiles.resize(iY, vector<Tile*>());
-		mEffectedTiles.resize(iY, vector<Tile*>());
-		mEnemyEmerge.resize(iY, vector<Tile*>());
+		//mEffectedTiles.resize(iY, vector<Tile*>());
+		//mEnemyEmerge.resize(iY, vector<Tile*>());
 		//mStruturesTiles.resize(iY, vector<Building*>());
 		for (int y = 0; y < iY; y++)
 		{
@@ -127,8 +127,8 @@ namespace m
 			mBoundaryTiles[y].resize(iX);
 			mArrowTiles[y].resize(iX);
 			//mStruturesTiles[y].resize(iX);
-			mEffectedTiles[y].resize(iX);
-			mEnemyEmerge[y].resize(iX);
+			//mEffectedTiles[y].resize(iX);
+			//mEnemyEmerge[y].resize(iX);
 		}
 		float fX, fY;
 		float mX = (10.f * (TILE_SIZE_X / 2.f));
@@ -221,11 +221,31 @@ namespace m
 	void Scene::ClearBackTiles()
 	{
 		if (mBackTiles.size() == 0) return;
-		for (int i = 0; i < mBackTiles.size(); i++)
+		vector<Tile*>::iterator iter = mBackTiles.begin();
+		while (iter != mBackTiles.end())
 		{
-			mBackTiles[i]->SetState(GameObject::STATE::Delete);
+			if (!(*iter)->GetShown())
+			{
+				//(*iter)->SetShown(true);
+				iter++;
+			}
+			else
+			{
+				object::Destory((*iter));
+				iter = mBackTiles.erase(iter);
+			}
 		}
-		mBackTiles.clear();
+		//for (int i = 0; i < mBackTiles.size();)
+		//{
+		//	if (!mBackTiles[i]->GetShown())
+		//	{
+		//		mBackTiles[i]->SetShown(true);
+		//		continue;
+		//	}
+		//	object::Destory(mBackTiles[i]);
+		//	
+		//	//delete mBackTiles[i];
+		//}
 	}
 	void Scene::CheckMouseOutOfMapRange()
 	{
@@ -240,10 +260,10 @@ namespace m
 
 		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, MOUSE_POS))
 		{
-			if (!mMouseFollower->GetMove())
-			{
-				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
-			}
+			//if (!mMouseFollower->GetMove())
+			//{
+			//	mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+			//}
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			SetAlphaState(GameObject::STATE::Invisible);
@@ -363,7 +383,6 @@ namespace m
 		{
 			for (int x = 0; x < mPosTiles[y].size(); x++)
 			{
-				ClearMap();
 				mBoundaryTiles[y][x]->ClearAddETCTiles();
 				mArrowTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
@@ -374,6 +393,8 @@ namespace m
 					, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
 			}
 		}
+		ClearBackTiles();
+		ClearMap();
 	}
 	/// <summary>
 	/// 마우스 위치의 타일 바꿈
@@ -396,7 +417,7 @@ namespace m
 	void Scene::Release()
 	{
 		Safe_Delete_X_Vec(mBacks);
-		Safe_Delete_X_Vec(mBackTiles);
+		//Safe_Delete_X_Vec(mBackTiles);
 		Safe_Delete_X_Vec(mStruturesTiles);
 
 		Safe_Delete_Y_Vec(mTiles);
@@ -404,8 +425,8 @@ namespace m
 		Safe_Delete_Y_Vec(mPosOutLineTiles);
 		Safe_Delete_Y_Vec(mBoundaryTiles);
 		Safe_Delete_Y_Vec(mArrowTiles);
-		Safe_Delete_Y_Vec(mEnemyEmerge);
-		Safe_Delete_Y_Vec(mEffectedTiles);
+		//Safe_Delete_Y_Vec(mEnemyEmerge);
+		//Safe_Delete_Y_Vec(mEffectedTiles);
 	}
 	void Scene::CheckNumInput()
 	{
@@ -531,7 +552,7 @@ namespace m
 				{
 					// 공격.
 					mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
-					mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
+					//mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
 					moveSave.clear();
 				}
 			}

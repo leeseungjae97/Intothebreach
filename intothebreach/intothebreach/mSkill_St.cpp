@@ -22,11 +22,11 @@ namespace m
 	}
 	void Skill_St::Update()
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		if (startFire)
@@ -44,13 +44,18 @@ namespace m
 	}
 	void Skill_St::Render(HDC hdc)
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
+		if (endFire)
+		{
+			HitEffect(hdc);
+			startFire = false;
+			endFire = false;
+		}
 		if (!startRender) return;
-		if (endFire) startFire = false;
 		if (startFire)
 		{
 			Active(hdc);
@@ -64,11 +69,11 @@ namespace m
 	{}
 	void Skill_St::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
@@ -105,7 +110,7 @@ namespace m
 	{
 		Vector2 mPos = mStPos;
 		Image* im;
-		if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
+		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
 		else im = Resources::Load<Image>(L"dot", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
 		float diff = (GetGuideLinePos() - mStPos).Length();
@@ -143,10 +148,10 @@ namespace m
 		//	&& scene->GetPlayerTurn()) return;
 
 		ARROW_TILE_T arrow[1];
-		if (mOnwer->GetCoord().y < guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_down;
-		if (mOnwer->GetCoord().y > guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_up;
-		if (mOnwer->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
-		if (mOnwer->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
+		if (mOwner->GetCoord().y < guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_down;
+		if (mOwner->GetCoord().y > guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_up;
+		if (mOwner->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
+		if (mOwner->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
 
 		/*if (endCoord == guideLineCoord)
 		{
@@ -156,12 +161,33 @@ namespace m
 			if (mStPos.x < mFinalEdPos.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		}*/
 
-		if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOnwer)->GetAlienType()]);
-		if (mOnwer->GetLayerType() == LAYER_TYPE::PLAYER)Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOnwer)->GetMechType()]);
+		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
+		if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
 
 		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 		//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+	}
+	void Skill_St::HitEffect(HDC hdc)
+	{
+		Skill::HitEffect(hdc);
+
+		DIR_EFFECT_T dirE = (DIR_EFFECT_T)(GetSkillDir() + 8);
+		Image* im = Resources::Load<Image>(MAKE_EFFECT_KEY(dirE), MAKE_EFFECT_PATH(dirE));
+		float fWid = im->GetWidth() / GET_LEN(dirE);
+		if (nullptr == GetSkillAnimator()->FindAnimation(MAKE_EFFECT_KEY(dirE)))
+		{
+			GetSkillAnimator()->CreateAnimation(
+				MAKE_EFFECT_KEY(dirE)
+				, im
+				, Vector2::Zero
+				, Vector2(fWid, im->GetHeight())
+				, Vector2(0, 0)
+				, GET_LEN(dirE)
+				, 0.5f
+			);
+		}
+		GetSkillAnimator()->Play(MAKE_EFFECT_KEY(dirE), false);
 	}
 	void Skill_St::CheckDirection()
 	{
@@ -181,8 +207,8 @@ namespace m
 
 		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, rPos))
 		{
-			SetEndFire(false);
-			SetStartFire(false);
+			//SetEndFire(false);
+			//SetStartFire(false);
 			SetStartRender(false);
 			return;
 		}
@@ -215,15 +241,15 @@ namespace m
 						//	scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)[i]->Hit(1);
 						//}
 						scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)->Hit(1);
-						SetEndFire(false);
-						SetStartFire(false);
+						//SetEndFire(false);
+						//SetStartFire(false);
 						SetStartRender(false);
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
-						SetEndFire(false);
-						SetStartFire(false);
+						//SetEndFire(false);
+						//SetStartFire(false);
 						SetStartRender(false);
 						return;
 					}

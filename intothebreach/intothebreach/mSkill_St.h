@@ -17,6 +17,7 @@ namespace m
         virtual void ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type) override;
         virtual void Active(HDC hdc) override;
         virtual void GuideWire(HDC hdc) override;
+        virtual void HitEffect(HDC hdc) override;
         virtual void CheckDirection();
     private:
     };

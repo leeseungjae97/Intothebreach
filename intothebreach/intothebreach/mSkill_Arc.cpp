@@ -22,33 +22,40 @@ namespace m
 		//fDistance = (mStPos - mFinalEdPos).Length();
 		offsetHeight = mFinalEdPos.y - mStPos.y;
 		//fHeight = max(mStPos.y, mFinalEdPos.y) - min(mStPos.y, mFinalEdPos.y);
+		//fHeight = mStPos.y;
+		//fHeight -= 100.f;
 
-		fHeight = mStPos.y;
-		fHeight -= 100.f;
+		//if(mStPos.y )
+		fHeight = 100.f - mStPos.y;
+
 		if (fHeight > 0) fHeight *= -1;
 		/*if (fHeight > 0) */
 		//else fHeight += 100.f;
 		//fHeight *= -1;
-
- 		gravityAccel = 2 * fHeight / (fMaxTime * fMaxTime);
+ 			gravityAccel = 2 * fHeight / (fMaxTime * fMaxTime);
 		velocityY = sqrtf(2.f * fHeight * gravityAccel);
-
 		float a = gravityAccel;
 		float b = -2 * velocityY;
 		float c = 2 * offsetHeight;
-
 		maxTheta = (-b + sqrtf(b * b - 4 * a * c)) / (2 * a);
 		minTheta = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
-
 		velocityX = -(mStPos.x - mFinalEdPos.x) / maxTheta;
+
+
+
+		//Vector2 diff = mFinalEdPos - mStPos;
+		//fDistance = diff.Length();
+		//Missile_vec = mFinalEdPos - mStPos;
+		//Missile_vec.Normalize();
+
 	}
 	void Skill_Arc::Update()
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		
@@ -60,6 +67,8 @@ namespace m
 			mPos.y = (mStPos.y - velocityY * fTime - (0.5f * gravityAccel * fTime * fTime));
 			Vector2 diff = prevMPos - mPos;
 			arcTheta = atan2(diff.y, diff.x);
+			//mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
+			//mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
 		}
 		CalEndFire();
 		SetPos(mPos);
@@ -71,11 +80,11 @@ namespace m
 	}
 	void Skill_Arc::Render(HDC hdc)
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
 		if (!startRender) return;
 		if (endFire) startFire = false;
 		if (startFire)
@@ -92,11 +101,11 @@ namespace m
 	}
 	void Skill_Arc::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		if (mOnwer->GetState() == GameObject::STATE::Death
+		if (mOwner->GetState() == GameObject::STATE::Death
 			||
-			mOnwer->GetState() == GameObject::STATE::Invisible
+			mOwner->GetState() == GameObject::STATE::Invisible
 			||
-			mOnwer->GetState() == GameObject::STATE::Broken) return;
+			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
@@ -117,17 +126,13 @@ namespace m
 		float absD = abs(mFinalEdPos.x - mStPos.x);
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
-
 		float len = (mFinalEdPos - mStPos).Length() / im->GetWidth() / 2.f;
 		float t = fMaxTime / len;
-
 		while (diff > 0)
 		{
 			mPos.x = (mStPos.x - velocityX * t);
 			mPos.y = (mStPos.y - velocityY * t - (0.5f * gravityAccel * t * t));
-
 			t += fMaxTime / len;
-
 			TransparentBlt(hdc,
 				(int)(mPos.x),
 				(int)(mPos.y),
@@ -138,12 +143,37 @@ namespace m
 				im->GetWidth(),
 				im->GetHeight(),
 				RGB(255, 0, 255));
-
 			vec = Vector2(mPos.x, mPos.y);
 			absD = abs(mFinalEdPos.x - mStPos.x);
 			absMD = abs(vec.x - mStPos.x);
 			diff = absD - absMD;
 		}
+
+		//float diff = (mFinalEdPos - mStPos).Length();
+		//float len = diff / im->GetWidth() / 2.f;
+		////m_curTime += sqrt(Missile_vec.x * Missile_vec.x + Missile_vec.y * Missile_vec.y)
+		////	* 500.f * im->GetWidth() * 2.f;
+		//m_curTime = 0;
+		////if (endCoord == guideLineCoord) (int)len == 3 ? len = 2 : 0;
+		//for (int i = 0; i < (int)len; i++)
+		//{
+		//	m_curTime += fDistance / im->GetWidth() * 2.f;
+		//	m_curZ = (-m_curTime * m_curTime + fDistance * m_curTime);
+		//	mPos.x += Missile_vec.x * im->GetWidth() * 2.f;
+		//	//mPos.y = m_curZ / fDistance;
+		//	mPos.y += Missile_vec.y * im->GetHeight() * 2.f;
+		//	TransparentBlt(hdc,
+		//		(int)(mPos.x),
+		//		(int)(mPos.y),
+		//		(int)(im->GetWidth() * 2),
+		//		(int)(im->GetHeight() * 2),
+		//		im->GetHdc(),
+		//		0, 0,
+		//		im->GetWidth(),
+		//		im->GetHeight(),
+		//		RGB(255, 0, 255));
+		//}
+
 
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
 		ARROW_TILE_T arrows[4] = {ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down

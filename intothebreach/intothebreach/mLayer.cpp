@@ -56,7 +56,13 @@ namespace m
 	{
 		for (GameObject* gameObj : mGameObjects)
 		{
-			if (!gameObj->GetIsFirstUpdate()) continue;
+			if (!gameObj->GetShown())
+			{
+				gameObj->SetShown(true);
+			}
+
+			if (gameObj->GetIsFirstUpdate()) continue;
+			
 			if (gameObj == nullptr)
 				continue;
 

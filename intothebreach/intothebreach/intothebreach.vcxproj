@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="AlienEnums.h" />
     <ClInclude Include="def.h" />
+    <ClInclude Include="EffectEnums.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="intothebreach.h" />
     <ClInclude Include="CommonInclude.h" />
@@ -144,6 +145,8 @@
     <ClInclude Include="mButton.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
+    <ClInclude Include="mEffect.h" />
+    <ClInclude Include="mPunch.h" />
     <ClInclude Include="mSkill.h" />
     <ClInclude Include="mSkill_Arc.h" />
     <ClInclude Include="mSkill_St.h" />
@@ -200,11 +203,13 @@
     <ClCompile Include="mAnimation.cpp" />
     <ClCompile Include="mAnimator.cpp" />
     <ClCompile Include="mCollider.cpp" />
+    <ClCompile Include="mEffect.cpp" />
     <ClCompile Include="mEndingScene.cpp" />
     <ClCompile Include="mInLandScene.cpp" />
     <ClCompile Include="mIntroScene.cpp" />
     <ClCompile Include="mPilot.cpp" />
     <ClCompile Include="mPlayerInfo.cpp" />
+    <ClCompile Include="mPunch.cpp" />
     <ClCompile Include="mSelectGDI.cpp" />
     <ClCompile Include="mApplication.cpp" />
     <ClCompile Include="mBackground.cpp" />

@@ -557,7 +557,7 @@ namespace m
 	}
 	void Unit::DrawSkill(Vector2 pos, Vector2 guideLinePos)
 	{
-		curAttactSkill = mSkills[skillIdx];
+		SetCurAttackSkill();
 		if (pos == Vector2::Minus) return;
 		if (nullptr == curAttactSkill)return;
 		curAttactSkill->ReInit(this->GetFinalCoord(), pos, guideLinePos, curAttactSkill->GetSkillType());

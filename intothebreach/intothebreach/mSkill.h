@@ -20,32 +20,29 @@ namespace m
 		virtual void GuideWire(HDC hdc);
 		virtual void PushUnit(ARROW_TILE_T *arrows, int size);
 		virtual void CheckDirection();
-		
+		virtual void HitEffect(HDC hdc);
+
 		//void DrawPushTile(int (*direct)[2], int size);
 		void DrawPushTile(ARROW_TILE_T *arrows, int size);
 		void ClearPushTile();
-		Vector2 GetEndCoord() { return endCoord; }
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
 		void CalEndFire();
-		Unit* GetOwner() { return mOnwer; }
 
+		Unit* GetOwner() { return mOwner; }
 		LAYER_TYPE GetLayerType() { return mLayerType; }
 		SKILL_T GetSkillType() { return mType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		Vector2 GetGuideLinePos() { return guideLinePos; }
 		Vector2 GetGuideLineCoord() { return guideLineCoord; }
-		bool GetEndFire()
-		{
-			return endFire;
-		}
-		bool GetStartFire()
-		{
-			return startFire;
-		}
-		bool GetStartRender() { 
-			return startRender; 
-		}
+		Vector2 GetEndCoord() { return endCoord; }
+		Animator* GetSkillAnimator() { return skillAnimator; }
+
+		bool GetEndFire(){return endFire;}
+		bool GetStartFire(){return startFire;}
+		bool GetStartRender() { return startRender; }
 		bool CheckSkillFiring();
+		int GetSkillDir() { return iDir; }
+
 		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
 		void SetSkillType(SKILL_T _type) { mType = _type; }
 		void SetRealPos(Vector2 _pos) { ; }
@@ -58,7 +55,7 @@ namespace m
 			startFire = _stFire; 
 		}
 		void SetStartRender(bool _sR) { 
-			if (!_sR) ClearPushTile();
+			//if (!_sR) ClearPushTile();
 			startRender = _sR; 
 		}
 
@@ -85,9 +82,12 @@ namespace m
 		float arcTheta;
 		float theta;
 
+		int iDir;
+
+		Animator* skillAnimator;
 		LAYER_TYPE mLayerType;
 		SKILL_T mType;
-		Unit* mOnwer;
+		Unit* mOwner;
 		Vector2 guideLinePos;
 		Vector2 guideLineCoord;
 		Vector2 Missile_vec;

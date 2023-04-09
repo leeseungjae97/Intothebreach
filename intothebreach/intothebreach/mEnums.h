@@ -9,6 +9,8 @@
 #include "StructureEnums.h"
 #include "SkillEnums.h"
 #include "UIEnums.h"
+#include "EffectEnums.h"
+
 enum class SCENE_TYPE
 {
 	IN_LAND0,
