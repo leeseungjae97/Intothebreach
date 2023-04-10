@@ -526,17 +526,24 @@ namespace m
 							continue;
 						}
 					}
-
+					if (SKILL_RANGE[(UINT)GetCurAttackSkill()->GetSkillType()] < now.level + 1)
+					{
+						find = true;
+						continue;
+					}
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
 
-					if (GetCurAttackSkill()->GetSkillType() != SKILL_T::ST
+					if (GetCurAttackSkill()->GetSkillType() == SKILL_T::ARC
 						&& rangeCheck) continue;
 
 					skill_range_map[(int)dy][(int)dx] = MOVE;
 					scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					//scene->SetPosTiles((int)dy, (int)dx, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+					if (find) break;
 				}
+				if (find) break;
 			}
+			if (find) break;
 		}
 		DrawOutLineTile((int)MOVE_TILE_T::square_r_l);
 	}

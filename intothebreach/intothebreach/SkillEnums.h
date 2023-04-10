@@ -9,10 +9,30 @@ enum class SKILL_T
 {
 	ARC,
 	ST,
+	RANGE_ST,
+	RANGE_ARC,
 	END,
 };
-
-
+enum class WEAPON_T
+{
+	titan_fist,
+	artemis_artillery,
+	taurus_cannon,
+	END,
+};
+int WEAPON_TYPE[(UINT)WEAPON_T::END]{
+	(int)SKILL_T::RANGE_ST,
+	(int)SKILL_T::ARC,
+	(int)SKILL_T::ST,
+};
+enum class A_WEAPON_T
+{
+	stinging,				// scorpion
+	fangs,					// leaper
+	stinger,				// hornet
+	accelerating_thorax,	// firefly
+	END,
+};
 enum class SKILL_N
 {
 	range,
@@ -20,7 +40,7 @@ enum class SKILL_N
 	punch,
 	END,
 };
-enum class SKILL_FUNC
+enum class SKILL_FUNC_T
 {
 	PUSH,
 	CHAIN,
@@ -47,6 +67,16 @@ wstring SKILL_DIR_PATH[(UINT)SKILL_DIR::NONE]{
 	L"L",
 	L"U",
 	L"D",
+};
+int SKILL_LEN[(UINT)SKILL_T::END]{
+	0,
+	0,
+	6,
+};
+int SKILL_RANGE[(UINT)SKILL_T::END]{
+	99,
+	99,
+	1,
 };
 int WEAPON_PUSH_DIR[(UINT)MECHS::END]{
 	1,//electrice,
@@ -100,7 +130,7 @@ int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//judo,
 	(int)SKILL_T::ST,//laser,
 	(int)SKILL_T::ST,//leap,
-	(int)SKILL_T::ST,//punch,
+	(int)SKILL_T::RANGE_ST,//punch,
 
 	(int)SKILL_T::ST,//charge,
 	(int)SKILL_T::ST,//jet,

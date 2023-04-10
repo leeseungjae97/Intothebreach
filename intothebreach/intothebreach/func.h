@@ -34,13 +34,13 @@ namespace m::object
 	}
 
 
-	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type, MECHS mType)
+	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type, MECHS mSkillType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Mech* gameObj 
-			= new Mech(mType, coord
-				, MECH_MOVE_RANGE[(UINT)mType]
-				, MECH_HP[(UINT)mType]
+			= new Mech(mSkillType, coord
+				, MECH_MOVE_RANGE[(UINT)mSkillType]
+				, MECH_HP[(UINT)mSkillType]
 				, scene->GetMechs().size());
 
 		gameObj->Initialize();
@@ -83,10 +83,10 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mType)
+	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mSkillType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Alien* gameObj = new Alien(mType, coord, scene->GetAliens().size());
+		Alien* gameObj = new Alien(mSkillType, coord, scene->GetAliens().size());
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());

@@ -6,7 +6,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Skill(SKILL_T _type, Unit* onwer);
+		Skill(WEAPON_T _type, Unit* onwer);
 		Skill(Skill& _origin);
 		~Skill();
 
@@ -20,7 +20,7 @@ namespace m
 		virtual void GuideWire(HDC hdc);
 		virtual void PushUnit(ARROW_TILE_T *arrows, int size);
 		virtual void CheckDirection();
-		virtual void HitEffect(HDC hdc);
+		virtual void HitEffectDir();
 
 		//void DrawPushTile(int (*direct)[2], int size);
 		void DrawPushTile(ARROW_TILE_T *arrows, int size);
@@ -30,12 +30,12 @@ namespace m
 
 		Unit* GetOwner() { return mOwner; }
 		LAYER_TYPE GetLayerType() { return mLayerType; }
-		SKILL_T GetSkillType() { return mType; }
+		SKILL_T GetSkillType() { return mSkillType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		Vector2 GetGuideLinePos() { return guideLinePos; }
 		Vector2 GetGuideLineCoord() { return guideLineCoord; }
 		Vector2 GetEndCoord() { return endCoord; }
-		Animator* GetSkillAnimator() { return skillAnimator; }
+		Animator* GetAnimator() { return mAnimator; }
 
 		bool GetEndFire(){return endFire;}
 		bool GetStartFire(){return startFire;}
@@ -44,20 +44,15 @@ namespace m
 		int GetSkillDir() { return iDir; }
 
 		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
-		void SetSkillType(SKILL_T _type) { mType = _type; }
+		void SetSkillType(SKILL_T _type) { mSkillType = _type; }
 		void SetRealPos(Vector2 _pos) { ; }
 		void SetEndPos(Vector2 _pos) { mFinalEdPos = _pos; }
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
 		void SetGuideLinePos(Vector2 _glp) { guideLinePos = _glp; }
 		void SetGuideLineCoord(Vector2 _glc) { guideLineCoord = _glc; }
 		void SetEndFire(bool _endFire) { endFire = _endFire; }
-		void SetStartFire(bool _stFire) { 
-			startFire = _stFire; 
-		}
-		void SetStartRender(bool _sR) { 
-			//if (!_sR) ClearPushTile();
-			startRender = _sR; 
-		}
+		void SetStartFire(bool _stFire) { startFire = _stFire; }
+		void SetStartRender(bool _sR) { startRender = _sR; }
 
 
 	protected:
@@ -84,9 +79,10 @@ namespace m
 
 		int iDir;
 
-		Animator* skillAnimator;
+		Animator* mAnimator;
 		LAYER_TYPE mLayerType;
-		SKILL_T mType;
+		SKILL_T mSkillType;
+		WEAPON_T mWeaponType;
 		Unit* mOwner;
 		Vector2 guideLinePos;
 		Vector2 guideLineCoord;

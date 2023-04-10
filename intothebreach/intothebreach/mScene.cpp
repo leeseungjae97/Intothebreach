@@ -204,10 +204,6 @@ namespace m
 			}
 		}
 	}
-
-	/// <summary>
-	/// 표기했던 이동가능거리 초기화.
-	/// </summary>
 	void Scene::ClearMap()
 	{
 		for (int y = 0; y < mPosTiles.size(); y++)
@@ -224,9 +220,13 @@ namespace m
 		vector<Tile*>::iterator iter = mBackTiles.begin();
 		while (iter != mBackTiles.end())
 		{
-			if (!(*iter)->GetShown())
+			if (!(*iter)->GetComponent<Animator>()->GetStopAnimator())
 			{
-				//(*iter)->SetShown(true);
+				iter++;
+			}
+			else if (!(*iter)->GetShown())
+			{
+				(*iter)->SetShown(true);
 				iter++;
 			}
 			else
@@ -260,10 +260,10 @@ namespace m
 
 		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, MOUSE_POS))
 		{
-			//if (!mMouseFollower->GetMove())
-			//{
-			//	mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
-			//}
+			if (!mMouseFollower->GetMove())
+			{
+				mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
+			}
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			SetAlphaState(GameObject::STATE::Invisible);
@@ -704,7 +704,7 @@ namespace m
 	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, BYTE fContant)
 	{
 		mPosTiles[_y][_x]->SetTileType(_type1);
-		mPosTiles[_y][_x]->SetCombatTileAnimator(_type2, fContant, true);
+		mPosTiles[_y][_x]->SetTileAnimator(_type2, fContant, true);
 	}
 	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2)
 	{

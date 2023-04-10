@@ -14,27 +14,6 @@ namespace m {
 		AddComponent(new Transform());
 		AddComponent(new Animator());
 		mAnimator = GetComponent<Animator>();
-
-		for (int i = 0; i < (int)COMBAT_ANIM_TILE_T::END; i++)
-		{
-			UINT len = COMBAT_ANIM_TILE_LEN[(UINT)i];
-
-			Image* im = Resources::Load<Image>(MAKE_TILE_KEY((COMBAT_ANIM_TILE_T)i)
-				, MAKE_TILE_PATH((COMBAT_ANIM_TILE_T)i));
-
-			float fWid = (float)im->GetWidth() / len;
-			float fHei = (float)im->GetHeight();
-			mAnimator->CreateAnimation(
-				MAKE_TILE_KEY((COMBAT_ANIM_TILE_T)i)
-				, im
-				, Vector2(Vector2::Zero)
-				, Vector2(fWid, fHei)
-				, COMBAT_ANIM_TIME_OFFSET[(UINT)i]
-				, len
-				, 0.2f
-				, AC_SRC_ALPHA
-			);
-		}
 	}
 	Tile::Tile()
 		: mTileTex(nullptr)
@@ -69,11 +48,91 @@ namespace m {
 		mTileTex->SetOffset(offset);
 		SetScale(Vector2((float)(mTileTex->GetWidth() * 2), (float)(mTileTex->GetHeight() * 2)));
 	}
-	void Tile::SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant, bool alpha)
+	void Tile::SetTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant, bool alpha)
 	{
 		mTileTex = nullptr;
 		if (alpha) mAnimator->SetConstant(fConstant);
+		
+		if (nullptr == mAnimator->FindAnimation(MAKE_TILE_KEY(_type)))
+		{
+			UINT len = COMBAT_ANIM_TILE_LEN[(UINT)_type];
+
+			Image* im = Resources::Load<Image>(MAKE_TILE_KEY(_type)
+				, MAKE_TILE_PATH(_type));
+
+			float fWid = (float)im->GetWidth() / len;
+			float fHei = (float)im->GetHeight();
+
+			mAnimator->CreateAnimation(
+				MAKE_TILE_KEY(_type)
+				, im
+				, Vector2::Zero
+				, Vector2(fWid, fHei)
+				, COMBAT_ANIM_TIME_OFFSET[(UINT)_type]
+				, len
+				, 0.2f
+				, AC_SRC_ALPHA
+			);
+		}
 		mAnimator->Play(MAKE_TILE_KEY(_type), true);
+	}
+	void Tile::SetTileAnimator(DIR_EFFECT_T _type, BYTE fConstant, bool alpha)
+	{
+		mTileTex = nullptr;
+		if (alpha) mAnimator->SetConstant(fConstant);
+
+		if (nullptr == mAnimator->FindAnimation(MAKE_EFFECT_KEY(_type)))
+		{
+			UINT len = GET_LEN(_type);
+
+			Image* im = Resources::Load<Image>(MAKE_EFFECT_KEY(_type)
+				, MAKE_EFFECT_PATH(_type));
+
+			float fWid = (float)im->GetWidth() / len;
+			float fHei = (float)im->GetHeight();
+
+			mAnimator->CreateAnimation(
+				MAKE_EFFECT_KEY(_type)
+				, im
+				, Vector2::Zero
+				, Vector2(fWid, fHei)
+				, DIR_EFFECT_T_OFFSET[(UINT)_type]
+				, len
+				, 0.05f
+				, AC_SRC_OVER
+			);
+		}
+		if(mAnimator->GetStopAnimator())
+			mAnimator->Play(MAKE_EFFECT_KEY(_type), false);
+	}
+	void Tile::SetTileAnimator(IMMO_EFFECT_T _type, BYTE fConstant, bool alpha)
+	{
+		mTileTex = nullptr;
+		if (alpha) mAnimator->SetConstant(fConstant);
+
+		if (nullptr == mAnimator->FindAnimation(MAKE_EFFECT_KEY(_type)))
+		{
+			UINT len = GET_LEN(_type);
+
+			Image* im = Resources::Load<Image>(MAKE_EFFECT_KEY(_type)
+				, MAKE_EFFECT_PATH(_type));
+
+			float fWid = (float)im->GetWidth() / len;
+			float fHei = (float)im->GetHeight();
+
+			mAnimator->CreateAnimation(
+				MAKE_EFFECT_KEY(_type)
+				, im
+				, Vector2::Zero
+				, Vector2(fWid, fHei)
+				, IMMO_EFFECT_T_OFFSET[(UINT)_type]
+				, len
+				, 0.05f
+				, AC_SRC_OVER
+			);
+		}
+		if (mAnimator->GetStopAnimator())
+			mAnimator->Play(MAKE_EFFECT_KEY(_type), false);
 	}
 	void Tile::ClearAddETCTiles()
 	{

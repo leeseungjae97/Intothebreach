@@ -15,7 +15,9 @@ namespace m
 	public:
 		void SetTileTexture(const wstring& key, const wstring& path);
 		void SetTileTexture(const wstring& key, const wstring& path, Vector2 offset);
-		void SetCombatTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant = 0, bool alpha = false);
+		void SetTileAnimator(COMBAT_ANIM_TILE_T _type, BYTE fConstant = 0, bool alpha = false);
+		void SetTileAnimator(DIR_EFFECT_T _type, BYTE fConstant = 0, bool alpha = false);
+		void SetTileAnimator(IMMO_EFFECT_T _type, BYTE fConstant = 0, bool alpha = false);
 		void SetTileType(TILE_T _type) { mTileType = _type; }
 		TILE_T GetTileType() { return mTileType; }
 		void InitETCTiles(int _size) { mETCTexs.resize(_size); }

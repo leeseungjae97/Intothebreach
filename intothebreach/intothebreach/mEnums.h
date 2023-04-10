@@ -30,6 +30,7 @@ enum class SCENE_TYPE
 enum class LAYER_TYPE
 {
 	BACKGROUND,
+	TILE_0,
 	TILE,
 	STRUCT,
 	MONSTER,

@@ -15,7 +15,7 @@ namespace m
 	}
 	void Skill_Arc::Initialize()
 	{
-		object::Visible(this);
+		//object::Visible(this);
 		fTime = 0.f;
 		fMaxTime = 0.4f;
 		fDistance = (mFinalEdPos - mStPos).Length();
@@ -75,7 +75,7 @@ namespace m
 
 		if (endFire)
 		{
-			object::Invisible(this);
+			//object::Invisible(this);
 		}
 	}
 	void Skill_Arc::Render(HDC hdc)
@@ -85,8 +85,13 @@ namespace m
 			mOwner->GetState() == GameObject::STATE::Invisible
 			||
 			mOwner->GetState() == GameObject::STATE::Broken) return;
+		if (endFire)
+		{
+			startFire = false;
+			endFire = false;
+			startRender = false;
+		}
 		if (!startRender) return;
-		if (endFire) startFire = false;
 		if (startFire)
 		{
 			Active(hdc);
@@ -176,8 +181,8 @@ namespace m
 
 
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		ARROW_TILE_T arrows[4] = {ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down
-			, ARROW_TILE_T::arrow_up, ARROW_TILE_T::arrow_left};
+		ARROW_TILE_T arrows[4] = {ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up,
+			ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left};
 		//Skill::DrawPushTile(direct, 4);
 		Skill::DrawPushTile(arrows, 4);
 	}
@@ -185,10 +190,9 @@ namespace m
 	{
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
-		// right, up, down, left
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_down
-			, ARROW_TILE_T::arrow_up, ARROW_TILE_T::arrow_left };
+		ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up, 
+			ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left };
 		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x) != nullptr)
 		{
 			//for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
@@ -197,14 +201,14 @@ namespace m
 			//}
 			scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)->Hit(1);
 			
-			SetEndFire(false);
-			SetStartFire(false);
+			//SetEndFire(false);
+			//SetStartFire(false);
 			PushUnit(arrows, 4);
 		}
 		else if (endFire)
 		{
-			SetEndFire(false);
-			SetStartFire(false);
+			//SetEndFire(false);
+			//SetStartFire(false);
 			PushUnit(arrows, 4);
 		}
 	}

@@ -10,14 +10,14 @@
 #include "mSceneManager.h"
 namespace m
 {
-	Alien::Alien(ALIENS mType, Vector2 _coord, size_t idx)
+	Alien::Alien(ALIENS mSkillType, Vector2 _coord, size_t idx)
 		: Unit(_coord
-			, ALIEN_MOVE_RANGE[(UINT)mType]
-			, ALIEN_HP[(UINT)mType]
-			, ALIEN_BASIC_WEAPON[(UINT)mType]
+			, ALIEN_MOVE_RANGE[(UINT)mSkillType]
+			, ALIEN_HP[(UINT)mSkillType]
+			, ALIEN_BASIC_WEAPON[(UINT)mSkillType]
 			, idx
 		)
-		, mAlienType(mType)
+		, mAlienType(mSkillType)
 	{
 		finalMoveCoord = Vector2::Minus;
 		moveCnt = 1;
@@ -28,7 +28,7 @@ namespace m
 
 		for (UINT i = 0; i < (UINT)ALIEN_CONDITION::END; i++)
 		{
-			if (ALIENS_APL_COND[(UINT)mType][i] != 1) continue;
+			if (ALIENS_APL_COND[(UINT)mSkillType][i] != 1) continue;
 			vImage[i] = Resources::Load<Image>(
 				MAKE_UNIT_KEY(mAlienType, (ALIEN_CONDITION)i)
 				, MAKE_UNIT_PATH(mAlienType, (ALIEN_CONDITION)i));

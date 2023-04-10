@@ -146,7 +146,7 @@
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
     <ClInclude Include="mEffect.h" />
-    <ClInclude Include="mPunch.h" />
+    <ClInclude Include="mSkill_RS.h" />
     <ClInclude Include="mSkill.h" />
     <ClInclude Include="mSkill_Arc.h" />
     <ClInclude Include="mSkill_St.h" />
@@ -209,7 +209,7 @@
     <ClCompile Include="mIntroScene.cpp" />
     <ClCompile Include="mPilot.cpp" />
     <ClCompile Include="mPlayerInfo.cpp" />
-    <ClCompile Include="mPunch.cpp" />
+    <ClCompile Include="mSkill_RS.cpp" />
     <ClCompile Include="mSelectGDI.cpp" />
     <ClCompile Include="mApplication.cpp" />
     <ClCompile Include="mBackground.cpp" />

@@ -3,13 +3,13 @@
 namespace m
 {
     Component::Component(COMPONENT_TYPE type)
-        : mType(type)
+        : mSkillType(type)
         , mOwner(nullptr)
     {
 
     }
     Component::Component(Component& other)
-        : mType(other.GetType())
+        : mSkillType(other.GetType())
         , mOwner(nullptr)
     {
 

@@ -11,8 +11,8 @@
 #include "mSceneManager.h"
 extern m::Application application;
 namespace m {
-	Skill::Skill(SKILL_T _type, Unit* owner)
-		: mType(_type) 
+	Skill::Skill(WEAPON_T _type, Unit* owner)
+		: mWeaponType(_type) 
 		, mOwner(owner)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
@@ -33,12 +33,14 @@ namespace m {
 		, mStPos(Vector2::Zero)
 		, mFinalEdPos(Vector2::One)
 	{
+		mSkillType = (SKILL_T)WEAPON_TYPE[(UINT)_type];
 		AddComponent(new Transform);
 		AddComponent(new Animator);
-		skillAnimator = GetComponent<Animator>();
+		mAnimator = GetComponent<Animator>();
 	}
 	Skill::Skill(Skill& _origin) 
-		: mType(_origin.mType)
+		: mSkillType(_origin.mSkillType)
+		, mWeaponType(_origin.mWeaponType)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, startFire(false)
@@ -58,18 +60,12 @@ namespace m {
 		, mStPos(_origin.mStPos)
 		, mFinalEdPos(_origin.mFinalEdPos)
 	{
-		int a = 0;
 	}
 	Skill::~Skill() {
-		int a = 0;
 	}
 	void Skill::Initialize() {
 	}
 	void Skill::CalEndFire() {
-		if (endFire)
-		{
-			int a = 0;
-		}
 		Vector2 vec = GetPos();
 		//if (vec.x == mStPos.x) return;
 
@@ -79,23 +75,17 @@ namespace m {
 
 		if (mStPos == Vector2::Zero || mFinalEdPos == Vector2::One) endFire = false;
 		else diff <= 0.f ? endFire = true : endFire = false;
-		if (endFire)
-		{
-			int a = 0;
-		}
 	}
 	void Skill::CheckDirection()
 	{
 
 	}
-	void Skill::HitEffect(HDC hdc)
+	void Skill::HitEffectDir()
 	{
 		if (mOwner->GetCoord().y < guideLineCoord.y) iDir = DOWN_NUM;
 		if (mOwner->GetCoord().y > guideLineCoord.y) iDir = UP_NUM;
 		if (mOwner->GetCoord().x < guideLineCoord.x) iDir = RIGHT_NUM;
 		if (mOwner->GetCoord().x > guideLineCoord.x) iDir = LEFT_NUM;
-
-
 	}
 	void Skill::ClearPushTile()
 	{
@@ -203,15 +193,23 @@ namespace m {
 			ARROW_ETC_T _type2;
 
 			//if (scene->GetEffectUnit(dy, dx).size() != 0)
-			if (scene->GetEffectUnit(dy, dx) != nullptr)
-			{
-				_type = (ARROW_TILE_T)((UINT)arrows[i] + 4);
-				_type2 = ARROW_ETC_T::push_y_box;
-			}
-			else
+			if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER)
 			{
 				_type = arrows[i];
 				_type2 = ARROW_ETC_T::push_box;
+			}
+			else
+			{
+				if (scene->GetEffectUnit(dy, dx) != nullptr)
+				{
+					_type = (ARROW_TILE_T)((UINT)arrows[i] + 4);
+					_type2 = ARROW_ETC_T::push_y_box;
+				}
+				else
+				{
+					_type = arrows[i];
+					_type2 = ARROW_ETC_T::push_box;
+				}
 			}
 
 			//if (scene->GetEffectUnit(dy, dx).size() != 0)
@@ -240,13 +238,49 @@ namespace m {
 			scene->GetBackTiles().push_back(tile);
 			scene->GetBackTiles().push_back(pushBox);
 
+			
 			scene->AddGameObject(pushBox, LAYER_TYPE::TILE);
-			scene->AddGameObject(tile, LAYER_TYPE::TILE_HEAD);
+			scene->AddGameObject(tile, LAYER_TYPE::TILE);
 		}
 	}
+	//void Skill::DrawPushAnimation(ARROW_TILE_T* arrows, int size)
+	//{
+
+	//}
 	void Skill::PushUnit(ARROW_TILE_T* arrows, int size)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
+
+		Tile* blow = new Tile(GetEndCoord());
+		if (GetLayerType() == LAYER_TYPE::PLAYER)
+		{
+			if (GetSkillType() == SKILL_T::ARC)
+			{
+				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+				blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
+
+				scene->GetBackTiles().push_back(blow);
+				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
+			}
+			if (GetSkillType() == SKILL_T::ST)
+			{
+				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+				blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
+
+				scene->GetBackTiles().push_back(blow);
+				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
+			}
+			if (GetSkillType() == SKILL_T::RANGE_ST)
+			{
+				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+				blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
+
+				scene->GetBackTiles().push_back(blow);
+				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
+			}
+		}
+		
+
 		for (int i = 0; i < size; i++)
 		{
 			int dy = 0;
@@ -264,8 +298,19 @@ namespace m {
 			}
 
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
-			if (nullptr == scene->GetEffectUnit(dy, dx)) continue;
+
+			if (GetSkillType() == SKILL_T::ARC)
+			{
+				Tile* animTile = new Tile(Vector2((float)dx, (float)dy));
+				animTile->SetPos(scene->GetPosTiles()[dy][dx]->GetCenterPos());
+				animTile->SetTileAnimator((DIR_EFFECT_T)i);
+				scene->GetBackTiles().push_back(animTile);
+				scene->AddGameObject(animTile, LAYER_TYPE::TILE_HEAD);
+			}
 			
+
+			if (nullptr == scene->GetEffectUnit(dy, dx)) continue;
+
 			Unit* unit = scene->GetEffectUnit(dy, dx);
 
 			int _dy = (int)dy + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;

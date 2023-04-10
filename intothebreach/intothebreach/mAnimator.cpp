@@ -22,7 +22,7 @@ namespace m {
 		: Component(COMPONENT_TYPE::ANIMATOR)
 		, mActiveAnimation(nullptr)
 		, mbLoop(false)
-		, stopAnimator(false)
+		, stopAnimator(true)
 	{
 	}
 	Animator::~Animator() {

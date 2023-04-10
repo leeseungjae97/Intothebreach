@@ -1,13 +1,14 @@
 #pragma once
-#include "mSkill.h"
+#include "mSkill_St.h"
 namespace m
 {
-    class Skill_St :
+    class Unit;
+    class Skill_RS:
         public Skill
     {
     public:
-        Skill_St(SKILL_T _type, Unit* owner);
-        ~Skill_St();
+        Skill_RS(SKILL_T _type, Unit* owner);
+        ~Skill_RS();
 
         virtual void Initialize() override;
         virtual void Update() override;
@@ -21,4 +22,5 @@ namespace m
     private:
     };
 }
+
 

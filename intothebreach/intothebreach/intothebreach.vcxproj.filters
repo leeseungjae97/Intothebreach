@@ -307,7 +307,7 @@
     <ClInclude Include="mEffect.h">
       <Filter>Contents\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="mPunch.h">
+    <ClInclude Include="mSkill_RS.h">
       <Filter>Contents\Attached\Skill\St\Punch</Filter>
     </ClInclude>
   </ItemGroup>
@@ -448,7 +448,7 @@
     <ClCompile Include="mEffect.cpp">
       <Filter>Contents\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="mPunch.cpp">
+    <ClCompile Include="mSkill_RS.cpp">
       <Filter>Contents\Attached\Skill\St\Punch</Filter>
     </ClCompile>
   </ItemGroup>

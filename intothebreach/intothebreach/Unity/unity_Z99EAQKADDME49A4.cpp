@@ -44,7 +44,7 @@
 #include "E:\intothebreach\intothebreach\intothebreach\mPlayerInfo.cpp"
 
 
-#include "E:\intothebreach\intothebreach\intothebreach\mPunch.cpp"
+#include "E:\intothebreach\intothebreach\intothebreach\mSkill_RS.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mSelectGDI.cpp"

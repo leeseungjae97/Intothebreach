@@ -6,19 +6,23 @@
 #include "mResources.h"
 namespace m
 {
-	Skill_St::Skill_St(SKILL_T _type, Unit* onwer)
-		: Skill(_type, onwer)
-	{}
+	Skill_St::Skill_St(SKILL_T _type, Unit* owner)
+		: Skill(_type, owner)
+	{
+	}
 	Skill_St::~Skill_St()
 	{
 
 	}
 	void Skill_St::Initialize()
 	{
+		//object::Visible(this);
 		Vector2 diff = mFinalEdPos - mStPos;
 		fDistance = diff.Length();
 		Missile_vec = mFinalEdPos - mStPos;
 		Missile_vec.Normalize();
+
+		//GetAnimator()->Stop();
 	}
 	void Skill_St::Update()
 	{
@@ -29,18 +33,19 @@ namespace m
 			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
+		CalEndFire();
+
 		if (startFire)
 		{
 			mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
 			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
 		}
-		CalEndFire();
 		SetPos(mPos);
 
-		if (endFire)
-		{
-			object::Invisible(this);
-		}
+		//if (endFire)
+		//{
+		//	
+		//}
 	}
 	void Skill_St::Render(HDC hdc)
 	{
@@ -51,9 +56,10 @@ namespace m
 			mOwner->GetState() == GameObject::STATE::Broken) return;
 		if (endFire)
 		{
-			HitEffect(hdc);
 			startFire = false;
 			endFire = false;
+			startRender = false;
+			//object::Invisible(this);
 		}
 		if (!startRender) return;
 		if (startFire)
@@ -93,7 +99,7 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 
-		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
+		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mSkillType, dir), MAKE_SKILL_PATH(mSkillType, dir));
 
 		TransparentBlt(hdc,
 			(int)(mPos.x),
@@ -108,6 +114,7 @@ namespace m
 	}
 	void Skill_St::GuideWire(HDC hdc)
 	{
+
 		Vector2 mPos = mStPos;
 		Image* im;
 		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
@@ -168,27 +175,6 @@ namespace m
 		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 		//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 	}
-	void Skill_St::HitEffect(HDC hdc)
-	{
-		Skill::HitEffect(hdc);
-
-		DIR_EFFECT_T dirE = (DIR_EFFECT_T)(GetSkillDir() + 8);
-		Image* im = Resources::Load<Image>(MAKE_EFFECT_KEY(dirE), MAKE_EFFECT_PATH(dirE));
-		float fWid = im->GetWidth() / GET_LEN(dirE);
-		if (nullptr == GetSkillAnimator()->FindAnimation(MAKE_EFFECT_KEY(dirE)))
-		{
-			GetSkillAnimator()->CreateAnimation(
-				MAKE_EFFECT_KEY(dirE)
-				, im
-				, Vector2::Zero
-				, Vector2(fWid, im->GetHeight())
-				, Vector2(0, 0)
-				, GET_LEN(dirE)
-				, 0.5f
-			);
-		}
-		GetSkillAnimator()->Play(MAKE_EFFECT_KEY(dirE), false);
-	}
 	void Skill_St::CheckDirection()
 	{
 		Scene* scene = SceneManager::GetActiveScene();
@@ -197,21 +183,18 @@ namespace m
 		Vector2 pos = GetPos();
 		Vector2 scale = GetScale();
 		Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
-		Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
+		HitEffectDir();
 
-		Vector2 bigRhombusDownPos(
-			mPosTiles[0][7]->GetPos().x + mPosTiles[0][7]->GetScale().x,
-			mPosTiles[7][7]->GetPos().y + mPosTiles[7][7]->GetScale().y);
-
-		Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
-
-		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, rPos))
-		{
-			//SetEndFire(false);
-			//SetStartFire(false);
-			SetStartRender(false);
-			return;
-		}
+		//Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
+		//Vector2 bigRhombusDownPos(
+		//	mPosTiles[0][7]->GetPos().x + mPosTiles[0][7]->GetScale().x,
+		//	mPosTiles[7][7]->GetPos().y + mPosTiles[7][7]->GetScale().y);
+		//Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
+		//if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, rPos))
+		//{
+		//	SetStartRender(false);
+		//	return;
+		//}
 
 		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER)
 		{
@@ -243,14 +226,19 @@ namespace m
 						scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)->Hit(1);
 						//SetEndFire(false);
 						//SetStartFire(false);
-						SetStartRender(false);
+						//SetStartRender(false);
+						
+						ARROW_TILE_T arrow[1] = {(ARROW_TILE_T)iDir};
+						PushUnit(arrow, 1);
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
 						//SetEndFire(false);
 						//SetStartFire(false);
-						SetStartRender(false);
+						//SetStartRender(false);
+						ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+						PushUnit(arrow, 1);
 						return;
 					}
 				}

@@ -18,7 +18,7 @@ namespace m {
         Vector2 GetCoord() { return mCoord; }
         Vector2 GetFinalCoord() { return mFinalCoord; }*/
 
-        STRUCTURES GetType() { return mType; }
+        STRUCTURES GetType() { return mSkillType; }
         virtual void Update() override;
         virtual void Render(HDC hdc) override;
 
@@ -34,7 +34,7 @@ namespace m {
         //Vector2 mFinalCoord;
         //Vector2 mFinalPos;
         Vector2 mOffset;
-        STRUCTURES mType;
+        STRUCTURES mSkillType;
     };
 }
 
