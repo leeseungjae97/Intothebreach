@@ -11,7 +11,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Unit(Vector2 _coord, int _range, int hp, int type, size_t idx);
+		Unit(Vector2 _coord, int _range, int hp, int type, size_t idx, int unitValue);
 		Unit(Unit& _origin);
 		Unit(Vector2 _coord);
 		Unit();
@@ -45,6 +45,7 @@ namespace m
 		void SetEndMove(bool _endMove) { endMove = _endMove; }
 		void SetEndAttack(bool _endAttack) { endAttack = _endAttack; }
 
+		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
@@ -62,15 +63,24 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
+		
+
 		void SetStructure(bool _b) { bStructure = _b; }
-		size_t GetMIdx() { return mIdx; }
 		void DrawSkill(Vector2 pos, Vector2 guideLinePos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
+
+		Vector2 GetUnitIdx() { return unitCoord; }
+		size_t GetMIdx() { return mIdx; }
+		WEAPON_T GetWeaponType() { return mWeaponType; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
-		Vector2 GetUnitIdx() { return unitCoord; }
+
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
+		int GetUnitName() { 
+			if ((int)MECHS::tele < unitName) return unitName - (int)MECHS::tele - 1;
+			return unitName; 
+		}
 		bool CheckSkillFiring();
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
@@ -133,6 +143,7 @@ namespace m
 		Vector2 unitCoord;		// effecUnit vector에 들어갈 Vector
 		size_t mIdx;		// Scene의 Mechs vector에 들어갈 index
 		int skillIdx;		// 사용할 스킬 index
+		int unitName;
 
 		bool drag;			//
 		bool endMove;		//
@@ -141,7 +152,7 @@ namespace m
 							// 이 값을 통해 공격과 이동의 분기가 나뉨.
 		bool bStructure;
 
-		Weapon* mWeapon;	// 미사용
+		WEAPON_T mWeaponType;
 		Pilot* mPilot;		// 미사용
 		//vector<SKILL_T> mSkills;
 	};

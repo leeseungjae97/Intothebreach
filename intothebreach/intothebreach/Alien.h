@@ -9,7 +9,7 @@ namespace m {
         public Unit {
     public:
 
-        Alien(ALIENS mSkillType, Vector2 _coord, size_t idx);
+        Alien(int unitType, Vector2 _coord, size_t idx);
         Alien(Alien& _origin);
         ~Alien();
 
@@ -33,9 +33,7 @@ namespace m {
         void SetFinalMoveCoord(Vector2 _coord) { finalMoveCoord = _coord; }
         Vector2 GetFinalMoveCoord() { return finalMoveCoord; }
 
-        ALIENS GetAlienType() { return mAlienType; }
     private:
-        ALIENS mAlienType;
         int moveCnt;
         Vector2 tarGetCoord;
         Vector2 finalMoveCoord;

@@ -9,14 +9,15 @@
 #include "mInput.h"
 namespace m
 {
-	Unit::Unit(Vector2 _coord, int _range, int hp, int _type, size_t idx)
+	Unit::Unit(Vector2 _coord, int _range, int hp, int skillType, size_t idx, int unitName)
 		: mPilot(nullptr)
-		, mWeapon(nullptr)
 		, curImage(nullptr)
 		, mAnimator(nullptr)
 		, endMove(false)
 		, endAttack(false)
 		, drag(false)
+		, unitName(unitName)
+		, mWeaponType(BASIC_WEAPON_TYPE[(UINT)unitName])
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::One)
@@ -27,7 +28,7 @@ namespace m
 		, skillIdx(-1)
 		, mIdx(idx)
 	{
-		SetSkill(_type);
+		SetSkill(skillType);
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
@@ -55,7 +56,6 @@ namespace m
 		: mPilot(nullptr)
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
-		, mWeapon(nullptr)
 		, curImage(nullptr)
 		, mAnimator(nullptr)
 		, endMove(false)
@@ -377,7 +377,7 @@ namespace m
 			}
 		}
 	}
-	void Unit::ActiveSkill(Vector2 otherPos)
+	void Unit::ActiveSkill(Vector2 targetUnitPos)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Vector2 endCoord = Vector2::Minus;
@@ -388,14 +388,33 @@ namespace m
 			{
 				Tile* p = scene->GetPosTiles()[y][x];
 				if (p->GetCoord() == GetFinalCoord()) continue;
-				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), otherPos))
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), targetUnitPos))
 				{
 					if (skill_range_map[(int)p->GetCoord().y][(int)p->GetCoord().x] != MOVE)
 					{
 						GetCurAttackSkill()->SetStartRender(false);
 						continue;
 					}
-
+					if (GetCurAttackSkill()->GetSkillType()
+						== SKILL_T::RANGE_ST)
+					{
+						if (p->GetCoord().x > GetCoord().x)
+						{
+							endCoord = Vector2(GetCoord().x + WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+						}
+						if (p->GetCoord().x < GetCoord().x)
+						{
+							endCoord = Vector2(GetCoord().x - WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+						}
+						if (p->GetCoord().y > GetCoord().y)
+						{
+							endCoord = Vector2(GetCoord().x, GetCoord().y + WEAPON_RANGE[(UINT)GetWeaponType()]);
+						}
+						if (p->GetCoord().y < GetCoord().y)
+						{
+							endCoord = Vector2(GetCoord().x, GetCoord().y - WEAPON_RANGE[(UINT)GetWeaponType()]);
+						}
+					}
 					if (GetCurAttackSkill()->GetSkillType()
 						== SKILL_T::ST)
 					{
@@ -468,7 +487,12 @@ namespace m
 			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 			DrawSkill(endCoord, drawGuideLineEndCoord);
-			GetCurAttackSkill()->SetStartRender(true);
+			if (GetLayerType() == LAYER_TYPE::MONSTER)
+			{
+				if (GetCurAttackSkill()->GetStartRender())
+					scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+						, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+			}else  GetCurAttackSkill()->SetStartRender(true);
 		}
 		// 공격완료하면 clear
 		ClearSkillRangeMap();
@@ -526,7 +550,7 @@ namespace m
 							continue;
 						}
 					}
-					if (SKILL_RANGE[(UINT)GetCurAttackSkill()->GetSkillType()] < now.level + 1)
+					if (WEAPON_RANGE[(UINT)GetWeaponType()] < now.level + 1)
 					{
 						find = true;
 						continue;

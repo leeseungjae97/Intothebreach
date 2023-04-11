@@ -7,7 +7,7 @@ namespace m {
 		//: mCoord(_coord)
 		//, mFinalCoord(_coord)
 		//, mFinalPos(Vector2::One)
-		: Unit(_coord, 0, 0, 0, idx)
+		: Unit(_coord, 0, 0, 0, idx, 0)
 		, mSkillType(_type)
 	{
 		AddComponent(new Transform());	

@@ -5,7 +5,7 @@ namespace m
 	class Mech : public Unit
 	{
 	public:
-		Mech(MECHS _mech, Vector2 _coord, int _range, int _hp, size_t idx);
+		Mech(int unitValue, Vector2 _coord, int _range, int _hp, size_t idx);
 		Mech(Mech& _origin);
 		~Mech();
 
@@ -20,9 +20,6 @@ namespace m
 		virtual void emerge() override;
 
 		void CheckNumInput();
-
-		MECHS GetMechType() { return mMechType; }
 	private:
-		MECHS mMechType;
 	};
 }

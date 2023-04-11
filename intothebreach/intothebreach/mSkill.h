@@ -6,7 +6,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Skill(WEAPON_T _type, Unit* onwer);
+		Skill(SKILL_T _type, Unit* onwer);
 		Skill(Skill& _origin);
 		~Skill();
 
@@ -31,6 +31,7 @@ namespace m
 		Unit* GetOwner() { return mOwner; }
 		LAYER_TYPE GetLayerType() { return mLayerType; }
 		SKILL_T GetSkillType() { return mSkillType; }
+		WEAPON_T GetWeaponType() { return mWeaponType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		Vector2 GetGuideLinePos() { return guideLinePos; }
 		Vector2 GetGuideLineCoord() { return guideLineCoord; }
@@ -42,6 +43,8 @@ namespace m
 		bool GetStartRender() { return startRender; }
 		bool CheckSkillFiring();
 		int GetSkillDir() { return iDir; }
+
+		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 
 		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
 		void SetSkillType(SKILL_T _type) { mSkillType = _type; }

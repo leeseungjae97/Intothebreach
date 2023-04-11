@@ -8,6 +8,7 @@ namespace m {
 		, mActiveAnimation(_origin.mActiveAnimation)
 		, mbLoop(_origin.mbLoop)
 		, stopAnimator(_origin.stopAnimator)
+		, mConstant(255)
 		//, mSpriteSheet(_origin.mSpriteSheet)
 		//, mAnimations(_origin.mAnimations)
 		//, mEvents(_origin.mEvents)

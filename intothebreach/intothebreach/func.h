@@ -7,6 +7,7 @@
 #include "mSkill.h"
 #include "mSkill_Arc.h"
 #include "mSkill_St.h"
+#include "mSkill_RS.h"
 #include "mTile.h"
 #include "CommonInclude.h"
 namespace m::object
@@ -33,36 +34,45 @@ namespace m::object
 		return gameObj;
 	}
 
-
-	static inline Mech* Instantiate(Vector2 coord, LAYER_TYPE type, MECHS mSkillType)
+	
+	static inline Unit* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Mech* gameObj 
-			= new Mech(mSkillType, coord
-				, MECH_MOVE_RANGE[(UINT)mSkillType]
-				, MECH_HP[(UINT)mSkillType]
+		Unit* gameObj = nullptr;
+
+		if (type == LAYER_TYPE::PLAYER)
+		{
+			gameObj = new Mech(unitName, coord
+				, MECH_MOVE_RANGE[(UINT)unitName]
+				, MECH_HP[(UINT)unitName]
 				, scene->GetMechs().size());
+
+			scene->GetMechs().push_back((Mech*)gameObj);
+			//gameObj->SetMIdx(scene->GetMechs().size() - 1);
+			gameObj->SetMove(true);
+		}
+		if(type == LAYER_TYPE::MONSTER)
+		{
+			gameObj = new Alien(unitName, coord, scene->GetAliens().size());
+			scene->GetAliens().push_back((Alien*)gameObj);
+		}
+		if (type == LAYER_TYPE::CLONE)
+		{
+			gameObj = new Mech(unitName, coord
+				, MECH_MOVE_RANGE[(UINT)unitName]
+				, MECH_HP[(UINT)unitName]
+				, scene->GetMechs().size());
+
+			gameObj->SetState(GameObject::STATE::Invisible);
+			gameObj->GetAnimator()->SetConstant(100);
+		}
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
 		gameObj->SetFinalPos(gameObj->GetPos());
-		gameObj->GetAnimator()->SetConstant(255);
 		gameObj->SetLayerType(type);
-		if (type == LAYER_TYPE::CLONE)
-		{
-			gameObj->SetState(GameObject::STATE::Invisible);
-			gameObj->GetAnimator()->SetConstant(100);
-			//gameObj->GetAnimator()->
 
-		}
-		if (type == LAYER_TYPE::PLAYER)
-		{
-			scene->GetMechs().push_back(gameObj);
-			//gameObj->SetMIdx(scene->GetMechs().size() - 1);
-			gameObj->SetMove(true);
-		}
-
-
+		assert(gameObj);
 
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
@@ -83,22 +93,22 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, ALIENS mSkillType)
-	{
-		Scene* scene = SceneManager::GetActiveScene();
-		Alien* gameObj = new Alien(mSkillType, coord, scene->GetAliens().size());
+	//static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName)
+	//{
+	//	Scene* scene = SceneManager::GetActiveScene();
+	//	Alien* gameObj = new Alien(unitName, coord, scene->GetAliens().size());
 
-		gameObj->Initialize();
-		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
-		gameObj->SetFinalPos(gameObj->GetPos());
-		gameObj->GetAnimator()->SetConstant(255);
-		gameObj->SetLayerType(type);
+	//	gameObj->Initialize();
+	//	gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
+	//	gameObj->SetFinalPos(gameObj->GetPos());
+	//	gameObj->GetAnimator()->SetConstant(255);
+	//	gameObj->SetLayerType(type);
 
-		scene->GetAliens().push_back(gameObj);
+	//	scene->GetAliens().push_back(gameObj);
 
-		scene->AddGameObject(gameObj, type);
-		return gameObj;
-	}
+	//	scene->AddGameObject(gameObj, type);
+	//	return gameObj;
+	//}
 
 	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type, Unit* unit)
 	{
@@ -119,9 +129,11 @@ namespace m::object
 		return gameObj;
 	}
 
+
 	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type, Unit* unit)
 	{
 		Skill* gameObj = nullptr;
+
 		switch (_type)
 		{
 		case SKILL_T::ARC:
@@ -134,12 +146,23 @@ namespace m::object
 			gameObj = new Skill_St(_type, unit);
 		}
 			break;
+		case SKILL_T::RANGE_ST:
+		{
+			gameObj = new Skill_RS(_type, unit);
+		}
+			break;
 		case SKILL_T::END:
 			break;
 		default:
 			break;
 		}
-		
+		//if (unit->GetLayerType() == LAYER_TYPE::PLAYER)
+		//	
+		//else 
+		//	gameObj->SetWeaponType(BASIC_A_WEAPON_TYPE[(UINT)_type]);
+
+		gameObj->SetWeaponType(BASIC_WEAPON_TYPE[(UINT)_type]);
+
 		Scene* scene = SceneManager::GetActiveScene();
 
 		vS.push_back(gameObj);

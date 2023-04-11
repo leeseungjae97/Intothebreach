@@ -11,8 +11,8 @@
 #include "mSceneManager.h"
 extern m::Application application;
 namespace m {
-	Skill::Skill(WEAPON_T _type, Unit* owner)
-		: mWeaponType(_type) 
+	Skill::Skill(SKILL_T _type, Unit* owner)
+		: mSkillType(_type) 
 		, mOwner(owner)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
@@ -33,14 +33,12 @@ namespace m {
 		, mStPos(Vector2::Zero)
 		, mFinalEdPos(Vector2::One)
 	{
-		mSkillType = (SKILL_T)WEAPON_TYPE[(UINT)_type];
 		AddComponent(new Transform);
 		AddComponent(new Animator);
 		mAnimator = GetComponent<Animator>();
 	}
 	Skill::Skill(Skill& _origin) 
 		: mSkillType(_origin.mSkillType)
-		, mWeaponType(_origin.mWeaponType)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, startFire(false)
@@ -124,7 +122,7 @@ namespace m {
 		SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());
 		SetStPos(GetPos());
 		SetEndPos(scene->GetPosTiles()[(int)enPos.y][(int)enPos.x]->GetCenterPos());
-		if (_type == SKILL_T::ST)
+		if (_type != SKILL_T::ARC)
 		{
 			SetGuideLinePos(scene->GetPosTiles()[(int)guideLinePos.y][(int)guideLinePos.x]->GetCenterPos());
 			SetGuideLineCoord(guideLinePos);
@@ -181,11 +179,15 @@ namespace m {
 				dx = (int)GetEndCoord().x + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
 
 			}
-			if (GetSkillType() == SKILL_T::ST)
+			else
 			{
 				dy = (int)GetEndCoord().y;
 				dx = (int)GetEndCoord().x;
 			}
+			//if (GetSkillType() == SKILL_T::ST)
+			//{
+			//	
+			//}
 
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 
@@ -291,12 +293,15 @@ namespace m {
 				dx = (int)GetEndCoord().x + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
 
 			}
-			if (GetSkillType() == SKILL_T::ST)
+			else
 			{
 				dy = (int)GetEndCoord().y;
 				dx = (int)GetEndCoord().x;
 			}
-
+			//if (GetSkillType() == SKILL_T::ST)
+			//{
+			//	
+			//}
 			if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 
 			if (GetSkillType() == SKILL_T::ARC)
@@ -318,7 +323,6 @@ namespace m {
 
 			if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
 			scene->MoveEffectUnit(unit, Vector2((float)_dx, (float)_dy));
-
 			//if (scene->GetEffectUnit(dy, dx).size() == 0)continue;
 			//for (int _i = 0; _i < scene->GetEffectUnit(dy, dx).size(); _i++)
 			//{

@@ -10,6 +10,7 @@
 #include "SkillEnums.h"
 #include "UIEnums.h"
 #include "EffectEnums.h"
+#include "UnitEnums.h"
 
 enum class SCENE_TYPE
 {

@@ -10,14 +10,14 @@
 #include "mSceneManager.h"
 namespace m
 {
-	Alien::Alien(ALIENS mSkillType, Vector2 _coord, size_t idx)
+	Alien::Alien(int unitType, Vector2 _coord, size_t idx)
 		: Unit(_coord
-			, ALIEN_MOVE_RANGE[(UINT)mSkillType]
-			, ALIEN_HP[(UINT)mSkillType]
-			, ALIEN_BASIC_WEAPON[(UINT)mSkillType]
+			, ALIEN_MOVE_RANGE[GetUnitName()]
+			, ALIEN_HP[GetUnitName()]
+			, BASIC_SKILL[unitType]
 			, idx
+			, unitType
 		)
-		, mAlienType(mSkillType)
 	{
 		finalMoveCoord = Vector2::Minus;
 		moveCnt = 1;
@@ -25,23 +25,23 @@ namespace m
 
 		vector<Image*> vImage = GetMImages();
 		vImage.resize((UINT)ALIEN_CONDITION::END);
-
+		
 		for (UINT i = 0; i < (UINT)ALIEN_CONDITION::END; i++)
 		{
-			if (ALIENS_APL_COND[(UINT)mSkillType][i] != 1) continue;
+			if (ALIENS_APL_COND[GetUnitName()][i] != 1) continue;
 			vImage[i] = Resources::Load<Image>(
-				MAKE_UNIT_KEY(mAlienType, (ALIEN_CONDITION)i)
-				, MAKE_UNIT_PATH(mAlienType, (ALIEN_CONDITION)i));
+				MAKE_UNIT_KEY((ALIENS)GetUnitName(), (ALIEN_CONDITION)i)
+				, MAKE_UNIT_PATH((ALIENS)GetUnitName(), (ALIEN_CONDITION)i));
 			if (nullptr == vImage[i]) continue;
-			vImage[i]->SetOffset(ALIEN_OFFSET[(UINT)mAlienType]);
+			vImage[i]->SetOffset(ALIEN_OFFSET[(UINT)GetUnitName()]);
 		}
 		for (int i = 0; i < 3; i++)
 		{
-			Vector2 size = ALIENS_SIZES[(UINT)mAlienType][i];
+			Vector2 size = ALIENS_SIZES[GetUnitName()][i];
 			UINT len = (UINT)((float)vImage[(int)i]->GetWidth() / size.x);
 
 			GetAnimator()->CreateAnimation(
-				MAKE_UNIT_KEY(mAlienType, (ALIEN_CONDITION)i)
+				MAKE_UNIT_KEY((ALIENS)GetUnitName(), (ALIEN_CONDITION)i)
 				, vImage[i]
 				, Vector2(Vector2::Zero)
 				, Vector2(size.x, size.y)
@@ -51,14 +51,13 @@ namespace m
 				, AC_SRC_OVER
 			);
 		}
-		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::IDLE), true);
 		SetState(STATE::Idle);
 
 		SetSkillIdx(0);
 		SetCurAttackSkill();
 	}
 	Alien::Alien(Alien& _origin)
-		: mAlienType(_origin.mAlienType)
 	{}
 	Alien::~Alien()
 	{}
@@ -153,6 +152,11 @@ namespace m
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
 				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
 				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				if (WEAPON_RANGE[(UINT)GetWeaponType()] < now.level + 1)
+				{
+					return false;
+				}
+
 				if (stPos.x == dx || stPos.y == dy)
 				{
 					queue.push_back(Vector2_1(Vector2(dx, dy), now.level + 1, idx));
@@ -174,7 +178,6 @@ namespace m
 						//	SetTargetCoord(Vector2(dx, dy));
 						//	return true;
 						//}
-						
 						if (scene->GetEffectUnit((int)dy, (int)dx)->GetLayerType() == LAYER_TYPE::PLAYER &&
 							scene->GetEffectUnit((int)dy, (int)dx)->GetState() != GameObject::STATE::Broken)
 						{
@@ -247,13 +250,13 @@ namespace m
 		//SetFinalPos(_pos);
 		//SetCoord(_coord);
 		//SetFinalCoord(_coord);
-		scene->SetPosTiles((int)GetFinalMoveCoord().y, (int)GetFinalMoveCoord().x
-			, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+		scene->SetPosTiles((int)GetTargetCoord().y, (int)GetTargetCoord().x
+			, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 
 		if (GetFinalMoveCoord() == _coord)
 		{
 			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
-			ActiveSkill(GetTargetCoord());
+			Unit::ActiveSkill(GetTargetCoord());
 			//ActiveSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
 			directQueue.clear();
@@ -277,6 +280,26 @@ namespace m
 		//{
 		//	return;
 		//}
+		if (GetCurAttackSkill()->GetSkillType()
+			== SKILL_T::RANGE_ST)
+		{
+			if (otherPos.x > GetCoord().x)
+			{
+				endCoord = Vector2(GetCoord().x + WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+			}
+			if (otherPos.x < GetCoord().x)
+			{
+				endCoord = Vector2(GetCoord().x - WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+			}
+			if (otherPos.y > GetCoord().y)
+			{
+				endCoord = Vector2(GetCoord().x, GetCoord().y + WEAPON_RANGE[(UINT)GetWeaponType()]);
+			}
+			if (otherPos.y < GetCoord().y)
+			{
+				endCoord = Vector2(GetCoord().x, GetCoord().y - WEAPON_RANGE[(UINT)GetWeaponType()]);
+			}
+		}
 		if (GetCurAttackSkill()->GetSkillType()
 			== SKILL_T::ST)
 		{
@@ -462,13 +485,13 @@ namespace m
 	}
 	void Alien::idle()
 	{
-		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::IDLE), true);
+		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::IDLE), true);
 		SetCurImage(nullptr);
 	}
 	void Alien::broken()
 	{
 		GetAnimator()->Stop();
-		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::DEATH), false);
+		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::DEATH), false);
 
 		SetCurImage(nullptr);
 	}
@@ -480,7 +503,7 @@ namespace m
 	void Alien::emerge()
 	{
 		GetAnimator()->Stop();
-		GetAnimator()->Play(MAKE_UNIT_KEY(mAlienType, ALIEN_CONDITION::EMERGE), false);
+		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::EMERGE), false);
 		SetCurImage(nullptr);
 	}
 }

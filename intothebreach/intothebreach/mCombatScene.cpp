@@ -45,13 +45,13 @@ namespace m {
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 
-		Mech* mech1 = object::Instantiate(Vector2(0, 0), LAYER_TYPE::PLAYER, MECHS::artillery);
-		Mech* mech2 = object::Instantiate(Vector2(2, 1), LAYER_TYPE::PLAYER, MECHS::tank);
-		Mech* mech3 = object::Instantiate(Vector2(0, 2), LAYER_TYPE::PLAYER, MECHS::punch);
+		object::Instantiate(Vector2(0, 0), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
+		object::Instantiate(Vector2(2, 1), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
+		object::Instantiate(Vector2(0, 2), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
-		Alien* alien1 = object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, ALIENS::Hornet);
-		Alien* alien2 = object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, ALIENS::Leaper);
-		Alien* alien3 = object::Instantiate(Vector2(5, 3), LAYER_TYPE::MONSTER, ALIENS::Firefly);
+		object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Hornet]);
+		object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Leaper]);
+		object::Instantiate(Vector2(5, 3), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Firefly]);
 
 		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
 		//object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::bar);

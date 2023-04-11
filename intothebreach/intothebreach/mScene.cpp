@@ -313,7 +313,7 @@ namespace m
 							if (mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
 							//mMechs[_i]->SetMove(true);
 							SetMouseFollower(mMechs[_i]);
-							SetAlphaFollower(object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetMechType()));
+							SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
 							break;
 						}
 					}

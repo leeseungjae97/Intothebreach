@@ -18,20 +18,18 @@ enum class WEAPON_T
 	titan_fist,
 	artemis_artillery,
 	taurus_cannon,
+
+	stinging,				// scorpion
+	fangs,					// leaper
+	stinger,				// hornet
+	accelerating_thorax,	// firefly
+	NONE,
 	END,
 };
 int WEAPON_TYPE[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::RANGE_ST,
 	(int)SKILL_T::ARC,
 	(int)SKILL_T::ST,
-};
-enum class A_WEAPON_T
-{
-	stinging,				// scorpion
-	fangs,					// leaper
-	stinger,				// hornet
-	accelerating_thorax,	// firefly
-	END,
 };
 enum class SKILL_N
 {
@@ -68,17 +66,66 @@ wstring SKILL_DIR_PATH[(UINT)SKILL_DIR::NONE]{
 	L"U",
 	L"D",
 };
-int SKILL_LEN[(UINT)SKILL_T::END]{
-	0,
-	0,
+int WEAPON_LEN[(UINT)WEAPON_T::END]{
+	1,
+	1,
 	6,
 };
-int SKILL_RANGE[(UINT)SKILL_T::END]{
+int WEAPON_RANGE[(UINT)WEAPON_T::END]{
+	1,
 	99,
+	99,
+
 	99,
 	1,
+	99,
+	99,
 };
-int WEAPON_PUSH_DIR[(UINT)MECHS::END]{
+WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
+	WEAPON_T::NONE,//electrice,
+	WEAPON_T::NONE,//flame,
+	WEAPON_T::NONE,//guard,
+	WEAPON_T::NONE,//judo,
+	WEAPON_T::NONE,//laser,
+	WEAPON_T::NONE,//leap,
+	WEAPON_T::titan_fist,//punch,
+
+	WEAPON_T::NONE,//charge,
+	WEAPON_T::NONE,//jet,
+	WEAPON_T::NONE,//mirror,
+	WEAPON_T::taurus_cannon,//tank,
+	WEAPON_T::NONE,//unstable,
+	WEAPON_T::NONE,//wall,
+
+	WEAPON_T::artemis_artillery,//artillery,
+	WEAPON_T::NONE,//dstrike,
+	WEAPON_T::NONE,//ice,
+	WEAPON_T::NONE,//ignite,
+	WEAPON_T::NONE,//rockart,
+	WEAPON_T::NONE,//rocket,
+
+	WEAPON_T::NONE,//grav,
+	WEAPON_T::NONE,//nano,
+	WEAPON_T::NONE,//pulse,
+	WEAPON_T::NONE,//science,
+	WEAPON_T::NONE,//tele,
+
+	WEAPON_T::NONE,//Beetle,
+	WEAPON_T::NONE,//Blobber,
+	WEAPON_T::NONE,//Burrower,
+	WEAPON_T::NONE,//Centipede,
+	WEAPON_T::NONE,//Crab,
+	WEAPON_T::NONE,//Digger,
+	WEAPON_T::accelerating_thorax,//Firefly,
+	WEAPON_T::stinger,//Hornet,
+	WEAPON_T::NONE,//Jelly,
+	WEAPON_T::fangs,//Leaper,
+	WEAPON_T::NONE,//Scarab,
+	WEAPON_T::stinging,//Scorpion,
+	WEAPON_T::NONE,//Slime,
+	WEAPON_T::NONE,//Spider,
+};
+int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	1,//electrice,
 	1,//flame,
 	1,//guard,
@@ -106,8 +153,7 @@ int WEAPON_PUSH_DIR[(UINT)MECHS::END]{
 	0,//pulse,
 	0,//science,
 	0,//tele,
-};
-int ALIEN_WEAPON_PUSH_DIR[(UINT)ALIENS::END]{
+
 	1,//Beetle,
 	0,//Blobber,
 	0,//Burrower,
@@ -123,7 +169,7 @@ int ALIEN_WEAPON_PUSH_DIR[(UINT)ALIENS::END]{
 	0,//Slime,
 	0,//Spider,
 };
-int BASIC_WEAPON[(UINT)MECHS::END]{
+int BASIC_SKILL[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	(int)SKILL_T::ST,//electrice,
 	(int)SKILL_T::ST,//flame,
 	(int)SKILL_T::ST,//guard,
@@ -151,8 +197,7 @@ int BASIC_WEAPON[(UINT)MECHS::END]{
 	(int)SKILL_T::ST,//pulse,
 	(int)SKILL_T::ST,//science,
 	(int)SKILL_T::ST,//tele,
-};
-int ALIEN_BASIC_WEAPON[(UINT)ALIENS::END]{
+
 	(int)SKILL_T::ST,//Beetle,
 	(int)SKILL_T::ST,//Blobber,
 	(int)SKILL_T::ST,//Burrower,

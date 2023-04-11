@@ -94,22 +94,22 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 
+
 		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mSkillType, dir), MAKE_SKILL_PATH(mSkillType, dir));
-		float fWid = im->GetWidth() / SKILL_LEN[(UINT)mSkillType];
-		GetAnimator()->CreateAnimation(
-			MAKE_SKILL_KEY(mSkillType, dir),
-			im,
-			Vector2::Zero,
-			Vector2(fWid, im->GetHeight()),
-			Vector2::Zero,
-			SKILL_LEN[(UINT)mSkillType],
-			0.05f
-		);
-
+		float fWid = im->GetWidth() / WEAPON_LEN[(UINT)mOwner->GetWeaponType()];
+		if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(mSkillType, dir)))
+		{
+			GetAnimator()->CreateAnimation(
+				MAKE_SKILL_KEY(mSkillType, dir),
+				im,
+				Vector2::Zero,
+				Vector2(fWid, im->GetHeight()),
+				Vector2::Zero,
+				WEAPON_LEN[(UINT)mSkillType],
+				0.05f
+			);
+		}
 		GetAnimator()->Play(MAKE_SKILL_KEY(mSkillType, dir), false);
-
-
-
 	}
 	void Skill_RS::GuideWire(HDC hdc)
 	{
@@ -121,11 +121,22 @@ namespace m
 		if (mOwner->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		if (mOwner->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
 
-		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
-		if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
+		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
+		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
+		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
 	}
 	void Skill_RS::CheckDirection()
 	{
+		HitEffectDir();
+		Scene* scene = SceneManager::GetActiveScene();
+		if (nullptr != scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x))
+		{
+			scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x)->Hit(1);
+			SetEndFire(false);
+			SetStartFire(false);
+			SetStartRender(false);
+		}
+
 		ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
 		PushUnit(arrow, 1);
 	}

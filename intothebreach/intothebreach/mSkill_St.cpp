@@ -57,8 +57,8 @@ namespace m
 		if (endFire)
 		{
 			startFire = false;
-			endFire = false;
-			startRender = false;
+			/*endFire = false;
+			startRender = false;*/
 			//object::Invisible(this);
 		}
 		if (!startRender) return;
@@ -168,8 +168,10 @@ namespace m
 			if (mStPos.x < mFinalEdPos.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		}*/
 
-		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
-		if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
+		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
+		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
+
+		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
 
 		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
@@ -196,10 +198,7 @@ namespace m
 		//	return;
 		//}
 
-		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER)
-		{
-			unit = GetOwner();
-		}
+		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER) unit = GetOwner();
 		else unit = scene->GetMouseFollower();
 
 		for (int y = 0; y < mPosTiles.size(); y++)
@@ -217,16 +216,16 @@ namespace m
 
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
 				{
-					if (scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x) != 0)
+					if (nullptr != scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x))
 					{
 						//for (int i = 0; i < scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x).size(); i++)
 						//{
 						//	scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)[i]->Hit(1);
 						//}
 						scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)->Hit(1);
-						//SetEndFire(false);
-						//SetStartFire(false);
-						//SetStartRender(false);
+						SetEndFire(false);
+						SetStartFire(false);
+						SetStartRender(false);
 						
 						ARROW_TILE_T arrow[1] = {(ARROW_TILE_T)iDir};
 						PushUnit(arrow, 1);
@@ -234,9 +233,9 @@ namespace m
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
-						//SetEndFire(false);
-						//SetStartFire(false);
-						//SetStartRender(false);
+						SetEndFire(false);
+						SetStartFire(false);
+						SetStartRender(false);
 						ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
 						PushUnit(arrow, 1);
 						return;
