@@ -18,9 +18,12 @@ namespace m
         virtual void Active(HDC hdc) override;
         virtual void GuideWire(HDC hdc) override;
         virtual void CheckDirection();
+        void DrawSmoke();
+
     private:
         float m_curTime = 0;
         float m_curZ = 0;
+        vector<Background*> smokeVector;
     };
 
 }

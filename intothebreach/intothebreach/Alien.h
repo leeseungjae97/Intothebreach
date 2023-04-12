@@ -37,7 +37,6 @@ namespace m {
         int moveCnt;
         Vector2 tarGetCoord;
         Vector2 finalMoveCoord;
-        vector<Vector2_1> directQueue;
         vector<Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
     };
 }

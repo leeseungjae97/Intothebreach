@@ -7,6 +7,7 @@ namespace m
 	class Pilot;
 	class Skill;
 	class Animator;
+	class Background;
 	class Unit :
 		public GameObject
 	{
@@ -52,6 +53,7 @@ namespace m
 		
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
+		void DrawMoveDust();
 
 		void Hit(int damage)
 		{
@@ -70,6 +72,10 @@ namespace m
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 
 		Vector2 GetUnitIdx() { return unitCoord; }
+		vector<Vector2_1>& GetPathQue() { return pathQueue; }
+		vector<Vector2_1>& GetArrowQue() { return arrowDirectQueue; }
+		vector<Vector2_1>& GetDirectQue() { return directQueue; }
+		vector<Background*>& GetMoveDusts() { return moveDusts; }
 		size_t GetMIdx() { return mIdx; }
 		WEAPON_T GetWeaponType() { return mWeaponType; }
 		int GetFullHp() { return mHp; }
@@ -118,6 +124,9 @@ namespace m
 
 	protected:
 		vector<Vector2_1> pathQueue;
+		vector<Vector2_1> directQueue;
+		vector<Vector2_1> arrowDirectQueue;
+		vector<Vector2_2> mechMoveSave;
 		vector<Skill*> mSkills;
 		Skill* curAttactSkill;
 		vector<Image*> mImages; // 전체 이미지
@@ -125,6 +134,7 @@ namespace m
 		int skill_range_map[TILE_Y][TILE_X]{};	// 스킬 BFS 맵
 		int searchMap[TILE_Y][TILE_X];
 	private:
+		vector<Background*> moveDusts;
 		Animator* mAnimator;
 		Image* curImage;
 		Image* hpImage;

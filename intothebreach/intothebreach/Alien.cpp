@@ -20,6 +20,7 @@ namespace m
 		)
 	{
 		finalMoveCoord = Vector2::Minus;
+		tarGetCoord = Vector2::Minus;
 		moveCnt = 1;
 
 
@@ -236,6 +237,7 @@ namespace m
 			}
 		}
 		Vector2_1 curCoord = iter;
+		//if(directQueue.size() <= moveCnt)
 		if (directQueue.size() != 0)
 			curCoord = directQueue[directQueue.size() - moveCnt];
 
@@ -250,13 +252,13 @@ namespace m
 		//SetFinalPos(_pos);
 		//SetCoord(_coord);
 		//SetFinalCoord(_coord);
-		scene->SetPosTiles((int)GetTargetCoord().y, (int)GetTargetCoord().x
-			, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+		//scene->SetPosTiles((int)GetTargetCoord().y, (int)GetTargetCoord().x
+		//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 
 		if (GetFinalMoveCoord() == _coord)
 		{
 			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
-			Unit::ActiveSkill(GetTargetCoord());
+			ActiveSkill(GetTargetCoord());
 			//ActiveSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
 			directQueue.clear();
@@ -272,6 +274,7 @@ namespace m
 	}
 	void Alien::ActiveSkill(Vector2 otherPos)
 	{
+		if (otherPos == Vector2::Minus) return;
 		Scene* scene = SceneManager::GetActiveScene();
 		Vector2 endCoord = Vector2::Minus;
 		Vector2 drawGuideLineEndCoord = Vector2::Minus;
@@ -287,15 +290,15 @@ namespace m
 			{
 				endCoord = Vector2(GetCoord().x + WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
 			}
-			if (otherPos.x < GetCoord().x)
+			else if (otherPos.x < GetCoord().x)
 			{
 				endCoord = Vector2(GetCoord().x - WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
 			}
-			if (otherPos.y > GetCoord().y)
+			else if (otherPos.y > GetCoord().y)
 			{
 				endCoord = Vector2(GetCoord().x, GetCoord().y + WEAPON_RANGE[(UINT)GetWeaponType()]);
 			}
-			if (otherPos.y < GetCoord().y)
+			else if (otherPos.y < GetCoord().y)
 			{
 				endCoord = Vector2(GetCoord().x, GetCoord().y - WEAPON_RANGE[(UINT)GetWeaponType()]);
 			}
@@ -340,13 +343,13 @@ namespace m
 			}
 			for (int i = st; i != end + IDVar; i += IDVar)
 			{
-				if (cY 
+				if (cY
 					&& scene->GetEffectUnit(i, (int)GetCoord().x) != nullptr)
 				{
 					endCoord = Vector2(GetCoord().x, (float)i);
 					break;
 				}
-				if (!cY 
+				if (!cY
 					&& scene->GetEffectUnit((int)GetCoord().y, i) != nullptr)
 				{
 					endCoord = Vector2((float)i, GetCoord().y);
@@ -356,40 +359,50 @@ namespace m
 				if (cY)drawGuideLineEndCoord = Vector2(otherPos.x, (float)i);
 				else drawGuideLineEndCoord = Vector2((float)i, otherPos.y);
 			}
-			if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
-			if (endCoord != Vector2::Minus)
-			{
-				//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-				//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-
-				if(GetCurAttackSkill()->GetStartRender())
-					scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-						, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-				//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
-				//Scene* scene = SceneManager::GetActiveScene();
-				//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
-				//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-				//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-				//if (!scene->GetPlayerTurn())
-				//{
-				//	
-				//	//GetCurAttackSkill()->SetStartRender(true);
-				//}
-				//else
-				//{
-				//	Vector2 pos = scene->GetPosTile(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x)->GetPos();
-				//	GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
-				//	GetCurAttackSkill()->SetGuideLinePos(pos);
-				//}
-				DrawSkill(endCoord, drawGuideLineEndCoord);
-			}
 		}
 		if (GetCurAttackSkill()->GetSkillType()
 			== SKILL_T::ARC)
 		{
 			endCoord = otherPos;
+		}
 
-			DrawSkill(endCoord, Vector2(0, 0));
+		if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
+		if (endCoord != Vector2::Minus && otherPos != Vector2::Minus)
+		{
+			//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+			//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+
+			//if (GetCurAttackSkill()->GetStartRender())
+			//if(scene->GetEffectUnit((int)endCoord.y, (int)endCoord.x) != nullptr)
+			//if (drawGuideLineEndCoord.x <= Vector2::Minus.x
+			//	|| drawGuideLineEndCoord.y <= Vector2::Minus.y) 
+			//{
+			//	drawGuideLineEndCoord = endCoord;
+			//}
+			//else
+			//{
+			//	
+			//}
+			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+			
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
+			//Scene* scene = SceneManager::GetActiveScene();
+			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			//if (!scene->GetPlayerTurn())
+			//{
+			//	
+			//	//GetCurAttackSkill()->SetStartRender(true);
+			//}
+			//else
+			//{
+			//	Vector2 pos = scene->GetPosTile(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x)->GetPos();
+			//	GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
+			//	GetCurAttackSkill()->SetGuideLinePos(pos);
+			//}
+			DrawSkill(endCoord, drawGuideLineEndCoord);
 		}
 		// 공격완료하면 clear
 		ClearSkillRangeMap();
@@ -402,7 +415,7 @@ namespace m
 		ClearSearchMap();
 		Scene* scene = SceneManager::GetActiveScene();
 
-		if (moveCnt == 1 && !scene->GetPlayerTurn()) DrawMoveRangeTile();
+		if (moveCnt == 0 && !scene->GetPlayerTurn()) DrawMoveRangeTile();
 
 		list<Vector2_1>queue;
 
@@ -454,8 +467,8 @@ namespace m
 					{
 						
 					}
-					scene->SetPosTiles((int)dy, (int)dx
-						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					//scene->SetPosTiles((int)dy, (int)dx
+					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));
 
 					find = true;

@@ -65,7 +65,6 @@ namespace m {
 		{
 			if (!Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() * 2, (float)application.GetResolutionHeight()/2)))
 			{
-
 				mBacks[0]->SetPos(Vector2(mBacks[0]->GetPos().x - scrollSpeed * Time::fDeltaTime(), mBacks[0]->GetPos().y));
 				mBacks[1]->SetPos(Vector2(mBacks[1]->GetPos().x - (scrollSpeed + 150.f) * Time::fDeltaTime(), mBacks[1]->GetPos().y));
 				mBacks[2]->SetPos(Vector2(mBacks[2]->GetPos().x - (scrollSpeed + 350.f) * Time::fDeltaTime(), mBacks[2]->GetPos().y));

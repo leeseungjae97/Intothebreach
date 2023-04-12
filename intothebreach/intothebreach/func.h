@@ -53,7 +53,7 @@ namespace m::object
 		}
 		if(type == LAYER_TYPE::MONSTER)
 		{
-			gameObj = new Alien(unitName, coord, scene->GetAliens().size());
+			gameObj = new Alien(GET_UNIT_NUM(unitName), coord, scene->GetAliens().size());
 			scene->GetAliens().push_back((Alien*)gameObj);
 		}
 		if (type == LAYER_TYPE::CLONE)
@@ -173,6 +173,15 @@ namespace m::object
 	static inline void Instantiate(vector<Skill*>& vS, SKILL_T _type, int idx)
 	{
 		Skill* gameObj = vS[idx];
+	}
+	template <typename T>
+	static inline void DestoryUnitVector(vector<T>& _vec)
+	{
+		for (size_t i = 0; i < _vec.size(); i++)
+		{
+			if (nullptr != _vec[i]) _vec[i]->SetState(GameObject::STATE::Delete);
+		}
+		_vec.clear();
 	}
 	static void Destory(GameObject* obj)
 	{

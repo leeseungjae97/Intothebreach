@@ -19,7 +19,9 @@ namespace m
 		virtual void water() override;
 		virtual void emerge() override;
 
+		void MechMove();
 		void CheckNumInput();
 	private:
+		int moveCnt;
 	};
 }

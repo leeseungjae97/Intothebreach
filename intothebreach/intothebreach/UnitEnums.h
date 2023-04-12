@@ -88,4 +88,4 @@ int UNITS_WEAPONS[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	(int)WEAPON_T::NONE,//Slime,
 	(int)WEAPON_T::NONE,//Spider,
 };
-int GET_ALIEN_UNIT(int unitValue){return unitValue - (int)MECHS::tele + 1;}
+int GET_UNIT_NUM(int unitValue) { return unitValue + (int)MECHS::tele + 1; }

@@ -15,6 +15,7 @@ namespace m
 {
 	Mech::Mech(int unitName, Vector2 _coord, int _range, int _hp, size_t idx)
 		: Unit(_coord, _range, _hp, BASIC_SKILL[(UINT)unitName], idx, unitName)
+		, moveCnt(GetMoveRange())
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
 
@@ -57,8 +58,15 @@ namespace m
 	{}
 	void Mech::Update()
 	{
-		CheckNumInput();
 		Unit::Update();
+		CheckNumInput();
+
+		if (GetEndMove())
+		{
+			SceneManager::GetActiveScene()->SetMouseFollower(nullptr);
+			MechMove();
+		}
+		//else object::DestoryUnitVector<Background*>(GetMoveDusts());
 		if (KEY_PRESSED(KEYCODE_TYPE::Q))
 		{
 			SetState(STATE::Broken);
@@ -132,6 +140,45 @@ namespace m
 				SetCurAttackSkill();
 				SetMove(false);
 			}
+		}
+	}
+	void Mech::MechMove()
+	{
+		if (directQueue.size() == 0)
+		{
+			SetEndMove(false);
+			return;
+		}
+		moveDelay += Time::fDeltaTime();
+		if (moveDelay >= 0.1f)
+		{
+			moveDelay = 0.f;
+		}
+		else return;
+		Scene* scene = SceneManager::GetActiveScene();
+
+		//SetFinalCoord(directQueue[moveCnt - 1].coord);
+		//SetFinalPos();
+		if (directQueue.size() <= moveCnt)
+			moveCnt = directQueue.size() - 1;
+		scene->MoveEffectUnit(this, directQueue[moveCnt].coord);
+		
+		moveCnt--;
+		DrawMoveDust();
+		//if (GetCoord() == GetFinalCoord())
+		//{
+		//	scene->GetMoveSave().push_back(Vector2_2(GetFinalCoord(), GetFinalPos(), GetMIdx()));
+		//	directQueue.clear();
+		//	moveCnt = GetMoveRange();;
+		//	SetEndMove(false);
+		//	SceneManager::GetActiveScene()->SetMouseFollower(nullptr);
+		//}
+		if (moveCnt == -1)
+		{
+			scene->GetMoveSave().push_back(Vector2_2(GetFinalCoord(), GetFinalPos(), GetMIdx()));
+			directQueue.clear();
+			moveCnt = GetMoveRange();
+			SetEndMove(false);
 		}
 	}
 	void Mech::idle()

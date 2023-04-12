@@ -3,6 +3,7 @@
 #include "mTransform.h"
 #include "mCamera.h"
 #include "mResources.h"
+#include "mBackground.h"
 #include "mSelectGDI.h"
 #include "mSkill.h"
 #include "func.h"
@@ -197,20 +198,25 @@ namespace m
 
 					scene->SetAlphaState(GameObject::STATE::Visibie);
 
-					list<Vector2> directQue;
+					//list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
+
+					arrowDirectQueue.clear();
+					directQueue.clear();
 
 					while (!pathQueue.empty() && now.coord != curCoord)
 					{
 						now = pathQueue.back();
 						pathQueue.pop_back();
 					}
-					directQue.push_back(Vector2(now.coord.x, now.coord.y));
+					arrowDirectQueue.push_back(Vector2_1(Vector2(now.coord.x, now.coord.y), 0, 0));
+					directQueue.push_back(Vector2_1(Vector2(now.coord.x, now.coord.y), 0, 0));
 
 					while (!pathQueue.empty() && now.coord != prevCoord)
 					{
 						now = pathQueue[now.parentIdx];
-						directQue.push_back(Vector2(now.coord.x, now.coord.y));
+						arrowDirectQueue.push_back(Vector2_1(Vector2(now.coord.x, now.coord.y), 0, 0));
+						directQueue.push_back(Vector2_1(Vector2(now.coord.x, now.coord.y), 0, 0));
 					}
 
 					MOVE_ARROW_T type = (MOVE_ARROW_T)0;
@@ -219,14 +225,14 @@ namespace m
 					Vector2 nCoord = Vector2::Zero;
 
 					vector<Vector2> mVec;
-					while (!directQue.empty())
+					while (!arrowDirectQueue.empty())
 					{
-						coord = directQue.back();
+						coord = arrowDirectQueue.back().coord;
 						mVec.push_back(Vector2(coord.x, coord.y));
-						directQue.pop_back();
-						if (!directQue.empty())
+						arrowDirectQueue.pop_back();
+						if (!arrowDirectQueue.empty())
 						{
-							nCoord = directQue.back();
+							nCoord = arrowDirectQueue.back().coord;
 							// 나오는 pos들은 장애물의 위치가 배제된 것이기 때문에 생각하지 안해도 된다.
 							if (coord.y != nCoord.y)
 							{
@@ -276,6 +282,39 @@ namespace m
 					}
 				}
 			}
+		}
+	}
+	void Unit::DrawMoveDust()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+
+			int c = rand() % 2;
+
+			Background* dust = new Background(
+				MAKE_DUST_KEY(TILE_T::GREEN, c),
+				MAKE_DUST_PATH(TILE_T::GREEN, c),
+				2);
+			dust->SetCutPos(true);
+			dust->SetAlpha(true);
+
+			float randConstant = (rand() % 255) + 125;
+			dust->SetAlphaConstant(randConstant);
+			int randPM = 1;
+			
+			if (c) randPM *= -1;
+
+			float randX = GetPos().x + (rand() % 30) * randPM;
+			float randY = GetPos().y + (rand() % 20) * randPM;
+
+			dust->SetPos(Vector2(randX, randY));
+
+			Vector2 dir = Vector2(0, -1.f);
+
+			dust->SetMovement(dir);
+
+			moveDusts.push_back(dust);
+			SceneManager::GetActiveScene()->AddGameObject(dust, LAYER_TYPE::UI);
 		}
 	}
 	void Unit::DrawMoveRangeTile()

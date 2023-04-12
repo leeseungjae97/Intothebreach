@@ -171,7 +171,7 @@ namespace m
 		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
 		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
 
-		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
+		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
 
 		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
@@ -210,8 +210,8 @@ namespace m
 
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
 				{
-					mPosTiles[(int)p->GetCoord().y][(int)p->GetCoord().x]->SetTileTexture(MAKE_TILE_KEY(MOVE_TILE_T::square_r)
-						, MAKE_TILE_PATH(MOVE_TILE_T::square_r));
+					//mPosTiles[(int)p->GetCoord().y][(int)p->GetCoord().x]->SetTileTexture(MAKE_TILE_KEY(MOVE_TILE_T::square_r)
+					//	, MAKE_TILE_PATH(MOVE_TILE_T::square_r));
 				}
 
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
@@ -227,8 +227,11 @@ namespace m
 						SetStartFire(false);
 						SetStartRender(false);
 						
-						ARROW_TILE_T arrow[1] = {(ARROW_TILE_T)iDir};
-						PushUnit(arrow, 1);
+						if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
+						{
+							ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+							PushUnit(arrow, 1);
+						}
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
@@ -236,8 +239,11 @@ namespace m
 						SetEndFire(false);
 						SetStartFire(false);
 						SetStartRender(false);
-						ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
-						PushUnit(arrow, 1);
+						if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
+						{
+							ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+							PushUnit(arrow, 1);
+						}
 						return;
 					}
 				}

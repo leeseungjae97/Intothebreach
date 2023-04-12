@@ -1,9 +1,12 @@
 #include "mSkill_Arc.h"
 #include "mTime.h"
 #include "mResources.h"
+#include "mBackground.h"
 #include "mUnit.h"
 #include "mImage.h"
 #include "func.h"
+#include "mApplication.h"
+extern m::Application application;
 namespace m
 {
 	Skill_Arc::Skill_Arc(SKILL_T _type, Unit* onwer)
@@ -15,6 +18,7 @@ namespace m
 	}
 	void Skill_Arc::Initialize()
 	{
+		object::DestoryUnitVector<Background*>(smokeVector);
 		//object::Visible(this);
 		fTime = 0.f;
 		fMaxTime = 0.4f;
@@ -41,8 +45,6 @@ namespace m
 		minTheta = (-b - sqrtf(b * b - 4 * a * c)) / (2 * a);
 		velocityX = -(mStPos.x - mFinalEdPos.x) / maxTheta;
 
-
-
 		//Vector2 diff = mFinalEdPos - mStPos;
 		//fDistance = diff.Length();
 		//Missile_vec = mFinalEdPos - mStPos;
@@ -66,6 +68,7 @@ namespace m
 			mPos.x = (mStPos.x - velocityX * fTime);
 			mPos.y = (mStPos.y - velocityY * fTime - (0.5f * gravityAccel * fTime * fTime));
 			Vector2 diff = prevMPos - mPos;
+			DrawSmoke();
 			arcTheta = atan2(diff.y, diff.x);
 			//mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
 			//mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
@@ -100,6 +103,37 @@ namespace m
 		{
 			GuideWire(hdc);
 		}
+	}
+	void Skill_Arc::DrawSmoke()
+	{
+		//Image* im = Resources::Load<Image>(MAKE_EFFECT_KEY(SINGLE_EFFECT_T::ar_s), MAKE_EFFECT_PATH(SINGLE_EFFECT_T::ar_s));
+		//smokeVector.push_back(im);
+		int c = rand() % 4;
+		Background* smoke = new Background(
+			MAKE_EFFECT_KEY(SINGLE_EFFECT_T::ar_s, c),
+			MAKE_EFFECT_PATH(SINGLE_EFFECT_T::ar_s, c),
+			2);
+
+		smoke->SetCutPos(true);
+		smoke->SetAlpha(true);
+		float randConstant = (rand() % 255) + 125;
+		smoke->SetAlphaConstant(randConstant);
+		float randX = GetPos().x - (rand() % 50);
+		float randY = GetPos().y - (rand() % 50);
+		
+		smoke->SetPos(Vector2(randX, randY));
+		int randDegree = rand() % 360;
+		int randTheta = randDegree * PI / 180.f;
+		//bitmap::RotateBitmap(application.GetHdc(), smoke->GetPos(), smoke->GetImage()->GetBitmap(), randTheta, smoke->GetImage()->GetHdc());
+
+		float randDirX = rand() % 255;
+		float randDirY = rand() % 255;
+		Vector2 dir = Vector2(randDirX, randDirY);
+
+		smoke->SetMovement(dir);
+		
+		smokeVector.push_back(smoke);
+		SceneManager::GetActiveScene()->AddGameObject(smoke, LAYER_TYPE::UI);
 	}
 	void Skill_Arc::Release()
 	{
@@ -191,8 +225,6 @@ namespace m
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up, 
-			ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left };
 		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x) != nullptr)
 		{
 			//for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
@@ -203,12 +235,19 @@ namespace m
 			
 			//SetEndFire(false);
 			//SetStartFire(false);
-			PushUnit(arrows, 4);
+			if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
+			{
+				ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up,
+				ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left };
+				PushUnit(arrows, 4);
+			}
 		}
 		else if (endFire)
 		{
 			//SetEndFire(false);
 			//SetStartFire(false);
+			ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up,
+			ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left };
 			PushUnit(arrows, 4);
 		}
 	}

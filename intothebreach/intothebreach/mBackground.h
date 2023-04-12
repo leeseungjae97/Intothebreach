@@ -18,12 +18,13 @@ namespace m {
         int GetAlphaConstant() { return iConstant; }
 
         void SetBlink(bool _b) { bBlink = _b; }
-
+        void SetMovement(Vector2 _v) { vMovement = _v; }
     private :
         int iConstant;
         int idDir;
         int idVar;
         bool bBlink;
+        Vector2 vMovement;
     };
 
 }

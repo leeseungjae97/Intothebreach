@@ -254,33 +254,63 @@ namespace m {
 		Scene* scene = SceneManager::GetActiveScene();
 
 		Tile* blow = new Tile(GetEndCoord());
-		if (GetLayerType() == LAYER_TYPE::PLAYER)
+	
+		switch (mOwner->GetWeaponType())
 		{
-			if (GetSkillType() == SKILL_T::ARC)
-			{
-				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
-				blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
+		case WEAPON_T::titan_fist:
+		{
+			blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 4));
 
-				scene->GetBackTiles().push_back(blow);
-				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
-			}
-			if (GetSkillType() == SKILL_T::ST)
-			{
-				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
-				blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
-
-				scene->GetBackTiles().push_back(blow);
-				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
-			}
-			if (GetSkillType() == SKILL_T::RANGE_ST)
-			{
-				blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
-				blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
-
-				scene->GetBackTiles().push_back(blow);
-				scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
-			}
+			scene->GetBackTiles().push_back(blow);
+			scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
 		}
+			break;
+		case WEAPON_T::artemis_artillery:
+		{
+			blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+			blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
+
+			scene->GetBackTiles().push_back(blow);
+			scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
+		}
+			break;
+		case WEAPON_T::taurus_cannon:
+		{
+			blow->SetPos(scene->GetPosTiles()[(int)GetEndCoord().y][(int)GetEndCoord().x]->GetCenterPos());
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
+
+			scene->GetBackTiles().push_back(blow);
+			scene->AddGameObject(blow, LAYER_TYPE::TILE_HEAD);
+		}
+			break;
+		case WEAPON_T::stinging:
+			break;
+		case WEAPON_T::fangs:
+			break;
+		case WEAPON_T::stinger:
+			break;
+		case WEAPON_T::accelerating_thorax:
+			break;
+		case WEAPON_T::NONE:
+			break;
+		case WEAPON_T::END:
+			break;
+		default:
+			break;
+		}
+			//if ()
+			//{
+			//
+			//}
+			//if (GetSkillType() == SKILL_T::ST)
+			//{
+			//	
+			//}
+			//if (GetSkillType() == SKILL_T::RANGE_ST)
+			//{
+
+			//}
 		
 
 		for (int i = 0; i < size; i++)

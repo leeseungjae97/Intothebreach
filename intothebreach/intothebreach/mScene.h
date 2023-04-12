@@ -55,6 +55,7 @@ namespace m
 		vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
 		vector<Building*>& GetStructuresTiles() {return mStruturesTiles;}
+		vector<Vector2_2>& GetMoveSave() { return moveSave; }
 		Unit* GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
 		void CheckMouseOutOfMapRange();

@@ -126,48 +126,15 @@ WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//Spider,
 };
 int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
-	1,//electrice,
-	1,//flame,
-	1,//guard,
-	1,//judo,
-	1,//laser,
-	1,//leap,
-	1,//punch,
+	1,//titan_fist,
+	4,//artemis_artillery,
+	1,//taurus_cannon,
 
-	1,//charge,
-	1,//jet,
-	1,//mirror,
-	1,//tank,
-	1,//unstable,
-	1,//wall,
-
-	4,//artillery,
-	4,//dstrike,
-	4,//ice,
-	4,//ignite,
-	4,//rockart,
-	4,//rocket,
-
-	0,//grav,
-	0,//nano,
-	0,//pulse,
-	0,//science,
-	0,//tele,
-
-	1,//Beetle,
-	0,//Blobber,
-	0,//Burrower,
-	0,//Centipede,
-	0,//Crab,
-	0,//Digger,
-	0,//Firefly,
-	1,//Hornet,
-	0,//Jelly,
-	0,//Leaper,
-	0,//Scarab,
-	0,//Scorpion,
-	0,//Slime,
-	0,//Spider,
+	0,//stinging,				// scorpion
+	0,//fangs,					// leaper
+	0,//stinger,				// hornet
+	0,//accelerating_thorax,	// firefly
+	//NONE,
 };
 int BASIC_SKILL[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	(int)SKILL_T::ST,//electrice,
@@ -207,7 +174,7 @@ int BASIC_SKILL[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	(int)SKILL_T::ST,//Firefly,
 	(int)SKILL_T::ST,//Hornet,
 	(int)SKILL_T::ST,//Jelly,
-	(int)SKILL_T::ST,//Leaper,
+	(int)SKILL_T::RANGE_ST,//Leaper,
 	(int)SKILL_T::ST,//Scarab,
 	(int)SKILL_T::ST,//Scorpion,
 	(int)SKILL_T::ST,//Slime,

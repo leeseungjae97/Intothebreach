@@ -123,7 +123,7 @@ namespace m
 
 		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
 		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
-		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
+		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
 	}
 	void Skill_RS::CheckDirection()
 	{
@@ -132,12 +132,18 @@ namespace m
 		if (nullptr != scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x))
 		{
 			scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x)->Hit(1);
-			SetEndFire(false);
-			SetStartFire(false);
-			SetStartRender(false);
 		}
+		SetEndFire(false);
+		SetStartFire(false);
+		SetStartRender(false);
 
-		ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
-		PushUnit(arrow, 1);
+		
+		if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
+		{
+			ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+			PushUnit(arrow, 1);
+		}
+			
+		return;
 	}
 }

@@ -52,6 +52,13 @@ wstring TILE_PATH[(UINT)TILE_T::END]{
    L"cave\\",
    L""
 };
+wstring MAKE_DUST_KEY(TILE_T _type, int i) { 
+
+	return TILE_PATH[(UINT)_type] + L"dust" +(i == 0 ? L"_f" : L"") + L".bmp";
+}
+wstring MAKE_DUST_PATH(TILE_T _type, int i ) { 
+	return L"..\\Resources\\texture\\terrain\\" + TILE_PATH[(UINT)_type] + L"dust" + (i == 0 ? L"_f" : L"") + L".bmp";
+}
 wstring MAKE_TILE_KEY(TILE_T _type, TILE_HEAD_T _type2)
 {
 	wstring key = L"";
@@ -84,8 +91,8 @@ wstring ARROW_ETC_PATH[(UINT)ARROW_ETC_T::END]{
 	L"push_box_y",
 };
 
-wstring MAKE_TILE_KEY(ARROW_ETC_T _type){ return ARROW_ETC_PATH[(UINT)_type]; }
-wstring MAKE_TILE_PATH(ARROW_ETC_T _type){ return L"..\\Resources\\texture\\combat\\" + ARROW_ETC_PATH[(UINT)_type] + L".bmp"; }
+wstring MAKE_TILE_KEY(ARROW_ETC_T _type) { return ARROW_ETC_PATH[(UINT)_type]; }
+wstring MAKE_TILE_PATH(ARROW_ETC_T _type) { return L"..\\Resources\\texture\\combat\\" + ARROW_ETC_PATH[(UINT)_type] + L".bmp"; }
 
 enum class MOVE_TILE_T
 {

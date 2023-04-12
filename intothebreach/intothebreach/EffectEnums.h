@@ -39,6 +39,12 @@ wstring SINGLE_EFFECT_T_PATH[(UINT)SINGLE_EFFECT_T::END]{
 	L"acid_smoke",
 	L"fireball_smoke",
 };
+wstring EFFECT_DIR_PATH[4]{
+	L"_0",
+	L"_1",
+	L"_2",
+	L"_3",
+};
 wstring DIR_EFFECT_T_PATH[(UINT)DIR_EFFECT_T::END]{
 	L"airpush_R",
 	L"airpush_U",
@@ -93,9 +99,20 @@ int IMMO_EFFECT_T_LEN[(UINT)IMMO_EFFECT_T::END]{
 };
 wstring MAKE_EFFECT_KEY(DIR_EFFECT_T _type) { return DIR_EFFECT_T_PATH[(UINT)_type]; }
 wstring MAKE_EFFECT_KEY(SINGLE_EFFECT_T _type) { return SINGLE_EFFECT_T_PATH[(UINT)_type]; }
+wstring MAKE_EFFECT_KEY(SINGLE_EFFECT_T _type, int i) { 
+
+	return SINGLE_EFFECT_T_PATH[(UINT)_type] + EFFECT_DIR_PATH[i];
+}
+
 wstring MAKE_EFFECT_KEY(IMMO_EFFECT_T _type) { return IMMO_EFFECT_T_PATH[(UINT)_type]; }
 int GET_LEN(DIR_EFFECT_T _type) { return DIR_EFFECT_T_LEN[(UINT)_type]; }
 int GET_LEN(IMMO_EFFECT_T _type) { return IMMO_EFFECT_T_LEN[(UINT)_type]; }
 wstring MAKE_EFFECT_PATH(DIR_EFFECT_T _type) { return L"..\\Resources\\texture\\effect\\" + DIR_EFFECT_T_PATH[(UINT)_type] + L".bmp"; }
 wstring MAKE_EFFECT_PATH(SINGLE_EFFECT_T _type) { return L"..\\Resources\\texture\\effect\\ac_smoke\\" + SINGLE_EFFECT_T_PATH[(UINT)_type] + L".bmp"; }
+wstring MAKE_EFFECT_PATH(SINGLE_EFFECT_T _type, int i) { 
+	return L"..\\Resources\\texture\\effect\\ac_smoke\\" 
+		+ SINGLE_EFFECT_T_PATH[(UINT)_type]
+		+ EFFECT_DIR_PATH[i]
+		+ L".bmp"; 
+}
 wstring MAKE_EFFECT_PATH(IMMO_EFFECT_T _type) { return L"..\\Resources\\texture\\effect\\" + IMMO_EFFECT_T_PATH[(UINT)_type] + L".bmp"; }

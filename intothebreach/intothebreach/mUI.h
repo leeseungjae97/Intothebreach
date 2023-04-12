@@ -31,6 +31,7 @@ namespace m{
 		void SetCutPos(bool _cp) { cutPos = _cp; }
 		void SetEC(bool _ec) { effectCamera = _ec; }
 		void SetAlpha(bool _mA) { mAlpha = _mA; }
+		Image* GetImage() { return mImage; }
 
 	protected:
 		Image* mImage;

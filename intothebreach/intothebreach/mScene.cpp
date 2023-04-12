@@ -281,6 +281,7 @@ namespace m
 					{
 						mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 						mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
+						mMouseFollower->GetDirectQue().clear();
 					}
 					// 마우스의 위치가 이동가능 범위일때
 					// 마우스위치의 타일로 이동
@@ -416,7 +417,7 @@ namespace m
 	}
 	void Scene::Release()
 	{
-		Safe_Delete_X_Vec(mBacks);
+		//Safe_Delete_X_Vec(mBacks);
 		//Safe_Delete_X_Vec(mBackTiles);
 		Safe_Delete_X_Vec(mStruturesTiles);
 
@@ -607,6 +608,7 @@ namespace m
 			// TODO: TURN END
 		}
 
+		
 		if (nullptr != mMouseFollower)
 		{
 			if (!mMouseFollower->GetMove()) return;
@@ -614,7 +616,7 @@ namespace m
 
 		if (nullptr != mMouseFollower)
 		{
-			if (mMouseFollower->GetMove())
+			if (mMouseFollower->GetMove() && !mMouseFollower->GetEndMove())
 			{
 				mMouseFollower->DrawMoveRangeTile();
 				mMouseFollower->DrawMoveDirectionTile();
@@ -632,7 +634,7 @@ namespace m
 		{
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
-
+			
 			SetMouseFollower(nullptr);
 		}
 
@@ -640,12 +642,11 @@ namespace m
 		{
 			if (nullptr != mMouseFollower)
 			{
-				MoveEffectUnit(mMouseFollower);
-				moveSave.push_back(Vector2_2(mMouseFollower->GetFinalCoord(), mMouseFollower->GetFinalPos(), mMouseFollower->GetMIdx()));
+				//MoveEffectUnit(mMouseFollower);
 				mMouseFollower->SetEndMove(true);
-				mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
-				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());
-				SetMouseFollower(nullptr);
+				mMouseFollower->SetPos(mMouseFollower->GetPos());
+				mMouseFollower->SetCoord(mMouseFollower->GetCoord());
+				//SetMouseFollower(nullptr);
 			}
 			else
 			{

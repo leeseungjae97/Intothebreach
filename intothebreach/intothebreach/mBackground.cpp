@@ -3,6 +3,8 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mCamera.h"
+#include "func.h"
+#include "mTime.h"
 extern m::Application application;
 namespace m {
 	Background::Background(const wstring& key
@@ -23,6 +25,7 @@ namespace m {
 		iConstant = -1;
 		idVar = 1;
 		idDir = 1;
+		vMovement = Vector2::Zero;
 	}
 	Background::~Background() {
 	}
@@ -32,6 +35,17 @@ namespace m {
 	}
 	void Background::Update() {
 		GameObject::Update();
+		
+		if (vMovement != Vector2::Zero)
+		{
+			if (GetAlphaConstant() < 10) object::Destory(this);
+			vMovement.Normalize();
+			Vector2 nPos;
+			nPos.x = GetPos().x + vMovement.x * 50.f * Time::fDeltaTime();
+			nPos.y = GetPos().y + vMovement.y * 50.f * Time::fDeltaTime();
+			SetAlphaConstant(GetAlphaConstant() - 10);
+			SetPos(nPos);
+		}
 	}
 
 	void Background::Render(HDC hdc) {
