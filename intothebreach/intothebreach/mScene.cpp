@@ -354,7 +354,10 @@ namespace m
 	{
 		for (UINT _i = 0; _i < mAliens.size(); _i++)
 		{
-			if (nullptr == mAliens[_i] || mAliens[_i]->GetFinalCoord() == Vector2::Zero) continue;
+			if (nullptr == mAliens[_i] 
+				|| mAliens[_i]->GetFinalCoord() == Vector2::Zero
+				|| mAliens[_i]->GetState() == GameObject::STATE::Emerge
+				|| mAliens[_i]->GetState() == GameObject::STATE::Emerge_loop) continue;
 			Vector2 mCoord = mAliens[_i]->GetFinalCoord();
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MONSTER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(100);
@@ -474,6 +477,9 @@ namespace m
 
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
+		if (curAlien->GetState() == GameObject::STATE::Emerge_loop) return;
+		if (curAlien->GetState() == GameObject::STATE::Emerge) return;
+
 		if (nullptr != curAlien->GetCurAttackSkill()
 			&& curAlien->GetCurAttackSkill()->GetStartRender())
 		{

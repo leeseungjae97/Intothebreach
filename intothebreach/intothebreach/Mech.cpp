@@ -196,6 +196,4 @@ namespace m
 		GetAnimator()->Stop();
 		SetCurImage(GetMImages()[(UINT)COMBAT_CONDITION_T::WATER]);
 	}
-	void Mech::emerge()
-	{}
 }

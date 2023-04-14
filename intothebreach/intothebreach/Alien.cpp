@@ -25,7 +25,7 @@ namespace m
 
 
 		vector<Image*> vImage = GetMImages();
-		vImage.resize((UINT)ALIEN_CONDITION::END);
+		vImage.resize((UINT)ALIEN_CONDITION::END + 1);
 		
 		for (UINT i = 0; i < (UINT)ALIEN_CONDITION::END; i++)
 		{
@@ -33,8 +33,25 @@ namespace m
 			vImage[i] = Resources::Load<Image>(
 				MAKE_UNIT_KEY((ALIENS)GetUnitName(), (ALIEN_CONDITION)i)
 				, MAKE_UNIT_PATH((ALIENS)GetUnitName(), (ALIEN_CONDITION)i));
+
 			if (nullptr == vImage[i]) continue;
-			vImage[i]->SetOffset(ALIEN_OFFSET[(UINT)GetUnitName()]);
+
+			vImage[i]->SetOffset(ALIEN_OFFSET[(UINT)GetUnitName()][i]);
+		}
+		vImage[vImage.size() - 1] = Resources::Load<Image>(L"emerge_loop", L"..\\Resources\\texture\\combat\\emerge_loop.bmp");
+		if (nullptr == GetAnimator()->FindAnimation(L"emerge_loop"))
+		{
+			float fWid = vImage[vImage.size() - 1]->GetWidth() / 6;
+			GetAnimator()->CreateAnimation(
+				L"emerge_loop"
+				, vImage[vImage.size() - 1]
+				, Vector2::Zero
+				, Vector2(fWid, vImage[vImage.size() - 1]->GetHeight())
+				, vImage[vImage.size() - 1]->GetOffset()
+				, 6
+				, 0.1f
+				, AC_SRC_OVER
+			);
 		}
 		for (int i = 0; i < 3; i++)
 		{
@@ -53,7 +70,7 @@ namespace m
 			);
 		}
 		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::IDLE), true);
-		SetState(STATE::Idle);
+		SetState(STATE::Emerge_loop);
 
 		SetSkillIdx(0);
 		SetCurAttackSkill();
@@ -80,6 +97,10 @@ namespace m
 		if (KEY_PRESSED(KEYCODE_TYPE::E))
 		{
 			SetState(STATE::Idle);
+		}
+		if (KEY_PRESSED(KEYCODE_TYPE::T))
+		{
+			SetState(STATE::Emerge_loop);
 		}
 
 		if (Unit::GetCurHp() == 0)
@@ -113,6 +134,11 @@ namespace m
 				SetState(STATE::Idle);
 			}
 			emerge();
+		}
+			break;
+		case STATE::Emerge_loop:
+		{
+			emerger_loop();
 		}
 		break;
 		case STATE::End:
@@ -258,9 +284,9 @@ namespace m
 		if (GetFinalMoveCoord() == _coord)
 		{
 			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
-			ActiveSkill(GetTargetCoord());
 			//ActiveSkill(GetTargetCoord());
 			GetCurAttackSkill()->SetStartRender(true);
+			ActiveSkill(GetTargetCoord());
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
@@ -367,11 +393,10 @@ namespace m
 		}
 
 		if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
-		if (endCoord != Vector2::Minus && otherPos != Vector2::Minus)
+		if (endCoord != Vector2::Minus)
 		{
 			//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
 			//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-
 			//if (GetCurAttackSkill()->GetStartRender())
 			//if(scene->GetEffectUnit((int)endCoord.y, (int)endCoord.x) != nullptr)
 			//if (drawGuideLineEndCoord.x <= Vector2::Minus.x
@@ -383,9 +408,6 @@ namespace m
 			//{
 			//	
 			//}
-			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-				, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-			
 			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
 			//Scene* scene = SceneManager::GetActiveScene();
 			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
@@ -402,8 +424,16 @@ namespace m
 			//	GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
 			//	GetCurAttackSkill()->SetGuideLinePos(pos);
 			//}
+
+
+
 			DrawSkill(endCoord, drawGuideLineEndCoord);
 		}
+
+		if (GetCurAttackSkill()->GetStartRender())
+			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+
 		// 공격완료하면 clear
 		ClearSkillRangeMap();
 	}
@@ -484,6 +514,7 @@ namespace m
 		// 공격할 대상을 찾지 못했을때.
 		if (!find)
 		{
+			SetTargetCoord(Vector2(-1, -1));
 			int randIdx = rand() % alienPathQueue.size();
 			SetFinalMoveCoord(alienPathQueue[randIdx].coord);
 		}
@@ -517,6 +548,12 @@ namespace m
 	{
 		GetAnimator()->Stop();
 		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::EMERGE), false);
+		SetCurImage(nullptr);
+	}
+	void Alien::emerger_loop()
+	{
+		GetAnimator()->Stop();
+		GetAnimator()->Play(L"emerge_loop", true);
 		SetCurImage(nullptr);
 	}
 }

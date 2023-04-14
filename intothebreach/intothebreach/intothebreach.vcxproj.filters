@@ -128,6 +128,9 @@
     <Filter Include="Contents\Attached\Skill\St\Punch">
       <UniqueIdentifier>{3573ac8b-b2c7-42d7-94c3-30ff0f91d11f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contents\Unit\Building">
+      <UniqueIdentifier>{7b9c731d-b2b1-4303-97df-aaa1d8b1936c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -253,9 +256,6 @@
     <ClInclude Include="func.h">
       <Filter>Engine\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Building.h">
-      <Filter>Contents\Tile</Filter>
-    </ClInclude>
     <ClInclude Include="mUnit.h">
       <Filter>Contents\Unit</Filter>
     </ClInclude>
@@ -309,6 +309,9 @@
     </ClInclude>
     <ClInclude Include="mSkill_RS.h">
       <Filter>Contents\Attached\Skill\St\Punch</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Contents\Unit\Building</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -421,9 +424,6 @@
     <ClCompile Include="Alien.cpp">
       <Filter>Contents\Unit\Ailen</Filter>
     </ClCompile>
-    <ClCompile Include="Building.cpp">
-      <Filter>Contents\Tile</Filter>
-    </ClCompile>
     <ClCompile Include="mUnit.cpp">
       <Filter>Contents\Unit</Filter>
     </ClCompile>
@@ -450,6 +450,9 @@
     </ClCompile>
     <ClCompile Include="mSkill_RS.cpp">
       <Filter>Contents\Attached\Skill\St\Punch</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Contents\Unit\Building</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

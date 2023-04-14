@@ -59,8 +59,4 @@ namespace m {
 	{
 		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off]);
 	}
-	void Building::emerge()
-	{
-		SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::Off]);
-	}
 }

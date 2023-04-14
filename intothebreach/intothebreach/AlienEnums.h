@@ -48,7 +48,7 @@ wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
 	L"_emerge",
 	L"_Bw",
 };
-m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
+m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
 	//x, y
 	{},//Beetle,
 	{},//Blobber,
@@ -56,10 +56,10 @@ m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END]{
 	{},//Centipede,
 	{},//Crab,
 	{},//Digger,
-	{},//Firefly,
-	{},//Hornet,
+	{{10, -10.f},{10, -10.f},{2, -8.f},{10, -10.f}},//Firefly,
+	{{20, -25.f},{20, -25.f},{3, -21.f},{20, -25.f}},//Hornet,
 	{},//Jelly,
-	{},//Leaper,
+	{{5, -10.f},{5, -10.f},{5, -10.f},{5, -10.f}},//Leaper,
 	{},//Scarab,
 	{},//Scorpion,
 	{},//Slime,

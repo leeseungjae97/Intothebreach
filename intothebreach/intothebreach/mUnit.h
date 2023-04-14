@@ -117,10 +117,9 @@ namespace m
 		{
 			return mFinalCoord;
 		}
-		virtual void idle() = 0;
-		virtual void broken() = 0;
-		virtual void water() = 0;
-		virtual void emerge() = 0;
+		virtual void idle() {};
+		virtual void broken() {};
+		virtual void water() {};
 
 	protected:
 		vector<Vector2_1> pathQueue;

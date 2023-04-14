@@ -16,6 +16,7 @@ namespace m
 			Water,
 			Death,
 			Emerge,		
+			Emerge_loop,
 			// 오브젝트 상태 설정
 			Invisible,	// 보이지 않게만
 			Visibie,	// 보이지 않았던 오브젝트 보이게
