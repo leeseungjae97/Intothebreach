@@ -19,6 +19,8 @@ enum class COMBAT_CONDITION_T {
 	BROKEN,
 	WATER,
 	WATER_BROKEN,
+	NO_SHADOW,
+	HOLO,
 	END
 };
 enum class MECHS {
@@ -197,35 +199,36 @@ int MECHS_T_HT[(UINT)MECHS::END]{
 	(int)MECH_T::Science,
 	(int)MECH_T::Science,
 };
-m::Vector2 MECHS_OFFSET[(UINT)MECHS::END]{
+m::Vector2 MECHS_OFFSET[(UINT)MECHS::END][(UINT)COMBAT_CONDITION_T::END]{
+	// S_SIZE, IDLE, BROKEN, WATER, WATER_BROKEN, NO_SHADOW, HOLO,
 	//x, y
-	{}, //   L"mech_electrice",
-	{}, //  L"mech_flame",
-	{}, //  L"mech_guard",
-	{}, //  L"mech_judo",
-	{}, //  L"mech_laser",
-	{}, //  L"mech_leap",
-	{9.f,-6.f}, //  L"mech_punch",
+	{{}}, //   L"mech_electrice",
+	{{}}, //  L"mech_flame",
+	{{}}, //  L"mech_guard",
+	{{}}, //  L"mech_judo",
+	{{}}, //  L"mech_laser",
+	{{}}, //  L"mech_leap",
+	{{9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {0, -50.f},}, //  L"mech_punch",
 
-	{8.f, 0.f}, //  L"mech_charge",
-	{}, //  L"mech_jet",
-	{}, //  L"mech_mirror",
-	{15.f, 6.f}, //  L"mech_tank",
-	{}, //  L"mech_unstable",
-	{}, //  L"mech_wall",
+	{{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{0.f, -50}}, //  L"mech_charge",
+	{{}}, //  L"mech_jet",
+	{{}}, //  L"mech_mirror",
+	{{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{0, -50}}, //  L"mech_tank",
+	{{}}, //  L"mech_unstable",
+	{{}}, //  L"mech_wall",
 
-	{15.f, -5.f}, //  L"mech_artillery",
-	{}, //  L"mech_dstrike",
-	{}, //  L"mech_ice",
-	{}, //  L"mech_ignite",
-	{}, //  L"mech_rockart",
-	{}, //  L"mech_rocket",
+	{{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{0, -50}}, //  L"mech_artillery",
+	{{}}, //  L"mech_dstrike",
+	{{}}, //  L"mech_ice",
+	{{}}, //  L"mech_ignite",
+	{{}}, //  L"mech_rockart",
+	{{}}, //  L"mech_rocket",
 
-	{}, //  L"mech_grav",
-	{}, //  L"mech_nano",
-	{}, //  L"mech_pulse",
-	{}, //  L"mech_science",
-	{}, //  L"mech_tele",
+	{{}}, //  L"mech_grav",
+	{{}}, //  L"mech_nano",
+	{{}}, //  L"mech_pulse",
+	{{}}, //  L"mech_science",
+	{{}}, //  L"mech_tele",
 };
 
 m::Vector2 MECHS_IMAGE_SIZE[(UINT)MECHS::END]{
@@ -263,7 +266,9 @@ wstring MECH_CONDITION[(UINT)COMBAT_CONDITION_T::END]{
    L"_a",
    L"_broken",
    L"_w",
-   L"_w_broken"
+   L"_w_broken",
+   L"_ns",
+   L"_h",
 };
 wstring COMMON_MECH_T[(UINT)COMMON_CONDITION_T::END]{
    L"",

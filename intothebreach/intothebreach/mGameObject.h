@@ -11,6 +11,7 @@ namespace m
 		enum class STATE
 		{
 			// 게임 기본동작들
+			NoMove,
 			Idle,
 			Broken,
 			Water,
@@ -108,6 +109,7 @@ namespace m
 		bool mbDead;
 		vector<Component*> mComponents;
 		STATE mState;
+		STATE mVisible;
 	};
 
 }

@@ -50,6 +50,7 @@ namespace m::object
 			scene->GetMechs().push_back((Mech*)gameObj);
 			//gameObj->SetMIdx(scene->GetMechs().size() - 1);
 			gameObj->SetMove(true);
+			gameObj->SetState(GameObject::STATE::Invisible);
 		}
 		if(type == LAYER_TYPE::MONSTER)
 		{
@@ -68,7 +69,10 @@ namespace m::object
 		}
 
 		gameObj->Initialize();
-		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
+		if (coord == Vector2::Minus)
+			gameObj->SetPos(Vector2(-200.f, -200.f));
+		else 
+			gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
 		gameObj->SetFinalPos(gameObj->GetPos());
 		gameObj->SetLayerType(type);
 

@@ -247,7 +247,7 @@ namespace m
 		//	//delete mBackTiles[i];
 		//}
 	}
-	void Scene::CheckMouseOutOfMapRange()
+	bool Scene::CheckMouseOutRange()
 	{
 		Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
 
@@ -258,7 +258,15 @@ namespace m
 		Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
 
 
-		if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, MOUSE_POS))
+		if (math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, MOUSE_POS))
+		{
+			return true;
+		}
+		else return false;
+	}
+	void Scene::OutOfMapRange()
+	{
+		if (!CheckMouseOutRange())
 		{
 			if (!mMouseFollower->GetMove())
 			{
@@ -294,6 +302,8 @@ namespace m
 			}
 		}
 	}
+
+
 	/// <summary>
 	/// 마우스 위치에 메카
 	/// </summary>
@@ -356,7 +366,7 @@ namespace m
 		{
 			if (nullptr == mAliens[_i] 
 				|| mAliens[_i]->GetFinalCoord() == Vector2::Zero
-				|| mAliens[_i]->GetState() == GameObject::STATE::Emerge
+				/*|| mAliens[_i]->GetState() == GameObject::STATE::Emerge*/
 				|| mAliens[_i]->GetState() == GameObject::STATE::Emerge_loop) continue;
 			Vector2 mCoord = mAliens[_i]->GetFinalCoord();
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::MONSTER);
@@ -541,7 +551,7 @@ namespace m
 		mMouseFollower->ActiveSkill(MOUSE_POS);
 		mMouseFollower->DrawSkillRangeTile();
 
-		Scene::CheckMouseOutOfMapRange();
+		Scene::OutOfMapRange();
 
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& !mMouseFollower->GetCurAttackSkill()->GetStartFire())
@@ -627,7 +637,7 @@ namespace m
 				mMouseFollower->DrawMoveRangeTile();
 				mMouseFollower->DrawMoveDirectionTile();
 			}
-			Scene::CheckMouseOutOfMapRange();
+			Scene::OutOfMapRange();
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LSHIFT))
@@ -665,7 +675,10 @@ namespace m
 		Vector2 idx = unit->GetFinalCoord();
 		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]) return;
 		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = unit;
-		effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+
+		if(idx != Vector2::Minus)
+			effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+
 		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
 		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
 		//{
@@ -724,18 +737,25 @@ namespace m
 		mBoundaryTiles[y][x]->SetETCTiles(MAKE_TILE_KEY(_type)
 			, MAKE_TILE_PATH(_type));
 	}
-	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE layer)
+	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE lType)
 	{
-		mLayers[(UINT)layer].AddGameObject(obj);
-		if (layer == LAYER_TYPE::BACKGROUND)
+		mLayers[(UINT)lType].AddGameObject(obj);
+		if (lType == LAYER_TYPE::BACKGROUND)
 			mBacks.push_back(dynamic_cast<Background*>(obj));
 
-		if (nullptr != dynamic_cast<Unit*>(obj) && layer != LAYER_TYPE::CLONE)
+		if (nullptr != dynamic_cast<Unit*>(obj) && lType != LAYER_TYPE::CLONE)
 		{
 			Vector2 idx = ((Unit*)obj)->GetCoord();
-			effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
+			if(idx == Vector2::Minus)
+				effectUnits[0][0] = (dynamic_cast<Unit*>(obj));
+			else 
+				effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
 			((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
+	}
+	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE lType)
+	{
+		mLayers[(UINT)lType].ObjectFront(obj);
 	}
 	void Scene::RemoveEffectUnit(Vector2 _coord)
 	{

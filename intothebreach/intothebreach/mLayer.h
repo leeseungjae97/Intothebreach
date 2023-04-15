@@ -15,7 +15,7 @@ namespace m
 		virtual void Release();
 
 		void AddGameObject(GameObject* gameObj);
-
+		void ObjectFront(GameObject* gameObj);
 		vector<GameObject*>& GetGameObjects() { return mGameObjects; }
 	private:
 		vector<GameObject*> mGameObjects;

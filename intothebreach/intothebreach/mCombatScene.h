@@ -17,8 +17,12 @@ namespace m {
 		virtual void OnEnter() override;
 		virtual void OnExit() override;;
 		
+		void RandSpawnAlien();
+		void PutUnitBeforeCombat();
 	private:
-		
+		bool bSetPosition;
+
+		int mechIdx;
 	};
 }
 

@@ -1,16 +1,16 @@
 #include "Mech.h"
 #include "mTime.h"
+#include "func.h"
 #include "mSceneManager.h"
-#include "mInput.h"
 #include "mResources.h"
-#include "mImage.h"
-#include "mTransform.h"
-#include "mTime.h"
 #include "mAnimator.h"
+#include "mBackground.h"
+#include "mTransform.h"
+#include "mImage.h"
+#include "mInput.h"
 #include "mCamera.h"
 #include "mCollider.h"
 #include "mSkill.h"
-#include "func.h"
 namespace m
 {
 	Mech::Mech(int unitName, Vector2 _coord, int _range, int _hp, size_t idx)
@@ -25,7 +25,7 @@ namespace m
 				MAKE_UNIT_KEY((MECHS)unitName, (COMBAT_CONDITION_T)i)
 				, MAKE_UNIT_PATH((MECHS)unitName, (COMBAT_CONDITION_T)i));
 			if (nullptr == GetMImages()[i]) continue;
-			GetMImages()[i]->SetOffset(MECHS_OFFSET[(UINT)unitName]);
+			GetMImages()[i]->SetOffset(MECHS_OFFSET[(UINT)unitName][i]);
 		}
 
 		UINT len = UINT(GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetWidth() / (GetMImages()[(UINT)COMBAT_CONDITION_T::S_SIZE]->GetWidth() + MECHS_IMAGE_SIZE[(UINT)unitName].x));
@@ -94,9 +94,8 @@ namespace m
 		case STATE::Water:
 			water();
 			break;
-		case STATE::Emerge:
-			break;
-		case STATE::End:
+		case STATE::NoMove:
+			noMove();
 			break;
 		default:
 			break;
@@ -104,6 +103,57 @@ namespace m
 	}
 	void Mech::Render(HDC hdc)
 	{
+		if (bCancelDeploy && nullptr != GetCurImage())
+		{
+			deployArrow = Resources::Load<Image>(L"deploy_swap", L"..\\Resources\\texture\\combat\\deployment_x.bmp");
+			Vector2 mPos = GetPos();
+			mPos.y -= deployArrow->GetHeight();
+			TransparentBlt(hdc
+				, (int)(mPos.x)
+				, (int)(mPos.y)
+				, (int)(deployArrow->GetWidth() * 2)
+				, (int)(deployArrow->GetHeight() * 2)
+				, deployArrow->GetHdc()
+				, 0
+				, 0
+				, (int)(deployArrow->GetWidth())
+				, (int)(deployArrow->GetHeight())
+				, RGB(255, 0, 255));
+		}
+		if (bSwap && nullptr != GetCurImage())
+		{
+			deployArrow = Resources::Load<Image>(L"deploy_swap", L"..\\Resources\\texture\\combat\\deployment_swap.bmp");
+			Vector2 mPos = GetPos();
+			mPos.y -= deployArrow->GetHeight();
+			TransparentBlt(hdc
+				, (int)(mPos.x)
+				, (int)(mPos.y)
+				, (int)(deployArrow->GetWidth() * 2)
+				, (int)(deployArrow->GetHeight() * 2)
+				, deployArrow->GetHdc()
+				, 0
+				, 0
+				, (int)(deployArrow->GetWidth())
+				, (int)(deployArrow->GetHeight())
+				, RGB(255, 0, 255));
+		}
+		if (bDeploy && nullptr != GetCurImage())
+		{
+			deployArrow = Resources::Load<Image>(L"deploy_arrow", L"..\\Resources\\texture\\combat\\deployment_arrow.bmp");
+			Vector2 mPos = GetPos();
+			mPos.y -= deployArrow->GetHeight();
+			TransparentBlt(hdc
+				, (int)(mPos.x)
+				, (int)(mPos.y)
+				, (int)(deployArrow->GetWidth() * 2)
+				, (int)(deployArrow->GetHeight() * 2)
+				, deployArrow->GetHdc()
+				, 0
+				, 0
+				, (int)(deployArrow->GetWidth())
+				, (int)(deployArrow->GetHeight())
+				, RGB(255, 0, 255));
+		}
 		Unit::Render(hdc);
 	}
 	void Mech::Release()
@@ -195,5 +245,10 @@ namespace m
 	{
 		GetAnimator()->Stop();
 		SetCurImage(GetMImages()[(UINT)COMBAT_CONDITION_T::WATER]);
+	}
+	void Mech::noMove()
+	{
+		GetAnimator()->Stop();
+		SetCurImage(GetMImages()[(UINT)COMBAT_CONDITION_T::NO_SHADOW]);
 	}
 }

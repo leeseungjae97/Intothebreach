@@ -7,6 +7,7 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mResources.h"
+#include "mBackground.h"
 #include "mTile.h"
 #include "Mech.h"
 #include "func.h"
@@ -22,7 +23,7 @@ namespace m {
 	void CombatScene::Initialize() {
 		Scene::Initialize();
 		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
-
+		mechIdx = 0;
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
 
@@ -44,15 +45,6 @@ namespace m {
 		}
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
-
-		object::Instantiate(Vector2(0, 0), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
-		object::Instantiate(Vector2(2, 1), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
-		object::Instantiate(Vector2(0, 2), LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
-
-		object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Hornet]);
-		object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Leaper]);
-		object::Instantiate(Vector2(5, 3), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Firefly]);
-
 		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
 		//object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::bar);
 		//object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::battry);
@@ -67,30 +59,166 @@ namespace m {
 		//object::Instantiate(Vector2(2, 1), LAYER_TYPE::STRUCT, STRUCTURES::shield);
 		//object::Instantiate(Vector2(3, 1), LAYER_TYPE::STRUCT, STRUCTURES::supply);
 		//object::Instantiate(Vector2(2, 1), LAYER_TYPE::STRUCT, STRUCTURES::timelab);
-		object::Instantiate(Vector2(3, 1), LAYER_TYPE::STRUCT, STRUCTURES::tower);
 		//object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::wind);
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
-		//Building* stTile3 = object::Instantiate(Vector2(3, 1), LAYER_TYPE::STRUCT, STRUCTURES::solar);
+		object::Instantiate(Vector2(5, 5), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Hornet]);
+		object::Instantiate(Vector2(5, 4), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Leaper]);
+		object::Instantiate(Vector2(5, 3), LAYER_TYPE::MONSTER, UNITS[(UINT)ALIENS::Firefly]);
 
-		//stTile->SetPos(mTiles[3][3]->GetCenterPos());
-		//mStruturesTiles[3][3] = stTile;
-		//AddGameObject(stTile, LAYER_TYPE::STRUCT);
-		//Building* stTile1 = new Building(STRUCTURES_T::Mountain, mTiles[1][2]->GetCoord());
-		//stTile1->SetPos(mTiles[1][2]->GetCenterPos());
-		//mStruturesTiles[1][2] = stTile1;
-		//AddGameObject(stTile1, LAYER_TYPE::STRUCT);
-		//Building* stTile2 = new Building(STRUCTURES_T::Mountain, mTiles[2][0]->GetCoord());
-		//stTile2->SetPos(mTiles[2][0]->GetCenterPos());
-		//mStruturesTiles[2][0] = stTile2;
-		//AddGameObject(stTile2, LAYER_TYPE::STRUCT);
+		object::Instantiate(Vector2(3, 1), LAYER_TYPE::STRUCT, STRUCTURES::tower);
+	}
+	void CombatScene::RandSpawnAlien()
+	{
+		for (int y = 1; y < TILE_Y - 1; y++)
+		{
+			for (int x = 5; x < TILE_X; x++)
+			{
+
+			}
+		}
+	}
+	void CombatScene::PutUnitBeforeCombat()
+	{
+		if (mechIdx >= GetMechs().size())
+		{
+			if (KEY_UP(KEYCODE_TYPE::SPACE))
+			{
+				bSetPosition = true;
+				SetMouseFollower(nullptr);
+				return;
+			}
+		}
+		else
+		{
+			if (GetMechs()[mechIdx]->GetState() != GameObject::STATE::NoMove)
+			{
+				GetMechs()[mechIdx]->SetState(GameObject::STATE::NoMove);
+				//GetMechs()[mechIdx]->GetMImages()[(UINT)COMBAT_CONDITION_T::NO_SHADOW]->SetOffset(Vector2(10, -20.f));
+				GetMechs()[mechIdx]->SetDeploy(true);
+				SetMouseFollower(GetMechs()[mechIdx]);
+			}
+			for (int i = 0; i < GetMechs().size(); i++)
+			{
+				GetMechs()[i]->SetDeploy(true);
+				//GetMechs()[i]->SetSwap(false);
+
+			}
+		}
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				Tile* p = GetPosTiles()[y][x];
+				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+				{
+					//MoveEffectUnit(GetMouseFollower(), GetPosTile(y, x)->GetCoord());
+					if (nullptr != GetMouseFollower())
+					{
+						GetMouseFollower()->SetCoord(GetPosTile(y, x)->GetCoord());
+						GetMouseFollower()->SetPos(GetPosTile(y, x)->GetCenterPos());
+						GetMouseFollower()->SetFinalPos(GetMouseFollower()->GetPos());
+					}
+
+					bool bExMech = false;
+					Mech* mech = nullptr;
+					for (int i = 0; i < GetMechs().size(); i++)
+					{
+						if (nullptr != GetMouseFollower()
+							&&
+							p->GetCoord() == GetMechs()[i]->GetCoord()
+							&&
+							i != GetMouseFollower()->GetMIdx())
+						{
+							mech = GetMechs()[i];
+							bExMech = true;
+							break;
+						}
+					}
+					if (!((y > 0 && y < 7) && (x > 0 && x < 4)))
+					{
+						GetMouseFollower()->SetCancelDeploy(true);
+					}
+					if (!CheckMouseOutRange())
+					{
+						GetMouseFollower()->SetCancelDeploy(true);
+
+					}
+					if (bExMech)
+					{
+						// 교환
+						GetMouseFollower()->SetSwap(true);
+						mech->SetSwap(true);
+						//GetMouseFollower()->SetDeploy(false);
+						//mech->SetDeploy(false);
+						//mech->SetPos(GetMouseFollower()->GetPos());
+						//mech->SetCoord(GetMouseFollower()->GetCoord());
+					}
+
+					if (KEY_UP(KEYCODE_TYPE::LBTN))
+					{
+						bExMech = false;
+						for (int i = 0; i < GetMechs().size(); i++)
+						{
+							if (nullptr == GetMouseFollower()
+								&& p->GetCoord() == GetMechs()[i]->GetCoord()
+								||
+								p->GetCoord() == GetMechs()[i]->GetCoord()
+								&& i != GetMouseFollower()->GetMIdx())
+							{
+								bExMech = true;
+								mech = GetMechs()[i];
+								break;
+							}
+						}
+						if (!bExMech)
+						{
+							if (mechIdx + 1 < GetMechs().size()
+								&& GetMechs()[mechIdx + 1]->GetState() == GameObject::STATE::NoMove)
+							{
+								SetMouseFollower(nullptr);
+								return;
+							}
+
+							mechIdx++;
+							SetMouseFollower(nullptr);
+						}
+						else
+						{
+							ObjectGoFront(mech, mech->GetLayerType());
+							SetMouseFollower(mech);
+							mechIdx = mech->GetMIdx();
+						}
+					}
+					
+				}
+			}
+		}
+		// 1,1 ~ y + 5, x + 2
+		for (int y = 1; y < 7; y++)
+		{
+			for (int x = 1; x < 4; x++)
+			{
+
+			}
+		}
 	}
 	void CombatScene::Update() {
 		Scene::Update();
-		Scene::MoveMech();
-		Scene::MoveSkill();
-		//Scene::CheckNumInput();
-		Scene::AlienAlgorithm();
-		//Scene::MoveAlien();
+
+		if (!bSetPosition)
+		{
+			RandSpawnAlien();
+			PutUnitBeforeCombat();
+		}
+		else
+		{
+			Scene::MoveMech();
+			Scene::MoveSkill();
+			Scene::AlienAlgorithm();
+		}
 		if (KEY_DOWN(KEYCODE_TYPE::N)) {
 			SceneManager::LoadScene(SCENE_TYPE::TITLE);
 		}
@@ -105,4 +233,5 @@ namespace m {
 	}
 	void CombatScene::OnExit() {
 	}
+
 }

@@ -90,4 +90,18 @@ namespace m
 
 		mGameObjects.push_back(gameObj);
 	}
+	void Layer::ObjectFront(GameObject* gameObj)
+	{
+		if (gameObj == nullptr) return;
+		vector<GameObject*>::iterator iter = mGameObjects.begin();
+		while (iter != mGameObjects.end())
+		{
+			if ((*iter) == gameObj)
+			{
+				iter = mGameObjects.erase(iter);
+			}
+			else iter++;
+		}
+		mGameObjects.push_back(gameObj);
+	}
 }

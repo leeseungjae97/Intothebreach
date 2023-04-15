@@ -45,8 +45,9 @@ namespace m
 		void SetMove(bool _move) { move = _move; }
 		void SetEndMove(bool _endMove) { endMove = _endMove; }
 		void SetEndAttack(bool _endAttack) { endAttack = _endAttack; }
-
+		void SetVisibleHp(bool _b) { visibleHp = _b; }
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
+
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
@@ -160,7 +161,7 @@ namespace m
 		bool move;			// 공격에서 이동으로 넘갈때 사용.
 							// 이 값을 통해 공격과 이동의 분기가 나뉨.
 		bool bStructure;
-
+		bool visibleHp;
 		WEAPON_T mWeaponType;
 		Pilot* mPilot;		// 미사용
 		//vector<SKILL_T> mSkills;

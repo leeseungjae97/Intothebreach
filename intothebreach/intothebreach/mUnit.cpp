@@ -110,45 +110,48 @@ namespace m
 		}
 		if (lType == LAYER_TYPE::CLONE) return;
 
-
-		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpImage && 0 != mHp)
+		if (visibleHp)
 		{
-			mPos += hpImage->GetOffset();
-			mPos = Camera::CalculatePos(mPos);
-			TransparentBlt(hdc
-				, (int)(mPos.x - hpImage->GetWidth() / 2.f)
-				, (int)(mPos.y - hpImage->GetHeight() / 2.f)
-				, (int)(hpImage->GetWidth() * 2)
-				, (int)(hpImage->GetHeight() * 2)
-				, hpImage->GetHdc()
-				, 0
-				, 0
-				, (int)(hpImage->GetWidth())
-				, (int)(hpImage->GetHeight())
-				, RGB(255, 0, 255));
-		}
-		mPos = GetComponent<Transform>()->GetPos();
-		if (nullptr != hpBack  && 0 != mHp )
-		{
-			mPos += hpBack->GetOffset();
-			mPos = Camera::CalculatePos(mPos);
-
-			int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
-			int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
-			if (mHp == 0) return;
-			int hpWidth = (hpBack->GetWidth() * 2) / mHp;
-			int hpHeight = hpBack->GetHeight() * 2;
-			for (int i = 0; i < curHp; i++)
+			mPos = GetComponent<Transform>()->GetPos();
+			if (nullptr != hpImage && 0 != mHp)
 			{
-				SelectGDI p(hdc, BRUSH_TYPE::GREEN);
-				Rectangle(hdc
-					, (int)(px + hpWidth * i)
-					, (int)(py)
-					, (int)(px + hpWidth * (i + 1))
-					, (int)(py + hpHeight));
+				mPos += hpImage->GetOffset();
+				mPos = Camera::CalculatePos(mPos);
+				TransparentBlt(hdc
+					, (int)(mPos.x - hpImage->GetWidth() / 2.f)
+					, (int)(mPos.y - hpImage->GetHeight() / 2.f)
+					, (int)(hpImage->GetWidth() * 2)
+					, (int)(hpImage->GetHeight() * 2)
+					, hpImage->GetHdc()
+					, 0
+					, 0
+					, (int)(hpImage->GetWidth())
+					, (int)(hpImage->GetHeight())
+					, RGB(255, 0, 255));
+			}
+			mPos = GetComponent<Transform>()->GetPos();
+			if (nullptr != hpBack && 0 != mHp)
+			{
+				mPos += hpBack->GetOffset();
+				mPos = Camera::CalculatePos(mPos);
+
+				int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
+				int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
+				if (mHp == 0) return;
+				int hpWidth = (hpBack->GetWidth() * 2) / mHp;
+				int hpHeight = hpBack->GetHeight() * 2;
+				for (int i = 0; i < curHp; i++)
+				{
+					SelectGDI p(hdc, BRUSH_TYPE::GREEN);
+					Rectangle(hdc
+						, (int)(px + hpWidth * i)
+						, (int)(py)
+						, (int)(px + hpWidth * (i + 1))
+						, (int)(py + hpHeight));
+				}
 			}
 		}
+		
 		if (bStructure)
 		{
 			// TODO building. energy status

@@ -34,7 +34,8 @@ namespace m
 
 		void AlienAlgorithm();
 
-		void AddGameObject(GameObject* obj, LAYER_TYPE layer);
+		void AddGameObject(GameObject* obj, LAYER_TYPE lType);
+		void ObjectGoFront(GameObject* obj, LAYER_TYPE lType);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
 		void HighlightTile();
@@ -43,7 +44,7 @@ namespace m
 		void ClearBackTiles();
 		void DrawFootTile();
 		void CheckNumInput();
-		
+
 		void UndoMove();
 
 		TILES& GetPosTiles() { return mPosTiles; }
@@ -58,7 +59,8 @@ namespace m
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
 		Unit* GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
-		void CheckMouseOutOfMapRange();
+		bool CheckMouseOutRange();
+		void OutOfMapRange();
 		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
 		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, BYTE fContant);
 		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2);
