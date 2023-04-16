@@ -16,6 +16,13 @@ namespace m
 	Mech::Mech(int unitName, Vector2 _coord, int _range, int _hp, size_t idx)
 		: Unit(_coord, _range, _hp, BASIC_SKILL[(UINT)unitName], idx, unitName)
 		, moveCnt(GetMoveRange())
+		, fDeployConstant(255)
+		, bMakeDeployAlpha(false)
+		, bDeploy(false)
+		, bSwap(false)
+		, bCancelDeploy(false)
+		, bDeployed(false)
+
 	{
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
 
@@ -42,14 +49,27 @@ namespace m
 			, 0.2f
 			, AC_SRC_ALPHA
 		);
+		if (GetLayerType() == LAYER_TYPE::CLONE)
+		{
+			return;
+		}
 		GetAnimator()->SetConstant(255);
 		GetAnimator()->Play(MAKE_UNIT_KEY((MECHS)unitName, COMBAT_CONDITION_T::IDLE), true);
 
 		SetState(STATE::Idle);
 	}
 	Mech::Mech(Mech& _origin)
+		: Unit(_origin.GetCoord()
+			, _origin.GetMoveRange()
+			, 0
+			, 0
+			, _origin.GetMIdx()
+			, _origin.GetUnitName())
 	{
-
+		SetState(_origin.GetState());
+		SetDeploy(_origin.GetDeploy());
+		SetCancelDeploy(_origin.GetCancelDeploy());
+		SetSwap(_origin.GetSwap());
 	}
 	Mech::~Mech()
 	{
@@ -103,12 +123,18 @@ namespace m
 	}
 	void Mech::Render(HDC hdc)
 	{
+		BLENDFUNCTION func = {};
+		func.BlendOp = AC_SRC_OVER;
+		func.BlendFlags = 0;
+		func.AlphaFormat = AC_SRC_ALPHA;
+		func.SourceConstantAlpha = fDeployConstant;
+
 		if (bCancelDeploy && nullptr != GetCurImage())
 		{
-			deployArrow = Resources::Load<Image>(L"deploy_swap", L"..\\Resources\\texture\\combat\\deployment_x.bmp");
+			deployArrow = Resources::Load<Image>(L"deploy_x", L"..\\Resources\\texture\\combat\\deployment_x.bmp");
 			Vector2 mPos = GetPos();
 			mPos.y -= deployArrow->GetHeight();
-			TransparentBlt(hdc
+			AlphaBlend(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
 				, (int)(deployArrow->GetWidth() * 2)
@@ -118,14 +144,14 @@ namespace m
 				, 0
 				, (int)(deployArrow->GetWidth())
 				, (int)(deployArrow->GetHeight())
-				, RGB(255, 0, 255));
+				, func);
 		}
 		if (bSwap && nullptr != GetCurImage())
 		{
 			deployArrow = Resources::Load<Image>(L"deploy_swap", L"..\\Resources\\texture\\combat\\deployment_swap.bmp");
 			Vector2 mPos = GetPos();
 			mPos.y -= deployArrow->GetHeight();
-			TransparentBlt(hdc
+			AlphaBlend(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
 				, (int)(deployArrow->GetWidth() * 2)
@@ -135,14 +161,14 @@ namespace m
 				, 0
 				, (int)(deployArrow->GetWidth())
 				, (int)(deployArrow->GetHeight())
-				, RGB(255, 0, 255));
+				, func);
 		}
 		if (bDeploy && nullptr != GetCurImage())
 		{
 			deployArrow = Resources::Load<Image>(L"deploy_arrow", L"..\\Resources\\texture\\combat\\deployment_arrow.bmp");
 			Vector2 mPos = GetPos();
 			mPos.y -= deployArrow->GetHeight();
-			TransparentBlt(hdc
+			AlphaBlend(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
 				, (int)(deployArrow->GetWidth() * 2)
@@ -152,7 +178,18 @@ namespace m
 				, 0
 				, (int)(deployArrow->GetWidth())
 				, (int)(deployArrow->GetHeight())
-				, RGB(255, 0, 255));
+				, func);
+			//TransparentBlt(hdc
+			//	, (int)(mPos.x)
+			//	, (int)(mPos.y)
+			//	, (int)(deployArrow->GetWidth() * 2)
+			//	, (int)(deployArrow->GetHeight() * 2)
+			//	, deployArrow->GetHdc()
+			//	, 0
+			//	, 0
+			//	, (int)(deployArrow->GetWidth())
+			//	, (int)(deployArrow->GetHeight())
+			//	, RGB(255, 0, 255));
 		}
 		Unit::Render(hdc);
 	}

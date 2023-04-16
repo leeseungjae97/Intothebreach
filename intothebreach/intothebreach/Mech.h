@@ -24,7 +24,6 @@ namespace m
 		void CheckNumInput();
 		void SetDeploy(bool _b) { 
 			_b ? (bDeploy = _b, bSwap = false, bCancelDeploy = false) : (bDeploy = _b);
-
 		}
 		void SetSwap(bool _b) { 
 			_b ? (bDeploy = false, bSwap = _b, bCancelDeploy = false) : (bSwap = _b);
@@ -32,12 +31,23 @@ namespace m
 		void SetCancelDeploy(bool _b) { 
 			_b ? (bDeploy = false, bSwap = false, bCancelDeploy = _b) : (bCancelDeploy = _b);
 		}
+		void SetMakeDeployAlpha(bool _b) { bMakeDeployAlpha = _b; }
+		void SetDeployConstant(float _c) { fDeployConstant = _c; }
+		void SetDeployed(bool _b) { bDeployed = _b; }
+
+		bool GetDeployed() { return bDeployed; }
+		bool GetMakeDeployAlpha() { return bMakeDeployAlpha; }
 		bool GetDeploy() { return bDeploy; }
+		bool GetCancelDeploy() { return bCancelDeploy; }
+		bool GetSwap() { return bSwap; }
 	private:
 		int moveCnt;
 		bool bDeploy;
 		bool bSwap;
 		bool bCancelDeploy;
+		bool bMakeDeployAlpha;
+		bool bDeployed;
+		float fDeployConstant;
 		Image* deployArrow;
 	};
 }

@@ -35,7 +35,7 @@ namespace m::object
 	}
 
 	
-	static inline Unit* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName)
+	static inline Unit* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName, Unit* _origin = nullptr)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Unit* gameObj = nullptr;
@@ -63,9 +63,19 @@ namespace m::object
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
 				, scene->GetMechs().size());
-
-			gameObj->SetState(GameObject::STATE::Invisible);
-			gameObj->GetAnimator()->SetConstant(100);
+			
+			if (nullptr != _origin)
+			{
+				//((Mech*)gameObj)->SetState(_origin->GetState());
+				((Mech*)gameObj)->SetDeploy(((Mech*)_origin)->GetDeploy());
+				((Mech*)gameObj)->SetCancelDeploy(((Mech*)_origin)->GetCancelDeploy());
+				((Mech*)gameObj)->SetSwap(((Mech*)_origin)->GetSwap());
+			}
+			else
+			{
+				gameObj->GetAnimator()->SetConstant(100);
+				gameObj->SetState(GameObject::STATE::Invisible);
+			}
 		}
 
 		gameObj->Initialize();

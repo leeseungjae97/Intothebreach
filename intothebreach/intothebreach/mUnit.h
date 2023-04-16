@@ -47,6 +47,7 @@ namespace m
 		void SetEndAttack(bool _endAttack) { endAttack = _endAttack; }
 		void SetVisibleHp(bool _b) { visibleHp = _b; }
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
+		void SetUnitConstant(float _constant) { unitConstant = _constant; }
 
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
@@ -92,7 +93,8 @@ namespace m
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
 		bool GetEndAttack() { return endAttack; }
-		
+		float GetUnitConstant(){return unitConstant;}
+
 		int GetSkillMap(int y, int x) { return skill_range_map[y][x]; }
 		void SetSkillMap(int y, int x, int num) { skill_range_map[y][x] = num; }
 
@@ -154,6 +156,7 @@ namespace m
 		size_t mIdx;		// Scene의 Mechs vector에 들어갈 index
 		int skillIdx;		// 사용할 스킬 index
 		int unitName;
+		float unitConstant;
 
 		bool drag;			//
 		bool endMove;		//

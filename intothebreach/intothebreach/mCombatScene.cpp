@@ -82,7 +82,17 @@ namespace m {
 	}
 	void CombatScene::PutUnitBeforeCombat()
 	{
-		if (mechIdx >= GetMechs().size())
+		bool bConfirm = true;
+		for (int i = 0; i < GetMechs().size(); i++)
+		{
+			GetMechs()[i]->SetDeploy(true);
+			if (!GetMechs()[i]->GetDeployed())
+			{
+				bConfirm = false;
+			}
+		}
+
+		if (bConfirm)
 		{
 			if (KEY_UP(KEYCODE_TYPE::SPACE))
 			{
@@ -93,115 +103,199 @@ namespace m {
 		}
 		else
 		{
-			if (GetMechs()[mechIdx]->GetState() != GameObject::STATE::NoMove)
+			if (nullptr == GetMouseFollower() 
+				&& GetMechs()[mechIdx]->GetState() != GameObject::STATE::NoMove)
 			{
+				for (int i = 0; i < GetMechs().size(); i++)
+				{
+					if (!GetMechs()[i]->GetDeployed())
+					{
+						mechIdx = i;
+						break;
+					}
+				}
 				GetMechs()[mechIdx]->SetState(GameObject::STATE::NoMove);
-				//GetMechs()[mechIdx]->GetMImages()[(UINT)COMBAT_CONDITION_T::NO_SHADOW]->SetOffset(Vector2(10, -20.f));
-				GetMechs()[mechIdx]->SetDeploy(true);
 				SetMouseFollower(GetMechs()[mechIdx]);
 			}
-			for (int i = 0; i < GetMechs().size(); i++)
-			{
-				GetMechs()[i]->SetDeploy(true);
-				//GetMechs()[i]->SetSwap(false);
+		}
 
-			}
+		// MouseFollower 범위 벗어나는거 체크
+		if (nullptr != GetMouseFollower()
+			&& !CheckMouseOutRange())
+		{	
+			// MouseFollower 범위 벗어나면 Cancel로 바꾸기
+			GetMouseFollower()->SetCancelDeploy(true);
 		}
 		for (int y = 0; y < TILE_Y; y++)
 		{
 			for (int x = 0; x < TILE_X; x++)
 			{
 				Tile* p = GetPosTiles()[y][x];
+				// MOUSE_POS가 있는 타일 찾기.
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
-					//MoveEffectUnit(GetMouseFollower(), GetPosTile(y, x)->GetCoord());
 					if (nullptr != GetMouseFollower())
 					{
 						GetMouseFollower()->SetCoord(GetPosTile(y, x)->GetCoord());
 						GetMouseFollower()->SetPos(GetPosTile(y, x)->GetCenterPos());
-						GetMouseFollower()->SetFinalPos(GetMouseFollower()->GetPos());
 					}
-
-					bool bExMech = false;
-					Mech* mech = nullptr;
-					for (int i = 0; i < GetMechs().size(); i++)
-					{
-						if (nullptr != GetMouseFollower()
-							&&
-							p->GetCoord() == GetMechs()[i]->GetCoord()
-							&&
-							i != GetMouseFollower()->GetMIdx())
-						{
-							mech = GetMechs()[i];
-							bExMech = true;
-							break;
-						}
-					}
-					if (!((y > 0 && y < 7) && (x > 0 && x < 4)))
-					{
-						GetMouseFollower()->SetCancelDeploy(true);
-					}
-					if (!CheckMouseOutRange())
-					{
-						GetMouseFollower()->SetCancelDeploy(true);
-
-					}
-					if (bExMech)
-					{
-						// 교환
-						GetMouseFollower()->SetSwap(true);
-						mech->SetSwap(true);
-						//GetMouseFollower()->SetDeploy(false);
-						//mech->SetDeploy(false);
-						//mech->SetPos(GetMouseFollower()->GetPos());
-						//mech->SetCoord(GetMouseFollower()->GetCoord());
-					}
-
 					if (KEY_UP(KEYCODE_TYPE::LBTN))
 					{
-						bExMech = false;
-						for (int i = 0; i < GetMechs().size(); i++)
-						{
-							if (nullptr == GetMouseFollower()
-								&& p->GetCoord() == GetMechs()[i]->GetCoord()
-								||
-								p->GetCoord() == GetMechs()[i]->GetCoord()
-								&& i != GetMouseFollower()->GetMIdx())
-							{
-								bExMech = true;
-								mech = GetMechs()[i];
-								break;
-							}
-						}
-						if (!bExMech)
-						{
-							if (mechIdx + 1 < GetMechs().size()
-								&& GetMechs()[mechIdx + 1]->GetState() == GameObject::STATE::NoMove)
-							{
-								SetMouseFollower(nullptr);
-								return;
-							}
-
-							mechIdx++;
-							SetMouseFollower(nullptr);
-						}
-						else
-						{
-							ObjectGoFront(mech, mech->GetLayerType());
-							SetMouseFollower(mech);
-							mechIdx = mech->GetMIdx();
-						}
+						SetMouseFollower(nullptr);
 					}
-					
-				}
-			}
-		}
-		// 1,1 ~ y + 5, x + 2
-		for (int y = 1; y < 7; y++)
-		{
-			for (int x = 1; x < 4; x++)
-			{
 
+
+					//bool bExMech = false;
+					//Mech* mech = nullptr;
+					//for (int i = 0; i < GetMechs().size(); i++)
+					//{
+					//	// 타일의 위치에 있는 메크가 MouseFollower가 아니라면.
+					//	// 메크를 받아오고
+					//	// 교환 bool값 true로
+					//	if (nullptr != GetMouseFollower()
+					//		&& p->GetCoord() == GetMechs()[i]->GetCoord()
+					//		&& i != GetMouseFollower()->GetMIdx())
+					//	{
+					//		mech = GetMechs()[i];
+					//		bExMech = true;
+					//		break;
+					//	}
+					//}
+					//// 교환이면 MouseFollower Swap true, 교환 mech Swap true
+					//if (nullptr != GetMouseFollower()
+					//	&& bExMech)
+					//{
+					//	GetMouseFollower()->SetSwap(true);
+					//	mech->SetSwap(true);
+					//	//GetMouseFollower()->SetDeploy(false);
+					//	//mech->SetDeploy(false);
+					//	//mech->SetPos(GetMouseFollower()->GetPos());
+					//	//mech->SetCoord(GetMouseFollower()->GetCoord());
+					//}
+					////else
+					////{
+					////	//배치
+					////}
+					//// 메크가 Deploy인 범위 외에 Cancel값 true
+					//if (nullptr != GetMouseFollower()
+					//	&& !((y > 0 && y < 7) && (x > 0 && x < 4)))
+					//{
+					//	GetMouseFollower()->SetCancelDeploy(true);
+					//}
+
+					//// MouseFollower 비어있지않고, MouseFollower 첫 배정된 메크가 아니라면
+					//// 전체 메크가 Deploy 였던지 확인.
+					//// MouseFollower FinalCoord에 알파생성.
+					//if(nullptr != GetMouseFollower()
+					//	&& GetMouseFollower()->GetMakeDeployAlpha()
+					//	&& bConfirm)
+					//{
+					//	//SetAlphaState(GameObject::STATE::NoMove);
+					//	SetAlphaFollower((Mech*)object::Instantiate(GetMechs()[mechIdx]->GetFinalCoord()
+					//		, LAYER_TYPE::CLONE, GetMechs()[mechIdx]->GetUnitName(), GetMechs()[mechIdx]));
+					//	GetAlphaFollower()->SetState(GameObject::STATE::NoMove);
+					//	GetAlphaFollower()->SetDeployConstant(100);
+					//	GetAlphaFollower()->SetUnitConstant(100);
+					//	GetMouseFollower()->SetMakeDeployAlpha(false);
+					//}
+
+					//if (KEY_UP(KEYCODE_TYPE::LBTN))
+					//{
+					//	// MouseFollower Cancel 상태라면 클릭 return
+					//	if (nullptr != GetMouseFollower()
+					//		&& GetMouseFollower()->GetCancelDeploy())
+					//		return;
+					//	// MouseFollower 비어있지 않다면 
+					//	// MouseFollower FinalCoord 에 현재 마우스의 위치값을 받아옴
+					//	// MouseFollower 의 알파 생성 bool 값 true
+					//	if (nullptr != GetMouseFollower())
+					//	{
+					//		GetMouseFollower()->SetFinalPos(GetMouseFollower()->GetPos());
+					//		GetMouseFollower()->SetFinalCoord(GetMouseFollower()->GetCoord());
+					//		GetMouseFollower()->SetMakeDeployAlpha(true);
+					//	}
+					//	// MouseFollower 비어있지 않다면
+					//	// MouseFollower Deploy 설정
+					//	if (nullptr != GetMouseFollower())
+					//	{
+					//		GetMouseFollower()->SetDeployed(true);
+					//	}
+
+					//	bExMech = false;
+					//	for (int i = 0; i < GetMechs().size(); i++)
+					//	{
+					//		// MouseFollower가 비어있지 않은 상태
+					//		// 타일의 위치에 있는 메크가 MouseFollower가 아니라면.
+					//		if (nullptr != GetMouseFollower()
+					//			&& p->GetCoord() == GetMechs()[i]->GetCoord()
+					//			&& i != GetMouseFollower()->GetMIdx())
+					//		{
+					//			bExMech = true;
+					//			mech = GetMechs()[i];
+					//			break;
+					//		}
+					//	}
+					//	if (nullptr == GetMouseFollower() && nullptr != mech)
+					//	{
+					//		ObjectGoFront(mech, mech->GetLayerType());
+					//		SetMouseFollower(mech);
+					//	}
+
+					//	// 배치
+					//	if (!bExMech)
+					//	{
+					//		//if (mechIdx + 1 < GetMechs().size()
+					//		//	&& GetMechs()[mechIdx + 1]->GetState() == GameObject::STATE::NoMove)
+					//		//{
+					//		//	SetMouseFollower(nullptr);
+					//		//	return;
+					//		//}
+					//		if (bConfirm)
+					//		{
+
+					//		}
+					//		else
+					//		{
+					//			// 전체 메크중에 Deploy되지 않은 mech의 index받기.
+					//			//mechIdx++;
+					//			// MouseFollower를 nullptr로 바꿈
+					//			SetMouseFollower(nullptr);
+					//		}
+					//	}
+					//	// 교환
+					//	else
+					//	{
+					//		if (bConfirm)
+					//		{
+					//			ObjectGoFront(mech, mech->GetLayerType());
+					//			Vector2 tCoord = GetMouseFollower()->GetCoord();
+					//			Vector2 tPos = GetMouseFollower()->GetPos();
+
+					//			GetMouseFollower()->SetCoord(mech->GetCoord());
+					//			GetMouseFollower()->SetPos(mech->GetPos());
+					//			mech->SetCoord(tCoord);
+					//			mech->SetPos(tPos);
+
+					//			
+					//			//SetMouseFollower(mech);
+					//			//mechIdx = mech->GetMIdx();
+					//		}
+					//		else
+					//		{
+					//			ObjectGoFront(mech, mech->GetLayerType());
+					//			SetMouseFollower(mech);
+					//			mechIdx = mech->GetMIdx();
+					//		}
+					//	}
+						//if (nullptr != GetMouseFollower()
+						//	&& GetMouseFollower()->GetFinalPos() != Vector2::One)
+						//{
+						//	// AlphaBlender.
+						//	GetMouseFollower()->SetFinalPos(GetMouseFollower()->GetPos());
+						//	SetAlphaFollower((Mech*)object::Instantiate(GetMouseFollower()->GetFinalCoord(), LAYER_TYPE::CLONE, GetMouseFollower()->GetUnitName()));
+						//}
+					//}
+				}
 			}
 		}
 	}

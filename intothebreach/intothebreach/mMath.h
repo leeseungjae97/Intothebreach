@@ -216,10 +216,14 @@ namespace m::math {
         if (gradient[0] * _x + intercept[0] < _y
             && gradient[1] * _x + intercept[1] < _y
             && gradient[2] * _x + intercept[2] > _y
-            && gradient[3] * _x + intercept[3] > _y) {
+            && gradient[3] * _x + intercept[3] > _y) 
+        {
             return true;
         }
-        else return false;
+        else
+        {
+            return false;
+        }
     }
 
 }

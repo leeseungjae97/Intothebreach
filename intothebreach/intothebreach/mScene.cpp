@@ -16,6 +16,7 @@ namespace m
 {
 	Scene::Scene()
 		: mMouseFollower(nullptr)
+		, mAlphaFollower(nullptr)
 		//, map(nullptr)
 	{
 		mLayers.reserve(5);
@@ -262,7 +263,10 @@ namespace m
 		{
 			return true;
 		}
-		else return false;
+		else
+		{
+			return false;
+		}
 	}
 	void Scene::OutOfMapRange()
 	{
@@ -783,5 +787,9 @@ namespace m
 	{
 		mMouseFollower = _mM;
 		if (nullptr == _mM) SetAlphaFollower(_mM);
+	}
+	void Scene::SetMouseFollowerE(Mech* _mM)
+	{
+		mMouseFollower = _mM;
 	}
 }

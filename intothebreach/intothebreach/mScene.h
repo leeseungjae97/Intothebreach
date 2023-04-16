@@ -78,6 +78,7 @@ namespace m
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
 
 		void SetMouseFollower(Mech* _mM);
+		void SetMouseFollowerE(Mech* _mM);
 		void SetAlphaFollower(Mech* _mM);
 		void SetAlphaState(GameObject::STATE state);
 		void SetPlayerTurn(bool _playerTurn) { playerTurn = _playerTurn; }

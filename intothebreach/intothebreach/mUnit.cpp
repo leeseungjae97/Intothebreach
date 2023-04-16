@@ -21,7 +21,7 @@ namespace m
 		, mWeaponType(BASIC_WEAPON_TYPE[(UINT)unitName])
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
-		, mFinalPos(Vector2::One)
+		, mFinalPos(Vector2::Minus)
 		, unitCoord(Vector2::One)
 		, moveRange(_range)
 		, mHp(hp)
@@ -96,19 +96,44 @@ namespace m
 			Image* curImage = GetCurImage();
 			mPos += curImage->GetOffset();
 			mPos = Camera::CalculatePos(mPos);
-			TransparentBlt(hdc
-				, (int)(mPos.x - curImage->GetWidth() / 2.f)
-				, (int)(mPos.y - curImage->GetHeight() / 2.f)
-				, (int)(curImage->GetWidth() * 2)
-				, (int)(curImage->GetHeight() * 2)
-				, curImage->GetHdc()
-				, 0
-				, 0
-				, (int)(curImage->GetWidth())
-				, (int)(curImage->GetHeight())
-				, RGB(255, 0, 255));
+			if (unitConstant != 0)
+			{
+				BLENDFUNCTION func = {};
+				func.BlendOp = AC_SRC_OVER;
+				func.BlendFlags = 0;
+				func.AlphaFormat = AC_SRC_ALPHA;
+				func.SourceConstantAlpha = unitConstant;
+
+				AlphaBlend(hdc
+					, (int)(mPos.x - curImage->GetWidth() / 2.f)
+					, (int)(mPos.y - curImage->GetHeight() / 2.f)
+					, (int)(curImage->GetWidth() * 2)
+					, (int)(curImage->GetHeight() * 2)
+					, curImage->GetHdc()
+					, 0
+					, 0
+					, (int)(curImage->GetWidth())
+					, (int)(curImage->GetHeight())
+					, func);
+			}
+			else
+			{
+				TransparentBlt(hdc
+					, (int)(mPos.x - curImage->GetWidth() / 2.f)
+					, (int)(mPos.y - curImage->GetHeight() / 2.f)
+					, (int)(curImage->GetWidth() * 2)
+					, (int)(curImage->GetHeight() * 2)
+					, curImage->GetHdc()
+					, 0
+					, 0
+					, (int)(curImage->GetWidth())
+					, (int)(curImage->GetHeight())
+					, RGB(255, 0, 255));
+			}
+		
+			
 		}
-		if (lType == LAYER_TYPE::CLONE) return;
+		//if (lType == LAYER_TYPE::CLONE) return;
 
 		if (visibleHp)
 		{

@@ -21,7 +21,7 @@ namespace m {
 		void PutUnitBeforeCombat();
 	private:
 		bool bSetPosition;
-
+		//bool bConfirm;
 		int mechIdx;
 	};
 }
