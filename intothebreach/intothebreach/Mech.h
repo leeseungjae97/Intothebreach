@@ -22,6 +22,11 @@ namespace m
 
 		void MechMove();
 		void CheckNumInput();
+		void EndDeploy() {
+			bDeploy = false;
+			bCancelDeploy = false;
+			bSwap = false;
+		}
 		void SetDeploy(bool _b) { 
 			_b ? (bDeploy = _b, bSwap = false, bCancelDeploy = false) : (bDeploy = _b);
 		}

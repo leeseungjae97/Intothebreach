@@ -63,7 +63,6 @@ namespace m::object
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
 				, scene->GetMechs().size());
-			
 			if (nullptr != _origin)
 			{
 				//((Mech*)gameObj)->SetState(_origin->GetState());

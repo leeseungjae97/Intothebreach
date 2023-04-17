@@ -133,20 +133,20 @@ m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 //
 int ALIENS_APL_COND[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
 	//idle, death, emeger, water
-	{},//Beetle,
-	{},//Blobber,
-	{},//Burrower,
-	{},//Centipede,
-	{},//Crab,
-	{},//Digger,
+	{1,1,1,1},//Beetle,
+	{1,1,1,1},//Blobber,
+	{1,1,1,0},//Burrower,
+	{1,1,1,1},//Centipede,
+	{1,1,1,1},//Crab,
+	{1,1,1,1},//Digger,
 	{1,1,1,1},//Firefly,
 	{1,1,1,0},//Hornet,
-	{},//Jelly,
+	{1,1,1,0},//Jelly,
 	{1,1,1,1},//Leaper,
-	{},//Scarab,
-	{},//Scorpion,
-	{},//Slime,
-	{},//Spider,
+	{1,1,1,1},//Scarab,
+	{1,1,1,1},//Scorpion,
+	{1,1,1,1},//Slime,
+	{1,1,1,1},//Spider,
 
 };
 m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{

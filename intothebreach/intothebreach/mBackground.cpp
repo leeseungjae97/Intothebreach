@@ -26,6 +26,8 @@ namespace m {
 		idVar = 1;
 		idDir = 1;
 		vMovement = Vector2::Zero;
+		bSmoothDisappear = false;
+		bSmoothAppear = false;
 	}
 	Background::~Background() {
 	}
@@ -131,13 +133,37 @@ namespace m {
 				func.BlendOp = AC_SRC_OVER;
 				func.BlendFlags = 0;
 				func.AlphaFormat = mAlpha;
+
 				if (bBlink)
 				{
 					iConstant += idVar * idDir;
+					if (iConstant >= 255 || iConstant <= 0) idDir *= -1;
 				}
-				if (iConstant >= 255 || iConstant <= 0) idDir *= -1;
+				
 				if(iConstant != -1 ) func.SourceConstantAlpha = iConstant;
 				else func.SourceConstantAlpha = 125;
+
+				if (bSmoothDisappear)
+				{
+					idDir = -1;
+					if (iConstant <= 0)
+					{
+						bSmoothDisappear = false;
+					}
+					else iConstant += idVar * idDir;
+				}
+				if (bSmoothAppear)
+				{
+					idDir = 1;
+					if (iConstant >= 255 - idVar)
+					{
+						bSmoothAppear = false;
+					}
+					else
+					{
+						iConstant += idVar * idDir;
+					}	
+				}
 
 				AlphaBlend(hdc
 					, (int)(mPos.x)

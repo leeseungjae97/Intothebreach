@@ -25,13 +25,14 @@ namespace m {
 		float yPos = 210.f;
 		for (int i = 0; i < 5; i++)
 		{
-			Button* btn = new Button(UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
+			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
 			btn->SetText(true);
 			btn->SetAlpha(true);
 			btn->SetMoveScene(SCENE_TYPE::SELECT_ROBOT);
 			btn->UseTextAlpha(true);
 			btn->SetPos(Vector2(-300.f, yPos));
 			btn->SetSize(Vector2(300.f, 45.f));
+			btn->SetReSizeable(true);
 			yPos += 52.f;
 
 			AddGameObject(btn, LAYER_TYPE::UI);
@@ -58,7 +59,16 @@ namespace m {
 	}
 	void TitleScene::Update() {
 		Scene::Update();
-		if (KEY_DOWN(KEYCODE_TYPE::N)) {
+		//if (KEY_DOWN(KEYCODE_TYPE::N)) {
+		//	SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
+		//}
+		//if (btns[1]->GetBtnName() == TITLE_UI_TEXT_PATH[(UINT)TITLE_UI_TEXT::NS_TEXT])
+		//{
+		//	
+		//}
+		if (btns[1]->GetClicked())
+		{
+			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
 		}
 		if (GetFirstUpdate())

@@ -26,6 +26,7 @@ namespace m
 	}
 	void Skill_RS::Update()
 	{
+		if (nullptr == mOwner) return;
 		if (mOwner->GetState() == GameObject::STATE::Death
 			||
 			mOwner->GetState() == GameObject::STATE::Invisible
@@ -44,6 +45,7 @@ namespace m
 	}
 	void Skill_RS::Render(HDC hdc)
 	{
+		if (nullptr == mOwner) return;
 		if (mOwner->GetState() == GameObject::STATE::Death
 			||
 			mOwner->GetState() == GameObject::STATE::Invisible
@@ -70,6 +72,7 @@ namespace m
 	{}
 	void Skill_RS::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
+		if (nullptr == mOwner) return;
 		if (mOwner->GetState() == GameObject::STATE::Death
 			||
 			mOwner->GetState() == GameObject::STATE::Invisible

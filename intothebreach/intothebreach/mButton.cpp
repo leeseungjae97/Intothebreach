@@ -22,6 +22,10 @@ m::Button::Button(const wstring& inner
 	SetCutPos(true);
 	SetEC(false);
 	textAlpha = 0;
+	iTextMag = 1;
+	textPos = Vector2::Minus;
+	bReSzieable = false;
+	bClicked = false;
 }
 
 m::Button::~Button()
@@ -31,7 +35,6 @@ void m::Button::Initialize()
 {
 	
 }
-
 void m::Button::Update()
 {
 	GameObject::Update();
@@ -39,18 +42,23 @@ void m::Button::Update()
 	{
 		if (KEY_UP(KEYCODE_TYPE::LBTN))
 		{
-			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
-			SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
-			//;
+			bClicked = true;
 		}
-		if(mSize.x <= 400.f) mSize.x += 50.f;
+		if (bReSzieable)
+		{
+			if (mSize.x <= 400.f) mSize.x += 50.f;
+		}
+			
 	}
 	else
 	{
-		if (mSize.x > 300.f) mSize.x -= 50.f;
+		if (bReSzieable)
+		{
+			if (mSize.x > 300.f) mSize.x -= 50.f;
+		}
+		
 	}
 }
-
 void m::Button::Render(HDC hdc)
 {
 	Vector2 mPos = GetPos();
@@ -96,20 +104,36 @@ void m::Button::Render(HDC hdc)
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_ALPHA;
-		if(bTextAlpha) func.SourceConstantAlpha = textAlpha;
-		else func.SourceConstantAlpha = 255;
-
-		AlphaBlend(hdc
-			, (int)(mPos.x)
-			, (int)(mPos.y)
-			, (int)(im->GetWidth())
-			, (int)(im->GetHeight())
-			, im->GetHdc()
-			, 0
-			, 0
-			, (int)(im->GetWidth())
-			, (int)(im->GetHeight())
-			, func);
+		func.SourceConstantAlpha = textAlpha;
+		if (textPos != Vector2::Minus) mPos += textPos;
+		if (bTextAlpha)
+		{
+			AlphaBlend(hdc
+				, (int)(mPos.x)
+				, (int)(mPos.y)
+				, (int)(im->GetWidth() * iTextMag)
+				, (int)(im->GetHeight() * iTextMag)
+				, im->GetHdc()
+				, 0
+				, 0
+				, (int)(im->GetWidth())
+				, (int)(im->GetHeight())
+				, func);
+		}
+		else
+		{
+			TransparentBlt(hdc
+				, (int)(mPos.x)
+				, (int)(mPos.y)
+				, (int)(im->GetWidth() * iTextMag)
+				, (int)(im->GetHeight() * iTextMag)
+				, im->GetHdc()
+				, 0
+				, 0
+				, (int)(im->GetWidth())
+				, (int)(im->GetHeight())
+				, RGB(255, 0, 255));
+		}
 	}
 }
 

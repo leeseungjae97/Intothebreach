@@ -65,6 +65,7 @@ namespace m {
 				Background* p = Islands[i];
 				if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS)) {
 					SceneManager::LoadScene((SCENE_TYPE)i);
+					SceneManager::SelectLand(i);
 				}
 			}
 		}

@@ -3,6 +3,7 @@
 namespace m {
 	class Tile;
 	class TileHead;
+	class Button;
 	class CombatScene : public Scene {
 	public:
 		CombatScene();
@@ -19,10 +20,21 @@ namespace m {
 		
 		void RandSpawnAlien();
 		void PutUnitBeforeCombat();
+		int GetTextTurnNumber() { return iTurn; }
+		void SetTextTurnNumber(int _turn);
+		void PlayerTurnBackground();
+		void AlienTurnBackground();
 	private:
+		vector<Background*> combatBack;
 		bool bSetPosition;
 		//bool bConfirm;
+		Button* textDeploy;
+		Button* btnConfirm;
+		Button* textTurn;
+		Button* textTurnNum;
+		Button* textTurnInfo;
 		int mechIdx;
+		int iTurn;
 	};
 }
 

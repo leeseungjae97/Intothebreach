@@ -9,6 +9,7 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mBackground.h"
+#include "mCombatScene.h"
 #include "func.h"
 #include "mInput.h"
 extern m::Application application;
@@ -21,7 +22,7 @@ namespace m
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
-		playerTurn = true;
+		playerTurn = false;
 		firstUpdate = true;
 		curAttackAlien = 0;
 	}
@@ -488,7 +489,7 @@ namespace m
 			SetPlayerTurn(true);
 			return;
 		}
-
+		((CombatScene*)SceneManager::GetActiveScene())->AlienTurnBackground();
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
 		if (curAlien->GetState() == GameObject::STATE::Emerge_loop) return;
@@ -526,7 +527,13 @@ namespace m
 	void Scene::MoveSkill()
 	{
 		if (!playerTurn) return;
-
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			if (mAliens[i]->GetState() == GameObject::STATE::Broken)
+			{
+				return;
+			}
+		}
 
 		for (int i = 0; i < mAliens.size(); i++)
 		{
@@ -605,12 +612,24 @@ namespace m
 	void Scene::MoveMech()
 	{
 		if (!playerTurn) return;
+		((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
 		drawTile();
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			if (mAliens[i]->GetState() == GameObject::STATE::Broken)
+			{
+				return;
+			}
+		}
 		if (KEY_UP(KEYCODE_TYPE::SPACE))
 		{
 			if (!playerTurn) playerTurn = true;
 			else
 			{
+				((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
+					((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
+				);
+
 				playerTurn = false;
 				if (nullptr != mMouseFollower)
 				{
@@ -678,6 +697,7 @@ namespace m
 	{
 		Vector2 idx = unit->GetFinalCoord();
 		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]) return;
+
 		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = unit;
 
 		if(idx != Vector2::Minus)

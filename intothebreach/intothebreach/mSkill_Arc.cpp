@@ -112,7 +112,7 @@ namespace m
 		Background* smoke = new Background(
 			MAKE_EFFECT_KEY(SINGLE_EFFECT_T::ar_s, c),
 			MAKE_EFFECT_PATH(SINGLE_EFFECT_T::ar_s, c),
-			2);
+		2);
 
 		smoke->SetCutPos(true);
 		smoke->SetAlpha(true);

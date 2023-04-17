@@ -49,10 +49,7 @@ namespace m
 			, 0.2f
 			, AC_SRC_ALPHA
 		);
-		if (GetLayerType() == LAYER_TYPE::CLONE)
-		{
-			return;
-		}
+
 		GetAnimator()->SetConstant(255);
 		GetAnimator()->Play(MAKE_UNIT_KEY((MECHS)unitName, COMBAT_CONDITION_T::IDLE), true);
 

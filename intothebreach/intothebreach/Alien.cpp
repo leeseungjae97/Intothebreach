@@ -529,6 +529,7 @@ namespace m
 	}
 	void Alien::idle()
 	{
+		SetVisibleHp(true);
 		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::IDLE), true);
 		SetCurImage(nullptr);
 	}

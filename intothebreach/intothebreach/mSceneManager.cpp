@@ -13,9 +13,10 @@ namespace m
 {	
 	std::vector<Scene*> SceneManager::mScenes = {};
 	Scene* SceneManager::mActiveScene = nullptr;
-
+	SCENE_TYPE SceneManager::selectedLand = SCENE_TYPE::IN_LAND0;
 	void SceneManager::Initialize()
 	{
+
 		mScenes.resize((UINT)SCENE_TYPE::END);
 
 		mScenes[(UINT)SCENE_TYPE::TITLE] = new TitleScene();
@@ -77,6 +78,11 @@ namespace m
 		mActiveScene->OnEnter();
 		// ¥Ÿ¿Ωæ¿
 		
+	}
+
+	void SceneManager::SelectLand(int land)
+	{
+		selectedLand = (SCENE_TYPE)land;
 	}
 
 }
