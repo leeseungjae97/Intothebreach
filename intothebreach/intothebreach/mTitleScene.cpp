@@ -108,7 +108,7 @@ namespace m {
 		}
 		else
 		{
-			mBacks[5]->SetState(GameObject::STATE::Visibie);
+			mBacks[5]->SetState(GameObject::STATE::Visible);
 		}
 		
 		

@@ -19,5 +19,6 @@ namespace m
 		vector<GameObject*>& GetGameObjects() { return mGameObjects; }
 	private:
 		vector<GameObject*> mGameObjects;
+		LAYER_TYPE mLayer;
 	};
 }

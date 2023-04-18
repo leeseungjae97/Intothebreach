@@ -322,13 +322,13 @@ namespace m
 				Tile* p = mPosTiles[y][x];
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
-					for (UINT _i = 0; _i < mMechs.size(); _i++)
+					for (UINT _i = 0; _i < PlayerInfo::mMechs.size(); _i++)
 					{
-						if (mPosTiles[y][x]->GetCoord() == mMechs[_i]->GetCoord())
+						if (mPosTiles[y][x]->GetCoord() == PlayerInfo::mMechs[_i]->GetCoord())
 						{
-							if (mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
-							//mMechs[_i]->SetMove(true);
-							SetMouseFollower(mMechs[_i]);
+							if (PlayerInfo::mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
+							//PlayerInfo::mMechs[_i]->SetMove(true);
+							SetMouseFollower(PlayerInfo::mMechs[_i]);
 							SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
 							break;
 						}
@@ -354,9 +354,9 @@ namespace m
 			Vector2 mp = mStruturesTiles[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = BUILDING;
 		}
-		for (int i = 0; i < mMechs.size(); i++)
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
-			Vector2 mp = mMechs[i]->GetFinalCoord();
+			Vector2 mp = PlayerInfo::mMechs[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = MECH;
 		}
 		for (int i = 0; i < mAliens.size(); i++)
@@ -380,9 +380,9 @@ namespace m
 				MAKE_TILE_KEY(MOVE_TILE_T::square_gy)
 				, MAKE_TILE_PATH(MOVE_TILE_T::square_gy));
 		}
-		for (UINT _i = 0; _i < mMechs.size(); _i++)
+		for (UINT _i = 0; _i < PlayerInfo::mMechs.size(); _i++)
 		{
-			Vector2 mCoord = mMechs[_i]->GetFinalCoord();
+			Vector2 mCoord = PlayerInfo::mMechs[_i]->GetFinalCoord();
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileType(TILE_T::PLAYER);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetSourceConstantAlpha(150);
 			mPosTiles[(int)mCoord.y][(int)mCoord.x]->SetTileTexture(
@@ -479,12 +479,15 @@ namespace m
 		if (playerTurn) return;
 
 		bool n = false;
-		for (int i = 0; i < mMechs.size(); i++)
-			if (mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+			if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
 		if (!n) return;
 
 		if (mAliens.size() <= curAttackAlien)
 		{
+			((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
+				((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
+			);
 			curAttackAlien = 0;
 			SetPlayerTurn(true);
 			return;
@@ -542,8 +545,7 @@ namespace m
 			//	SetPosTiles((int)mAliens[i]->GetFinalMoveCoord().y, (int)mAliens[i]->GetFinalMoveCoord().x
 			//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
 			//}
-
-			if (mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
+			//if (mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
 			//mAliens[i]->AlienMoveToAttackCheck(mAliens[i]->GetCoord());
 			mAliens[i]->ActiveSkill(mAliens[i]->GetTargetCoord());
 		}
@@ -597,7 +599,7 @@ namespace m
 	{
 		if (moveSave.size() != 0)
 		{
-			Mech* mech = mMechs[moveSave[moveSave.size() - 1].mechIdx];
+			Mech* mech = PlayerInfo::mMechs[moveSave[moveSave.size() - 1].mechIdx];
 			mech->SetEndMove(false);
 			mech->SetCoord(Vector2(moveSave[moveSave.size() - 1].coord));
 
@@ -612,8 +614,9 @@ namespace m
 	void Scene::MoveMech()
 	{
 		if (!playerTurn) return;
-		((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
 		drawTile();
+
+		((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
 		for (int i = 0; i < mAliens.size(); i++)
 		{
 			if (mAliens[i]->GetState() == GameObject::STATE::Broken)
@@ -626,10 +629,9 @@ namespace m
 			if (!playerTurn) playerTurn = true;
 			else
 			{
-				((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
-					((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
-				);
-
+				//((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
+				//	((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
+				//);
 				playerTurn = false;
 				if (nullptr != mMouseFollower)
 				{
@@ -770,10 +772,13 @@ namespace m
 		if (nullptr != dynamic_cast<Unit*>(obj) && lType != LAYER_TYPE::CLONE)
 		{
 			Vector2 idx = ((Unit*)obj)->GetCoord();
-			if(idx == Vector2::Minus)
-				effectUnits[0][0] = (dynamic_cast<Unit*>(obj));
-			else 
+			//if (idx == Vector2::Minus);
+			//	effectUnits[0][0] = (dynamic_cast<Unit*>(obj));
+			//else 
+			//	effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
+			if (idx != Vector2::Minus)
 				effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
+
 			((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
 	}
@@ -783,7 +788,7 @@ namespace m
 	}
 	void Scene::RemoveEffectUnit(Vector2 _coord)
 	{
-
+		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = nullptr;
 	}
 	void Scene::SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type)
 	{

@@ -7,17 +7,14 @@ namespace m {
 	class Pilot;
 	class PlayerInfo {
 	public:
-		PlayerInfo();
-		~PlayerInfo();
-
-	public:
-		vector<Mech*>& GetMechs() { return mMechs; };
-
+		static vector<Mech*>& GetMechs() { return mMechs; };
+		static void Initialize();
+		static vector<Mech*> mMechs;
+		static vector<Weapon*> mWeapons;
+		static vector<Pilot*> mPilots;
+		static int gridPower;
+		static int defence;
 	private:
-		vector<Mech*> mMechs;
-		vector<Skill*> mSkills;
-		vector<Weapon*> mWeapons;
-		vector<Pilot*> mPilots;
 	};
 }
 

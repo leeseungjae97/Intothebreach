@@ -95,14 +95,66 @@ namespace m
 		textTurnNum->SetPos(Vector2(textTurn->GetPos()));
 		textTurnNum->SetTextMag(2);
 		textTurnNum->SetTextPos(Vector2(textTurn->GetTextPos().x + 60.f, 0.f));
+
+		gridPowerBox = new Button(L"..\\Resources\\texture\\ui\\combat\\grid_def_box.bmp", A_BTN_BACK);
+		gridPowerBox->SetText(true);
+		gridPowerBox->UseTextAlpha(false);
+		gridPowerBox->SetSize(Vector2(380.f, 38.f));
+		gridPowerBox->SetPos(Vector2(10.f, 10.f));
+		gridPowerBox->SetTextPos(Vector2(gridPowerBox->GetSize().x / 2 - 291 / 2, gridPowerBox->GetSize().y / 2 - 33 / 2));
+
+		btnTurnEnd = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_end_text.bmp", A_BTN_BACK);
+		btnTurnEnd->SetText(true);
+		btnTurnEnd->UseTextAlpha(false);
+		btnTurnEnd->SetSize(Vector2(210, 65));
+		btnTurnEnd->SetPos(Vector2(gridPowerBox->GetPos().x, gridPowerBox->GetPos().y + gridPowerBox->GetSize().y + 5));
+		btnTurnEnd->SetTextPos(Vector2(btnTurnEnd->GetSize().x / 2 - 90 / 2, btnTurnEnd->GetSize().y / 2 - 28 / 2));
+
+		btnUndoMove = new Button(L"..\\Resources\\texture\\ui\\combat\\cancel_move_text.bmp", A_BTN_BACK);
+		btnUndoMove->SetText(true);
+		btnUndoMove->UseTextAlpha(false);
+		btnUndoMove->SetSize(Vector2(90, 65));
+		btnUndoMove->SetPos(Vector2(btnTurnEnd->GetPos().x + btnTurnEnd->GetSize().x + 5, btnTurnEnd->GetPos().y));
+		btnUndoMove->SetTextPos(Vector2(btnUndoMove->GetSize().x / 2 - 27 / 2, btnUndoMove->GetSize().y / 2 - 33 / 2));
+
+		btnInitTurn = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_init_text.bmp", A_BTN_BACK);
+		btnInitTurn->SetText(true);
+		btnInitTurn->UseTextAlpha(false);
+		btnInitTurn->SetSize(Vector2(90, 38));
+		btnInitTurn->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
+		btnInitTurn->SetTextPos(Vector2(btnInitTurn->GetSize().x /2 - 63/ 2 , btnInitTurn->GetSize().y / 2 - 13/2));
+
+		textBattleEnd = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_init_text.bmp", A_BTN_BACK);
+		textBattleEnd->SetText(true);
+		textBattleEnd->UseTextAlpha(false);
+		textBattleEnd->SetSize(Vector2(90, 38));
+		textBattleEnd->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
+		textBattleEnd->SetTextPos(Vector2(textBattleEnd->GetSize().x / 2 - 63 / 2, textBattleEnd->GetSize().y / 2 - 13 / 2));
+
+		gridPowerBox->SetState(GameObject::STATE::Invisible);
+		btnTurnEnd->SetState(GameObject::STATE::Invisible);
+		btnUndoMove->SetState(GameObject::STATE::Invisible);
+		btnInitTurn->SetState(GameObject::STATE::Invisible);
+		textBattleEnd->SetState(GameObject::STATE::Invisible);
+
+		showPlayerInfo;
 		//textTurnNum->SetSize(Vector2(300.f, 50.f));
 		//textTurn->SetState(GameObject::STATE::Invisible);
 		//textTurnInfo = new Button();
-
+		//textDefence1 = new Button(L"..\\Resources\\texture\\ui\\combat\\grid_def_box.bmp", A_BTN_BACK);
+		//textDefence1->SetText(true);
+		//textDefence1->UseTextAlpha(false);
+		//textDefence1->SetPos(Vector2(textTurn->GetPos()));
+		//textDefence1->SetTextMag(2);
+		//textDefence1->SetTextPos(Vector2(textTurn->GetTextPos().x + 60.f, 0.f));
 		AddGameObject(textDeploy, LAYER_TYPE::UI);
 		AddGameObject(btnConfirm, LAYER_TYPE::UI);
 		AddGameObject(textTurn, LAYER_TYPE::UI);
 		AddGameObject(textTurnNum, LAYER_TYPE::UI);
+		AddGameObject(gridPowerBox, LAYER_TYPE::UI);
+		AddGameObject(btnTurnEnd, LAYER_TYPE::UI);
+		AddGameObject(btnUndoMove, LAYER_TYPE::UI);
+		AddGameObject(btnInitTurn, LAYER_TYPE::UI);
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
@@ -130,27 +182,37 @@ namespace m
 	}
 	void CombatScene::RandSpawnAlien()
 	{
-		//for (int y = 1; y < TILE_Y - 1; y++){
-		//	for (int x = 5; x < TILE_X; x++){
-		//		
-		//	}
-		//}
-		for (int i = 0; i < 3; i++)
+		while (GetAliens().size() != 2)
 		{
 			srand((unsigned int)time(NULL));
 			//int randNum = rand();
-			int randY = rand() % 7;
-			int randX = rand() % 3;
+			float randY = (float)(rand() % 7);
+			float randX = (float)(rand() % 3);
 			//int randNum2 = rand();
 
-			randY += 1;
-			randX += 5;
+			randY += 1.f;
+			randX += 5.f;
 			int randAlien[3] = { 6,7,9 };
 			int randUnit = rand() % 3;
-			ALIENS::Leaper;
-
-			object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+			if (GetAliens().size() == 0)
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[7]);
+			else
+			{
+				bool f = false;
+				vector<Alien*>::iterator iter = GetAliens().begin();
+				while (iter != GetAliens().end())
+				{
+					if ((*iter)->GetCoord() == Vector2(randX, randY))
+					{
+						f = true;
+						break;
+					}else iter++;
+				}
+				if (!f)
+					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[7]);
+			}
 		}
+		
 		//for (int i = 0; i < 3; i++)
 		//{
 		//	
@@ -183,10 +245,10 @@ namespace m
 			}
 		}
 		bool bConfirm = true;
-		for (int i = 0; i < GetMechs().size(); i++)
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
-			GetMechs()[i]->SetDeploy(true);
-			if (!GetMechs()[i]->GetDeployed())
+			PlayerInfo::mMechs[i]->SetDeploy(true);
+			if (!PlayerInfo::mMechs[i]->GetDeployed())
 			{
 				bConfirm = false;
 			}
@@ -195,17 +257,19 @@ namespace m
 		if (bConfirm)
 		{
 			textDeploy->ChangeText(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOY_TEXT]);
-			btnConfirm->SetState(GameObject::STATE::Visibie);
+			btnConfirm->SetState(GameObject::STATE::Visible);
 			if (btnConfirm->GetClicked())
 			{
+				//SetTextTurnNumber(GetTextTurnNumber() + 1);
+				Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 				bSetPosition = true;
 				SetMouseFollower(nullptr);
-				for (int i = 0; i < GetMechs().size(); i++)
+				for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 				{
-					GetMechs()[i]->SetState(GameObject::STATE::Idle);
-					GetMechs()[i]->EndDeploy();
-					GetMechs()[i]->SetVisibleHp(true);
-					MoveEffectUnit(GetMechs()[i]);
+					PlayerInfo::mMechs[i]->SetState(GameObject::STATE::Idle);
+					PlayerInfo::mMechs[i]->EndDeploy();
+					PlayerInfo::mMechs[i]->SetVisibleHp(true);
+					MoveEffectUnit(PlayerInfo::mMechs[i]);
 				}
 				for (int i = 0; i < GetAliens().size(); i++)
 				{
@@ -224,22 +288,22 @@ namespace m
 		else
 		{
 			//if (nullptr == GetMouseFollower() 
-			//	&& GetMechs()[mechIdx]->GetState() != GameObject::STATE::NoMove)
+			//	&& PlayerInfo::mMechs[mechIdx]->GetState() != GameObject::STATE::NoMove)
 			if (nullptr == GetMouseFollower())
 			{
-				for (int i = 0; i < GetMechs().size(); i++)
+				for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 				{
-					if (!GetMechs()[i]->GetDeployed())
+					if (!PlayerInfo::mMechs[i]->GetDeployed())
 					{
 						mechIdx = i;
 						break;
 					}
 					//if (bConfirm)
-					//	GetMechs()[i]->SetMakeDeployAlpha(true);
+					//	PlayerInfo::mMechs[i]->SetMakeDeployAlpha(true);
 				}
-				GetMechs()[mechIdx]->SetState(GameObject::STATE::NoMove);
-				ObjectGoFront(GetMechs()[mechIdx], GetMechs()[mechIdx]->GetLayerType());
-				SetMouseFollower(GetMechs()[mechIdx]);
+				PlayerInfo::mMechs[mechIdx]->SetState(GameObject::STATE::NoMove);
+				ObjectGoFront(PlayerInfo::mMechs[mechIdx], PlayerInfo::mMechs[mechIdx]->GetLayerType());
+				SetMouseFollower(PlayerInfo::mMechs[mechIdx]);
 			}
 		}
 		//if (nullptr != GetMouseFollower()
@@ -278,12 +342,12 @@ namespace m
 
 					}
 					Mech* mech = nullptr;
-					for (int i = 0; i < GetMechs().size(); i++)
+					for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 					{
-						if (p->GetCoord() == GetMechs()[i]->GetCoord()
+						if (p->GetCoord() == PlayerInfo::mMechs[i]->GetCoord()
 							&& i != mechIdx)
 						{
-							mech = GetMechs()[i];
+							mech = PlayerInfo::mMechs[i];
 							break;
 						}
 					}
@@ -298,15 +362,15 @@ namespace m
 						GetMouseFollower()->SetSwap(true);
 						mech->SetSwap(true);
 
-						if (mech->GetMakeDeployAlpha())
-						{
-							Mech* mechAlpha = (Mech*)object::Instantiate(mech->GetFinalCoord()
-								, LAYER_TYPE::CLONE, mech->GetUnitName(), mech);
-							mechAlpha->SetState(GameObject::STATE::NoMove);
-							mechAlpha->SetDeployConstant(100);
-							mechAlpha->SetUnitConstant(100);
-							mech->SetMakeDeployAlpha(false);
-						}
+						//if (mech->GetMakeDeployAlpha())
+						//{
+						//	Mech* mechAlpha = (Mech*)object::Instantiate(mech->GetFinalCoord()
+						//		, LAYER_TYPE::CLONE, mech->GetUnitName(), mech);
+						//	mechAlpha->SetState(GameObject::STATE::NoMove);
+						//	mechAlpha->SetDeployConstant(100);
+						//	mechAlpha->SetUnitConstant(100);
+						//	mech->SetMakeDeployAlpha(false);
+						//}
 					}
 					if (KEY_UP(KEYCODE_TYPE::LBTN))
 					{
@@ -324,7 +388,7 @@ namespace m
 								ObjectGoFront(mech, mech->GetLayerType());
 								SetMouseFollower(mech);
 								//mech->SetDeployed(true);
-								mechIdx = mech->GetMIdx();
+								mechIdx = (int)mech->GetMIdx();
 							}
 							else // 배치
 							{
@@ -341,22 +405,22 @@ namespace m
 							{
 								ObjectGoFront(mech, mech->GetLayerType());
 								SetMouseFollower(mech);
-								mechIdx = mech->GetMIdx();
+								mechIdx = (int)mech->GetMIdx();
 							}
 						}
 					}
 					//bool bExMech = false;
 					//Mech* mech = nullptr;
-					//for (int i = 0; i < GetMechs().size(); i++)
+					//for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 					//{
 					//	// 타일의 위치에 있는 메크가 MouseFollower가 아니라면.
 					//	// 메크를 받아오고
 					//	// 교환 bool값 true로
 					//	if (nullptr != GetMouseFollower()
-					//		&& p->GetCoord() == GetMechs()[i]->GetCoord()
+					//		&& p->GetCoord() == PlayerInfo::mMechs[i]->GetCoord()
 					//		&& i != GetMouseFollower()->GetMIdx())
 					//	{
-					//		mech = GetMechs()[i];
+					//		mech = PlayerInfo::mMechs[i];
 					//		bExMech = true;
 					//		break;
 					//	}
@@ -390,8 +454,8 @@ namespace m
 					//	&& bConfirm)
 					//{
 					//	//SetAlphaState(GameObject::STATE::NoMove);
-					//	SetAlphaFollower((Mech*)object::Instantiate(GetMechs()[mechIdx]->GetFinalCoord()
-					//		, LAYER_TYPE::CLONE, GetMechs()[mechIdx]->GetUnitName(), GetMechs()[mechIdx]));
+					//	SetAlphaFollower((Mech*)object::Instantiate(PlayerInfo::mMechs[mechIdx]->GetFinalCoord()
+					//		, LAYER_TYPE::CLONE, PlayerInfo::mMechs[mechIdx]->GetUnitName(), PlayerInfo::mMechs[mechIdx]));
 					//	GetAlphaFollower()->SetState(GameObject::STATE::NoMove);
 					//	GetAlphaFollower()->SetDeployConstant(100);
 					//	GetAlphaFollower()->SetUnitConstant(100);
@@ -419,16 +483,16 @@ namespace m
 					//		GetMouseFollower()->SetDeployed(true);
 					//	}
 					//	bExMech = false;
-					//	for (int i = 0; i < GetMechs().size(); i++)
+					//	for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 					//	{
 					//		// MouseFollower가 비어있지 않은 상태
 					//		// 타일의 위치에 있는 메크가 MouseFollower가 아니라면.
 					//		if (nullptr != GetMouseFollower()
-					//			&& p->GetCoord() == GetMechs()[i]->GetCoord()
+					//			&& p->GetCoord() == PlayerInfo::mMechs[i]->GetCoord()
 					//			&& i != GetMouseFollower()->GetMIdx())
 					//		{
 					//			bExMech = true;
-					//			mech = GetMechs()[i];
+					//			mech = PlayerInfo::mMechs[i];
 					//			break;
 					//		}
 					//	}
@@ -440,8 +504,8 @@ namespace m
 					//	// 배치
 					//	if (!bExMech)
 					//	{
-					//		//if (mechIdx + 1 < GetMechs().size()
-					//		//	&& GetMechs()[mechIdx + 1]->GetState() == GameObject::STATE::NoMove)
+					//		//if (mechIdx + 1 < PlayerInfo::mMechs.size()
+					//		//	&& PlayerInfo::mMechs[mechIdx + 1]->GetState() == GameObject::STATE::NoMove)
 					//		//{
 					//		//	SetMouseFollower(nullptr);
 					//		//	return;
@@ -507,11 +571,15 @@ namespace m
 		}
 		else
 		{
+			gridPowerBox->SetState(GameObject::STATE::Visible);
+			btnTurnEnd->SetState(GameObject::STATE::Visible);
+			btnUndoMove->SetState(GameObject::STATE::Visible);
+			btnInitTurn->SetState(GameObject::STATE::Visible);
 			Scene::MoveMech();
 			Scene::MoveSkill();
 			Scene::AlienAlgorithm();
 		}
-		if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1)
+		if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1 + 1)
 		{
 			SceneManager::LoadScene(SceneManager::GetSelectLand());
 		}

@@ -26,12 +26,6 @@ namespace m
 	}
 	void Skill_RS::Update()
 	{
-		if (nullptr == mOwner) return;
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		CalEndFire();
@@ -45,12 +39,7 @@ namespace m
 	}
 	void Skill_RS::Render(HDC hdc)
 	{
-		if (nullptr == mOwner) return;
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
+		Skill::Render(hdc);
 		if (endFire)
 		{
 			startFire = false;
@@ -72,12 +61,6 @@ namespace m
 	{}
 	void Skill_RS::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		if (nullptr == mOwner) return;
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}
@@ -99,14 +82,14 @@ namespace m
 
 
 		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mSkillType, dir), MAKE_SKILL_PATH(mSkillType, dir));
-		float fWid = im->GetWidth() / WEAPON_LEN[(UINT)mOwner->GetWeaponType()];
+		float fWid = (float)(im->GetWidth() / WEAPON_LEN[(UINT)mOwner->GetWeaponType()]);
 		if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(mSkillType, dir)))
 		{
 			GetAnimator()->CreateAnimation(
 				MAKE_SKILL_KEY(mSkillType, dir),
 				im,
 				Vector2::Zero,
-				Vector2(fWid, im->GetHeight()),
+				Vector2(fWid, (float)im->GetHeight()),
 				Vector2::Zero,
 				WEAPON_LEN[(UINT)mSkillType],
 				0.05f

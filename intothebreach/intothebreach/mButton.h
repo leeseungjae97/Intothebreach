@@ -30,7 +30,7 @@ namespace m
 		void SetTextPos(Vector2 _textPos) { textPos = _textPos; }
 		void SetReSizeable(bool _b) { bReSzieable = _b; }
 		int GetTextAlpha() { return textAlpha; }
-		void SetTextMag(int mag) { iTextMag = mag; }
+		void SetTextMag(int mag) { iTextScale = mag; }
 
 
 
@@ -43,6 +43,6 @@ namespace m
 		bool bReSzieable;
 		bool bClicked;
 		int textAlpha;
-		int iTextMag;
+		int iTextScale;
 	};
 }

@@ -111,10 +111,19 @@ namespace m {
 	}
 
 	void Skill::Update() {
+		if (mOwner->GetState() == GameObject::STATE::Invisible) return;
+		if (mOwner->GetState() == GameObject::STATE::Death
+			||
+			mOwner->GetState() == GameObject::STATE::Broken)
+		{
+			SetState(GameObject::STATE::Death);
+			return;
+		}
 		GameObject::Update();
 	}
 	void Skill::ReInit(Vector2 stPos, Vector2 enPos, Vector2 guideLinePos, SKILL_T _type)
 	{
+		if (mOwner->GetState() == GameObject::STATE::Invisible) return;
 		Scene* scene = SceneManager::GetActiveScene();
 
 		SetEndCoord(enPos);
@@ -365,7 +374,7 @@ namespace m {
 		}
 	}
 	void Skill::Render(HDC hdc) {
-
+		if (mOwner->GetState() == GameObject::STATE::Invisible) return;
 	}
 	void Skill::Release() {
 	}

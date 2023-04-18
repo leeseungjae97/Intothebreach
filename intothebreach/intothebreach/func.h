@@ -10,6 +10,7 @@
 #include "mSkill_RS.h"
 #include "mTile.h"
 #include "CommonInclude.h"
+#include "mPlayerInfo.h"
 namespace m::object
 {
 	template <typename T>
@@ -45,10 +46,10 @@ namespace m::object
 			gameObj = new Mech(unitName, coord
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
-				, scene->GetMechs().size());
+				, PlayerInfo::mMechs.size());
 
-			scene->GetMechs().push_back((Mech*)gameObj);
-			//gameObj->SetMIdx(scene->GetMechs().size() - 1);
+			PlayerInfo::mMechs.push_back((Mech*)gameObj);
+			//gameObj->SetMIdx(PlayerInfo::mMechs.size() - 1);
 			gameObj->SetMove(true);
 			gameObj->SetState(GameObject::STATE::Invisible);
 		}
@@ -62,7 +63,7 @@ namespace m::object
 			gameObj = new Mech(unitName, coord
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
-				, scene->GetMechs().size());
+				, PlayerInfo::mMechs.size());
 			if (nullptr != _origin)
 			{
 				//((Mech*)gameObj)->SetState(_origin->GetState());
@@ -93,7 +94,7 @@ namespace m::object
 	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Building* gameObj = new Building(_sType, coord, scene->GetStructuresTiles().size());
+		Building* gameObj = new Building(_sType, coord, (int)scene->GetStructuresTiles().size());
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
@@ -202,7 +203,7 @@ namespace m::object
 	}
 	static void Visible(GameObject* obj)
 	{
-		obj->SetState(GameObject::STATE::Visibie);
+		obj->SetState(GameObject::STATE::Visible);
 	}
 	static void Invisible(GameObject* obj)
 	{

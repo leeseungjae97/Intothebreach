@@ -53,11 +53,6 @@ namespace m
 	}
 	void Skill_Arc::Update()
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		
@@ -83,11 +78,7 @@ namespace m
 	}
 	void Skill_Arc::Render(HDC hdc)
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
+		Skill::Render(hdc);
 		if (endFire)
 		{
 			startFire = false;
@@ -116,18 +107,18 @@ namespace m
 
 		smoke->SetCutPos(true);
 		smoke->SetAlpha(true);
-		float randConstant = (rand() % 255) + 125;
-		smoke->SetAlphaConstant(randConstant);
+		float randConstant = (float)(rand() % 255) + 125;
+		smoke->SetAlphaConstant((int)randConstant);
 		float randX = GetPos().x - (rand() % 50);
 		float randY = GetPos().y - (rand() % 50);
 		
 		smoke->SetPos(Vector2(randX, randY));
 		int randDegree = rand() % 360;
-		int randTheta = randDegree * PI / 180.f;
+		int randTheta = (int)(randDegree * PI / 180.f);
 		//bitmap::RotateBitmap(application.GetHdc(), smoke->GetPos(), smoke->GetImage()->GetBitmap(), randTheta, smoke->GetImage()->GetHdc());
 
-		float randDirX = rand() % 255;
-		float randDirY = rand() % 255;
+		float randDirX = (float)(rand() % 255);
+		float randDirY = (float)(rand() % 255);
 		Vector2 dir = Vector2(randDirX, randDirY);
 
 		smoke->SetMovement(dir);
@@ -140,11 +131,6 @@ namespace m
 	}
 	void Skill_Arc::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}

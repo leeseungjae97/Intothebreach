@@ -32,7 +32,17 @@ namespace m {
 		Button* btnConfirm;
 		Button* textTurn;
 		Button* textTurnNum;
-		Button* textTurnInfo;
+
+		Button* gridPowerBox;
+		Button* textDefence1;
+		Button* textDefence2;
+		Button* btnTurnEnd;
+		Button* btnUndoMove;
+		Button* btnInitTurn;
+
+		Button* textBattleEnd;
+		Button* showPlayerInfo;
+
 		int mechIdx;
 		int iTurn;
 	};

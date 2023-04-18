@@ -53,7 +53,7 @@ namespace m
 		TILES& GetArrowTiles() { return mArrowTiles; }
 		TILES& GetBoundaryTiles() { return mBoundaryTiles; }
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
-		vector<Mech*>& GetMechs() { return mMechs; }
+		//vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
 		vector<Building*>& GetStructuresTiles() {return mStruturesTiles;}
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
@@ -113,7 +113,7 @@ namespace m
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
 
 		vector<Building*> mStruturesTiles;
-		vector<Mech*> mMechs;
+		//vector<Mech*> mMechs;
 		vector<Alien*> mAliens;
 
 		Mech* mMouseFollower;

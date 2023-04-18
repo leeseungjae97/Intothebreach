@@ -75,7 +75,23 @@ namespace m
 	Unit::Unit()
 	{}
 	Unit::~Unit()
-	{}
+	{
+		//pathQueue.clear();
+		//directQueue.clear();
+		//arrowDirectQueue.clear();
+		//mechMoveSave.clear();
+		//Safe_Delete_X_Vec(moveDusts);
+		//Safe_Delete_X_Vec(hpBar);
+
+		//if(nullptr != mAnimator)
+		//	delete mAnimator;
+		//if (nullptr != curAttactSkill)
+		//	curAttactSkill = nullptr;
+		//if (nullptr != curImage)
+		//	delete curImage;
+		//if (nullptr != hpBack)
+		//	delete hpBack;
+	}
 	void Unit::Initialize()
 	{
 		GameObject::Initialize();
@@ -83,12 +99,18 @@ namespace m
 	void Unit::Update()
 	{
 		GameObject::Update();
+		if (GetState() == GameObject::STATE::Death
+			||
+			GetState() == GameObject::STATE::Broken)
+		{
+			if(mCoord != Vector2::Minus)
+				SceneManager::GetActiveScene()->RemoveEffectUnit(mCoord);
+		}
 		pathQueue.clear();
 	}
 	void Unit::Render(HDC hdc)
 	{
 		GameObject::Render(hdc);
-
 		Vector2 mPos = GetPos();
 
 		if (nullptr != GetCurImage())
@@ -102,7 +124,7 @@ namespace m
 				func.BlendOp = AC_SRC_OVER;
 				func.BlendFlags = 0;
 				func.AlphaFormat = AC_SRC_ALPHA;
-				func.SourceConstantAlpha = unitConstant;
+				func.SourceConstantAlpha = (BYTE)unitConstant;
 
 				AlphaBlend(hdc
 					, (int)(mPos.x - curImage->GetWidth() / 2.f)
@@ -224,7 +246,7 @@ namespace m
 					Vector2 prevCoord = GetFinalCoord();
 					Vector2 curCoord = GetCoord();
 
-					scene->SetAlphaState(GameObject::STATE::Visibie);
+					scene->SetAlphaState(GameObject::STATE::Visible);
 
 					//list<Vector2> directQue;
 					Vector2_1 now(Vector2(Vector2::Minus), 0, 0);
@@ -326,8 +348,8 @@ namespace m
 			dust->SetCutPos(true);
 			dust->SetAlpha(true);
 
-			float randConstant = (rand() % 255) + 125;
-			dust->SetAlphaConstant(randConstant);
+			float randConstant = (float)(rand() % 255) + 125;
+			dust->SetAlphaConstant((int)randConstant);
 			int randPM = 1;
 			
 			if (c) randPM *= -1;
@@ -682,10 +704,6 @@ namespace m
 	//}
 	void Unit::ChangePilotSlot()
 	{}
-	Weapon* Unit::ChangeWeaponSlot(int index)
-	{
-		return nullptr;
-	}
 	void Unit::SetCurAttackSkill()
 	{
 		assert(this);

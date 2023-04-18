@@ -142,12 +142,30 @@ namespace m {
         Vector2 coord;
         int level;
         int parentIdx;
+
+        bool operator ==(const Vector2_1& other)
+        {
+            return (coord == other.coord && level == other.level && parentIdx == other.parentIdx);
+        }
+        bool operator !=(const Vector2_1& other)
+        {
+            return (coord != other.coord || level != other.level || parentIdx != other.parentIdx);
+        }
     };
     struct Vector2_2
     {
         Vector2 coord;
         Vector2 pos;
         size_t mechIdx;
+
+        bool operator == (const Vector2_2& other)
+        {
+            return (coord == other.coord && pos == other.pos && mechIdx == other.mechIdx);
+        }
+        bool operator != (const Vector2_2& other)
+        {
+            return (coord != other.coord || pos != other.pos || mechIdx != other.mechIdx);
+        }
     };
 	typedef Vector2 Pos;
 	typedef Vector2 Size;

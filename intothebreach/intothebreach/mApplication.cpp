@@ -5,6 +5,7 @@
 #include "mInput.h"
 #include "mResources.h"
 #include "mSelectGDI.h"
+#include "mPlayerInfo.h"
 #include "mCamera.h"
 namespace m
 {
@@ -24,6 +25,7 @@ namespace m
 
 	void Application::Initialize(HWND hWnd)
 	{
+		
 		mHwnd = hWnd;
 		mHdc = GetDC(hWnd);
 		mWidth = 1280;
@@ -54,6 +56,7 @@ namespace m
 		Input::Initialize();
 		SceneManager::Initialize();
 		Camera::Initialize();
+		PlayerInfo::Initialize();
 
 		SetMenuBar(false);
 	}

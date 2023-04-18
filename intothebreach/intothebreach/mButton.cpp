@@ -22,7 +22,7 @@ m::Button::Button(const wstring& inner
 	SetCutPos(true);
 	SetEC(false);
 	textAlpha = 0;
-	iTextMag = 1;
+	iTextScale = 1;
 	textPos = Vector2::Minus;
 	bReSzieable = false;
 	bClicked = false;
@@ -87,8 +87,8 @@ void m::Button::Render(HDC hdc)
 		TransparentBlt(hdc
 			, (int)(mPos.x)
 			, (int)(mPos.y)
-			, (int)(mImage->GetWidth())
-			, (int)(mImage->GetHeight())
+			, (int)(mSize.x)
+			, (int)(mSize.y)
 			, mImage->GetHdc()
 			, 0
 			, 0
@@ -111,8 +111,8 @@ void m::Button::Render(HDC hdc)
 			AlphaBlend(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
-				, (int)(im->GetWidth() * iTextMag)
-				, (int)(im->GetHeight() * iTextMag)
+				, (int)(im->GetWidth() * iTextScale)
+				, (int)(im->GetHeight() * iTextScale)
 				, im->GetHdc()
 				, 0
 				, 0
@@ -125,8 +125,8 @@ void m::Button::Render(HDC hdc)
 			TransparentBlt(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
-				, (int)(im->GetWidth() * iTextMag)
-				, (int)(im->GetHeight() * iTextMag)
+				, (int)(im->GetWidth() * iTextScale)
+				, (int)(im->GetHeight() * iTextScale)
 				, im->GetHdc()
 				, 0
 				, 0

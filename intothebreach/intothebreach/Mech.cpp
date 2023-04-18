@@ -70,6 +70,7 @@ namespace m
 	}
 	Mech::~Mech()
 	{
+		int a = 0;
 	}
 	void Mech::Initialize()
 	{}
@@ -124,7 +125,7 @@ namespace m
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_ALPHA;
-		func.SourceConstantAlpha = fDeployConstant;
+		func.SourceConstantAlpha = (BYTE)fDeployConstant;
 
 		if (bCancelDeploy && nullptr != GetCurImage())
 		{
@@ -219,7 +220,7 @@ namespace m
 			else // 이동이 취소되고 공격가능상태로
 			{
 				if(scene->GetAlphaFollower())
-					scene->GetAlphaFollower()->SetState(GameObject::STATE::Death);
+					//scene->GetAlphaFollower()->SetState(GameObject::STATE::Death);
 
 				SetCurAttackSkill();
 				SetMove(false);
@@ -244,7 +245,7 @@ namespace m
 		//SetFinalCoord(directQueue[moveCnt - 1].coord);
 		//SetFinalPos();
 		if (directQueue.size() <= moveCnt)
-			moveCnt = directQueue.size() - 1;
+			moveCnt = (int)directQueue.size() - 1;
 		scene->MoveEffectUnit(this, directQueue[moveCnt].coord);
 		
 		moveCnt--;

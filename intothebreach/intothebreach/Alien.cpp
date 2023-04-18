@@ -41,12 +41,12 @@ namespace m
 		vImage[vImage.size() - 1] = Resources::Load<Image>(L"emerge_loop", L"..\\Resources\\texture\\combat\\emerge_loop.bmp");
 		if (nullptr == GetAnimator()->FindAnimation(L"emerge_loop"))
 		{
-			float fWid = vImage[vImage.size() - 1]->GetWidth() / 6;
+			float fWid = (float)vImage[vImage.size() - 1]->GetWidth() / 6;
 			GetAnimator()->CreateAnimation(
 				L"emerge_loop"
 				, vImage[vImage.size() - 1]
 				, Vector2::Zero
-				, Vector2(fWid, vImage[vImage.size() - 1]->GetHeight())
+				, Vector2(fWid, (float)vImage[vImage.size() - 1]->GetHeight())
 				, vImage[vImage.size() - 1]->GetOffset()
 				, 6
 				, 0.1f
@@ -119,7 +119,6 @@ namespace m
 		case STATE::Broken:
 			if (GetAnimator()->GetStopAnimator())
 			{
-				//SceneManager::GetActiveScene()->RemoveEffectUnit(this);
 				SetState(STATE::Death);
 			}
 			broken();
@@ -140,7 +139,12 @@ namespace m
 		{
 			emerger_loop();
 		}
-		break;
+			break;
+		case STATE::Death:
+		{
+			
+		}
+			break;
 		case STATE::End:
 			break;
 		default:
@@ -240,7 +244,7 @@ namespace m
 		if (GetFinalMoveCoord() == Vector2::Minus) return;
 
 		moveDelay += Time::fDeltaTime();
-		if (moveDelay >= 0.3f)
+		if (moveDelay >= 0.2f)
 		{
 			moveDelay = 0.f;
 		}
@@ -342,20 +346,20 @@ namespace m
 				end = TILE_X - 1;
 				endCoord = Vector2((float)end, GetCoord().y);
 			}
-			if (otherPos.x < GetCoord().x)
+			else if (otherPos.x < GetCoord().x)
 			{
 				st = (int)GetCoord().x - 1;
 				end = 0;
 				endCoord = Vector2((float)end, GetCoord().y);
 			}
-			if (otherPos.y > GetCoord().y)
+			else if (otherPos.y > GetCoord().y)
 			{
 				st = (int)GetCoord().y + 1;
 				end = TILE_Y - 1;
 				endCoord = Vector2(GetCoord().x, (float)end);
 				cY = true;
 			}
-			if (otherPos.y < GetCoord().y)
+			else if (otherPos.y < GetCoord().y)
 			{
 				st = (int)GetCoord().y - 1;
 				end = 0;
@@ -430,7 +434,7 @@ namespace m
 			DrawSkill(endCoord, drawGuideLineEndCoord);
 		}
 
-		if (GetCurAttackSkill()->GetStartRender())
+		if (GetCurAttackSkill()->GetStartRender() && endCoord != Vector2::Minus)
 			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
 				, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
 

@@ -31,6 +31,8 @@ namespace m
 	GameObject::~GameObject()
 	{
 		for (Component* comp : mComponents) {
+			if (nullptr == comp) continue;
+
 			delete comp;
 			comp = nullptr;
 		}

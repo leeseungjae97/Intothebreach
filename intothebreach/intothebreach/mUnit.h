@@ -2,7 +2,6 @@
 #include "mGameObject.h"
 namespace m
 {
-	class Weapon;
 	class Image;
 	class Pilot;
 	class Skill;
@@ -29,7 +28,6 @@ namespace m
 		void SetSkill(int idx, SKILL_T type);
 
 		void ChangePilotSlot();
-		Weapon* ChangeWeaponSlot(int index);
 		Skill* GetSkill(int idx);
 
 		void SetCoord(Vector2 _coord) { mCoord = _coord; }

@@ -26,11 +26,6 @@ namespace m
 	}
 	void Skill_St::Update()
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::Update();
 		Vector2 mPos = GetPos();
 		CalEndFire();
@@ -49,11 +44,7 @@ namespace m
 	}
 	void Skill_St::Render(HDC hdc)
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
+		Skill::Render(hdc);
 		if (endFire)
 		{
 			startFire = false;
@@ -75,11 +66,6 @@ namespace m
 	{}
 	void Skill_St::ReInit(Vector2 stPos, Vector2 enPos, Vector2 glp, SKILL_T type)
 	{
-		if (mOwner->GetState() == GameObject::STATE::Death
-			||
-			mOwner->GetState() == GameObject::STATE::Invisible
-			||
-			mOwner->GetState() == GameObject::STATE::Broken) return;
 		Skill::ReInit(stPos, enPos, glp, type);
 		this->Initialize();
 	}

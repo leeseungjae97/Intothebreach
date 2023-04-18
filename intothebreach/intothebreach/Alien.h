@@ -5,7 +5,6 @@ namespace m
 	class Image;
 	class Animator;
 	class Pilot;
-	class Weapon;
 	class Alien :
 		public Unit
 	{
