@@ -186,22 +186,26 @@ namespace m
 		object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 		object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 		object::Instantiate(Vector2(4, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(5, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
-	
+		object::Instantiate(Vector2(4, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 6), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
-		object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
-		object::Instantiate(Vector2(5, 3), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(5, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(5, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		//object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+
+		//object::Instantiate(Vector2(5, 3), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		//object::Instantiate(Vector2(5, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		//object::Instantiate(Vector2(5, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
 		object::Instantiate(Vector2(0, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower);
-		object::Instantiate(Vector2(5, 1), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
+		object::Instantiate(Vector2(1, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
 	}
 	void CombatScene::RandSpawnAlien()
 	{
-		while (GetAliens().size() != 2)
+		while (GetAliens().size() != 4)
 		{
 			srand((unsigned int)time(NULL));
 			//int randNum = rand();
@@ -214,7 +218,7 @@ namespace m
 			int randAlien[3] = { 6,7,9 };
 			int randUnit = rand() % 3;
 			if (GetAliens().size() == 0)
-				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[7]);
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
 			else
 			{
 				bool f = false;
@@ -223,20 +227,34 @@ namespace m
 				{
 					if ((*iter)->GetCoord() == Vector2(randX, randY))
 					{
-						for (int i = 0; i < GetStructuresTiles().size(); i++)
-						{
-							if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
-							{
-								f = true;
-								break;
-							}
-						}
 						f = true;
 						break;
 					}else iter++;
 				}
+
+				vector<Building*>::iterator iter2 = GetStructuresTiles().begin();
+				while (iter2 != GetStructuresTiles().end())
+				{
+					if ((*iter2)->GetCoord() == Vector2(randX, randY))
+					{
+						f = true;
+						break;
+					}
+					else iter2++;
+				}
+				//for (int i = 0; i < GetStructuresTiles().size(); i++)
+				//{
+				//	if (f) break;
+				//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
+				//	{
+				//		f = true;
+				//		break;
+				//	}
+				//}
 				if (!f)
-					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[7]);
+				{
+					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+				}
 			}
 		}
 		
