@@ -18,6 +18,7 @@ enum class STRUCTURES {
 	tower,
 	wind,
 	train,
+	mountain,
 	END,
 };
 wstring STRUCTURES_PATH[(UINT)STRUCTURES::END]{
