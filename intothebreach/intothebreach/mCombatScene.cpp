@@ -64,74 +64,92 @@ namespace m
 		}
 
 		textDeploy = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT], A_BTN_BACK);
-		textDeploy->SetText(true);
+		textDeploy->SetInner(true);
 		textDeploy->SetAlpha(true);
-		textDeploy->UseTextAlpha(false);
-		textDeploy->SetTextPos(Vector2(10.f, 10.f));
+		textDeploy->UseInnerAlpha(false);
+		textDeploy->SetInnerPos(Vector2(10.f, 10.f));
 		textDeploy->SetPos(Vector2(10.f, 10.f));
 		textDeploy->SetSize(Vector2(300.f, 80.f));
 
 		btnConfirm = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::CON_TEXT], A_BTN_BACK);
-		btnConfirm->SetText(true);
+		btnConfirm->SetInner(true);
 		btnConfirm->SetAlpha(true);
-		btnConfirm->UseTextAlpha(false);
+		btnConfirm->UseInnerAlpha(false);
 		btnConfirm->SetPos(Vector2(textDeploy->GetPos().x, textDeploy->GetPos().y + textDeploy->GetSize().y + 10.f));
-		btnConfirm->SetTextPos(Vector2(btnConfirm->GetPos().x + 10.f, 10.f));
+		btnConfirm->SetInnerPos(Vector2(btnConfirm->GetPos().x + 10.f, 10.f));
 		btnConfirm->SetSize(Vector2(100.f, 50.f));
 		btnConfirm->SetState(GameObject::STATE::Invisible);
 
 		textTurn = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::TURN_TEXT], A_BTN_BACK);
-		textTurn->SetText(true);
+		textTurn->SetInner(true);
 		textTurn->SetAlpha(true);
-		textTurn->UseTextAlpha(false);
+		textTurn->UseInnerAlpha(false);
 		textTurn->SetSize(Vector2(300.f, 50.f));
 		textTurn->SetPos(Vector2(application.GetResolutionWidth() - textTurn->GetSize().x, 10.f));
-		textTurn->SetTextPos(Vector2(textTurn->GetSize().x / 2 - 105.f / 2
+		textTurn->SetInnerPos(Vector2(textTurn->GetSize().x / 2 - 105.f / 2
 			, textTurn->GetSize().y / 2 - 14.f / 2));
 
 		textTurnNum = new Button(COMBAT_UI_TEXT_PATH[iTurn], NO_BACK);
-		textTurnNum->SetText(true);
-		textTurnNum->UseTextAlpha(false);
+		textTurnNum->SetInner(true);
+		textTurnNum->UseInnerAlpha(false);
 		textTurnNum->SetPos(Vector2(textTurn->GetPos()));
-		textTurnNum->SetTextMag(2);
-		textTurnNum->SetTextPos(Vector2(textTurn->GetTextPos().x + 60.f, 0.f));
+		textTurnNum->SetInnerMag(2);
+		textTurnNum->SetInnerPos(Vector2(textTurn->GetInnerPos().x + 60.f, 0.f));
 
-		gridPowerBox = new Button(L"..\\Resources\\texture\\ui\\combat\\grid_def_box.bmp", A_BTN_BACK);
-		gridPowerBox->SetText(true);
-		gridPowerBox->UseTextAlpha(false);
+		gridPowerBox = new Button(L"..\\Resources\\texture\\ui\\combat\\grid_def_box_off.bmp", A_BTN_BACK);
+		gridPowerBox->SetInner(true);
+		gridPowerBox->UseInnerAlpha(false);
 		gridPowerBox->SetSize(Vector2(380.f, 38.f));
 		gridPowerBox->SetPos(Vector2(10.f, 10.f));
-		gridPowerBox->SetTextPos(Vector2(gridPowerBox->GetSize().x / 2 - 291 / 2, gridPowerBox->GetSize().y / 2 - 33 / 2));
+		gridPowerBox->SetInnerPos(Vector2(gridPowerBox->GetSize().x / 2 - 291 / 2, gridPowerBox->GetSize().y / 2 - 33 / 2));
+		gridPowerBox->SetState(GameObject::STATE::Invisible);
+		AddGameObject(gridPowerBox, LAYER_TYPE::UI);
+
+		for (int i = 0; i < MAX_GRID_POWER; i++)
+		{
+			wstring gridImageStr = L"";
+			if (i < PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+
+			Button* gridPower = new Button(gridImageStr, NO_BACK);
+			gridPower->SetInner(true);
+			gridPower->UseInnerAlpha(false);
+			gridPower->SetPos(Vector2(gridPowerBox->GetInnerPos().x + 95 + (i * 20 + gridPower->GetInnerImage()->GetWidth())
+				, 10 + gridPowerBox->GetSize().y / 2 - 30 / 2));
+			gridPower->SetState(GameObject::STATE::Invisible);
+			AddGameObject(gridPower, LAYER_TYPE::UI);
+			gridPowers.push_back(gridPower);
+		}
 
 		btnTurnEnd = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_end_text.bmp", A_BTN_BACK);
-		btnTurnEnd->SetText(true);
-		btnTurnEnd->UseTextAlpha(false);
+		btnTurnEnd->SetInner(true);
+		btnTurnEnd->UseInnerAlpha(false);
 		btnTurnEnd->SetSize(Vector2(210, 65));
 		btnTurnEnd->SetPos(Vector2(gridPowerBox->GetPos().x, gridPowerBox->GetPos().y + gridPowerBox->GetSize().y + 5));
-		btnTurnEnd->SetTextPos(Vector2(btnTurnEnd->GetSize().x / 2 - 90 / 2, btnTurnEnd->GetSize().y / 2 - 28 / 2));
+		btnTurnEnd->SetInnerPos(Vector2(btnTurnEnd->GetSize().x / 2 - 90 / 2, btnTurnEnd->GetSize().y / 2 - 28 / 2));
 
 		btnUndoMove = new Button(L"..\\Resources\\texture\\ui\\combat\\cancel_move_text.bmp", A_BTN_BACK);
-		btnUndoMove->SetText(true);
-		btnUndoMove->UseTextAlpha(false);
+		btnUndoMove->SetInner(true);
+		btnUndoMove->UseInnerAlpha(false);
 		btnUndoMove->SetSize(Vector2(90, 65));
 		btnUndoMove->SetPos(Vector2(btnTurnEnd->GetPos().x + btnTurnEnd->GetSize().x + 5, btnTurnEnd->GetPos().y));
-		btnUndoMove->SetTextPos(Vector2(btnUndoMove->GetSize().x / 2 - 27 / 2, btnUndoMove->GetSize().y / 2 - 33 / 2));
+		btnUndoMove->SetInnerPos(Vector2(btnUndoMove->GetSize().x / 2 - 27 / 2, btnUndoMove->GetSize().y / 2 - 33 / 2));
 
 		btnInitTurn = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_init_text.bmp", A_BTN_BACK);
-		btnInitTurn->SetText(true);
-		btnInitTurn->UseTextAlpha(false);
+		btnInitTurn->SetInner(true);
+		btnInitTurn->UseInnerAlpha(false);
 		btnInitTurn->SetSize(Vector2(90, 38));
 		btnInitTurn->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
-		btnInitTurn->SetTextPos(Vector2(btnInitTurn->GetSize().x /2 - 63/ 2 , btnInitTurn->GetSize().y / 2 - 13/2));
+		btnInitTurn->SetInnerPos(Vector2(btnInitTurn->GetSize().x / 2 - 63 / 2, btnInitTurn->GetSize().y / 2 - 13 / 2));
 
 		textBattleEnd = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_init_text.bmp", A_BTN_BACK);
-		textBattleEnd->SetText(true);
-		textBattleEnd->UseTextAlpha(false);
+		textBattleEnd->SetInner(true);
+		textBattleEnd->UseInnerAlpha(false);
 		textBattleEnd->SetSize(Vector2(90, 38));
 		textBattleEnd->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
-		textBattleEnd->SetTextPos(Vector2(textBattleEnd->GetSize().x / 2 - 63 / 2, textBattleEnd->GetSize().y / 2 - 13 / 2));
+		textBattleEnd->SetInnerPos(Vector2(textBattleEnd->GetSize().x / 2 - 63 / 2, textBattleEnd->GetSize().y / 2 - 13 / 2));
 
-		gridPowerBox->SetState(GameObject::STATE::Invisible);
 		btnTurnEnd->SetState(GameObject::STATE::Invisible);
 		btnUndoMove->SetState(GameObject::STATE::Invisible);
 		btnInitTurn->SetState(GameObject::STATE::Invisible);
@@ -151,7 +169,7 @@ namespace m
 		AddGameObject(btnConfirm, LAYER_TYPE::UI);
 		AddGameObject(textTurn, LAYER_TYPE::UI);
 		AddGameObject(textTurnNum, LAYER_TYPE::UI);
-		AddGameObject(gridPowerBox, LAYER_TYPE::UI);
+
 		AddGameObject(btnTurnEnd, LAYER_TYPE::UI);
 		AddGameObject(btnUndoMove, LAYER_TYPE::UI);
 		AddGameObject(btnInitTurn, LAYER_TYPE::UI);
@@ -176,23 +194,23 @@ namespace m
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
-		//RandSpawnAlien(1);
+		RandSpawnAlien(4);
 
-		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 
-		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(4, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 
-		object::Instantiate(Vector2(4, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(4, 6), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(4, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 6), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 
-		object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		object::Instantiate(Vector2(4, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
+		object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 
 		//object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
@@ -200,12 +218,12 @@ namespace m
 		//object::Instantiate(Vector2(5, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 		//object::Instantiate(Vector2(5, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
-		object::Instantiate(Vector2(0, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower);
-		object::Instantiate(Vector2(1, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
+		object::Instantiate(Vector2(0, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower, TILE_T::GREEN);
+		object::Instantiate(Vector2(1, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield, TILE_T::GREEN);
 	}
 	void CombatScene::RandSpawnAlien(int number)
 	{
-		int maxNum = GetAliens().size();
+		size_t maxNum = GetAliens().size();
 		while (GetAliens().size() != number + maxNum)
 		{
 			srand((unsigned int)time(NULL));
@@ -216,7 +234,7 @@ namespace m
 
 			randY += 1.f;
 			randX += 5.f;
-			int randAlien[3] = { 6,7,9};
+			int randAlien[3] = { 6,7,9 };
 			int randUnit = rand() % 3;
 			if (GetAliens().size() == 0)
 				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/7]);
@@ -230,11 +248,12 @@ namespace m
 					{
 						f = true;
 						break;
-					}else iter++;
+					}
+					else iter++;
 				}
 
-				vector<Building*>::iterator iter2 = GetStructuresTiles().begin();
-				while (iter2 != GetStructuresTiles().end())
+				vector<Building*>::iterator iter2 = GetStructures().begin();
+				while (iter2 != GetStructures().end())
 				{
 					if ((*iter2)->GetCoord() == Vector2(randX, randY))
 					{
@@ -263,7 +282,7 @@ namespace m
 	{
 		for (int i = 0; i < combatBack.size(); i++)
 		{
-			if(!combatBack[i]->GetSmoothAppear())
+			if (!combatBack[i]->GetSmoothAppear())
 				combatBack[i]->SmoothDisappear(true);
 		}
 	}
@@ -277,7 +296,6 @@ namespace m
 	}
 	void CombatScene::PutUnitBeforeCombat()
 	{
-		//((y > 0 && y < 7) && (x > 0 && x < 4))
 		for (int y = 1; y < 7; y++)
 		{
 			for (int x = 1; x < 4; x++)
@@ -297,7 +315,7 @@ namespace m
 
 		if (bConfirm)
 		{
-			textDeploy->ChangeText(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOY_TEXT]);
+			textDeploy->ChangeInner(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOY_TEXT]);
 			btnConfirm->SetState(GameObject::STATE::Visible);
 			if (btnConfirm->GetClicked())
 			{
@@ -311,7 +329,7 @@ namespace m
 					PlayerInfo::mMechs[i]->EndDeploy();
 					PlayerInfo::mMechs[i]->SetFinalCoord(PlayerInfo::mMechs[i]->GetCoord());
 					PlayerInfo::mMechs[i]->SetVisibleHp(true);
-					MoveEffectUnit(PlayerInfo::mMechs[i]);
+					MoveAffectUnit(PlayerInfo::mMechs[i]);
 				}
 				for (int i = 0; i < GetAliens().size(); i++)
 				{
@@ -322,15 +340,9 @@ namespace m
 
 				return;
 			}
-			//if (KEY_UP(KEYCODE_TYPE::SPACE))
-			//{
-			//	
-			//}
 		}
 		else
 		{
-			//if (nullptr == GetMouseFollower() 
-			//	&& PlayerInfo::mMechs[mechIdx]->GetState() != GameObject::STATE::NoMove)
 			if (nullptr == GetMouseFollower())
 			{
 				for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
@@ -340,18 +352,12 @@ namespace m
 						mechIdx = i;
 						break;
 					}
-					//if (bConfirm)
-					//	PlayerInfo::mMechs[i]->SetMakeDeployAlpha(true);
 				}
 				PlayerInfo::mMechs[mechIdx]->SetState(GameObject::STATE::NoMove);
 				ObjectGoFront(PlayerInfo::mMechs[mechIdx], PlayerInfo::mMechs[mechIdx]->GetLayerType());
 				SetMouseFollower(PlayerInfo::mMechs[mechIdx]);
 			}
 		}
-		//if (nullptr != GetMouseFollower()
-		//	&& bConfirm)
-		//	GetMouseFollower()->SetMakeDeployAlpha(true);
-
 		// MouseFollower 범위 벗어나는거 체크
 		if (nullptr != GetMouseFollower()
 			&& !CheckMouseOutRange())
@@ -381,7 +387,6 @@ namespace m
 						//	GetAlphaFollower()->SetUnitConstant(100);
 						//	GetMouseFollower()->SetMakeDeployAlpha(false);
 						//}
-
 					}
 					Mech* mech = nullptr;
 					for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
@@ -403,7 +408,6 @@ namespace m
 					{
 						GetMouseFollower()->SetSwap(true);
 						mech->SetSwap(true);
-
 						//if (mech->GetMakeDeployAlpha())
 						//{
 						//	Mech* mechAlpha = (Mech*)object::Instantiate(mech->GetFinalCoord()
@@ -600,7 +604,7 @@ namespace m
 	}
 	void CombatScene::SetTextTurnNumber(int _turn)
 	{
-		textTurnNum->ChangeText(COMBAT_UI_TEXT_PATH[_turn]);
+		textTurnNum->ChangeInner(COMBAT_UI_TEXT_PATH[_turn]);
 		iTurn = _turn;
 	}
 	void CombatScene::AlienIndexReSort()
@@ -619,11 +623,46 @@ namespace m
 			idx++;
 		}
 		int a = 0;
-		
+
 	}
 	void CombatScene::ButtonActivationCondition()
 	{
-		//gridPowerBox->SetState(GameObject::STATE::Visible);
+		if (gridPowerBox->GetHover())
+		{
+			for (int i = 0; i < gridPowers.size(); i++)
+			{
+				wstring gridImageStr = L"";
+				if (i <= PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_hover.bmp";
+				if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off_hover.bmp";
+				gridPowers[i]->ChangeInner(gridImageStr);
+				gridPowers[i]->SetState(GameObject::STATE::Visible);
+			}
+			gridPowerBox->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\grid_def_box_on.bmp");
+		}
+		else
+		{
+
+			for (int i = 0; i < gridPowers.size(); i++)
+			{
+				wstring gridImageStr = L"";
+				if (i < PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+				if (i == PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+				if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+				gridPowers[i]->ChangeInner(gridImageStr);
+				gridPowers[i]->SetState(GameObject::STATE::Visible);
+			}
+			gridPowerBox->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\grid_def_box_off.bmp");
+		}
+
+		if (btnInitTurn->GetClicked())
+		{
+			Scene::ResetTurn();
+			btnInitTurn->SetAlpha(true);
+			btnInitTurn->UseInnerAlpha(true);
+			btnInitTurn->SetInnerConstant(100);
+			btnInitTurn->SetConstant(100);
+			btnInitTurn->SetClicked(false);
+		}
 		if (btnUndoMove->GetClicked())
 		{
 			Scene::UndoMove();
@@ -632,13 +671,13 @@ namespace m
 		if (GetMoveSave().size() == 0)
 		{
 			btnUndoMove->SetAlpha(true);
-			btnUndoMove->UseTextAlpha(true);
-			btnUndoMove->SetTextConstant(100);
+			btnUndoMove->UseInnerAlpha(true);
+			btnUndoMove->SetInnerConstant(100);
 			btnUndoMove->SetConstant(100);
 		}
 		else
 		{
-			btnUndoMove->UseTextAlpha(false);
+			btnUndoMove->UseInnerAlpha(false);
 			btnUndoMove->SetAlpha(false);
 		}
 		//btnTurnEnd->SetState(GameObject::STATE::Visible);
@@ -659,6 +698,7 @@ namespace m
 			btnTurnEnd->SetState(GameObject::STATE::Visible);
 			btnUndoMove->SetState(GameObject::STATE::Visible);
 			btnInitTurn->SetState(GameObject::STATE::Visible);
+
 			Scene::MoveMech();
 			Scene::MoveSkill();
 			Scene::AlienAlgorithm();

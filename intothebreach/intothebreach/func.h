@@ -91,10 +91,10 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType)
+	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType, TILE_T mapType)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Building* gameObj = new Building(_sType, coord, (int)scene->GetStructuresTiles().size());
+		Building* gameObj = new Building(_sType, coord, (int)scene->GetStructures().size(), mapType);
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
@@ -102,7 +102,7 @@ namespace m::object
 		gameObj->GetAnimator()->SetConstant(255);
 		gameObj->SetLayerType(type);
 
-		scene->GetStructuresTiles().push_back(gameObj);
+		scene->GetStructures().push_back(gameObj);
 
 		scene->AddGameObject(gameObj, type);
 		return gameObj;

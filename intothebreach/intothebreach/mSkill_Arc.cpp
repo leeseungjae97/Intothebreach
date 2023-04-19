@@ -211,13 +211,13 @@ namespace m
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
-		if (endFire && scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x) != nullptr)
+		if (endFire && scene->SearchAffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x))
 		{
 			//for (int i = 0; i < scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x).size(); i++)
 			//{
 			//	scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)[i]->Hit(1);
 			//}
-			scene->GetEffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x)->Hit(1);
+			scene->HitAffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x, 1);
 			
 			//SetEndFire(false);
 			//SetStartFire(false);

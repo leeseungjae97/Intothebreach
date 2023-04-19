@@ -14,6 +14,7 @@ namespace m {
 		static vector<Pilot*> mPilots;
 		static int gridPower;
 		static int defence;
+		static int resetTurn;
 	private:
 	};
 }

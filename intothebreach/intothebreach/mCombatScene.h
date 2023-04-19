@@ -36,11 +36,15 @@ namespace m {
 		Button* textTurnNum;
 
 		Button* gridPowerBox;
+		vector<Button*> gridPowers;
+
 		Button* textDefence1;
 		Button* textDefence2;
 		Button* btnTurnEnd;
 		Button* btnUndoMove;
 		Button* btnInitTurn;
+
+
 
 		Button* textBattleEnd;
 		Button* showPlayerInfo;

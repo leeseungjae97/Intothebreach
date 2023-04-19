@@ -81,21 +81,21 @@ namespace m
 			dir = SKILL_DIR::D;
 
 
-		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mSkillType, dir), MAKE_SKILL_PATH(mSkillType, dir));
+		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
 		float fWid = (float)(im->GetWidth() / WEAPON_LEN[(UINT)mOwner->GetWeaponType()]);
-		if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(mSkillType, dir)))
+		if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(mType, dir)))
 		{
 			GetAnimator()->CreateAnimation(
-				MAKE_SKILL_KEY(mSkillType, dir),
+				MAKE_SKILL_KEY(mType, dir),
 				im,
 				Vector2::Zero,
 				Vector2(fWid, (float)im->GetHeight()),
 				Vector2::Zero,
-				WEAPON_LEN[(UINT)mSkillType],
+				WEAPON_LEN[(UINT)mType],
 				0.05f
 			);
 		}
-		GetAnimator()->Play(MAKE_SKILL_KEY(mSkillType, dir), false);
+		GetAnimator()->Play(MAKE_SKILL_KEY(mType, dir), false);
 	}
 	void Skill_RS::GuideWire(HDC hdc)
 	{
@@ -107,18 +107,15 @@ namespace m
 		if (mOwner->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		if (mOwner->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
 
-		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
-		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetUnitName()]);
 		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
 	}
 	void Skill_RS::CheckDirection()
 	{
 		HitEffectDir();
 		Scene* scene = SceneManager::GetActiveScene();
-		if (nullptr != scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x))
-		{
-			scene->GetEffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x)->Hit(1);
-		}
+
+		scene->HitAffectUnit((int)guideLineCoord.y, (int)guideLineCoord.x, 1);
+
 		SetEndFire(false);
 		SetStartFire(false);
 		SetStartRender(false);

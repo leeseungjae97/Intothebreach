@@ -21,6 +21,22 @@ enum class STRUCTURES {
 	mountain,
 	END,
 };
+enum class HITABLE_ENVI
+{
+	mountain,
+	END,
+};
+enum class AFFECT_ENVI
+{
+	forest,
+	END,
+};
+wstring HITABLE_ENVI_PATH[(UINT)HITABLE_ENVI::END]{
+	L"mountain_0_broken.bmp",
+};
+wstring AFFECT_ENVI_PATH[(UINT)AFFECT_ENVI::END]{
+
+};
 wstring STRUCTURES_PATH[(UINT)STRUCTURES::END]{
 	L"str_airfield1_",
 	L"str_bar1_",

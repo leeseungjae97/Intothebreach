@@ -9,7 +9,7 @@
 extern m::Application application;
 namespace m {
 	InLandScene::InLandScene(ISLAND_T _type)
-		: mSkillType(_type)
+		: mType(_type)
 	{
 	}
 	InLandScene::~InLandScene() {
@@ -19,12 +19,12 @@ namespace m {
 
 		AddGameObject(b, LAYER_TYPE::BACKGROUND);
 
-		Background* b0 = new Background(MAKE_SECTION_KEY(mSkillType, -1), MAKE_SECTION_PATH(mSkillType, -1), 2 , false, CENTER);
+		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2 , false, CENTER);
 		b0->SetPos(Vector2(100.f, 100.f));
 		AddGameObject(b0, LAYER_TYPE::BACKGROUND);
-		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mSkillType];
-		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mSkillType]; i++) {
-			Background* b_ = new Background(MAKE_SECTION_KEY(mSkillType, i), MAKE_SECTION_PATH(mSkillType, i), 2);
+		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mType];
+		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++) {
+			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i), MAKE_SECTION_PATH(mType, i), 2);
 			b_->SetPos(pos[i]);
 			mSections.push_back(b_);
 			AddGameObject(b_, LAYER_TYPE::BACKGROUND);

@@ -54,10 +54,10 @@ namespace m
 
 ;		Time::Initiailize();
 		Input::Initialize();
+		PlayerInfo::Initialize();
 		SceneManager::Initialize();
 		Camera::Initialize();
-		PlayerInfo::Initialize();
-
+		
 		SetMenuBar(false);
 	}
 

@@ -16,13 +16,10 @@ namespace m
 	}
 	void Skill_St::Initialize()
 	{
-		//object::Visible(this);
 		Vector2 diff = mFinalEdPos - mStPos;
 		fDistance = diff.Length();
 		Missile_vec = mFinalEdPos - mStPos;
 		Missile_vec.Normalize();
-
-		//GetAnimator()->Stop();
 	}
 	void Skill_St::Update()
 	{
@@ -36,11 +33,6 @@ namespace m
 			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
 		}
 		SetPos(mPos);
-
-		//if (endFire)
-		//{
-		//	
-		//}
 	}
 	void Skill_St::Render(HDC hdc)
 	{
@@ -48,9 +40,6 @@ namespace m
 		if (endFire)
 		{
 			startFire = false;
-			/*endFire = false;
-			startRender = false;*/
-			//object::Invisible(this);
 		}
 		if (!startRender) return;
 		if (startFire)
@@ -85,8 +74,36 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 
-		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mSkillType, dir), MAKE_SKILL_PATH(mSkillType, dir));
-
+		Image* im = nullptr;
+		switch (mOwner->GetWeaponType())
+		{
+		case WEAPON_T::titan_fist:
+			break;
+		case WEAPON_T::artemis_artillery:
+			break;
+		case WEAPON_T::taurus_cannon:
+		{
+			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
+		}
+			break;
+		case WEAPON_T::stinging:
+			break;
+		case WEAPON_T::fangs:
+			break;
+		case WEAPON_T::stinger:
+			break;
+		case WEAPON_T::accelerating_thorax:
+		{
+			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
+		}
+			break;
+		case WEAPON_T::NONE:
+			break;
+		case WEAPON_T::END:
+			break;
+		default:
+			break;
+		}
 		TransparentBlt(hdc,
 			(int)(mPos.x),
 			(int)(mPos.y),
@@ -129,39 +146,14 @@ namespace m
 
 		Scene* scene = SceneManager::GetActiveScene();
 
-		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-		//if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER)
-		//{
-		//	//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-		//	//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
-		//}
-
-
-		//if (mOnwer->GetLayerType() == LAYER_TYPE::MONSTER 
-		//	&& scene->GetPlayerTurn()) return;
-
 		ARROW_TILE_T arrow[1];
 		if (mOwner->GetCoord().y < guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_down;
 		if (mOwner->GetCoord().y > guideLineCoord.y)arrow[0] = ARROW_TILE_T::arrow_up;
 		if (mOwner->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		if (mOwner->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
 
-		/*if (endCoord == guideLineCoord)
-		{
-			if (mStPos.y > mFinalEdPos.y)arrow[0] = ARROW_TILE_T::arrow_up;
-			if (mStPos.y < mFinalEdPos.y)arrow[0] = ARROW_TILE_T::arrow_down;
-			if (mStPos.x > mFinalEdPos.x)arrow[0] = ARROW_TILE_T::arrow_left;
-			if (mStPos.x < mFinalEdPos.x)arrow[0] = ARROW_TILE_T::arrow_right;
-		}*/
-
-		//if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) Skill::DrawPushTile(arrow, ALIEN_WEAPON_PUSH_DIR[(UINT)((Alien*)mOwner)->GetAlienType()]);
-		//if (mOwner->GetLayerType() == LAYER_TYPE::PLAYER) Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)((Mech*)mOwner)->GetMechType()]);
 
 		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
-
-		//scene->SetPosTiles((int)endCoord.y, (int)endCoord.x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
-		//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-		//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 	}
 	void Skill_St::CheckDirection()
 	{
@@ -173,17 +165,6 @@ namespace m
 		Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
 		HitEffectDir();
 
-		//Vector2 bigRhombusPos(mPosTiles[7][0]->GetPos().x, mPosTiles[0][0]->GetPos().y);
-		//Vector2 bigRhombusDownPos(
-		//	mPosTiles[0][7]->GetPos().x + mPosTiles[0][7]->GetScale().x,
-		//	mPosTiles[7][7]->GetPos().y + mPosTiles[7][7]->GetScale().y);
-		//Vector2 bigRhombusScale(bigRhombusDownPos.x - bigRhombusPos.x, bigRhombusDownPos.y - bigRhombusPos.y);
-		//if (!math::CheckRhombusPos(bigRhombusPos, bigRhombusScale, rPos))
-		//{
-		//	SetStartRender(false);
-		//	return;
-		//}
-
 		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER) unit = GetOwner();
 		else unit = scene->GetMouseFollower();
 
@@ -194,21 +175,17 @@ namespace m
 				Tile* p = mPosTiles[y][x];
 				if (p->GetCoord() == unit->GetCoord()) continue;
 
-				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
-				{
-					//mPosTiles[(int)p->GetCoord().y][(int)p->GetCoord().x]->SetTileTexture(MAKE_TILE_KEY(MOVE_TILE_T::square_r)
-					//	, MAKE_TILE_PATH(MOVE_TILE_T::square_r));
-				}
+				//if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
+				//{
+				//	//mPosTiles[(int)p->GetCoord().y][(int)p->GetCoord().x]->SetTileTexture(MAKE_TILE_KEY(MOVE_TILE_T::square_r)
+				//	//	, MAKE_TILE_PATH(MOVE_TILE_T::square_r));
+				//}
 
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), rPos))
 				{
-					if (nullptr != scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x))
+					if (scene->SearchAffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x))
 					{
-						//for (int i = 0; i < scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x).size(); i++)
-						//{
-						//	scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)[i]->Hit(1);
-						//}
-						scene->GetEffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x)->Hit(1);
+						scene->HitAffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x, 1);
 						SetEndFire(false);
 						SetStartFire(false);
 						SetStartRender(false);

@@ -13,6 +13,18 @@ enum class DIR_EFFECT_T
 	st_u,
 	st_d,
 	st_l,
+	st_firefly1_r,
+	st_firefly1_u,
+	st_firefly1_d,
+	st_firefly1_l,
+	hornet1_r,
+	hornet1_u,
+	hornet1_d,
+	hornet1_l,
+	leaper1_r,
+	leaper1_u,
+	leaper1_d,
+	leaper1_l,
 	END,
 };
 enum class SINGLE_EFFECT_T
@@ -58,6 +70,14 @@ wstring DIR_EFFECT_T_PATH[(UINT)DIR_EFFECT_T::END]{
 	L"explo_push2_U",
 	L"explo_push2_D",
 	L"explo_push2_L",
+	L"shot_firefly_R",
+	L"shot_firefly_U",
+	L"shot_firefly_D",
+	L"shot_firefly_L",
+	L"hornet_R",
+	L"hornet_U",
+	L"hornet_D",
+	L"hornet_L",
 };
 m::Vector2 DIR_EFFECT_T_OFFSET[(UINT)DIR_EFFECT_T::END]{
 	{20.f, 20.f},//{-20.f,-20.f},//L"airpush_R",
@@ -91,6 +111,7 @@ int DIR_EFFECT_T_LEN[(UINT)DIR_EFFECT_T::END]{
 	9,
 	9,
 	9,
+
 };
 int IMMO_EFFECT_T_LEN[(UINT)IMMO_EFFECT_T::END]{
 	10,

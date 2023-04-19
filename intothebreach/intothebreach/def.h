@@ -31,6 +31,7 @@
 #define CYBORGS_			3
 
 #define ISLANDS				5
+#define MAX_GRID_POWER		7
 
 #define TILE_SIZE_X			56.f
 #define TILE_SIZE_Y			74.f

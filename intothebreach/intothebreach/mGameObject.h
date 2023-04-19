@@ -14,6 +14,7 @@ namespace m
 			NoMove,
 			Idle,
 			Broken,
+			Explo,
 			Water,
 			Death,
 			Emerge,		

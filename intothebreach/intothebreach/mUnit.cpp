@@ -28,6 +28,7 @@ namespace m
 		, curHp(hp)
 		, skillIdx(-1)
 		, mIdx(idx)
+		, affectUnitVectorIdx(0)
 	{
 		SetSkill(skillType);
 		AddComponent(new Animator());
@@ -50,6 +51,7 @@ namespace m
 		, mFinalPos(_origin.mFinalPos)
 		, moveRange(_origin.moveRange)
 	{
+
 		SetState(_origin.GetState());
 		mAnimator = GetComponent<Animator>();
 	}
@@ -543,14 +545,12 @@ namespace m
 						}
 						for (int i = st; i != end + IDVar; i += IDVar)
 						{
-							if (cY && nullptr != scene->GetEffectUnit(i, (int)GetCoord().x)
-								|| scene->GetEffectUnit(i, (int)GetCoord().x)->GetState() != STATE::Emerge_loop)
+							if (cY && scene->SearchAffectUnit(i, (int)GetCoord().x))
 							{
 								endCoord = Vector2(p->GetCoord().x, (float)i);
 								break;
 							}
-							if (!cY && nullptr != scene->GetEffectUnit((int)GetCoord().y, i)
-								|| scene->GetEffectUnit(i, (int)GetCoord().x)->GetState() != STATE::Emerge_loop)
+							if (!cY && scene->SearchAffectUnit((int)GetCoord().y, i))
 							{
 								endCoord = Vector2((float)i, p->GetCoord().y);
 								break;

@@ -16,11 +16,11 @@ namespace m
 		virtual void Render(HDC hdc) {};
 		virtual void Release();
 
-		COMPONENT_TYPE GetType() { return mSkillType; }
+		COMPONENT_TYPE GetType() { return mType; }
 		GameObject* GetOwner() { return mOwner; }
 
 	private:
 		GameObject* mOwner;
-		const COMPONENT_TYPE mSkillType;
+		const COMPONENT_TYPE mType;
 	};
 }

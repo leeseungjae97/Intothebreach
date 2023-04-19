@@ -26,10 +26,10 @@ namespace m {
 		for (int i = 0; i < 5; i++)
 		{
 			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
-			btn->SetText(true);
+			btn->SetInner(true);
 			btn->SetAlpha(true);
 			btn->SetMoveScene(SCENE_TYPE::SELECT_ROBOT);
-			btn->UseTextAlpha(true);
+			btn->UseInnerAlpha(true);
 			btn->SetPos(Vector2(-300.f, yPos));
 			btn->SetSize(Vector2(300.f, 45.f));
 			btn->SetReSizeable(true);
@@ -87,7 +87,7 @@ namespace m {
 				{
 					if (btns[i]->GetPos().x >= 1.f)
 					{
-						if (btns[i]->GetTextAlpha() + 10 < 255) btns[i]->SetTextConstant(btns[i]->GetTextAlpha() + 10);
+						if (btns[i]->GetInnerAlpha() + 10 < 255) btns[i]->SetInnerConstant(btns[i]->GetInnerAlpha() + 10);
 						btns[i]->SetPos(Vector2(1.f, btns[i]->GetPos().y));
 						continue;
 					}
@@ -124,7 +124,7 @@ namespace m {
 	}
 	void TitleScene::OnExit() {
 		for (int i = 0; i < btns.size(); i++)
-			btns[i]->SetTextConstant(255);
+			btns[i]->SetInnerConstant(255);
 
 		//Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 		SetFirstUpdate(false);

@@ -21,8 +21,7 @@ namespace m
 		virtual void PushUnit(ARROW_TILE_T *arrows, int size);
 		virtual void CheckDirection();
 		virtual void HitEffectDir();
-
-		//void DrawPushTile(int (*direct)[2], int size);
+		void DrawSkillEffect();
 		void DrawPushTile(ARROW_TILE_T *arrows, int size);
 		void ClearPushTile();
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
@@ -30,7 +29,7 @@ namespace m
 
 		Unit* GetOwner() { return mOwner; }
 		LAYER_TYPE GetLayerType() { return mLayerType; }
-		SKILL_T GetSkillType() { return mSkillType; }
+		SKILL_T GetSkillType() { return mType; }
 		WEAPON_T GetWeaponType() { return mWeaponType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		Vector2 GetGuideLinePos() { return guideLinePos; }
@@ -47,7 +46,7 @@ namespace m
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 
 		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
-		void SetSkillType(SKILL_T _type) { mSkillType = _type; }
+		void SetSkillType(SKILL_T _type) { mType = _type; }
 		void SetRealPos(Vector2 _pos) { ; }
 		void SetEndPos(Vector2 _pos) { mFinalEdPos = _pos; }
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
@@ -84,7 +83,7 @@ namespace m
 
 		Animator* mAnimator;
 		LAYER_TYPE mLayerType;
-		SKILL_T mSkillType;
+		SKILL_T mType;
 		WEAPON_T mWeaponType;
 		Unit* mOwner;
 		Vector2 guideLinePos;

@@ -36,6 +36,8 @@ enum class SKILL_N
 	range,
 	machtank,
 	punch,
+	firefly1,
+	hornet1,
 	END,
 };
 enum class SKILL_FUNC_T
@@ -51,6 +53,8 @@ wstring SKILL_PATH[(UINT)SKILL_N::END]{
 	L"shotup_tribomb_missile",
 	L"shot_mechtank_",
 	L"punch1_",
+	L"shot_firefly_",
+	L"hornet_",
 };
 enum class SKILL_DIR
 {
@@ -78,7 +82,7 @@ int WEAPON_RANGE[(UINT)WEAPON_T::END]{
 
 	99,
 	1,
-	99,
+	1,
 	99,
 };
 WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{

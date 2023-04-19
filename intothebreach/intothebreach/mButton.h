@@ -2,6 +2,7 @@
 #include "mUI.h"
 namespace m
 {
+	class Image;
 	class Button :
 		public UI
 	{
@@ -19,34 +20,39 @@ namespace m
 		virtual void Render(HDC hdc);
 		virtual void Release();
 
-		bool GetText() { return bText; }
+		bool GetInner() { return bInner; }
 		bool GetClicked() { return bClicked; }
+		bool GetHover() { return bHover; }
 		wstring GetBtnName() { return btnName; }
-		Vector2 GetTextPos() { return textPos; }
-		BYTE GetTextAlpha() { return textAlpha; }
+		Vector2 GetInnerPos() { return innerPos; }
+		Image* GetInnerImage() { return innerImage; }
+		BYTE GetInnerAlpha() { return innerAlpha; }
 
-		void SetText(bool _t) { bText = _t; }
+		void SetInner(bool _t) { bInner = _t; }
 		void SetClicked(bool _b) { bClicked = _b; }
-		void ChangeText(const wstring& _path) { btnName = _path; }
-		void UseTextAlpha(bool _t) { bTextAlpha = _t; }
-		void SetTextConstant(BYTE _a) { textAlpha = _a; }
+		void ChangeInner(const wstring& _path) { btnName = _path; }
+		void UseInnerAlpha(bool _t) { bInnerAlpha = _t; }
+		void SetInnerConstant(BYTE _a) { innerAlpha = _a; }
 		void SetMoveScene(SCENE_TYPE _type) { eBtnMoveScene = _type; }
-		void SetTextPos(Vector2 _textPos) { textPos = _textPos; }
+		void SetInnerPos(Vector2 _textPos) { innerPos = _textPos; }
 		void SetReSizeable(bool _b) { bReSzieable = _b; }
-		void SetTextMag(int mag) { iTextScale = mag; }
+		void SetInnerMag(int mag) { iInnerScale = mag; }
 		void SetConstant(BYTE _cons) { btConstant = _cons; }
-
+		void SetHover(bool _b) { bHover = _b; }
 
 	private:
-		Vector2 textPos;
+		Vector2 innerPos;
 		wstring btnName;
+
 		SCENE_TYPE eBtnMoveScene;
-		bool bText;
-		bool bTextAlpha;
+		Image* innerImage;
+		bool bInner;
+		bool bInnerAlpha;
 		bool bReSzieable;
 		bool bClicked;
+		bool bHover;
 		BYTE btConstant;
-		BYTE textAlpha;
-		int iTextScale;
+		BYTE innerAlpha;
+		int iInnerScale;
 	};
 }

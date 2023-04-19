@@ -245,7 +245,7 @@ namespace m
 		//SetFinalPos();
 		if (directQueue.size() <= moveCnt)
 			moveCnt = (int)directQueue.size() - 1;
-		scene->MoveEffectUnit(this, directQueue[moveCnt].coord);
+		scene->MoveAffectUnit(this, directQueue[moveCnt].coord);
 		
 		moveCnt--;
 		DrawMoveDust();

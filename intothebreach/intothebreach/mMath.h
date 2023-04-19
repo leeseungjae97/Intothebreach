@@ -167,6 +167,23 @@ namespace m {
             return (coord != other.coord || pos != other.pos || mechIdx != other.mechIdx);
         }
     };
+    struct Vector2_3
+    {
+        Vector2 coord;
+        Vector2 pos;
+        size_t mechIdx;
+        int lType;
+        int curHp;
+
+        bool operator == (const Vector2_3& other)
+        {
+            return (coord == other.coord && pos == other.pos && mechIdx == other.mechIdx && lType == other.lType);
+        }
+        bool operator != (const Vector2_3& other)
+        {
+            return (coord != other.coord || pos != other.pos || mechIdx != other.mechIdx || lType != other.lType);
+        }
+    };
 	typedef Vector2 Pos;
 	typedef Vector2 Size;
 

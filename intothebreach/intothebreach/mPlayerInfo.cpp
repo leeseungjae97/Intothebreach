@@ -8,11 +8,12 @@ namespace m {
 	vector<Pilot*> PlayerInfo::mPilots;
 	int PlayerInfo::gridPower;
 	int PlayerInfo::defence;
-
+	int PlayerInfo::resetTurn;
 	void PlayerInfo::Initialize()
 	{
 		gridPower = 5;
 		defence = 15;
+		resetTurn = 1;
 	}
 
 }

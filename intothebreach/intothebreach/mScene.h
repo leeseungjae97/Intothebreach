@@ -15,7 +15,7 @@ namespace m
 		typedef vector<vector<Tile*>> TILES;
 		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
-	
+		
 		Scene();
 		virtual ~Scene();
 
@@ -47,6 +47,7 @@ namespace m
 
 		void UndoMove();
 
+		TILE_T GetMapType() { return mapType; }
 		TILES& GetPosTiles() { return mPosTiles; }
 		Tile* GetPosTile(int y, int x) { return mPosTiles[y][x]; };
 		TILES& GetTiles() { return mTiles; }
@@ -55,20 +56,31 @@ namespace m
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
 		//vector<Mech*>& GetMechs() { return mMechs; }
 		vector<Alien*>& GetAliens() { return mAliens; }
-		vector<Building*>& GetStructuresTiles() {return mStruturesTiles;}
+		vector<Building*>& GetStructures() {return mStrutures;}
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
-		vector<Unit*>& GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
+		vector<Unit*>& GetAffectUnits(int y, int x) { return affectUnits[y][x]; }
 
+		bool SearchAffectUnit(int y, int x);
+		bool SearchAffectUnit(int y, int x, LAYER_TYPE type, GameObject::STATE state);
+		bool SearchAffectUnit(int y, int x, LAYER_TYPE type);
+		bool SearchAffectUnit(int y, int x, GameObject::STATE state);
+		bool SearchAffectUnit(int y, int x, GameObject::STATE state, bool contain);
+		bool SearchBlockUnit(int y, int x);
 		bool CheckMouseOutRange();
+
+		void ReSortAffectUnits(int y, int x);
+		void ReSortAffectUnits(float y, float x);
+		void HitAffectUnit(int y, int x, int damage);
 		void OutOfMapRange();
 		void SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2);
 		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_ANIM_TILE_T _type2, BYTE fContant);
 		void SetPosTiles(int _y, int _x, TILE_T _type1, COMBAT_TILE_T _type2);
 		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
 		void RobotDrag();
-		void MoveEffectUnit(Unit* unit);
-		void MoveEffectUnit(Unit* unit, Vector2 _coord);
+		void MoveAffectUnit(Unit* unit);
+		void MoveAffectUnit(Unit* unit, Vector2 _coord);
 		void RemoveEffectUnit(Vector2 _coord);
+		void RemoveEffectUnit(Vector2 _coord, Unit* unit);
 		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);
 
 
@@ -83,6 +95,8 @@ namespace m
 		void SetAlphaState(GameObject::STATE state);
 		void SetPlayerTurn(bool _playerTurn) { playerTurn = _playerTurn; }
 		void SetFirstUpdate(bool _isFirstUpdate) { firstUpdate = _isFirstUpdate; }
+		void SaveTurn();
+		void ResetTurn();
 
 		int GetMap(int y, int x) { return map[y][x]; }
 		void SetMap(int y, int x, int value) { map[y][x] = value; }
@@ -96,30 +110,28 @@ namespace m
 	private:
 		vector<Layer> mLayers;
 		
-		bool firstUpdate;
-
-
 		TILES mTiles;				// 기본 타일(땅)
 		TILES mPosTiles;			// 타일 위 타일 (이동 반경, 스킬 반경)
 		TILES mPosOutLineTiles;		// 타일 외곽선 타일 Highlight
 		TILES mBoundaryTiles;		// 타일 반경 외곽선 타일
 		TILES mArrowTiles;			// 최단 이동거리 표시 타일
-		TILES mEffectedTiles;
-		TILES mEnemyEmerge;
+		//TILES mEffectedTiles;
+		//TILES mEnemyEmerge;
+
 		vector<Tile*> mBackTiles;			// 기타 타일들 (그리지 않고 저장공간 용도로만 사용)
 
-		vector<Unit*> effectUnits[TILE_Y][TILE_X];
+		vector<Unit*> affectUnits[TILE_Y][TILE_X];	// 공격, 이동에 영향 받는 유닛들 모아둠.
 
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
-		vector<TILES> turnSave;		//  턴 초기화.
-
-		vector<Building*> mStruturesTiles;
-		//vector<Mech*> mMechs;
-		vector<Alien*> mAliens;
+		vector<Vector2_3> turnSave; 
+		vector<Building*> mStrutures;	// 건물, 영향받는 환경
+		vector<Alien*> mAliens;				// Alien 벡터.
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;
 
+		TILE_T mapType;
+		bool firstUpdate;
 		bool playerTurn;
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// 이동 BFS 맵

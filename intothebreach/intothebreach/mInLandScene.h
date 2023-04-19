@@ -17,7 +17,7 @@ namespace m {
 		virtual void OnExit() override;
 
 	private:
-		ISLAND_T mSkillType;
+		ISLAND_T mType;
 		vector<Background*> mSections;
     };
 }

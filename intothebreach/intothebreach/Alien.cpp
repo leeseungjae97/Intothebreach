@@ -202,38 +202,35 @@ namespace m
 					//}
 					//scene->SetPosTiles((int)dy, (int)dx
 					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
-					if (scene->GetEffectUnit((int)dy, (int)dx) != nullptr)
-					{
+					
 						//if (!scene->GetPlayerTurn())
 						//{
 						//	SetTargetCoord(Vector2(dx, dy));
 						//	return true;
 						//}
-						if (scene->GetEffectUnit((int)dy, (int)dx)->GetLayerType() == LAYER_TYPE::PLAYER &&
-							scene->GetEffectUnit((int)dy, (int)dx)->GetState() != GameObject::STATE::Broken)
+					if (scene->SearchAffectUnit((int)dy, (int)dx, LAYER_TYPE::PLAYER))
+					{
+						//GetCurAttackSkill()->SetGuideLinePos();
+						if (!scene->GetPlayerTurn())
 						{
-							//GetCurAttackSkill()->SetGuideLinePos();
-							if (!scene->GetPlayerTurn())
-							{
-							}
-							SetTargetCoord(Vector2(dx, dy));
-							return true;
 						}
-
-						//for (int i = 0; i < scene->GetMap((int)dy, (int)dx).size(); i++)
-						//{
-						//	if (scene->GetEffectUnit((int)dy, (int)dx)[i]->GetLayerType() == LAYER_TYPE::PLAYER &&
-						//		scene->GetEffectUnit((int)dy, (int)dx)[i]->GetState() != GameObject::STATE::Broken)
-						//	{
-						//		//GetCurAttackSkill()->SetGuideLinePos();
-						//		if (!scene->GetPlayerTurn())
-						//		{
-						//			SetTargetCoord(Vector2(dx, dy));
-						//			return true;
-						//		}
-						//	}
-						//}
+						SetTargetCoord(Vector2(dx, dy));
+						return true;
 					}
+
+					//for (int i = 0; i < scene->GetMap((int)dy, (int)dx).size(); i++)
+					//{
+					//	if (scene->GetEffectUnit((int)dy, (int)dx)[i]->GetLayerType() == LAYER_TYPE::PLAYER &&
+					//		scene->GetEffectUnit((int)dy, (int)dx)[i]->GetState() != GameObject::STATE::Broken)
+					//	{
+					//		//GetCurAttackSkill()->SetGuideLinePos();
+					//		if (!scene->GetPlayerTurn())
+					//		{
+					//			SetTargetCoord(Vector2(dx, dy));
+					//			return true;
+					//		}
+					//	}
+					//}
 				}
 			}
 		}
@@ -284,7 +281,7 @@ namespace m
 		Vector2 _coord = curCoord.coord;
 		//Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
 
-		scene->MoveEffectUnit(this, _coord);
+		scene->MoveAffectUnit(this, _coord);
 
 		//SetPos(_pos);
 		//SetFinalPos(_pos);
@@ -382,13 +379,13 @@ namespace m
 			for (int i = st; i != end + IDVar; i += IDVar)
 			{
 				if (cY
-					&& scene->GetEffectUnit(i, (int)GetCoord().x) != nullptr)
+					&& scene->SearchAffectUnit(i, (int)GetCoord().x))
 				{
 					endCoord = Vector2(GetCoord().x, (float)i);
 					break;
 				}
 				if (!cY
-					&& scene->GetEffectUnit((int)GetCoord().y, i) != nullptr)
+					&& scene->SearchAffectUnit((int)GetCoord().y, i))
 				{
 					endCoord = Vector2((float)i, GetCoord().y);
 					break;

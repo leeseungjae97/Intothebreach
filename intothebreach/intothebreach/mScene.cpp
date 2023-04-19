@@ -22,6 +22,7 @@ namespace m
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
+		mapType = TILE_T::GREEN;
 		playerTurn = false;
 		firstUpdate = true;
 		curAttackAlien = 0;
@@ -350,10 +351,11 @@ namespace m
 		//	}
 		//}
 		ClearMap();
-		for (int i = 0; i < mStruturesTiles.size(); i++)
+		for (int i = 0; i < mStrutures.size(); i++)
 		{
-			Vector2 mp = mStruturesTiles[i]->GetFinalCoord();
-			map[(int)mp.y][(int)mp.x] = BUILDING;
+			Vector2 mp = mStrutures[i]->GetFinalCoord();
+			if (mStrutures[i]->GetState() != GameObject::STATE::Explo)
+				map[(int)mp.y][(int)mp.x] = BUILDING;
 		}
 		for (int i = 0; i < mAliens.size(); i++)
 		{
@@ -440,7 +442,7 @@ namespace m
 	{
 		//Safe_Delete_X_Vec(mBacks);
 		//Safe_Delete_X_Vec(mBackTiles);
-		Safe_Delete_X_Vec(mStruturesTiles);
+		Safe_Delete_X_Vec(mStrutures);
 
 		Safe_Delete_Y_Vec(mTiles);
 		Safe_Delete_Y_Vec(mPosTiles);
@@ -493,6 +495,7 @@ namespace m
 			);
 			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
 			curAttackAlien = 0;
+			SaveTurn();
 			SetPlayerTurn(true);
 			return;
 		}
@@ -501,14 +504,21 @@ namespace m
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
 		if (curAlien->GetState() == GameObject::STATE::Emerge_loop)
 		{
-			if (nullptr == GetEffectUnit(curAlien->GetCoord().x, curAlien->GetCoord().y))
+			if (!SearchBlockUnit((int)curAlien->GetCoord().y, (int)curAlien->GetCoord().x))
 			{
 				curAlien->SetState(GameObject::STATE::Emerge);
 			}
 			else curAttackAlien++;
 			return;
 		}
-		if (curAlien->GetState() == GameObject::STATE::Emerge) return;
+		if (curAlien->GetState() == GameObject::STATE::Emerge)
+		{
+			if (SearchBlockUnit((int)curAlien->GetCoord().y, (int)curAlien->GetCoord().x))
+			{
+				curAlien->SetState(GameObject::STATE::Emerge_loop);
+			}
+			return;
+		}
 
 		if (nullptr != curAlien->GetCurAttackSkill()
 			&& curAlien->GetCurAttackSkill()->GetStartRender())
@@ -607,6 +617,91 @@ namespace m
 		Scene::DrawFootTile();
 		Scene::HighlightTile();
 	}
+	void Scene::SaveTurn()
+	{
+		
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+		{
+			turnSave.push_back(Vector2_3(
+				PlayerInfo::mMechs[i]->GetCoord()
+				, PlayerInfo::mMechs[i]->GetPos()
+				, PlayerInfo::mMechs[i]->GetMIdx()
+				, (int)PlayerInfo::mMechs[i]->GetLayerType()
+				, PlayerInfo::mMechs[i]->GetCurHp()
+			));
+		}
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			turnSave.push_back(Vector2_3(
+				mAliens[i]->GetCoord()
+				, mAliens[i]->GetPos()
+				, mAliens[i]->GetMIdx()
+				, (int)mAliens[i]->GetLayerType()
+				, mAliens[i]->GetCurHp()
+			));
+		}
+		for (int i = 0; i < mStrutures.size(); i++)
+		{
+			turnSave.push_back(Vector2_3(
+				mStrutures[i]->GetCoord()
+				, mStrutures[i]->GetPos()
+				, mStrutures[i]->GetMIdx()
+				, (int)mStrutures[i]->GetLayerType()
+				, 0
+			));
+		}
+
+	}
+	void Scene::ResetTurn()
+	{
+		if (PlayerInfo::resetTurn == 0) return;
+		PlayerInfo::resetTurn -= 1;
+
+		for (int i = 0; i < turnSave.size(); i++)
+		{
+			Vector2_3 info = turnSave[i];
+			if (info.lType == (int)LAYER_TYPE::PLAYER)
+			{
+				PlayerInfo::mMechs[info.mechIdx]->SetCoord(info.coord);
+				PlayerInfo::mMechs[info.mechIdx]->SetPos(info.pos);
+				PlayerInfo::mMechs[info.mechIdx]->SetFinalCoord(info.coord);
+				PlayerInfo::mMechs[info.mechIdx]->SetFinalPos(info.pos);
+				PlayerInfo::mMechs[info.mechIdx]->SetCurHp(info.curHp);
+			}
+			if (info.lType == (int)LAYER_TYPE::MONSTER)
+			{
+				mAliens[info.mechIdx]->SetCoord(info.coord);
+				mAliens[info.mechIdx]->SetPos(info.pos);
+				mAliens[info.mechIdx]->SetFinalCoord(info.coord);
+				mAliens[info.mechIdx]->SetFinalPos(info.pos);
+				mAliens[info.mechIdx]->SetCurHp(info.curHp);
+			}
+			if (info.lType == (int)LAYER_TYPE::STRUCT)
+			{
+				mStrutures[info.mechIdx]->SetCoord(info.coord);
+				mStrutures[info.mechIdx]->SetPos(info.pos);
+			}
+		}
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+		{
+			MoveAffectUnit(PlayerInfo::mMechs[i]);
+		}
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			MoveAffectUnit(mAliens[i]);
+		}
+		for (int i = 0; i < mStrutures.size(); i++)
+		{
+			MoveAffectUnit(mStrutures[i]);
+		}
+		//for (int y = 0; y < TILE_Y; y++)
+		//{
+		//	for (int x = 0; x < TILE_X; x++)
+		//	{
+		//		ReSortAffectUnits(y, x);
+		//	}
+		//}
+	}
 	void Scene::UndoMove()
 	{
 		if (moveSave.size() != 0)
@@ -617,7 +712,7 @@ namespace m
 			mech->SetPos(Vector2(moveBack.pos));
 			mech->SetEndMove(false);
 
-			MoveEffectUnit(mech);
+			MoveAffectUnit(mech);
 
 			mech->SetFinalCoord(mech->GetCoord());
 			mech->SetFinalPos(mech->GetPos());
@@ -704,7 +799,7 @@ namespace m
 				}
 
 				mMouseFollower->SetEndMove(true);
-				MoveEffectUnit(mMouseFollower, mMouseFollower->GetCoord());
+				MoveAffectUnit(mMouseFollower, mMouseFollower->GetCoord());
 				/*mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
 				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());*/
 				//SetMouseFollower(nullptr);
@@ -715,17 +810,37 @@ namespace m
 			}
 		}
 	}
-	void Scene::MoveEffectUnit(Unit* unit, Vector2 _coord)
+	void Scene::ReSortAffectUnits(float y, float x)
+	{
+		int _y = (int)y;
+		int _x = (int)x;
+		if (affectUnits[_y][_x].size() == 0) return;
+		for (int i = 0; i < affectUnits[_y][_x].size(); i++)
+		{
+			affectUnits[_y][_x][i]->SetAffectUnitVectorIdx(i);
+		}
+	}
+	void Scene::ReSortAffectUnits(int y, int x)
+	{
+		if (affectUnits[y][x].size() == 0) return;
+		for (int i = 0; i < affectUnits[y][x].size(); i++)
+		{
+			affectUnits[y][x][i]->SetAffectUnitVectorIdx(i);
+		}
+	}
+	void Scene::MoveAffectUnit(Unit* unit, Vector2 _coord)
 	{
 		Vector2 idx = unit->GetFinalCoord();
-		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]
-			&& effectUnits[(UINT)_coord.y][(UINT)_coord.x]->GetState() != GameObject::STATE::Emerge_loop) return;
-
-		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = unit;
-
-		if(idx != Vector2::Minus)
-			effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
-
+		//if (effectUnits[(UINT)_coord.y][(UINT)_coord.x].size() == 0)
+		//{
+		//	effectUnits[(UINT)_coord.y][(UINT)_coord.x]->GetState() != GameObject::STATE::Emerge_loop) return;
+		//}
+		//if (idx == Vector2::Minus) return
+			//effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		RemoveEffectUnit(idx, unit);
+		affectUnits[(UINT)_coord.y][(UINT)_coord.x].push_back(unit);
+		ReSortAffectUnits(_coord.y, _coord.x);
+		//unit->SetAffectUnitVectorIdx(affectUnits[(UINT)_coord.y][(UINT)_coord.x].size() - 1);
 		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
 		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
 		//{
@@ -741,14 +856,18 @@ namespace m
 		unit->SetFinalCoord(unit->GetCoord());
 		unit->SetFinalPos(unit->GetPos());
 	}
-	void Scene::MoveEffectUnit(Unit* unit)
+	void Scene::MoveAffectUnit(Unit* unit)
 	{
 		Vector2 idx = unit->GetFinalCoord();
 		Vector2 nIdx = unit->GetCoord();
-		if(idx != Vector2::Minus)
-			effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		//if(idx != Vector2::Minus)
+		//	effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		RemoveEffectUnit(idx, unit);
 		if (nIdx != Vector2::Minus)
-			effectUnits[(UINT)nIdx.y][(UINT)nIdx.x] = unit;
+		{
+			affectUnits[(UINT)nIdx.y][(UINT)nIdx.x].push_back(unit);
+			ReSortAffectUnits(nIdx.y, nIdx.x);
+		}
 
 		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
 		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
@@ -764,6 +883,111 @@ namespace m
 		//unit->SetCoord(nIdx);
 		//unit->SetFinalCoord(unit->GetCoord());
 		//unit->SetFinalPos(unit->GetPos());
+	}
+	void Scene::HitAffectUnit(int y, int x, int damage)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
+				||GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible)
+					continue;
+
+			GetAffectUnits(y, x)[i]->Hit(damage);
+		}
+	}
+	bool Scene::SearchAffectUnit(int y, int x, LAYER_TYPE type)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetLayerType() == type)
+			{
+				return true;
+			}
+
+		}
+		return false;
+	}
+	bool Scene::SearchAffectUnit(int y, int x, LAYER_TYPE type, GameObject::STATE state)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == state
+				&& GetAffectUnits(y, x)[i]->GetLayerType() == type)
+			{
+				return true;
+			}
+				
+		}
+		return false;
+	}
+	bool Scene::SearchAffectUnit(int y, int x, GameObject::STATE state, bool contain)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (contain)
+			{
+				if (GetAffectUnits(y, x)[i]->GetState() == state)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if (GetAffectUnits(y, x)[i]->GetState() != state)
+				{
+					return true;
+				}
+			}
+			
+
+		}
+		return false;
+	}
+	bool Scene::SearchAffectUnit(int y, int x, GameObject::STATE state)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == state)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	bool Scene::SearchAffectUnit(int y, int x)
+	{
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible)
+				continue;
+			else return true;
+		}
+		return false;
+	}
+	bool Scene::SearchBlockUnit(int y, int x)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
+			else return true;
+		}
+		return false;
 	}
 	void Scene::SetPosTiles(int _y, int _x, TILE_T _type1, MOVE_TILE_T _type2)
 	{
@@ -801,7 +1025,11 @@ namespace m
 			//else 
 			//	effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
 			if (idx != Vector2::Minus)
-				effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
+			{
+				affectUnits[(UINT)idx.y][(UINT)idx.x].push_back(dynamic_cast<Unit*>(obj));
+				((Unit*)obj)->SetAffectUnitVectorIdx(affectUnits[(UINT)idx.y][(UINT)idx.x].size() - 1);
+			}
+				
 			//((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
 	}
@@ -811,7 +1039,21 @@ namespace m
 	}
 	void Scene::RemoveEffectUnit(Vector2 _coord)
 	{
-		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = nullptr;
+		ReSortAffectUnits(_coord.y, _coord.x);
+		//effectUnits[(UINT)_coord.y][(UINT)_coord.x] = nullptr;
+	}
+	void Scene::RemoveEffectUnit(Vector2 _coord, Unit* unit)
+	{
+		vector<Unit*>::iterator iter = affectUnits[(UINT)_coord.y][(UINT)_coord.x].begin();
+		while (iter != affectUnits[(UINT)_coord.y][(UINT)_coord.x].end())
+		{
+			if ((*iter) == unit)
+			{
+				iter = affectUnits[(UINT)_coord.y][(UINT)_coord.x].erase(iter);
+			}
+			else iter++;
+		}
+		ReSortAffectUnits(_coord.y, _coord.x);
 	}
 	void Scene::SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type)
 	{

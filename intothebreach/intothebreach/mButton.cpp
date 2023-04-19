@@ -19,15 +19,15 @@ m::Button::Button(const wstring& inner
 		, _alphaCheck)
 	, btnName(inner)
 	, btConstant(0)
-	, textAlpha(0)
-	, iTextScale(1)
-	, textPos(Vector2::Minus)
+	, innerAlpha(0)
+	, iInnerScale(1)
+	, innerPos(Vector2::Minus)
 	, bReSzieable(false)
 	, bClicked(false)
 {
+	if(L"" != btnName) innerImage = Resources::Load<Image>(btnName, btnName);
 	SetCutPos(true);
 	SetEC(false);
-
 }
 
 m::Button::~Button()
@@ -42,6 +42,7 @@ void m::Button::Update()
 	GameObject::Update();
 	if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
 	{
+		bHover = true;
 		if (KEY_PRESSED(KEYCODE_TYPE::LBTN))
 		{
 			bClicked = true;
@@ -54,6 +55,7 @@ void m::Button::Update()
 	}
 	else
 	{
+		bHover = false;
 		if (bReSzieable)
 		{
 			if (mSize.x > 300.f) mSize.x -= 50.f;
@@ -100,27 +102,27 @@ void m::Button::Render(HDC hdc)
 			, RGB(255, 0, 255));
 	}
 	
-	if (bText)
+	if (bInner)
 	{
-		Image* im = Resources::Load<Image>(btnName, btnName);
+		innerImage = Resources::Load<Image>(btnName, btnName);
 		BLENDFUNCTION func = {};
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_ALPHA;
-		func.SourceConstantAlpha = textAlpha;
-		if (textPos != Vector2::Minus) mPos += textPos;
-		if (bTextAlpha)
+		func.SourceConstantAlpha = innerAlpha;
+		if (innerPos != Vector2::Minus) mPos += innerPos;
+		if (bInnerAlpha)
 		{
 			AlphaBlend(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
-				, (int)(im->GetWidth() * iTextScale)
-				, (int)(im->GetHeight() * iTextScale)
-				, im->GetHdc()
+				, (int)(innerImage->GetWidth() * iInnerScale)
+				, (int)(innerImage->GetHeight() * iInnerScale)
+				, innerImage->GetHdc()
 				, 0
 				, 0
-				, (int)(im->GetWidth())
-				, (int)(im->GetHeight())
+				, (int)(innerImage->GetWidth())
+				, (int)(innerImage->GetHeight())
 				, func);
 		}
 		else
@@ -128,13 +130,13 @@ void m::Button::Render(HDC hdc)
 			TransparentBlt(hdc
 				, (int)(mPos.x)
 				, (int)(mPos.y)
-				, (int)(im->GetWidth() * iTextScale)
-				, (int)(im->GetHeight() * iTextScale)
-				, im->GetHdc()
+				, (int)(innerImage->GetWidth() * iInnerScale)
+				, (int)(innerImage->GetHeight() * iInnerScale)
+				, innerImage->GetHdc()
 				, 0
 				, 0
-				, (int)(im->GetWidth())
-				, (int)(im->GetHeight())
+				, (int)(innerImage->GetWidth())
+				, (int)(innerImage->GetHeight())
 				, RGB(255, 0, 255));
 		}
 	}

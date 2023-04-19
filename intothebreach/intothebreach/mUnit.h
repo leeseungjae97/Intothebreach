@@ -37,6 +37,7 @@ namespace m
 		void SetCurImage(Image* m) { curImage = m; }
 		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
 		//void SetUnitCoord(Vector2 _coord) { unitCoord = _coord; }
+		void SetCurHp(int _hp) { curHp = _hp; }
 		void SetMIdx(int _idx) { mIdx = _idx; }
 		void SetMoveRange(int _move) { moveRange = _move; }
 		void SetSkillIdx(int _idx);
@@ -46,7 +47,7 @@ namespace m
 		void SetVisibleHp(bool _b) { visibleHp = _b; }
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 		void SetUnitConstant(float _constant) { unitConstant = _constant; }
-
+		void SetAffectUnitVectorIdx(size_t idx) { affectUnitVectorIdx = idx; }
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
@@ -55,7 +56,7 @@ namespace m
 		void DrawMoveDirectionTile();
 		void DrawMoveDust();
 
-		void Hit(int damage)
+		virtual void Hit(int damage)
 		{
 			if (curHp < damage) curHp = 0;
 			else curHp -= damage;
@@ -78,6 +79,7 @@ namespace m
 		vector<Background*>& GetMoveDusts() { return moveDusts; }
 		size_t GetMIdx() { return mIdx; }
 		WEAPON_T GetWeaponType() { return mWeaponType; }
+		size_t GetAffectUnitVectorIdx() { return affectUnitVectorIdx; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
 
@@ -151,6 +153,7 @@ namespace m
 		int curHp;			// 현재 hp
 		int moveRange;		// 로봇 타입의 enum으로 가져온 이동거리
 		//Vector2 unitCoord;		// effecUnit vector에 들어갈 Vector
+		size_t affectUnitVectorIdx;
 		size_t mIdx;		// Scene의 Mechs vector에 들어갈 index
 		int skillIdx;		// 사용할 스킬 index
 		int unitName;
