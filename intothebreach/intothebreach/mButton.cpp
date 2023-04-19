@@ -18,14 +18,16 @@ m::Button::Button(const wstring& inner
 		, _direction
 		, _alphaCheck)
 	, btnName(inner)
+	, btConstant(0)
+	, textAlpha(0)
+	, iTextScale(1)
+	, textPos(Vector2::Minus)
+	, bReSzieable(false)
+	, bClicked(false)
 {
 	SetCutPos(true);
 	SetEC(false);
-	textAlpha = 0;
-	iTextScale = 1;
-	textPos = Vector2::Minus;
-	bReSzieable = false;
-	bClicked = false;
+
 }
 
 m::Button::~Button()
@@ -40,7 +42,7 @@ void m::Button::Update()
 	GameObject::Update();
 	if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
 	{
-		if (KEY_UP(KEYCODE_TYPE::LBTN))
+		if (KEY_PRESSED(KEYCODE_TYPE::LBTN))
 		{
 			bClicked = true;
 		}
@@ -68,7 +70,8 @@ void m::Button::Render(HDC hdc)
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_OVER;
-		func.SourceConstantAlpha = 125;
+		if(btConstant != 0)func.SourceConstantAlpha = btConstant;
+		else func.SourceConstantAlpha = 125;
 
 		AlphaBlend(hdc
 			, (int)(mPos.x)

@@ -18,12 +18,14 @@ namespace m {
 		virtual void OnEnter() override;
 		virtual void OnExit() override;;
 		
-		void RandSpawnAlien();
-		void PutUnitBeforeCombat();
 		int GetTextTurnNumber() { return iTurn; }
+		void RandSpawnAlien(int number);
 		void SetTextTurnNumber(int _turn);
+		void PutUnitBeforeCombat();
 		void PlayerTurnBackground();
 		void AlienTurnBackground();
+		void AlienIndexReSort();
+		void ButtonActivationCondition();
 	private:
 		vector<Background*> combatBack;
 		bool bSetPosition;

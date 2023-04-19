@@ -57,7 +57,7 @@ namespace m
 		vector<Alien*>& GetAliens() { return mAliens; }
 		vector<Building*>& GetStructuresTiles() {return mStruturesTiles;}
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
-		Unit* GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
+		vector<Unit*>& GetEffectUnit(int y, int x) { return effectUnits[y][x]; }
 
 		bool CheckMouseOutRange();
 		void OutOfMapRange();
@@ -108,9 +108,10 @@ namespace m
 		TILES mEnemyEmerge;
 		vector<Tile*> mBackTiles;			// 기타 타일들 (그리지 않고 저장공간 용도로만 사용)
 
-		Unit* effectUnits[TILE_Y][TILE_X];
+		vector<Unit*> effectUnits[TILE_Y][TILE_X];
 
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
+		vector<TILES> turnSave;		//  턴 초기화.
 
 		vector<Building*> mStruturesTiles;
 		//vector<Mech*> mMechs;

@@ -176,7 +176,7 @@ namespace m
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
-		RandSpawnAlien();
+		//RandSpawnAlien(1);
 
 		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
@@ -203,9 +203,10 @@ namespace m
 		object::Instantiate(Vector2(0, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower);
 		object::Instantiate(Vector2(1, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
 	}
-	void CombatScene::RandSpawnAlien()
+	void CombatScene::RandSpawnAlien(int number)
 	{
-		while (GetAliens().size() != 4)
+		int maxNum = GetAliens().size();
+		while (GetAliens().size() != number + maxNum)
 		{
 			srand((unsigned int)time(NULL));
 			//int randNum = rand();
@@ -215,10 +216,10 @@ namespace m
 
 			randY += 1.f;
 			randX += 5.f;
-			int randAlien[3] = { 6,7,9 };
+			int randAlien[3] = { 6,7,9};
 			int randUnit = rand() % 3;
 			if (GetAliens().size() == 0)
-				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/7]);
 			else
 			{
 				bool f = false;
@@ -253,15 +254,10 @@ namespace m
 				//}
 				if (!f)
 				{
-					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/7]);
 				}
 			}
 		}
-		
-		//for (int i = 0; i < 3; i++)
-		//{
-		//	
-		//}
 	}
 	void CombatScene::PlayerTurnBackground()
 	{
@@ -313,6 +309,7 @@ namespace m
 				{
 					PlayerInfo::mMechs[i]->SetState(GameObject::STATE::Idle);
 					PlayerInfo::mMechs[i]->EndDeploy();
+					PlayerInfo::mMechs[i]->SetFinalCoord(PlayerInfo::mMechs[i]->GetCoord());
 					PlayerInfo::mMechs[i]->SetVisibleHp(true);
 					MoveEffectUnit(PlayerInfo::mMechs[i]);
 				}
@@ -606,6 +603,48 @@ namespace m
 		textTurnNum->ChangeText(COMBAT_UI_TEXT_PATH[_turn]);
 		iTurn = _turn;
 	}
+	void CombatScene::AlienIndexReSort()
+	{
+		vector<Alien*>::iterator iter = GetAliens().begin();
+		int idx = 0;
+		//while (iter != GetAliens().end())
+		//{
+		//	(*iter)->SetMIdx(i);
+		//	i++;
+		//	iter++;
+		//}
+		for (int i = 0; i < GetAliens().size(); i++)
+		{
+			GetAliens()[i]->SetMIdx(idx);
+			idx++;
+		}
+		int a = 0;
+		
+	}
+	void CombatScene::ButtonActivationCondition()
+	{
+		//gridPowerBox->SetState(GameObject::STATE::Visible);
+		if (btnUndoMove->GetClicked())
+		{
+			Scene::UndoMove();
+			btnUndoMove->SetClicked(false);
+		}
+		if (GetMoveSave().size() == 0)
+		{
+			btnUndoMove->SetAlpha(true);
+			btnUndoMove->UseTextAlpha(true);
+			btnUndoMove->SetTextConstant(100);
+			btnUndoMove->SetConstant(100);
+		}
+		else
+		{
+			btnUndoMove->UseTextAlpha(false);
+			btnUndoMove->SetAlpha(false);
+		}
+		//btnTurnEnd->SetState(GameObject::STATE::Visible);
+		//btnUndoMove->SetState(GameObject::STATE::Visible);
+		//btnInitTurn->SetState(GameObject::STATE::Visible);
+	}
 	void CombatScene::Update()
 	{
 		Scene::Update();
@@ -623,6 +662,8 @@ namespace m
 			Scene::MoveMech();
 			Scene::MoveSkill();
 			Scene::AlienAlgorithm();
+			AlienIndexReSort();
+			ButtonActivationCondition();
 		}
 		if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1 + 1)
 		{

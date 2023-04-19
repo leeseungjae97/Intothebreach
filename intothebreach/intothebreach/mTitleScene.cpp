@@ -87,7 +87,7 @@ namespace m {
 				{
 					if (btns[i]->GetPos().x >= 1.f)
 					{
-						if (btns[i]->GetTextAlpha() + 10 < 255) btns[i]->SetTextAlpha(btns[i]->GetTextAlpha() + 10);
+						if (btns[i]->GetTextAlpha() + 10 < 255) btns[i]->SetTextConstant(btns[i]->GetTextAlpha() + 10);
 						btns[i]->SetPos(Vector2(1.f, btns[i]->GetPos().y));
 						continue;
 					}
@@ -124,7 +124,7 @@ namespace m {
 	}
 	void TitleScene::OnExit() {
 		for (int i = 0; i < btns.size(); i++)
-			btns[i]->SetTextAlpha(255);
+			btns[i]->SetTextConstant(255);
 
 		//Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 		SetFirstUpdate(false);

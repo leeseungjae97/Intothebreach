@@ -22,7 +22,7 @@ namespace m
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::Minus)
-		, unitCoord(Vector2::One)
+		//, unitCoord(Vector2::One)
 		, moveRange(_range)
 		, mHp(hp)
 		, curHp(hp)
@@ -63,7 +63,7 @@ namespace m
 		, endAttack(false)
 		, drag(false)
 		, mFinalPos(Vector2::One)
-		, unitCoord(Vector2::One)
+		//, unitCoord(Vector2::One)
 		, mHp(0)
 		, curHp(0)
 
@@ -543,12 +543,14 @@ namespace m
 						}
 						for (int i = st; i != end + IDVar; i += IDVar)
 						{
-							if (cY && nullptr != scene->GetEffectUnit(i, (int)GetCoord().x) )
+							if (cY && nullptr != scene->GetEffectUnit(i, (int)GetCoord().x)
+								|| scene->GetEffectUnit(i, (int)GetCoord().x)->GetState() != STATE::Emerge_loop)
 							{
 								endCoord = Vector2(p->GetCoord().x, (float)i);
 								break;
 							}
-							if (!cY && nullptr != scene->GetEffectUnit((int)GetCoord().y, i))
+							if (!cY && nullptr != scene->GetEffectUnit((int)GetCoord().y, i)
+								|| scene->GetEffectUnit(i, (int)GetCoord().x)->GetState() != STATE::Emerge_loop)
 							{
 								endCoord = Vector2((float)i, p->GetCoord().y);
 								break;

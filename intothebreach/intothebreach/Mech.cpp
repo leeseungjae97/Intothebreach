@@ -70,7 +70,6 @@ namespace m
 	}
 	Mech::~Mech()
 	{
-		int a = 0;
 	}
 	void Mech::Initialize()
 	{}
@@ -260,7 +259,7 @@ namespace m
 		//}
 		if (moveCnt == -1)
 		{
-			scene->GetMoveSave().push_back(Vector2_2(GetFinalCoord(), GetFinalPos(), GetMIdx()));
+			//scene->GetMoveSave().push_back(Vector2_2(GetFinalCoord(), GetFinalPos(), GetMIdx()));
 			directQueue.clear();
 			moveCnt = GetMoveRange();
 			SetEndMove(false);

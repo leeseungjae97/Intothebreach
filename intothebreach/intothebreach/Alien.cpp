@@ -162,7 +162,7 @@ namespace m
 		Vector2 stPos = _alienCoord;
 		queue.push_back(Vector2_1(stPos, 0, -1));
 
-		//scene->SetMap();
+		scene->SetMap();
 
 		// right, up, down, left
 		float direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
@@ -242,7 +242,7 @@ namespace m
 	void Alien::AlienMoveCheck(int& curAlien)
 	{
 		if (GetFinalMoveCoord() == Vector2::Minus) return;
-
+		
 		moveDelay += Time::fDeltaTime();
 		if (moveDelay >= 0.2f)
 		{
@@ -268,10 +268,18 @@ namespace m
 		}
 		Vector2_1 curCoord = iter;
 		//if(directQueue.size() <= moveCnt)
-		if (directQueue.size() != 0)
-			curCoord = directQueue[directQueue.size() - moveCnt];
-
-		moveCnt++;
+		//if (directQueue.size() != 0)
+		//	curCoord = directQueue[directQueue.size() - moveCnt];
+		//else if (directQueue.size() <= moveCnt)
+		//{
+		//	curCoord = directQueue[directQueue.size() - 1];
+		//}
+		if (directQueue.size() > 0)
+		{
+			curCoord = directQueue.back();
+			directQueue.pop_back();
+			moveCnt++;
+		}
 
 		Vector2 _coord = curCoord.coord;
 		//Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
@@ -461,8 +469,8 @@ namespace m
 		
 		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y)))
 		{
-			//scene->SetPosTiles((int)stPos.y, (int)stPos.x
-			//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+			scene->SetPosTiles((int)stPos.y, (int)stPos.x
+				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 			SetFinalMoveCoord(Vector2(stPos.x, stPos.y));
 			return;
 		}
@@ -501,8 +509,8 @@ namespace m
 					{
 						
 					}
-					//scene->SetPosTiles((int)dy, (int)dx
-					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					scene->SetPosTiles((int)dy, (int)dx
+						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));
 
 					find = true;

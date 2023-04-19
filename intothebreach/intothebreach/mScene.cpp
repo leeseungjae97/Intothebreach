@@ -349,20 +349,23 @@ namespace m
 		//		}
 		//	}
 		//}
+		ClearMap();
 		for (int i = 0; i < mStruturesTiles.size(); i++)
 		{
 			Vector2 mp = mStruturesTiles[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = BUILDING;
 		}
+		for (int i = 0; i < mAliens.size(); i++)
+		{
+			Vector2 mp = mAliens[i]->GetFinalCoord();
+
+			if(mAliens[i]->GetState() != GameObject::STATE::Emerge_loop)
+				map[(int)mp.y][(int)mp.x] = ALIEN;
+		}
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
 			Vector2 mp = PlayerInfo::mMechs[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = MECH;
-		}
-		for (int i = 0; i < mAliens.size(); i++)
-		{
-			Vector2 mp = mAliens[i]->GetFinalCoord();
-			map[(int)mp.y][(int)mp.x] = ALIEN;
 		}
 	}
 	void Scene::DrawFootTile()
@@ -478,16 +481,17 @@ namespace m
 	{
 		if (playerTurn) return;
 
-		bool n = false;
-		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
-			if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
-		if (!n) return;
+		//bool n = false;
+		//for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+		//	if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
+		//if (!n) return;
 
 		if (mAliens.size() <= curAttackAlien)
 		{
 			((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
 				((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
 			);
+			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
 			curAttackAlien = 0;
 			SetPlayerTurn(true);
 			return;
@@ -495,7 +499,15 @@ namespace m
 		((CombatScene*)SceneManager::GetActiveScene())->AlienTurnBackground();
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
-		if (curAlien->GetState() == GameObject::STATE::Emerge_loop) return;
+		if (curAlien->GetState() == GameObject::STATE::Emerge_loop)
+		{
+			if (nullptr == GetEffectUnit(curAlien->GetCoord().x, curAlien->GetCoord().y))
+			{
+				curAlien->SetState(GameObject::STATE::Emerge);
+			}
+			else curAttackAlien++;
+			return;
+		}
 		if (curAlien->GetState() == GameObject::STATE::Emerge) return;
 
 		if (nullptr != curAlien->GetCurAttackSkill()
@@ -599,14 +611,15 @@ namespace m
 	{
 		if (moveSave.size() != 0)
 		{
-			Mech* mech = PlayerInfo::mMechs[moveSave[moveSave.size() - 1].mechIdx];
+			Vector2_2 moveBack = moveSave.back();
+			Mech* mech = PlayerInfo::mMechs[moveBack.mechIdx];
+			mech->SetCoord(Vector2(moveBack.coord));
+			mech->SetPos(Vector2(moveBack.pos));
 			mech->SetEndMove(false);
-			mech->SetCoord(Vector2(moveSave[moveSave.size() - 1].coord));
 
 			MoveEffectUnit(mech);
 
 			mech->SetFinalCoord(mech->GetCoord());
-			mech->SetPos(Vector2(moveSave[moveSave.size() - 1].pos));
 			mech->SetFinalPos(mech->GetPos());
 			moveSave.pop_back();
 		}
@@ -681,12 +694,19 @@ namespace m
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 		{
+			
 			if (nullptr != mMouseFollower)
 			{
 				//MoveEffectUnit(mMouseFollower);
+				if (moveSave.size() == 0 || moveSave.back().mechIdx != mMouseFollower->GetMIdx())
+				{
+					moveSave.push_back(Vector2_2(mMouseFollower->GetFinalCoord(), mMouseFollower->GetFinalPos(), mMouseFollower->GetMIdx()));
+				}
+
 				mMouseFollower->SetEndMove(true);
-				mMouseFollower->SetPos(mMouseFollower->GetPos());
-				mMouseFollower->SetCoord(mMouseFollower->GetCoord());
+				MoveEffectUnit(mMouseFollower, mMouseFollower->GetCoord());
+				/*mMouseFollower->SetFinalPos(mMouseFollower->GetPos());
+				mMouseFollower->SetFinalCoord(mMouseFollower->GetCoord());*/
 				//SetMouseFollower(nullptr);
 			}
 			else
@@ -698,7 +718,8 @@ namespace m
 	void Scene::MoveEffectUnit(Unit* unit, Vector2 _coord)
 	{
 		Vector2 idx = unit->GetFinalCoord();
-		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]) return;
+		if (nullptr != effectUnits[(UINT)_coord.y][(UINT)_coord.x]
+			&& effectUnits[(UINT)_coord.y][(UINT)_coord.x]->GetState() != GameObject::STATE::Emerge_loop) return;
 
 		effectUnits[(UINT)_coord.y][(UINT)_coord.x] = unit;
 
@@ -724,8 +745,11 @@ namespace m
 	{
 		Vector2 idx = unit->GetFinalCoord();
 		Vector2 nIdx = unit->GetCoord();
-		effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
-		effectUnits[(UINT)nIdx.y][(UINT)nIdx.x] = unit;
+		if(idx != Vector2::Minus)
+			effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
+		if (nIdx != Vector2::Minus)
+			effectUnits[(UINT)nIdx.y][(UINT)nIdx.x] = unit;
+
 		//vector<Unit*>::iterator iter = effectUnits[(UINT)idx.y][(UINT)idx.x].begin();
 		//for (int i = 0; i < effectUnits[(UINT)idx.y][(UINT)idx.x].size(); i++)
 		//{
@@ -778,8 +802,7 @@ namespace m
 			//	effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
 			if (idx != Vector2::Minus)
 				effectUnits[(UINT)idx.y][(UINT)idx.x] = (dynamic_cast<Unit*>(obj));
-
-			((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
+			//((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
 	}
 	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE lType)
