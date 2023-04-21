@@ -31,56 +31,46 @@ int WEAPON_TYPE[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::ARC,
 	(int)SKILL_T::ST,
 };
-enum class SKILL_N
-{
-	range,
-	machtank,
-	punch,
-	firefly1,
-	hornet1,
-	END,
-};
-enum class SKILL_FUNC_T
-{
-	PUSH,
-	CHAIN,
-	FIRE,
-	ICE,
-
-	END,
-};
-wstring SKILL_PATH[(UINT)SKILL_N::END]{
+wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
+	L"punch1_",
 	L"shotup_tribomb_missile",
 	L"shot_mechtank_",
-	L"punch1_",
-	L"shot_firefly_",
+
+	L"",
+	L"",
 	L"hornet_",
+	L"shot_firefly_",
 };
 enum class SKILL_DIR
 {
 	R,
-	L,
 	U,
 	D,
+	L,
 	NONE,
 };
 wstring SKILL_DIR_PATH[(UINT)SKILL_DIR::NONE]{
 	L"R",
-	L"L",
 	L"U",
 	L"D",
+	L"L",
 };
 int WEAPON_LEN[(UINT)WEAPON_T::END]{
-	1,
-	1,
 	6,
+	1,
+	1,
+
+	1,
+	1,
+	12,
+	1,
 };
 int WEAPON_RANGE[(UINT)WEAPON_T::END]{
 	1,
 	99,
 	99,
 
-	99,
+	1,
 	1,
 	1,
 	99,
@@ -140,67 +130,78 @@ int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	0,//accelerating_thorax,	// firefly
 	//NONE,
 };
-int BASIC_SKILL[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
-	(int)SKILL_T::ST,//electrice,
-	(int)SKILL_T::ST,//flame,
-	(int)SKILL_T::ST,//guard,
-	(int)SKILL_T::ST,//judo,
-	(int)SKILL_T::ST,//laser,
-	(int)SKILL_T::ST,//leap,
-	(int)SKILL_T::RANGE_ST,//punch,
+int WEAPON_SKILL[(UINT)WEAPON_T::END]{
+	(int)SKILL_T::RANGE_ST,//titan_fist,
+	(int)SKILL_T::ARC,//artemis_artillery,
+	(int)SKILL_T::ST,//taurus_cannon,
 
-	(int)SKILL_T::ST,//charge,
-	(int)SKILL_T::ST,//jet,
-	(int)SKILL_T::ST,//mirror,
-	(int)SKILL_T::ST,//tank,
-	(int)SKILL_T::ST,//unstable,
-	(int)SKILL_T::ST,//wall,
-
-	(int)SKILL_T::ARC,//artillery,
-	(int)SKILL_T::ARC,//dstrike,
-	(int)SKILL_T::ARC,//ice,
-	(int)SKILL_T::ARC,//ignite,
-	(int)SKILL_T::ARC,//rockart,
-	(int)SKILL_T::ARC,//rocket,
-
-	(int)SKILL_T::ST,//grav,
-	(int)SKILL_T::ST,//nano,
-	(int)SKILL_T::ST,//pulse,
-	(int)SKILL_T::ST,//science,
-	(int)SKILL_T::ST,//tele,
-
-	(int)SKILL_T::ST,//Beetle,
-	(int)SKILL_T::ST,//Blobber,
-	(int)SKILL_T::ST,//Burrower,
-	(int)SKILL_T::ST,//Centipede,
-	(int)SKILL_T::ARC,//Crab,
-	(int)SKILL_T::ST,//Digger,
-	(int)SKILL_T::ST,//Firefly,
-	(int)SKILL_T::ST,//Hornet,
-	(int)SKILL_T::ST,//Jelly,
-	(int)SKILL_T::RANGE_ST,//Leaper,
-	(int)SKILL_T::ST,//Scarab,
-	(int)SKILL_T::ST,//Scorpion,
-	(int)SKILL_T::ST,//Slime,
-	(int)SKILL_T::ARC,//Spider,
+	(int)SKILL_T::RANGE_ST,//stinging,				
+	(int)SKILL_T::RANGE_ST,//fangs,				
+	(int)SKILL_T::RANGE_ST,//stinger,				
+	(int)SKILL_T::ST,//accelerating_thorax,	
+	//NONE,
+	//END,
 };
-wstring MAKE_SKILL_KEY(SKILL_T skill, SKILL_DIR dir)
+//int WEAPON_SKILL[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
+//	(int)SKILL_T::ST,//electrice,
+//	(int)SKILL_T::ST,//flame,
+//	(int)SKILL_T::ST,//guard,
+//	(int)SKILL_T::ST,//judo,
+//	(int)SKILL_T::ST,//laser,
+//	(int)SKILL_T::ST,//leap,
+//	(int)SKILL_T::RANGE_ST,//punch,
+//
+//	(int)SKILL_T::ST,//charge,
+//	(int)SKILL_T::ST,//jet,
+//	(int)SKILL_T::ST,//mirror,
+//	(int)SKILL_T::ST,//tank,
+//	(int)SKILL_T::ST,//unstable,
+//	(int)SKILL_T::ST,//wall,
+//
+//	(int)SKILL_T::ARC,//artillery,
+//	(int)SKILL_T::ARC,//dstrike,
+//	(int)SKILL_T::ARC,//ice,
+//	(int)SKILL_T::ARC,//ignite,
+//	(int)SKILL_T::ARC,//rockart,
+//	(int)SKILL_T::ARC,//rocket,
+//
+//	(int)SKILL_T::ST,//grav,
+//	(int)SKILL_T::ST,//nano,
+//	(int)SKILL_T::ST,//pulse,
+//	(int)SKILL_T::ST,//science,
+//	(int)SKILL_T::ST,//tele,
+//
+//	(int)SKILL_T::ST,//Beetle,
+//	(int)SKILL_T::ST,//Blobber,
+//	(int)SKILL_T::ST,//Burrower,
+//	(int)SKILL_T::ST,//Centipede,
+//	(int)SKILL_T::ARC,//Crab,
+//	(int)SKILL_T::ST,//Digger,
+//	(int)SKILL_T::ST,//Firefly,
+//	(int)SKILL_T::RANGE_ST,//Hornet,
+//	(int)SKILL_T::ST,//Jelly,
+//	(int)SKILL_T::RANGE_ST,//Leaper,
+//	(int)SKILL_T::ST,//Scarab,
+//	(int)SKILL_T::ST,//Scorpion,
+//	(int)SKILL_T::ST,//Slime,
+//	(int)SKILL_T::ARC,//Spider,
+//};
+wstring MAKE_SKILL_KEY(WEAPON_T weapon, SKILL_DIR dir)
 {
 	wstring key = L"";
 
-	key.append(SKILL_PATH[(UINT)skill]);
+	key.append(WEAPON_PATH[(UINT)weapon]);
+
 	if (dir != SKILL_DIR::NONE)
-	{
 		key.append(SKILL_DIR_PATH[(UINT)dir]);
-	}
 
 	return key;
 };
-wstring MAKE_SKILL_PATH(SKILL_T skill, SKILL_DIR dir)
+wstring MAKE_SKILL_PATH(WEAPON_T weapon, SKILL_DIR dir)
 {
 	wstring path = L"..\\Resources\\texture\\effect\\";
 
-	path.append(SKILL_PATH[(UINT)skill]);
+	path.append(WEAPON_PATH[(UINT)weapon]);
 	if (dir != SKILL_DIR::NONE)
 	{
 		path.append(SKILL_DIR_PATH[(UINT)dir]);

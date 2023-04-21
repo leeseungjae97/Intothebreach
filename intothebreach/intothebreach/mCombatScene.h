@@ -26,6 +26,10 @@ namespace m {
 		void AlienTurnBackground();
 		void AlienIndexReSort();
 		void ButtonActivationCondition();
+
+		Button* GetTurnBox1() { return playerTurnBox; }
+		Button* GetTurnBox2() { return alienTurnBox; }
+
 	private:
 		vector<Background*> combatBack;
 		bool bSetPosition;
@@ -43,11 +47,20 @@ namespace m {
 		Button* btnTurnEnd;
 		Button* btnUndoMove;
 		Button* btnInitTurn;
+		
+		Button* playerTurnBox;
+		Button* alienTurnBox;
 
+		Button* playerUnitInfo;
+		vector<Button*> units;
+		//Button* unit1;
+		//Button* unit1Hp;
 
+		//Button* unit2;
+		//Button* unit2Hp;
 
-		Button* textBattleEnd;
-		Button* showPlayerInfo;
+		//Button* unit3;
+		//Button* unit3Hp;
 
 		int mechIdx;
 		int iTurn;

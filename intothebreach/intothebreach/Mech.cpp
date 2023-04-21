@@ -14,7 +14,7 @@
 namespace m
 {
 	Mech::Mech(int unitName, Vector2 _coord, int _range, int _hp, size_t idx)
-		: Unit(_coord, _range, _hp, BASIC_SKILL[(UINT)unitName], idx, unitName)
+		: Unit(_coord, _range, _hp, BASIC_WEAPON_TYPE[(UINT)unitName], idx, unitName)
 		, moveCnt(GetMoveRange())
 		, fDeployConstant(255)
 		, bMakeDeployAlpha(false)
@@ -24,6 +24,11 @@ namespace m
 		, bDeployed(false)
 
 	{
+		int a = unitName;
+		WEAPON_T bt = BASIC_WEAPON_TYPE[(UINT)unitName];
+		int b = GetUnitName();
+		int c = GET_UNIT_NUM(unitName);
+
 		GetMImages().resize((UINT)COMBAT_CONDITION_T::END);
 
 		for (UINT i = 0; i < (UINT)COMBAT_CONDITION_T::END; i++)
@@ -56,17 +61,7 @@ namespace m
 		SetState(STATE::Idle);
 	}
 	Mech::Mech(Mech& _origin)
-		: Unit(_origin.GetCoord()
-			, _origin.GetMoveRange()
-			, 0
-			, 0
-			, _origin.GetMIdx()
-			, _origin.GetUnitName())
 	{
-		SetState(_origin.GetState());
-		SetDeploy(_origin.GetDeploy());
-		SetCancelDeploy(_origin.GetCancelDeploy());
-		SetSwap(_origin.GetSwap());
 	}
 	Mech::~Mech()
 	{

@@ -9,13 +9,14 @@ namespace m
 	class Tile;
 	class Building;
 	class Background;
+	class GameObject;
 	class Scene : public Entity
 	{
 	public:
 		typedef vector<vector<Tile*>> TILES;
 		typedef vector<vector<Building*>> BUILDINGS;
 		typedef int(*INT_ARR)[TILE_Y];
-		
+
 		Scene();
 		virtual ~Scene();
 
@@ -85,6 +86,7 @@ namespace m
 
 
 		bool GetPlayerTurn() { return playerTurn; }
+		bool GetCurTurnEnd() { return curTurnEnd; }
 		bool GetFirstUpdate() { return firstUpdate; }
 		Mech* GetMouseFollower() { return mMouseFollower; }
 		Mech* GetAlphaFollower() { return mAlphaFollower; }
@@ -95,6 +97,7 @@ namespace m
 		void SetAlphaState(GameObject::STATE state);
 		void SetPlayerTurn(bool _playerTurn) { playerTurn = _playerTurn; }
 		void SetFirstUpdate(bool _isFirstUpdate) { firstUpdate = _isFirstUpdate; }
+		void SetCurTurnEnd(bool _b) { curTurnEnd = _b; }
 		void SaveTurn();
 		void ResetTurn();
 
@@ -133,6 +136,7 @@ namespace m
 		TILE_T mapType;
 		bool firstUpdate;
 		bool playerTurn;
+		bool curTurnEnd;
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// ¿Ãµø BFS ∏ 
 	};

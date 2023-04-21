@@ -172,6 +172,7 @@ namespace m {
         Vector2 coord;
         Vector2 pos;
         size_t mechIdx;
+        int state;
         int lType;
         int curHp;
 

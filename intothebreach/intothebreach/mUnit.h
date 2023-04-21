@@ -11,7 +11,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Unit(Vector2 _coord, int _range, int hp, int type, size_t idx, int unitValue);
+		Unit(Vector2 _coord, int _range, int hp, WEAPON_T type, size_t idx, int unitValue);
 		Unit(Unit& _origin);
 		Unit(Vector2 _coord);
 		Unit();
@@ -24,8 +24,8 @@ namespace m
 		virtual void ActiveSkill(Vector2 otherPos);
 
 		void SetSkill();
-		void SetSkill(int type);
-		void SetSkill(int idx, SKILL_T type);
+		void SetSkill(WEAPON_T type);
+		void SetSkill(int idx, WEAPON_T type);
 
 		void ChangePilotSlot();
 		Skill* GetSkill(int idx);
@@ -51,7 +51,7 @@ namespace m
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
 		void DrawSkillRangeTile();
-		
+
 		void DrawMoveRangeTile();
 		void DrawMoveDirectionTile();
 		void DrawMoveDust();
@@ -66,7 +66,7 @@ namespace m
 			if (curHp + repair < mHp) curHp = mHp;
 			else curHp += repair;
 		}
-		
+
 
 		void SetStructure(bool _b) { bStructure = _b; }
 		void DrawSkill(Vector2 pos, Vector2 guideLinePos);
@@ -77,6 +77,7 @@ namespace m
 		vector<Vector2_1>& GetArrowQue() { return arrowDirectQueue; }
 		vector<Vector2_1>& GetDirectQue() { return directQueue; }
 		vector<Background*>& GetMoveDusts() { return moveDusts; }
+		vector<Skill*>& GetSkills() { return mSkills; }
 		size_t GetMIdx() { return mIdx; }
 		WEAPON_T GetWeaponType() { return mWeaponType; }
 		size_t GetAffectUnitVectorIdx() { return affectUnitVectorIdx; }
@@ -85,15 +86,16 @@ namespace m
 
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
-		int GetUnitName() { 
+		int GetUnitName()
+		{
 			if ((int)MECHS::tele < unitName) return unitName - (int)MECHS::tele - 1;
-			return unitName; 
+			return unitName;
 		}
 		bool CheckSkillFiring();
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
 		bool GetEndAttack() { return endAttack; }
-		float GetUnitConstant(){return unitConstant;}
+		float GetUnitConstant() { return unitConstant; }
 
 		int GetSkillMap(int y, int x) { return skill_range_map[y][x]; }
 		void SetSkillMap(int y, int x, int num) { skill_range_map[y][x] = num; }
@@ -163,7 +165,7 @@ namespace m
 		bool endMove;		//
 		bool endAttack;		// 공격을 마치면
 		bool move;			// 공격에서 이동으로 넘갈때 사용.
-							// 이 값을 통해 공격과 이동의 분기가 나뉨.
+		// 이 값을 통해 공격과 이동의 분기가 나뉨.
 		bool bStructure;
 		bool visibleHp;
 		WEAPON_T mWeaponType;

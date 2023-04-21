@@ -1,6 +1,7 @@
 #pragma once
 wstring A_BTN_BACK = L"..\\Resources\\texture\\ui\\in_btn.bmp";
 wstring NO_BACK = L"..\\Resources\\texture\\ui\\no_back.bmp";
+wstring TURN_BACK = L"..\\Resources\\texture\\ui\\combat\\turn_box.bmp";
 enum class TITLE_UI_TEXT
 {
 	CN_TEXT,

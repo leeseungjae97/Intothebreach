@@ -9,7 +9,7 @@
 extern m::Application application;
 namespace m
 {
-	Skill_Arc::Skill_Arc(SKILL_T _type, Unit* onwer)
+	Skill_Arc::Skill_Arc(WEAPON_T _type, Unit* onwer)
 		: Skill(_type, onwer)
 	{
 	}

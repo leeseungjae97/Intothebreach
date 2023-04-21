@@ -87,7 +87,7 @@ namespace m {
 				{
 					if (btns[i]->GetPos().x >= 1.f)
 					{
-						if (btns[i]->GetInnerAlpha() + 10 < 255) btns[i]->SetInnerConstant(btns[i]->GetInnerAlpha() + 10);
+						if (btns[i]->GetInnerConstant() + 10 < 255) btns[i]->SetInnerConstant(btns[i]->GetInnerConstant() + 10);
 						btns[i]->SetPos(Vector2(1.f, btns[i]->GetPos().y));
 						continue;
 					}

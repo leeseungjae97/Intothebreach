@@ -11,6 +11,9 @@
 #include "mTile.h"
 #include "CommonInclude.h"
 #include "mPlayerInfo.h"
+#include "Building.h"
+#include "Mech.h"
+#include "Alien.h"
 namespace m::object
 {
 	template <typename T>
@@ -124,7 +127,7 @@ namespace m::object
 	//	return gameObj;
 	//}
 
-	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, SKILL_T _type, Unit* unit)
+	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, WEAPON_T _type, Unit* unit)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Skill* gameObj = new Skill(_type, unit);
@@ -144,28 +147,28 @@ namespace m::object
 	}
 
 
-	static inline Skill* Instantiate(vector<Skill*>& vS, SKILL_T _type, Unit* unit)
+	static inline Skill* Instantiate(vector<Skill*>& vS, WEAPON_T weapon, Unit* unit)
 	{
 		Skill* gameObj = nullptr;
 
-		switch (_type)
+		switch (WEAPON_SKILL[(UINT)weapon])
 		{
-		case SKILL_T::ARC:
+		case (int)SKILL_T::ARC:
 		{
-			gameObj = new Skill_Arc(_type, unit);
+			gameObj = new Skill_Arc(weapon, unit);
 		}
 			break;
-		case SKILL_T::ST:
+		case (int)SKILL_T::ST:
 		{
-			gameObj = new Skill_St(_type, unit);
+			gameObj = new Skill_St(weapon, unit);
 		}
 			break;
-		case SKILL_T::RANGE_ST:
+		case (int)SKILL_T::RANGE_ST:
 		{
-			gameObj = new Skill_RS(_type, unit);
+			gameObj = new Skill_RS(weapon, unit);
 		}
 			break;
-		case SKILL_T::END:
+		case (int)SKILL_T::END:
 			break;
 		default:
 			break;
@@ -175,7 +178,7 @@ namespace m::object
 		//else 
 		//	gameObj->SetWeaponType(BASIC_A_WEAPON_TYPE[(UINT)_type]);
 
-		gameObj->SetWeaponType(BASIC_WEAPON_TYPE[(UINT)_type]);
+		//gameObj->SetWeaponType(BASIC_WEAPON_TYPE[(UINT)_type]);
 
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -184,7 +187,7 @@ namespace m::object
 
 		return gameObj;
 	}
-	static inline void Instantiate(vector<Skill*>& vS, SKILL_T _type, int idx)
+	static inline void Instantiate(vector<Skill*>& vS, WEAPON_T _type, int idx)
 	{
 		Skill* gameObj = vS[idx];
 	}

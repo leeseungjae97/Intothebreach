@@ -10,6 +10,7 @@
 #include "mApplication.h"
 #include "mBackground.h"
 #include "mCombatScene.h"
+#include "mButton.h"
 #include "func.h"
 #include "mInput.h"
 extern m::Application application;
@@ -18,14 +19,14 @@ namespace m
 	Scene::Scene()
 		: mMouseFollower(nullptr)
 		, mAlphaFollower(nullptr)
-		//, map(nullptr)
+		, playerTurn(false)
+		, curTurnEnd(true)
+		, firstUpdate(true)
+		, curAttackAlien(0)
 	{
 		mLayers.reserve(5);
 		mLayers.resize((UINT)LAYER_TYPE::END);
 		mapType = TILE_T::GREEN;
-		playerTurn = false;
-		firstUpdate = true;
-		curAttackAlien = 0;
 	}
 	Scene::~Scene()
 	{
@@ -154,7 +155,7 @@ namespace m
 			}
 		}
 		MakeVariTile(iY, iX);
-		
+
 		SetMap();
 	}
 	/// <summary>
@@ -361,7 +362,7 @@ namespace m
 		{
 			Vector2 mp = mAliens[i]->GetFinalCoord();
 
-			if(mAliens[i]->GetState() != GameObject::STATE::Emerge_loop)
+			if (mAliens[i]->GetState() != GameObject::STATE::Emerge_loop)
 				map[(int)mp.y][(int)mp.x] = ALIEN;
 		}
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
@@ -374,7 +375,7 @@ namespace m
 	{
 		for (UINT _i = 0; _i < mAliens.size(); _i++)
 		{
-			if (nullptr == mAliens[_i] 
+			if (nullptr == mAliens[_i]
 				|| mAliens[_i]->GetFinalCoord() == Vector2::Zero
 				/*|| mAliens[_i]->GetState() == GameObject::STATE::Emerge*/
 				|| mAliens[_i]->GetState() == GameObject::STATE::Emerge_loop) continue;
@@ -496,10 +497,11 @@ namespace m
 			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
 			curAttackAlien = 0;
 			SaveTurn();
-			SetPlayerTurn(true);
+			playerTurn = true;
+			curTurnEnd = true;
 			return;
 		}
-		((CombatScene*)SceneManager::GetActiveScene())->AlienTurnBackground();
+		//((CombatScene*)SceneManager::GetActiveScene())->AlienTurnBackground();
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
 		if (curAlien->GetState() == GameObject::STATE::Emerge_loop)
@@ -619,13 +621,14 @@ namespace m
 	}
 	void Scene::SaveTurn()
 	{
-		
+
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
 			turnSave.push_back(Vector2_3(
 				PlayerInfo::mMechs[i]->GetCoord()
 				, PlayerInfo::mMechs[i]->GetPos()
 				, PlayerInfo::mMechs[i]->GetMIdx()
+				, (int)PlayerInfo::mMechs[i]->GetState()
 				, (int)PlayerInfo::mMechs[i]->GetLayerType()
 				, PlayerInfo::mMechs[i]->GetCurHp()
 			));
@@ -636,6 +639,7 @@ namespace m
 				mAliens[i]->GetCoord()
 				, mAliens[i]->GetPos()
 				, mAliens[i]->GetMIdx()
+				, (int)mAliens[i]->GetState()
 				, (int)mAliens[i]->GetLayerType()
 				, mAliens[i]->GetCurHp()
 			));
@@ -646,6 +650,7 @@ namespace m
 				mStrutures[i]->GetCoord()
 				, mStrutures[i]->GetPos()
 				, mStrutures[i]->GetMIdx()
+				, (int)mStrutures[i]->GetState()
 				, (int)mStrutures[i]->GetLayerType()
 				, 0
 			));
@@ -667,6 +672,13 @@ namespace m
 				PlayerInfo::mMechs[info.mechIdx]->SetFinalCoord(info.coord);
 				PlayerInfo::mMechs[info.mechIdx]->SetFinalPos(info.pos);
 				PlayerInfo::mMechs[info.mechIdx]->SetCurHp(info.curHp);
+				PlayerInfo::mMechs[info.mechIdx]->SetState((GameObject::STATE)info.state);
+				PlayerInfo::mMechs[info.mechIdx]->SetEndMove(false);
+				PlayerInfo::mMechs[info.mechIdx]->SetEndAttack(false);
+				for (int i = 0; i < PlayerInfo::mMechs[info.mechIdx]->GetSkills().size(); i++)
+				{
+					PlayerInfo::mMechs[info.mechIdx]->GetSkills()[i]->Clear();
+				}
 			}
 			if (info.lType == (int)LAYER_TYPE::MONSTER)
 			{
@@ -674,12 +686,16 @@ namespace m
 				mAliens[info.mechIdx]->SetPos(info.pos);
 				mAliens[info.mechIdx]->SetFinalCoord(info.coord);
 				mAliens[info.mechIdx]->SetFinalPos(info.pos);
+				mAliens[info.mechIdx]->SetState((GameObject::STATE)info.state);
 				mAliens[info.mechIdx]->SetCurHp(info.curHp);
+				mAliens[info.mechIdx]->SetEndMove(false);
+				mAliens[info.mechIdx]->SetEndAttack(false);
 			}
 			if (info.lType == (int)LAYER_TYPE::STRUCT)
 			{
 				mStrutures[info.mechIdx]->SetCoord(info.coord);
 				mStrutures[info.mechIdx]->SetPos(info.pos);
+				mStrutures[info.mechIdx]->SetState((GameObject::STATE)info.state);
 			}
 		}
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
@@ -724,7 +740,8 @@ namespace m
 		if (!playerTurn) return;
 		drawTile();
 
-		((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
+		//((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
+		//if (!((CombatScene*)SceneManager::GetActiveScene())->GetTurnBox1()->GetEndApDAp()) return;
 		for (int i = 0; i < mAliens.size(); i++)
 		{
 			if (mAliens[i]->GetState() == GameObject::STATE::Broken)
@@ -745,7 +762,7 @@ namespace m
 				{
 					mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 					mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
-					
+
 					if (nullptr != mMouseFollower->GetCurAttackSkill())
 					{
 						mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
@@ -754,10 +771,11 @@ namespace m
 					SetMouseFollower(nullptr);
 				}
 			}
+			curTurnEnd = true;
 			// TODO: TURN END
 		}
 
-		
+
 		if (nullptr != mMouseFollower)
 		{
 			if (!mMouseFollower->GetMove()) return;
@@ -783,13 +801,13 @@ namespace m
 		{
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
-			
+
 			SetMouseFollower(nullptr);
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 		{
-			
+
 			if (nullptr != mMouseFollower)
 			{
 				//MoveEffectUnit(mMouseFollower);
@@ -890,10 +908,10 @@ namespace m
 		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
 		{
 			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
-				||GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible)
-					continue;
+				continue;
 
 			GetAffectUnits(y, x)[i]->Hit(damage);
 		}
@@ -921,7 +939,7 @@ namespace m
 			{
 				return true;
 			}
-				
+
 		}
 		return false;
 	}
@@ -944,7 +962,7 @@ namespace m
 					return true;
 				}
 			}
-			
+
 
 		}
 		return false;
@@ -1029,7 +1047,7 @@ namespace m
 				affectUnits[(UINT)idx.y][(UINT)idx.x].push_back(dynamic_cast<Unit*>(obj));
 				((Unit*)obj)->SetAffectUnitVectorIdx(affectUnits[(UINT)idx.y][(UINT)idx.x].size() - 1);
 			}
-				
+
 			//((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
 	}

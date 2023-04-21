@@ -23,22 +23,34 @@ namespace m
 		bool GetInner() { return bInner; }
 		bool GetClicked() { return bClicked; }
 		bool GetHover() { return bHover; }
+		bool GetBlink() { return bBlink; }
+		bool GetApDAp() { return bApDAp; }
+		bool GetEndApDAp() { return endApDAp; }
+		bool GetSmoothAppear() { return bSmoothAppear; }
+		bool GetSmoothDisappear() { return bSmoothDisappear; }
 		wstring GetBtnName() { return btnName; }
 		Vector2 GetInnerPos() { return innerPos; }
 		Image* GetInnerImage() { return innerImage; }
-		BYTE GetInnerAlpha() { return innerAlpha; }
+		BYTE GetInnerConstant() { return innerConstant; }
+		BYTE GetConstant() { return btConstant; }
+		int GetIdVar() { return idVar; }
 
 		void SetInner(bool _t) { bInner = _t; }
 		void SetClicked(bool _b) { bClicked = _b; }
 		void ChangeInner(const wstring& _path) { btnName = _path; }
 		void UseInnerAlpha(bool _t) { bInnerAlpha = _t; }
-		void SetInnerConstant(BYTE _a) { innerAlpha = _a; }
+		void SetInnerConstant(BYTE _a) { innerConstant = _a; }
 		void SetMoveScene(SCENE_TYPE _type) { eBtnMoveScene = _type; }
 		void SetInnerPos(Vector2 _textPos) { innerPos = _textPos; }
 		void SetReSizeable(bool _b) { bReSzieable = _b; }
 		void SetInnerMag(int mag) { iInnerScale = mag; }
 		void SetConstant(BYTE _cons) { btConstant = _cons; }
+		void SetIdVar(int _iv) { idVar = _iv; }
 		void SetHover(bool _b) { bHover = _b; }
+		void SetBlink(bool _b) { bBlink = _b; }
+		void SmoothAppear(bool _b) { bSmoothAppear = _b; }
+		void SmoothDisappear(bool _b) { bSmoothDisappear = _b; }
+		void SetApDAp(bool _b) { bApDAp = _b; }
 
 	private:
 		Vector2 innerPos;
@@ -51,8 +63,17 @@ namespace m
 		bool bReSzieable;
 		bool bClicked;
 		bool bHover;
+		bool bSmoothAppear;
+		bool bSmoothDisappear;
+		bool bApDAp;
+		bool endApDAp;
+
+		int idDir;
+		int idVar;
+		bool bBlink;
+
 		BYTE btConstant;
-		BYTE innerAlpha;
+		BYTE innerConstant;
 		int iInnerScale;
 	};
 }

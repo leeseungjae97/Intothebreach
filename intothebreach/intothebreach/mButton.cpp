@@ -19,23 +19,32 @@ m::Button::Button(const wstring& inner
 		, _alphaCheck)
 	, btnName(inner)
 	, btConstant(0)
-	, innerAlpha(0)
+	, innerConstant(0)
 	, iInnerScale(1)
+	, idVar(1)
+	, idDir(1)
+	, bBlink(false)
 	, innerPos(Vector2::Minus)
 	, bReSzieable(false)
 	, bClicked(false)
+	, bSmoothDisappear(false)
+	, bSmoothAppear(false)
+	, endApDAp(false)
 {
-	if(L"" != btnName) innerImage = Resources::Load<Image>(btnName, btnName);
+	if (L"" != btnName) innerImage = Resources::Load<Image>(btnName, btnName);
 	SetCutPos(true);
 	SetEC(false);
 }
 
 m::Button::~Button()
-{}
+{
+	//if(nullptr != innerImage)
+	//	delete innerImage;
+}
 
 void m::Button::Initialize()
 {
-	
+
 }
 void m::Button::Update()
 {
@@ -51,7 +60,7 @@ void m::Button::Update()
 		{
 			if (mSize.x <= 400.f) mSize.x += 50.f;
 		}
-			
+
 	}
 	else
 	{
@@ -60,19 +69,66 @@ void m::Button::Update()
 		{
 			if (mSize.x > 300.f) mSize.x -= 50.f;
 		}
-		
+
 	}
 }
 void m::Button::Render(HDC hdc)
 {
 	Vector2 mPos = GetPos();
+	//if (bBlink)
+	//{
+	//	btConstant += idVar * idDir;
+	//	innerAlpha += idVar * idDir;
+	//	if (btConstant >= 255 || btConstant <= 0)
+	//	{
+	//		idDir *= -1;
+	//	}
+	//}
+	if (bApDAp)
+	{
+		if (btConstant >= 255)
+		{
+			idDir *= -1;
+		}
+		if (btConstant - idVar <= 0 && idDir == -1)
+		{
+			idDir *= -1;
+			bApDAp = false;
+			btConstant = 0;
+			innerConstant = 0;
+			SetState(STATE::Invisible);
+		}
+		btConstant += idVar * idDir;
+		innerConstant += idVar * idDir;
+	}
+	else idDir *= -1;
+
+	if (bSmoothAppear)
+	{
+		idDir = 1;
+		if (btConstant < 255 - idVar)
+		{
+			btConstant += idVar * idDir;
+			innerConstant += idVar * idDir;
+		}
+	}
+	if (bSmoothDisappear)
+	{
+		idDir = -1;
+		if (btConstant - idVar > 0)
+		{
+			btConstant += idVar * idDir;
+			innerConstant += idVar * idDir;
+		}
+	}
+
 	if (mAlpha)
 	{
 		BLENDFUNCTION func = {};
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
-		func.AlphaFormat = AC_SRC_OVER;
-		if(btConstant != 0)func.SourceConstantAlpha = btConstant;
+		func.AlphaFormat = AC_SRC_ALPHA;
+		if (btConstant != 0)func.SourceConstantAlpha = btConstant;
 		else func.SourceConstantAlpha = 125;
 
 		AlphaBlend(hdc
@@ -101,7 +157,7 @@ void m::Button::Render(HDC hdc)
 			, (int)(mImage->GetHeight())
 			, RGB(255, 0, 255));
 	}
-	
+
 	if (bInner)
 	{
 		innerImage = Resources::Load<Image>(btnName, btnName);
@@ -109,7 +165,8 @@ void m::Button::Render(HDC hdc)
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_ALPHA;
-		func.SourceConstantAlpha = innerAlpha;
+		func.SourceConstantAlpha = innerConstant;
+
 		if (innerPos != Vector2::Minus) mPos += innerPos;
 		if (bInnerAlpha)
 		{

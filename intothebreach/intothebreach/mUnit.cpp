@@ -10,7 +10,7 @@
 #include "mInput.h"
 namespace m
 {
-	Unit::Unit(Vector2 _coord, int _range, int hp, int skillType, size_t idx, int unitName)
+	Unit::Unit(Vector2 _coord, int _range, int hp, WEAPON_T weaponType, size_t idx, int unitName)
 		: mPilot(nullptr)
 		, curImage(nullptr)
 		, mAnimator(nullptr)
@@ -18,7 +18,7 @@ namespace m
 		, endAttack(false)
 		, drag(false)
 		, unitName(unitName)
-		, mWeaponType(BASIC_WEAPON_TYPE[(UINT)unitName])
+		, mWeaponType(weaponType)
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::Minus)
@@ -30,7 +30,7 @@ namespace m
 		, mIdx(idx)
 		, affectUnitVectorIdx(0)
 	{
-		SetSkill(skillType);
+		SetSkill(weaponType);
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
@@ -73,6 +73,7 @@ namespace m
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
+		int a = 0;
 	}
 	Unit::Unit()
 	{}
@@ -686,13 +687,13 @@ namespace m
 	}
 	void Unit::SetSkill()
 	{}
-	void Unit::SetSkill(int type)
+	void Unit::SetSkill(WEAPON_T weapon)
 	{
-		object::Instantiate(mSkills, (SKILL_T)type, this);
+		object::Instantiate(mSkills, weapon, this);
 	}
-	void Unit::SetSkill(int idx, SKILL_T type)
+	void Unit::SetSkill(int idx, WEAPON_T type)
 	{
-		object::Instantiate(mSkills, (SKILL_T)type, idx);
+		object::Instantiate(mSkills, (WEAPON_T)type, idx);
 	}
 	Skill* Unit::GetSkill(int idx)
 	{

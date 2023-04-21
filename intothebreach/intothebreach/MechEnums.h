@@ -365,7 +365,7 @@ wstring MECH_S_PATH[(UINT)MECH_T::END]{
 wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring key = L"";
 	int _type = MECHS_T_HT[(UINT)_mech];
-
+	
 	wstring path_1 = MECH_S_PATH[_type];
 	wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	wstring path_3 = MECH_CONDITION[(UINT)_cond];

@@ -10,7 +10,7 @@
 #include "mImage.h"
 namespace m {
 	Building::Building(STRUCTURES _type, Vector2 _coord, int idx, TILE_T _mapType)
-		: Unit(_coord, 0, 0, 0, idx, 0)
+		: Unit(_coord, 0, 0, WEAPON_T::NONE, idx, 0)
 		, mType(_type)
 		, mapType(_mapType)
 	{
@@ -151,7 +151,11 @@ namespace m {
 	void Building::idle()
 	{
 		if (mType != STRUCTURES::mountain)
+		{
 			SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::On]);
+			if (nullptr == gridIcon)
+				gridIcon = Resources::Load<Image>(L"gridPowerIcon", L"..\\Resources\\texture\\combat\\icons\\icon_gridpower_glow_y.bmp");
+		}
 		else
 		{
 			Image* imn = Resources::Load<Image>(MAKE_TILE_KEY(mapType, TILE_HEAD_T::mountain)

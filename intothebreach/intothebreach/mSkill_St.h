@@ -6,7 +6,7 @@ namespace m
         public Skill
     {
     public:
-        Skill_St(SKILL_T _type, Unit* owner);
+        Skill_St(WEAPON_T _type, Unit* owner);
         ~Skill_St();
 
         virtual void Initialize() override;

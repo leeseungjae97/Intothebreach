@@ -10,10 +10,9 @@
 
 namespace m
 {
-	Skill_RS::Skill_RS(SKILL_T _type, Unit* owner)
+	Skill_RS::Skill_RS(WEAPON_T _type, Unit* owner)
 		:Skill(_type, owner)
 	{
-
 	}
 	Skill_RS::~Skill_RS()
 	{}
@@ -43,8 +42,8 @@ namespace m
 		if (endFire)
 		{
 			startFire = false;
-			endFire = false;
-			startRender = false;
+			//endFire = false;
+			//startRender = false;
 			//object::Invisible(this);
 		}
 		if (!startRender) return;
@@ -80,22 +79,50 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 
+		//WEAPON_T nn = mWeaponType;
 
-		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
-		float fWid = (float)(im->GetWidth() / WEAPON_LEN[(UINT)mOwner->GetWeaponType()]);
-		if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(mType, dir)))
-		{
-			GetAnimator()->CreateAnimation(
-				MAKE_SKILL_KEY(mType, dir),
-				im,
-				Vector2::Zero,
-				Vector2(fWid, (float)im->GetHeight()),
-				Vector2::Zero,
-				WEAPON_LEN[(UINT)mType],
-				0.05f
-			);
-		}
-		GetAnimator()->Play(MAKE_SKILL_KEY(mType, dir), false);
+		//if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)))
+		//{
+		//	Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), MAKE_SKILL_PATH(WEAPON_T::titan_fist, dir));
+		//	float fWid = (float)(im->GetWidth() / WEAPON_LEN[(UINT)WEAPON_T::titan_fist]);
+
+		//	GetAnimator()->CreateAnimation(
+		//		MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir),
+		//		im,
+		//		Vector2::Zero,
+		//		Vector2(fWid, (float)im->GetHeight()),
+		//		Vector2::Zero,
+		//		WEAPON_LEN[(UINT)mType],
+		//		0.5f,
+		//		AC_SRC_OVER
+		//	);
+		//}
+		//if(GetAnimator()->GetStopAnimator())
+		//	GetAnimator()->Play(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), false);
+		//GetAnimator()->SetConstant(255);
+		//if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)))
+		//{
+		//	UINT len = WEAPON_LEN[(UINT)WEAPON_T::titan_fist];
+
+		//	Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)
+		//		, MAKE_SKILL_PATH(WEAPON_T::titan_fist, dir));
+
+		//	float fWid = (float)im->GetWidth() / len;
+		//	float fHei = (float)im->GetHeight();
+
+		//	GetAnimator()->CreateAnimation(
+		//		MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)
+		//		, im
+		//		, Vector2::Zero
+		//		, Vector2(fWid, fHei)
+		//		, Vector2::Zero
+		//		, len
+		//		, 0.1f
+		//		, AC_SRC_OVER
+		//	);
+		//}
+		//if (GetAnimator()->GetStopAnimator())
+		//	GetAnimator()->Play(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), true);
 	}
 	void Skill_RS::GuideWire(HDC hdc)
 	{
@@ -120,12 +147,14 @@ namespace m
 		SetStartFire(false);
 		SetStartRender(false);
 
-		
-		if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
-		{
-			ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
-			PushUnit(arrow, 1);
-		}
+
+		ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+		PushUnit(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
+
+		//if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
+		//{
+
+		//}else 
 			
 		return;
 	}

@@ -6,7 +6,7 @@
 #include "mResources.h"
 namespace m
 {
-	Skill_St::Skill_St(SKILL_T _type, Unit* owner)
+	Skill_St::Skill_St(WEAPON_T _type, Unit* owner)
 		: Skill(_type, owner)
 	{
 	}
@@ -74,36 +74,7 @@ namespace m
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
 
-		Image* im = nullptr;
-		switch (mOwner->GetWeaponType())
-		{
-		case WEAPON_T::titan_fist:
-			break;
-		case WEAPON_T::artemis_artillery:
-			break;
-		case WEAPON_T::taurus_cannon:
-		{
-			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
-		}
-			break;
-		case WEAPON_T::stinging:
-			break;
-		case WEAPON_T::fangs:
-			break;
-		case WEAPON_T::stinger:
-			break;
-		case WEAPON_T::accelerating_thorax:
-		{
-			im = Resources::Load<Image>(MAKE_SKILL_KEY(mType, dir), MAKE_SKILL_PATH(mType, dir));
-		}
-			break;
-		case WEAPON_T::NONE:
-			break;
-		case WEAPON_T::END:
-			break;
-		default:
-			break;
-		}
+		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mWeaponType, dir), MAKE_SKILL_PATH(mWeaponType, dir));
 		TransparentBlt(hdc,
 			(int)(mPos.x),
 			(int)(mPos.y),
@@ -152,8 +123,8 @@ namespace m
 		if (mOwner->GetCoord().x < guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_right;
 		if (mOwner->GetCoord().x > guideLineCoord.x)arrow[0] = ARROW_TILE_T::arrow_left;
 
-
-		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
+		
+		Skill::DrawPushTile(arrow, WEAPON_PUSH_DIR[(UINT)GetWeaponType()]);
 	}
 	void Skill_St::CheckDirection()
 	{
@@ -190,11 +161,10 @@ namespace m
 						SetStartFire(false);
 						SetStartRender(false);
 						
-						if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
-						{
-							ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
-							PushUnit(arrow, 1);
-						}
+
+						ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+						PushUnit(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
+
 						return;
 					}
 					if (p->GetCoord() == GetEndCoord())
@@ -202,11 +172,10 @@ namespace m
 						SetEndFire(false);
 						SetStartFire(false);
 						SetStartRender(false);
-						if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
-						{
-							ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
-							PushUnit(arrow, 1);
-						}
+
+						ARROW_TILE_T arrow[1] = { (ARROW_TILE_T)iDir };
+						PushUnit(arrow, WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()]);
+
 						return;
 					}
 				}

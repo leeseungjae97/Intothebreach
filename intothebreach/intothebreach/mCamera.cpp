@@ -46,22 +46,22 @@ namespace m
 			}
 		}
 		//Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 2.0f);
-		if (KEY_PRESSED(KEYCODE_TYPE::W))
-		{
-			mLookPosition.y -= Time::fDeltaTime() * 500.0f;
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::S))
-		{
-			mLookPosition.y += Time::fDeltaTime() * 500.0f;
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::A))
-		{
-			mLookPosition.x -= Time::fDeltaTime() * 500.0f;
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::D))
-		{
-			mLookPosition.x += Time::fDeltaTime() * 500.0f;
-		}
+		//if (KEY_PRESSED(KEYCODE_TYPE::W))
+		//{
+		//	mLookPosition.y -= Time::fDeltaTime() * 500.0f;
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::S))
+		//{
+		//	mLookPosition.y += Time::fDeltaTime() * 500.0f;
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::A))
+		//{
+		//	mLookPosition.x -= Time::fDeltaTime() * 500.0f;
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::D))
+		//{
+		//	mLookPosition.x += Time::fDeltaTime() * 500.0f;
+		//}
 		CalDiff();
 		CheckEffectEnd();
 	}

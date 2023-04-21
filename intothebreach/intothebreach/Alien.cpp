@@ -12,9 +12,9 @@ namespace m
 {
 	Alien::Alien(int unitType, Vector2 _coord, size_t idx)
 		: Unit(_coord
-			, ALIEN_MOVE_RANGE[GetUnitName()]
-			, ALIEN_HP[GetUnitName()]
-			, BASIC_SKILL[unitType]
+			, ALIEN_MOVE_RANGE[unitType - (int)MECHS::tele - 1]
+			, ALIEN_HP[unitType - (int)MECHS::tele - 1]
+			, BASIC_WEAPON_TYPE[unitType]
 			, idx
 			, unitType
 		)
@@ -433,9 +433,6 @@ namespace m
 			//	GetCurAttackSkill()->SetGuideLineCoord(drawGuideLineEndCoord);
 			//	GetCurAttackSkill()->SetGuideLinePos(pos);
 			//}
-
-
-
 			DrawSkill(endCoord, drawGuideLineEndCoord);
 		}
 
@@ -466,8 +463,8 @@ namespace m
 		
 		if (AlienMoveToAttackCheck(Vector2(stPos.x, stPos.y)))
 		{
-			scene->SetPosTiles((int)stPos.y, (int)stPos.x
-				, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+			//scene->SetPosTiles((int)stPos.y, (int)stPos.x
+			//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 			SetFinalMoveCoord(Vector2(stPos.x, stPos.y));
 			return;
 		}
@@ -506,8 +503,8 @@ namespace m
 					{
 						
 					}
-					scene->SetPosTiles((int)dy, (int)dx
-						, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
+					//scene->SetPosTiles((int)dy, (int)dx
+					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));
 
 					find = true;

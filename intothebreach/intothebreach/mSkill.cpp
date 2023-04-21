@@ -12,9 +12,10 @@
 extern m::Application application;
 namespace m
 {
-	Skill::Skill(SKILL_T _type, Unit* owner)
-		: mType(_type)
+	Skill::Skill(WEAPON_T _type, Unit* owner)
+		: mType((SKILL_T)WEAPON_SKILL[(UINT)_type])
 		, mOwner(owner)
+		, mWeaponType(_type)
 		, mLayerType(LAYER_TYPE::SKILL)
 		, endFire(false)
 		, startFire(false)
@@ -110,6 +111,39 @@ namespace m
 			return true;
 		}
 		return false;
+	}
+
+	void Skill::Clear()
+	{
+		if (nullptr == this) return;
+		endFire = false;
+		startFire = false;
+		startRender = false;
+
+		offsetHeight = 0;
+		maxTheta = 0;
+		minTheta = 0;
+		fHeight = 0;
+		fMaxTime = 0;
+		fTime = 0;
+		velocityY = 0;
+		velocityX = 0;
+		gravityAccel = 0;
+
+		fDistance = 0;
+
+		arcTheta = 0;
+		theta = 0;
+
+		iDir = 0;
+
+		guideLinePos = Vector2::Zero;
+		guideLineCoord = Vector2::Zero;
+		Missile_vec = Vector2::Zero;
+		Missile_vec2 = Vector2::Zero;
+		endCoord = Vector2::Zero;
+		mStPos = Vector2::Zero;
+		mFinalEdPos = Vector2::Zero;
 	}
 
 	void Skill::Update()
@@ -254,7 +288,7 @@ namespace m
 		break;
 		case WEAPON_T::accelerating_thorax:
 		{
-
+			blow->SetTileAnimator(IMMO_EFFECT_T::ep_firefly1);
 		}
 		break;
 		case WEAPON_T::NONE:
@@ -281,7 +315,6 @@ namespace m
 			{
 				dy = (int)GetEndCoord().y + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;
 				dx = (int)GetEndCoord().x + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
-
 			}
 			else
 			{
@@ -307,10 +340,18 @@ namespace m
 
 			int _dy = (int)dy + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].y;
 			int _dx = (int)dx + (int)ARROW_TILE_DIRECTION[(UINT)arrows[i]].x;
-
+			
 			if (_dx < 0 || _dy < 0 || _dx > TILE_X - 1 || _dy > TILE_Y - 1) continue;
-			for (int i = 0; i < units.size(); i++)
-				scene->MoveAffectUnit(units[i], Vector2((float)_dx, (float)_dy));
+			if (scene->SearchAffectUnit(_dy, _dx))
+			{
+				scene->HitAffectUnit(dy, dx, 1);
+				scene->HitAffectUnit(_dy, _dx, 1);
+			}
+			else
+			{
+				for (int i = 0; i < units.size(); i++)
+					scene->MoveAffectUnit(units[i], Vector2((float)_dx, (float)_dy));
+			}
 		}
 	}
 	void Skill::Render(HDC hdc)

@@ -6,7 +6,7 @@ namespace m
 		public GameObject
 	{
 	public:
-		Skill(SKILL_T _type, Unit* onwer);
+		Skill(WEAPON_T _type, Unit* onwer);
 		Skill(Skill& _origin);
 		~Skill();
 
@@ -55,7 +55,7 @@ namespace m
 		void SetEndFire(bool _endFire) { endFire = _endFire; }
 		void SetStartFire(bool _stFire) { startFire = _stFire; }
 		void SetStartRender(bool _sR) { startRender = _sR; }
-
+		void Clear();
 
 	protected:
 		float GRAVITY = 9.81f * 0.1f;

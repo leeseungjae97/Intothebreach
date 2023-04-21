@@ -143,19 +143,41 @@ namespace m
 		btnInitTurn->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
 		btnInitTurn->SetInnerPos(Vector2(btnInitTurn->GetSize().x / 2 - 63 / 2, btnInitTurn->GetSize().y / 2 - 13 / 2));
 
-		textBattleEnd = new Button(L"..\\Resources\\texture\\ui\\combat\\turn_init_text.bmp", A_BTN_BACK);
-		textBattleEnd->SetInner(true);
-		textBattleEnd->UseInnerAlpha(false);
-		textBattleEnd->SetSize(Vector2(90, 38));
-		textBattleEnd->SetPos(Vector2(15 + gridPowerBox->GetSize().x, 10));
-		textBattleEnd->SetInnerPos(Vector2(textBattleEnd->GetSize().x / 2 - 63 / 2, textBattleEnd->GetSize().y / 2 - 13 / 2));
+		playerTurnBox = new Button(L"..\\Resources\\texture\\ui\\combat\\player_turn_noti.bmp", TURN_BACK);
+		playerTurnBox->SetInner(true);
+		playerTurnBox->UseInnerAlpha(true);
+		playerTurnBox->SetInnerConstant(0);
+		playerTurnBox->SetAlpha(true);
+		playerTurnBox->SetConstant(0);
+		playerTurnBox->SetSize(Vector2(application.GetResolutionWidth(), 80.f));
+		playerTurnBox->SetPos(Vector2(0, application.GetResolutionHeight() / 2));
+		playerTurnBox->SetInnerPos(Vector2(playerTurnBox->GetSize().x / 2 - 147 / 2, playerTurnBox->GetSize().y / 2 - 55 / 2));
+		playerTurnBox->SetIdVar(5);
+		playerTurnBox->SetState(GameObject::STATE::Invisible);
+
+		alienTurnBox = new Button(L"..\\Resources\\texture\\ui\\combat\\ey_turn_noti.bmp", TURN_BACK);
+		alienTurnBox->SetInner(true);
+		alienTurnBox->UseInnerAlpha(true);
+		alienTurnBox->SetInnerConstant(0);
+		alienTurnBox->SetAlpha(true);
+		alienTurnBox->SetConstant(0);
+		alienTurnBox->SetSize(Vector2(application.GetResolutionWidth(), 80.f));
+		alienTurnBox->SetPos(Vector2(0, application.GetResolutionHeight() / 2));
+		alienTurnBox->SetInnerPos(Vector2(alienTurnBox->GetSize().x / 2 - 62 / 2, alienTurnBox->GetSize().y / 2 - 29 / 2));
+		alienTurnBox->SetIdVar(5);
+		alienTurnBox->SetState(GameObject::STATE::Invisible);
 
 		btnTurnEnd->SetState(GameObject::STATE::Invisible);
 		btnUndoMove->SetState(GameObject::STATE::Invisible);
 		btnInitTurn->SetState(GameObject::STATE::Invisible);
-		textBattleEnd->SetState(GameObject::STATE::Invisible);
 
-		showPlayerInfo;
+		playerUnitInfo = new Button(L"..\\Resources\\texture\\ui\\combat\\player_unit_info.bmp", TURN_BACK);
+		playerUnitInfo->SetInner(true);
+		playerUnitInfo->SetSize(Vector2(playerUnitInfo->GetInnerImage()->GetWidth(), playerUnitInfo->GetInnerImage()->GetHeight()));
+		playerUnitInfo->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5));
+		playerUnitInfo->SetInnerPos(Vector2(playerUnitInfo->GetSize().x / 2 - 57 / 2, playerUnitInfo->GetSize().y / 2 - 195 / 2));
+		playerUnitInfo->SetState(GameObject::STATE::Visible);
+		
 		//textTurnNum->SetSize(Vector2(300.f, 50.f));
 		//textTurn->SetState(GameObject::STATE::Invisible);
 		//textTurnInfo = new Button();
@@ -173,6 +195,10 @@ namespace m
 		AddGameObject(btnTurnEnd, LAYER_TYPE::UI);
 		AddGameObject(btnUndoMove, LAYER_TYPE::UI);
 		AddGameObject(btnInitTurn, LAYER_TYPE::UI);
+		AddGameObject(playerUnitInfo, LAYER_TYPE::UI);
+		AddGameObject(playerTurnBox, LAYER_TYPE::UI);
+		AddGameObject(alienTurnBox, LAYER_TYPE::UI);
+
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
 		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
@@ -194,12 +220,26 @@ namespace m
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
 		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
+		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+		{
+			Button* unit = new Button(MAKE_UNIT_PATH((MECHS)PlayerInfo::mMechs[i]->GetUnitName(), COMBAT_CONDITION_T::NO_SHADOW)
+				, NO_BACK);
+			Button* unitHp = new Button();
+			unit->SetInner(true);
+			unit->UseInnerAlpha(false);
+			unit->SetInnerPos(Vector2(playerUnitInfo->GetPos().x + playerUnitInfo->GetSize().x / 2 - unit->GetInnerImage()->GetWidth() / 2
+				, playerUnitInfo->GetPos().y + 10 + 65 * i));
+			unit->SetState(GameObject::STATE::Visible);
+			units.push_back(unit);
+			AddGameObject(unit, LAYER_TYPE::UI);
+		}
+
 		RandSpawnAlien(4);
 
-		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-
 		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+
 		object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
@@ -237,7 +277,7 @@ namespace m
 			int randAlien[3] = { 6,7,9 };
 			int randUnit = rand() % 3;
 			if (GetAliens().size() == 0)
-				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/7]);
+				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/6]);
 			else
 			{
 				bool f = false;
@@ -273,26 +313,40 @@ namespace m
 				//}
 				if (!f)
 				{
-					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/7]);
+					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/6]);
 				}
 			}
 		}
 	}
 	void CombatScene::PlayerTurnBackground()
 	{
+		if (alienTurnBox->GetApDAp())
+			alienTurnBox->SetApDAp(false);
+
+		playerTurnBox->SetState(GameObject::STATE::Visible);
+		playerTurnBox->SetApDAp(true);
+
 		for (int i = 0; i < combatBack.size(); i++)
 		{
 			if (!combatBack[i]->GetSmoothAppear())
 				combatBack[i]->SmoothDisappear(true);
 		}
+		Scene::SetCurTurnEnd(false);
 	}
 	void CombatScene::AlienTurnBackground()
 	{
+		if(playerTurnBox->GetApDAp())
+			playerTurnBox->SetApDAp(false);
+
+		alienTurnBox->SetState(GameObject::STATE::Visible);
+		alienTurnBox->SetApDAp(true);
+
 		for (int i = 0; i < combatBack.size(); i++)
 		{
 			if (!combatBack[i]->GetSmoothDisappear())
 				combatBack[i]->SmoothAppear(true);
 		}
+		Scene::SetCurTurnEnd(false);
 	}
 	void CombatScene::PutUnitBeforeCombat()
 	{
@@ -698,10 +752,25 @@ namespace m
 			btnTurnEnd->SetState(GameObject::STATE::Visible);
 			btnUndoMove->SetState(GameObject::STATE::Visible);
 			btnInitTurn->SetState(GameObject::STATE::Visible);
+			playerUnitInfo->SetState(GameObject::STATE::Visible);
 
-			Scene::MoveMech();
-			Scene::MoveSkill();
-			Scene::AlienAlgorithm();
+			if (Scene::GetCurTurnEnd())
+			{
+				if(Scene::GetPlayerTurn())
+					PlayerTurnBackground();
+				if (!Scene::GetPlayerTurn())
+					AlienTurnBackground();
+			}
+			else
+			{
+				if (Scene::GetPlayerTurn() && !playerTurnBox->GetApDAp()
+					|| !Scene::GetPlayerTurn() && !alienTurnBox->GetApDAp())
+				{
+					Scene::MoveMech();
+					Scene::MoveSkill();
+					Scene::AlienAlgorithm();
+				}
+			}
 			AlienIndexReSort();
 			ButtonActivationCondition();
 		}
