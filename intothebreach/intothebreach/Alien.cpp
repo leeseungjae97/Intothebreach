@@ -120,6 +120,7 @@ namespace m
 			if (GetAnimator()->GetStopAnimator())
 			{
 				SetState(STATE::Death);
+				SceneManager::GetActiveScene()->RemoveEffectUnit(GetCoord(), this);
 			}
 			broken();
 			break;

@@ -155,7 +155,7 @@ namespace m
 		playerTurnBox->SetIdVar(5);
 		playerTurnBox->SetState(GameObject::STATE::Invisible);
 
-		alienTurnBox = new Button(L"..\\Resources\\texture\\ui\\combat\\ey_turn_noti.bmp", TURN_BACK);
+		alienTurnBox = new Button(L"..\\Resources\\texture\\ui\\combat\\start_mission_text.bmp", TURN_BACK);
 		alienTurnBox->SetInner(true);
 		alienTurnBox->UseInnerAlpha(true);
 		alienTurnBox->SetInnerConstant(0);
@@ -163,9 +163,21 @@ namespace m
 		alienTurnBox->SetConstant(0);
 		alienTurnBox->SetSize(Vector2(application.GetResolutionWidth(), 80.f));
 		alienTurnBox->SetPos(Vector2(0, application.GetResolutionHeight() / 2));
-		alienTurnBox->SetInnerPos(Vector2(alienTurnBox->GetSize().x / 2 - 62 / 2, alienTurnBox->GetSize().y / 2 - 29 / 2));
+		alienTurnBox->SetInnerPos(Vector2(alienTurnBox->GetSize().x / 2 - 133 / 2, alienTurnBox->GetSize().y / 2 - 27 / 2));
 		alienTurnBox->SetIdVar(5);
 		alienTurnBox->SetState(GameObject::STATE::Invisible);
+
+		endMissionBox = new Button(L"..\\Resources\\texture\\ui\\combat\\start_mission_text.bmp", TURN_BACK);
+		endMissionBox->SetInner(true);
+		endMissionBox->UseInnerAlpha(true);
+		endMissionBox->SetInnerConstant(0);
+		endMissionBox->SetAlpha(true);
+		endMissionBox->SetConstant(0);
+		endMissionBox->SetSize(Vector2(application.GetResolutionWidth(), 80.f));
+		endMissionBox->SetPos(Vector2(0, application.GetResolutionHeight() / 2));
+		endMissionBox->SetInnerPos(Vector2(endMissionBox->GetSize().x / 2 - 133 / 2, endMissionBox->GetSize().y / 2 - 27 / 2));
+		endMissionBox->SetIdVar(5);
+		endMissionBox->SetState(GameObject::STATE::Invisible);
 
 		btnTurnEnd->SetState(GameObject::STATE::Invisible);
 		btnUndoMove->SetState(GameObject::STATE::Invisible);
@@ -176,8 +188,18 @@ namespace m
 		playerUnitInfo->SetSize(Vector2(playerUnitInfo->GetInnerImage()->GetWidth(), playerUnitInfo->GetInnerImage()->GetHeight()));
 		playerUnitInfo->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5));
 		playerUnitInfo->SetInnerPos(Vector2(playerUnitInfo->GetSize().x / 2 - 57 / 2, playerUnitInfo->GetSize().y / 2 - 195 / 2));
-		playerUnitInfo->SetState(GameObject::STATE::Visible);
+		playerUnitInfo->SetState(GameObject::STATE::Invisible);
 		
+		selectUnitBox = new Button(L"..\\Resources\\texture\\ui\\combat\\select_player_unit.bmp", NO_BACK);
+		selectUnitBox->SetInner(true);
+		//selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5));
+		selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5
+		 + ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * 2)));
+		selectUnitBox->SetSize(Vector2(selectUnitBox->GetInnerImage()->GetWidth(), 
+			selectUnitBox->GetInnerImage()->GetHeight()));
+		//selectUnitBox->SetInnerPos(Vector2();
+		selectUnitBox->SetState(GameObject::STATE::Invisible);
+
 		//textTurnNum->SetSize(Vector2(300.f, 50.f));
 		//textTurn->SetState(GameObject::STATE::Invisible);
 		//textTurnInfo = new Button();
@@ -197,7 +219,9 @@ namespace m
 		AddGameObject(btnInitTurn, LAYER_TYPE::UI);
 		AddGameObject(playerUnitInfo, LAYER_TYPE::UI);
 		AddGameObject(playerTurnBox, LAYER_TYPE::UI);
+		AddGameObject(endMissionBox, LAYER_TYPE::UI);
 		AddGameObject(alienTurnBox, LAYER_TYPE::UI);
+		AddGameObject(selectUnitBox, LAYER_TYPE::UI);
 
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
@@ -222,19 +246,30 @@ namespace m
 
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
-			Button* unit = new Button(MAKE_UNIT_PATH((MECHS)PlayerInfo::mMechs[i]->GetUnitName(), COMBAT_CONDITION_T::NO_SHADOW)
-				, NO_BACK);
-			Button* unitHp = new Button();
-			unit->SetInner(true);
-			unit->UseInnerAlpha(false);
-			unit->SetInnerPos(Vector2(playerUnitInfo->GetPos().x + playerUnitInfo->GetSize().x / 2 - unit->GetInnerImage()->GetWidth() / 2
-				, playerUnitInfo->GetPos().y + 10 + 65 * i));
-			unit->SetState(GameObject::STATE::Visible);
-			units.push_back(unit);
-			AddGameObject(unit, LAYER_TYPE::UI);
+			Mech* mech = new Mech(
+				PlayerInfo::mMechs[i]->GetUnitName()
+				, Vector2::Minus
+				, 0
+				, PlayerInfo::mMechs[i]->GetFullHp()
+				, 99
+			);
+			mech->SetState(GameObject::STATE::NoMove);
+			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
+			//Image* img = mech->GetCurImage(COMBAT_CONDITION_T::BROKEN);
+			mech->SetHpCOffset(false);
+			mech->SetHpBackOffset(Vector2(8, -35));
+			mech->SetHpOffset(Vector2(3, -41));
+			Vector2 offset = img->GetOffset();
+			mech->SetPos(Vector2(playerUnitInfo->GetPos().x - offset.x + playerUnitInfo->GetSize().x / 2 + (img->GetWidth()) / 2
+				,playerUnitInfo->GetPos().y - offset.y + 70 * (i + 1) - 30));
+			mech->SetVisibleHp(true);
+			mech->SetImageMag(1);
+			mech->SetState(GameObject::STATE::Invisible);
+			AddGameObject(mech, LAYER_TYPE::UI);
+			infoUnits.push_back(mech);
 		}
 
-		RandSpawnAlien(4);
+		RandSpawnAlien(2);
 
 		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
@@ -753,7 +788,10 @@ namespace m
 			btnUndoMove->SetState(GameObject::STATE::Visible);
 			btnInitTurn->SetState(GameObject::STATE::Visible);
 			playerUnitInfo->SetState(GameObject::STATE::Visible);
-
+			for (int i = 0; i < infoUnits.size(); i++)
+			{
+				infoUnits[i]->SetState(GameObject::STATE::NoMove);
+			}
 			if (Scene::GetCurTurnEnd())
 			{
 				if(Scene::GetPlayerTurn())
@@ -766,10 +804,23 @@ namespace m
 				if (Scene::GetPlayerTurn() && !playerTurnBox->GetApDAp()
 					|| !Scene::GetPlayerTurn() && !alienTurnBox->GetApDAp())
 				{
+					alienTurnBox->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\ey_turn_noti.bmp");
+					alienTurnBox->SetInnerPos(Vector2(alienTurnBox->GetSize().x / 2 - 62 / 2, alienTurnBox->GetSize().y / 2 - 29 / 2));
 					Scene::MoveMech();
 					Scene::MoveSkill();
 					Scene::AlienAlgorithm();
 				}
+			}
+			for (int i = 0; i < infoUnits.size(); i++)
+			{
+				if(nullptr == GetMouseFollower())selectUnitBox->SetState(GameObject::STATE::Invisible);
+				if (PlayerInfo::mMechs[i]->GetSelected())
+				{
+					selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5
+						+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * i)));
+					selectUnitBox->SetState(GameObject::STATE::Visible);
+				}
+				infoUnits[i]->SetCurHp(PlayerInfo::mMechs[i]->GetCurHp());
 			}
 			AlienIndexReSort();
 			ButtonActivationCondition();

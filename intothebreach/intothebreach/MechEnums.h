@@ -54,35 +54,6 @@ enum class MECHS {
 
 	END
 };
-int MECH_DEFAULT_WEAPON[(UINT)MECHS::END]{
-	//electrice,
-	//flame,
-	//guard,
-	//judo,
-	//laser,
-	//leap,
-	//punch,
-
-	//charge,
-	//jet,
-	//mirror,
-	//tank,
-	//unstable,
-	//wall,
-
-	//artillery,
-	//dstrike,
-	//ice,
-	//ignite,
-	//rockart,
-	//rocket,
-
-	//grav,
-	//nano,
-	//pulse,
-	//science,
-	//tele,
-};
 int MECH_HP[(UINT)MECHS::END]{
 	3,//electrice,
 	3,//flame,

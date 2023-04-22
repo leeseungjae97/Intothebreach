@@ -22,24 +22,30 @@ namespace m
 
 		void MechMove();
 		void CheckNumInput();
-		void EndDeploy() {
+		void SetSelected(bool _b) { bSelected = _b; }
+		void EndDeploy()
+		{
 			bDeploy = false;
 			bCancelDeploy = false;
 			bSwap = false;
 		}
-		void SetDeploy(bool _b) { 
+		void SetDeploy(bool _b)
+		{
 			_b ? (bDeploy = _b, bSwap = false, bCancelDeploy = false) : (bDeploy = _b);
 		}
-		void SetSwap(bool _b) { 
+		void SetSwap(bool _b)
+		{
 			_b ? (bDeploy = false, bSwap = _b, bCancelDeploy = false) : (bSwap = _b);
 		}
-		void SetCancelDeploy(bool _b) { 
+		void SetCancelDeploy(bool _b)
+		{
 			_b ? (bDeploy = false, bSwap = false, bCancelDeploy = _b) : (bCancelDeploy = _b);
 		}
 		void SetMakeDeployAlpha(bool _b) { bMakeDeployAlpha = _b; }
 		void SetDeployConstant(float _c) { fDeployConstant = _c; }
 		void SetDeployed(bool _b) { bDeployed = _b; }
 
+		bool GetSelected() { return bSelected; }
 		bool GetDeployed() { return bDeployed; }
 		bool GetMakeDeployAlpha() { return bMakeDeployAlpha; }
 		bool GetDeploy() { return bDeploy; }
@@ -47,6 +53,7 @@ namespace m
 		bool GetSwap() { return bSwap; }
 	private:
 		int moveCnt;
+		bool bSelected;
 		bool bDeploy;
 		bool bSwap;
 		bool bCancelDeploy;

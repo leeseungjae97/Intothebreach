@@ -17,11 +17,14 @@ namespace m
 		, endMove(false)
 		, endAttack(false)
 		, drag(false)
+		, iImageMag(2)
 		, unitName(unitName)
 		, mWeaponType(weaponType)
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, mFinalPos(Vector2::Minus)
+		, mHpBackOffset(Vector2::Minus)
+		, bHpCOffset(true)
 		//, unitCoord(Vector2::One)
 		, moveRange(_range)
 		, mHp(hp)
@@ -130,10 +133,10 @@ namespace m
 				func.SourceConstantAlpha = (BYTE)unitConstant;
 
 				AlphaBlend(hdc
-					, (int)(mPos.x - curImage->GetWidth() / 2.f)
-					, (int)(mPos.y - curImage->GetHeight() / 2.f)
-					, (int)(curImage->GetWidth() * 2)
-					, (int)(curImage->GetHeight() * 2)
+					, (int)(mPos.x - curImage->GetWidth() / iImageMag)
+					, (int)(mPos.y - curImage->GetHeight() / iImageMag)
+					, (int)(curImage->GetWidth() * iImageMag)
+					, (int)(curImage->GetHeight() * iImageMag)
 					, curImage->GetHdc()
 					, 0
 					, 0
@@ -144,10 +147,10 @@ namespace m
 			else
 			{
 				TransparentBlt(hdc
-					, (int)(mPos.x - curImage->GetWidth() / 2.f)
-					, (int)(mPos.y - curImage->GetHeight() / 2.f)
-					, (int)(curImage->GetWidth() * 2)
-					, (int)(curImage->GetHeight() * 2)
+					, (int)(mPos.x - curImage->GetWidth() / iImageMag)
+					, (int)(mPos.y - curImage->GetHeight() / iImageMag)
+					, (int)(curImage->GetWidth() * iImageMag)
+					, (int)(curImage->GetHeight() * iImageMag)
 					, curImage->GetHdc()
 					, 0
 					, 0
@@ -165,13 +168,16 @@ namespace m
 			mPos = GetComponent<Transform>()->GetPos();
 			if (nullptr != hpImage && 0 != mHp)
 			{
-				mPos += hpImage->GetOffset();
+				if(bHpCOffset)
+					mPos += hpImage->GetOffset();
+				if (mHpBackOffset != Vector2::Minus)
+					mPos += mHpBackOffset;
 				mPos = Camera::CalculatePos(mPos);
 				TransparentBlt(hdc
-					, (int)(mPos.x - hpImage->GetWidth() / 2.f)
-					, (int)(mPos.y - hpImage->GetHeight() / 2.f)
-					, (int)(hpImage->GetWidth() * 2)
-					, (int)(hpImage->GetHeight() * 2)
+					, (int)(mPos.x - hpImage->GetWidth() / iImageMag)
+					, (int)(mPos.y - hpImage->GetHeight() / iImageMag)
+					, (int)(hpImage->GetWidth() * iImageMag)
+					, (int)(hpImage->GetHeight() * iImageMag)
 					, hpImage->GetHdc()
 					, 0
 					, 0
@@ -182,14 +188,17 @@ namespace m
 			mPos = GetComponent<Transform>()->GetPos();
 			if (nullptr != hpBack && 0 != mHp)
 			{
-				mPos += hpBack->GetOffset();
-				mPos = Camera::CalculatePos(mPos);
+				if(bHpCOffset)
+					mPos += hpBack->GetOffset();
+				if (mHpOffset != Vector2::Minus)
+					mPos += mHpOffset;
 
-				int px = (int)(mPos.x - hpBack->GetWidth() / 2.f);
-				int py = (int)(mPos.y - hpBack->GetHeight() / 2.f);
+				mPos = Camera::CalculatePos(mPos);
+				int px = (int)(mPos.x - hpBack->GetWidth() / iImageMag);
+				int py = (int)(mPos.y - hpBack->GetHeight() / iImageMag);
 				if (mHp == 0) return;
-				int hpWidth = (hpBack->GetWidth() * 2) / mHp;
-				int hpHeight = hpBack->GetHeight() * 2;
+				int hpWidth = (hpBack->GetWidth() * iImageMag) / mHp;
+				int hpHeight = hpBack->GetHeight() * iImageMag;
 				for (int i = 0; i < curHp; i++)
 				{
 					SelectGDI p(hdc, BRUSH_TYPE::GREEN);
@@ -201,12 +210,6 @@ namespace m
 				}
 			}
 		}
-		
-		if (bStructure)
-		{
-			// TODO building. energy status
-		}
-
 	}
 	void Unit::Release()
 	{

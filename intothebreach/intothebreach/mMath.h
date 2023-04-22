@@ -171,18 +171,18 @@ namespace m {
     {
         Vector2 coord;
         Vector2 pos;
-        size_t mechIdx;
+        size_t idx;
         int state;
         int lType;
         int curHp;
 
         bool operator == (const Vector2_3& other)
         {
-            return (coord == other.coord && pos == other.pos && mechIdx == other.mechIdx && lType == other.lType);
+            return (coord == other.coord && pos == other.pos && idx == other.idx && lType == other.lType);
         }
         bool operator != (const Vector2_3& other)
         {
-            return (coord != other.coord || pos != other.pos || mechIdx != other.mechIdx || lType != other.lType);
+            return (coord != other.coord || pos != other.pos || idx != other.idx || lType != other.lType);
         }
     };
 	typedef Vector2 Pos;

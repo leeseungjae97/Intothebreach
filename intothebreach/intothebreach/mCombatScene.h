@@ -52,7 +52,10 @@ namespace m {
 		Button* alienTurnBox;
 
 		Button* playerUnitInfo;
-		vector<Button*> units;
+		Button* selectUnitBox;
+
+		Button* endMissionBox;
+		vector<Mech*> infoUnits;
 		//Button* unit1;
 		//Button* unit1Hp;
 

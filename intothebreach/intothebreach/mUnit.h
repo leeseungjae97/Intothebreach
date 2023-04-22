@@ -48,8 +48,12 @@ namespace m
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 		void SetUnitConstant(float _constant) { unitConstant = _constant; }
 		void SetAffectUnitVectorIdx(size_t idx) { affectUnitVectorIdx = idx; }
+		void SetImageMag(int _mg) { iImageMag = _mg; }
+		void SetHpCOffset(bool _b) { bHpCOffset = _b; }
 		void ClearSkillRangeMap();
 		void DrawOutLineTile(int _type);
+		void SetHpBackOffset(Vector2 _offset) { mHpBackOffset = _offset; }
+		void SetHpOffset(Vector2 _offset) { mHpOffset = _offset; }
 		void DrawSkillRangeTile();
 
 		void DrawMoveRangeTile();
@@ -67,8 +71,6 @@ namespace m
 			else curHp += repair;
 		}
 
-
-		void SetStructure(bool _b) { bStructure = _b; }
 		void DrawSkill(Vector2 pos, Vector2 guideLinePos);
 		void SetHp(int _hp) { mHp = curHp = _hp; }
 
@@ -83,6 +85,7 @@ namespace m
 		size_t GetAffectUnitVectorIdx() { return affectUnitVectorIdx; }
 		int GetFullHp() { return mHp; }
 		int GetCurHp() { return curHp; }
+		int GetImageMag() { return iImageMag; }
 
 		int GetSkillIdx() { return skillIdx; }
 		int GetMoveRange() { return moveRange; }
@@ -95,6 +98,7 @@ namespace m
 		bool GetMove() { return move; }
 		bool GetEndMove() { return endMove; }
 		bool GetEndAttack() { return endAttack; }
+		bool GetHpCOffset() { return bHpCOffset; }
 		float GetUnitConstant() { return unitConstant; }
 
 		int GetSkillMap(int y, int x) { return skill_range_map[y][x]; }
@@ -106,22 +110,15 @@ namespace m
 		Animator* GetAnimator() { return mAnimator; }
 
 		Image* GetCurImage() { return curImage; }
-
+		Image* GetCurImage(COMBAT_CONDITION_T type) { return GetMImages()[(UINT)type]; }
 		LAYER_TYPE GetLayerType() { return lType; }
 
 		Skill* GetCurAttackSkill() { return curAttactSkill; }
-		Vector2 GetFinalPos()
-		{
-			return mFinalPos;
-		}
-		Vector2 GetCoord()
-		{
-			return mCoord;
-		}
-		Vector2 GetFinalCoord()
-		{
-			return mFinalCoord;
-		}
+		Vector2 GetHpBackOffset() { return mHpBackOffset; }
+		Vector2 GetHpOffset() { return mHpOffset; }
+		Vector2 GetFinalPos() { return mFinalPos; }
+		Vector2 GetCoord() { return mCoord; }
+		Vector2 GetFinalCoord() { return mFinalCoord; }
 		virtual void idle() {};
 		virtual void broken() {};
 		virtual void water() {};
@@ -147,7 +144,8 @@ namespace m
 		LAYER_TYPE lType;
 
 		Vector2 mCoord;
-
+		Vector2 mHpBackOffset;
+		Vector2 mHpOffset;
 		Vector2 mFinalCoord;
 		Vector2 mFinalPos;
 
@@ -161,12 +159,13 @@ namespace m
 		int unitName;
 		float unitConstant;
 
+		int iImageMag;
+		bool bHpCOffset;
 		bool drag;			//
 		bool endMove;		//
 		bool endAttack;		// 공격을 마치면
 		bool move;			// 공격에서 이동으로 넘갈때 사용.
 		// 이 값을 통해 공격과 이동의 분기가 나뉨.
-		bool bStructure;
 		bool visibleHp;
 		WEAPON_T mWeaponType;
 		Pilot* mPilot;		// 미사용

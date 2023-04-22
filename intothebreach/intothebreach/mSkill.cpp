@@ -356,7 +356,7 @@ namespace m
 	}
 	void Skill::Render(HDC hdc)
 	{
-		if (mOwner->GetState() == GameObject::STATE::Invisible) return;
+		//if (mOwner->GetState() == GameObject::STATE::Invisible) return;
 	}
 	void Skill::Release()
 	{}

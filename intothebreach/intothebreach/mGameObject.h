@@ -11,6 +11,7 @@ namespace m
 		enum class STATE
 		{
 			// 게임 기본동작들
+			NONE,
 			NoMove,
 			Idle,
 			Broken,

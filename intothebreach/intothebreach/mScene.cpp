@@ -330,6 +330,7 @@ namespace m
 						{
 							if (PlayerInfo::mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
 							//PlayerInfo::mMechs[_i]->SetMove(true);
+							PlayerInfo::mMechs[_i]->SetSelected(true);
 							SetMouseFollower(PlayerInfo::mMechs[_i]);
 							SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
 							break;
@@ -482,8 +483,8 @@ namespace m
 	}
 	void Scene::AlienAlgorithm()
 	{
-		if (playerTurn) return;
-
+		if (playerTurn || curTurnEnd) return;
+		drawTile();
 		//bool n = false;
 		//for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		//	if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
@@ -494,14 +495,13 @@ namespace m
 			((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
 				((CombatScene*)SceneManager::GetActiveScene())->GetTextTurnNumber() + 1
 			);
-			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
-			curAttackAlien = 0;
-			SaveTurn();
 			playerTurn = true;
 			curTurnEnd = true;
+			SaveTurn();
+			curAttackAlien = 0;
+			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
 			return;
 		}
-		//((CombatScene*)SceneManager::GetActiveScene())->AlienTurnBackground();
 		Alien* curAlien = mAliens[curAttackAlien];
 		if (curAlien->GetState() == GameObject::STATE::Death) return;
 		if (curAlien->GetState() == GameObject::STATE::Emerge_loop)
@@ -510,17 +510,14 @@ namespace m
 			{
 				curAlien->SetState(GameObject::STATE::Emerge);
 			}
-			else curAttackAlien++;
-			return;
-		}
-		if (curAlien->GetState() == GameObject::STATE::Emerge)
-		{
-			if (SearchBlockUnit((int)curAlien->GetCoord().y, (int)curAlien->GetCoord().x))
+			else
 			{
-				curAlien->SetState(GameObject::STATE::Emerge_loop);
+				HitAffectUnit((int)curAlien->GetCoord().y, (int)curAlien->GetCoord().x, 1);
+				curAttackAlien++;
 			}
 			return;
 		}
+		if (curAlien->GetState() == GameObject::STATE::Emerge) return;
 
 		if (nullptr != curAlien->GetCurAttackSkill()
 			&& curAlien->GetCurAttackSkill()->GetStartRender())
@@ -553,7 +550,7 @@ namespace m
 	}
 	void Scene::MoveSkill()
 	{
-		if (!playerTurn) return;
+		if (!playerTurn || curTurnEnd) return;
 		for (int i = 0; i < mAliens.size(); i++)
 		{
 			if (mAliens[i]->GetState() == GameObject::STATE::Broken)
@@ -621,12 +618,12 @@ namespace m
 	}
 	void Scene::SaveTurn()
 	{
-
+		turnSave.clear();
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
 			turnSave.push_back(Vector2_3(
-				PlayerInfo::mMechs[i]->GetCoord()
-				, PlayerInfo::mMechs[i]->GetPos()
+				PlayerInfo::mMechs[i]->GetFinalCoord()
+				, PlayerInfo::mMechs[i]->GetFinalPos()
 				, PlayerInfo::mMechs[i]->GetMIdx()
 				, (int)PlayerInfo::mMechs[i]->GetState()
 				, (int)PlayerInfo::mMechs[i]->GetLayerType()
@@ -636,8 +633,8 @@ namespace m
 		for (int i = 0; i < mAliens.size(); i++)
 		{
 			turnSave.push_back(Vector2_3(
-				mAliens[i]->GetCoord()
-				, mAliens[i]->GetPos()
+				mAliens[i]->GetFinalCoord()
+				, mAliens[i]->GetFinalPos()
 				, mAliens[i]->GetMIdx()
 				, (int)mAliens[i]->GetState()
 				, (int)mAliens[i]->GetLayerType()
@@ -647,8 +644,8 @@ namespace m
 		for (int i = 0; i < mStrutures.size(); i++)
 		{
 			turnSave.push_back(Vector2_3(
-				mStrutures[i]->GetCoord()
-				, mStrutures[i]->GetPos()
+				mStrutures[i]->GetFinalCoord()
+				, mStrutures[i]->GetFinalPos()
 				, mStrutures[i]->GetMIdx()
 				, (int)mStrutures[i]->GetState()
 				, (int)mStrutures[i]->GetLayerType()
@@ -667,37 +664,38 @@ namespace m
 			Vector2_3 info = turnSave[i];
 			if (info.lType == (int)LAYER_TYPE::PLAYER)
 			{
-				PlayerInfo::mMechs[info.mechIdx]->SetCoord(info.coord);
-				PlayerInfo::mMechs[info.mechIdx]->SetPos(info.pos);
-				PlayerInfo::mMechs[info.mechIdx]->SetFinalCoord(info.coord);
-				PlayerInfo::mMechs[info.mechIdx]->SetFinalPos(info.pos);
-				PlayerInfo::mMechs[info.mechIdx]->SetCurHp(info.curHp);
-				PlayerInfo::mMechs[info.mechIdx]->SetState((GameObject::STATE)info.state);
-				PlayerInfo::mMechs[info.mechIdx]->SetEndMove(false);
-				PlayerInfo::mMechs[info.mechIdx]->SetEndAttack(false);
-				for (int i = 0; i < PlayerInfo::mMechs[info.mechIdx]->GetSkills().size(); i++)
+				PlayerInfo::mMechs[info.idx]->SetCoord(info.coord);
+				PlayerInfo::mMechs[info.idx]->SetPos(info.pos);
+				PlayerInfo::mMechs[info.idx]->SetFinalCoord(info.coord);
+				PlayerInfo::mMechs[info.idx]->SetFinalPos(info.pos);
+				PlayerInfo::mMechs[info.idx]->SetCurHp(info.curHp);
+				PlayerInfo::mMechs[info.idx]->SetState((GameObject::STATE)info.state);
+				PlayerInfo::mMechs[info.idx]->SetEndMove(false);
+				PlayerInfo::mMechs[info.idx]->SetEndAttack(false);
+				for (int i = 0; i < PlayerInfo::mMechs[info.idx]->GetSkills().size(); i++)
 				{
-					PlayerInfo::mMechs[info.mechIdx]->GetSkills()[i]->Clear();
+					PlayerInfo::mMechs[info.idx]->GetSkills()[i]->Clear();
 				}
 			}
 			if (info.lType == (int)LAYER_TYPE::MONSTER)
 			{
-				mAliens[info.mechIdx]->SetCoord(info.coord);
-				mAliens[info.mechIdx]->SetPos(info.pos);
-				mAliens[info.mechIdx]->SetFinalCoord(info.coord);
-				mAliens[info.mechIdx]->SetFinalPos(info.pos);
-				mAliens[info.mechIdx]->SetState((GameObject::STATE)info.state);
-				mAliens[info.mechIdx]->SetCurHp(info.curHp);
-				mAliens[info.mechIdx]->SetEndMove(false);
-				mAliens[info.mechIdx]->SetEndAttack(false);
+				mAliens[info.idx]->SetCoord(info.coord);
+				mAliens[info.idx]->SetPos(info.pos);
+				mAliens[info.idx]->SetFinalCoord(info.coord);
+				mAliens[info.idx]->SetFinalPos(info.pos);
+				mAliens[info.idx]->SetState((GameObject::STATE)info.state);
+				mAliens[info.idx]->SetCurHp(info.curHp);
+				mAliens[info.idx]->SetEndMove(false);
+				mAliens[info.idx]->SetEndAttack(false);
 			}
 			if (info.lType == (int)LAYER_TYPE::STRUCT)
 			{
-				mStrutures[info.mechIdx]->SetCoord(info.coord);
-				mStrutures[info.mechIdx]->SetPos(info.pos);
-				mStrutures[info.mechIdx]->SetState((GameObject::STATE)info.state);
+				mStrutures[info.idx]->SetCoord(info.coord);
+				mStrutures[info.idx]->SetPos(info.pos);
+				mStrutures[info.idx]->SetState((GameObject::STATE)info.state);
 			}
 		}
+		turnSave.clear();
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
 			MoveAffectUnit(PlayerInfo::mMechs[i]);
@@ -737,7 +735,7 @@ namespace m
 	}
 	void Scene::MoveMech()
 	{
-		if (!playerTurn) return;
+		if (!playerTurn || curTurnEnd) return;
 		drawTile();
 
 		//((CombatScene*)SceneManager::GetActiveScene())->PlayerTurnBackground();
@@ -910,8 +908,9 @@ namespace m
 			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
-				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible)
-				continue;
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
+			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 
 			GetAffectUnits(y, x)[i]->Hit(damage);
 		}
@@ -981,16 +980,39 @@ namespace m
 	}
 	bool Scene::SearchAffectUnit(int y, int x)
 	{
-		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		vector<Unit*>::iterator iter = GetAffectUnits(y, x).begin();
+		while (iter != GetAffectUnits(y, x).end())
 		{
-			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
-				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
-				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
-				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
-				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible)
+			if ((*iter)->GetState() == GameObject::STATE::NONE
+				|| (*iter)->GetState() == GameObject::STATE::Explo
+				|| (*iter)->GetState() == GameObject::STATE::Emerge_loop
+				|| (*iter)->GetState() == GameObject::STATE::Emerge
+				|| (*iter)->GetState() == GameObject::STATE::Death
+				|| (*iter)->GetState() == GameObject::STATE::Invisible)
+			{
+				iter++;
 				continue;
-			else return true;
+			}
+			if ((*iter)->GetLayerType() == LAYER_TYPE::MONSTER
+				&& (*iter)->GetState() == GameObject::STATE::Broken)
+			{
+				iter++;
+				continue;
+			}
+			return true;
 		}
+		//for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		//{
+		//	if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
+		//		|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+		//		|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
+		//		|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
+		//		|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
+		//	if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+		//		&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
+
+		//	return true;
+		//}
 		return false;
 	}
 	bool Scene::SearchBlockUnit(int y, int x)
@@ -998,12 +1020,15 @@ namespace m
 		if (GetAffectUnits(y, x).size() == 0) return false;
 		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
 		{
-			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken
+			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::NONE
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
-			else return true;
+			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
+			return true;
 		}
 		return false;
 	}
@@ -1093,11 +1118,13 @@ namespace m
 	}
 	void Scene::SetMouseFollower(Mech* _mM)
 	{
-		mMouseFollower = _mM;
-		if (nullptr == _mM) SetAlphaFollower(_mM);
-	}
-	void Scene::SetMouseFollowerE(Mech* _mM)
-	{
+		if (nullptr == _mM)
+		{
+			if (nullptr != mMouseFollower)
+				mMouseFollower->SetSelected(false);
+
+			SetAlphaFollower(_mM);
+		}
 		mMouseFollower = _mM;
 	}
 }

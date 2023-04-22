@@ -87,7 +87,7 @@ namespace m
 		{
 			SetState(STATE::Idle);
 		}
-		if (Unit::GetCurHp() == 0)
+		if (Unit::GetCurHp() == 0 && GetLayerType() == LAYER_TYPE::PLAYER)
 		{
 			SetState(STATE::Broken);
 		}
@@ -207,7 +207,8 @@ namespace m
 			if (!GetMove()) // 공격이 취소되고 이동가능상태로
 			{
 				SetMove(true);
-				GetCurAttackSkill()->SetStartRender(false);
+				if(GetCurAttackSkill())
+					GetCurAttackSkill()->SetStartRender(false);
 
 				SetSkillIdx(-1);
 			}
