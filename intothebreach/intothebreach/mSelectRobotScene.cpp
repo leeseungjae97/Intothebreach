@@ -7,12 +7,15 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mCamera.h"
+#include "func.h"
 extern m::Application application;
 namespace m
 {
 	SelectRobotScene::SelectRobotScene()
-		:mMech()
-	{}
+		: Scene()
+		, mMech()
+	{
+	}
 
 	SelectRobotScene::~SelectRobotScene()
 	{
@@ -24,7 +27,9 @@ namespace m
 		Scene::Initialize();
 		//Background* b0 = new Background(L"", L"");
 		//AddGameObject(b0, LAYER_TYPE::BACKGROUND);
-
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
+		object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
 		moon = new Background(L"moon", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_sky_top.bmp", 2, false);
 		moon->SetCutPos(true);

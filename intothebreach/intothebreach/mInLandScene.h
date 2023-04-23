@@ -1,6 +1,7 @@
 #pragma once
 #include "mScene.h"
 namespace m {
+	class Button;
 	class Background;
     class InLandScene :
         public Scene {
@@ -19,6 +20,8 @@ namespace m {
 	private:
 		ISLAND_T mType;
 		vector<Background*> mSections;
+
+		Button* upUiBox;
     };
 }
 

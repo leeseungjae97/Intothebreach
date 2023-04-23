@@ -52,7 +52,7 @@ namespace m
 			, GetMImages()[(UINT)COMBAT_CONDITION_T::IDLE]->GetOffset()
 			, len
 			, 0.2f
-			, AC_SRC_ALPHA
+			, (UINT)AC_SRC_ALPHA
 		);
 
 		GetAnimator()->SetConstant(255);
@@ -79,13 +79,17 @@ namespace m
 			MechMove();
 		}
 		//else object::DestoryUnitVector<Background*>(GetMoveDusts());
-		if (KEY_PRESSED(KEYCODE_TYPE::Q))
+		//if (KEY_PRESSED(KEYCODE_TYPE::Q))
+		//{
+		//	SetState(STATE::Broken);
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::E))
+		//{
+		//	SetState(STATE::Idle);
+		//}
+		if (KEY_PRESSED(KEYCODE_TYPE::R))
 		{
-			SetState(STATE::Broken);
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::E))
-		{
-			SetState(STATE::Idle);
+			Repair(1);
 		}
 		if (Unit::GetCurHp() == 0 && GetLayerType() == LAYER_TYPE::PLAYER)
 		{

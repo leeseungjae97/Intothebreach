@@ -36,11 +36,16 @@ m::Vector2 ISLAND_OUTLINE_OFFSET[(UINT)ISLAND_T::END]{
    {0, 0}
 };
 m::Vector2 ISLANDS_POS[(UINT)ISLAND_T::END]{
-	{100, 80},
-	{250, 370},
-	{580, 250},
-	{900, 440},
-	{500, 50}
+	//{100, 80},
+	//{250, 370},
+	//{580, 250},
+	//{900, 440},
+	//{500, 50}
+	{150, 80},
+	{280, 370},
+	{590, 250},
+	{910, 440},
+	{510, 50}
 };
 UINT ISLANDS_SECTIONS[(UINT)ISLAND_T::END]{
    8,

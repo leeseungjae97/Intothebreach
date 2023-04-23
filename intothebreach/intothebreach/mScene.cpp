@@ -10,6 +10,8 @@
 #include "mApplication.h"
 #include "mBackground.h"
 #include "mCombatScene.h"
+#include "mSelectLandScene.h"
+#include "mInLandScene.h"
 #include "mButton.h"
 #include "func.h"
 #include "mInput.h"
@@ -24,7 +26,7 @@ namespace m
 		, firstUpdate(true)
 		, curAttackAlien(0)
 	{
-		mLayers.reserve(5);
+		//mLayers.reserve((UINT)LAYER_TYPE::END);
 		mLayers.resize((UINT)LAYER_TYPE::END);
 		mapType = TILE_T::GREEN;
 	}
@@ -659,6 +661,8 @@ namespace m
 		if (PlayerInfo::resetTurn == 0) return;
 		PlayerInfo::resetTurn -= 1;
 
+		moveSave.clear();
+
 		for (int i = 0; i < turnSave.size(); i++)
 		{
 			Vector2_3 info = turnSave[i];
@@ -695,6 +699,7 @@ namespace m
 				mStrutures[info.idx]->SetState((GameObject::STATE)info.state);
 			}
 		}
+		ClearAffectUnit();
 		turnSave.clear();
 		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		{
@@ -853,7 +858,7 @@ namespace m
 		//}
 		//if (idx == Vector2::Minus) return
 			//effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
-		RemoveEffectUnit(idx, unit);
+		RemoveAffectUnit(idx, unit);
 		affectUnits[(UINT)_coord.y][(UINT)_coord.x].push_back(unit);
 		ReSortAffectUnits(_coord.y, _coord.x);
 		//unit->SetAffectUnitVectorIdx(affectUnits[(UINT)_coord.y][(UINT)_coord.x].size() - 1);
@@ -878,7 +883,7 @@ namespace m
 		Vector2 nIdx = unit->GetCoord();
 		//if(idx != Vector2::Minus)
 		//	effectUnits[(UINT)idx.y][(UINT)idx.x] = nullptr;
-		RemoveEffectUnit(idx, unit);
+		RemoveAffectUnit(idx, unit);
 		if (nIdx != Vector2::Minus)
 		{
 			affectUnits[(UINT)nIdx.y][(UINT)nIdx.x].push_back(unit);
@@ -1076,16 +1081,32 @@ namespace m
 			//((Unit*)obj)->SetUnitCoord(Vector2(idx.x, idx.y));
 		}
 	}
+	void Scene::ClearAffectUnit()
+	{
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				for (int i = 0; i < affectUnits[y][x].size(); i++)
+				{
+					affectUnits[y][x][i] = nullptr;
+				}
+				affectUnits[y][x].clear();
+			}
+		}
+
+
+	}
 	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE lType)
 	{
 		mLayers[(UINT)lType].ObjectFront(obj);
 	}
-	void Scene::RemoveEffectUnit(Vector2 _coord)
+	void Scene::RemoveAffectUnit(Vector2 _coord)
 	{
 		ReSortAffectUnits(_coord.y, _coord.x);
 		//effectUnits[(UINT)_coord.y][(UINT)_coord.x] = nullptr;
 	}
-	void Scene::RemoveEffectUnit(Vector2 _coord, Unit* unit)
+	void Scene::RemoveAffectUnit(Vector2 _coord, Unit* unit)
 	{
 		vector<Unit*>::iterator iter = affectUnits[(UINT)_coord.y][(UINT)_coord.x].begin();
 		while (iter != affectUnits[(UINT)_coord.y][(UINT)_coord.x].end())

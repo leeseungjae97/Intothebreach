@@ -9,11 +9,12 @@ namespace m {
 	Animation::Animation() 
 		: mAnimator(nullptr)
 		, mImage(nullptr)
-		, mSpriteIndex(0)
+		//, mSpriteIndex(0)
 		, mTime(0.0f)
 		, mbComplete(false)
 		, mbAffectedCamera(false)
 		, mAlpha(AC_SRC_OVER)
+		, mbReverse(false)
 	{
 	}
 	Animation::Animation(Animation& other)
@@ -36,12 +37,27 @@ namespace m {
 		mTime += Time::fDeltaTime();
 		if (mSpriteSheet[mSpriteIndex].duration < mTime) {
 			mTime = 0.0f;
-			if (mSpriteSheet.size() <= mSpriteIndex + 1) {
-				mbComplete = true;
+			if (mbReverse)
+			{
+				if (mSpriteIndex - 1 < 0)
+				{
+					mbComplete = true;
+				}
+				else
+				{
+					mSpriteIndex -= 1;
+				}
+			}else{
+				if (mSpriteSheet.size() <= mSpriteIndex + 1)
+				{
+					mbComplete = true;
+				}
+				else
+				{
+					mSpriteIndex += 1;
+				}
 			}
-			else {
-				mSpriteIndex += 1;
-			}
+			
 		}
 	}
 	void Animation::Initialize() {
@@ -118,7 +134,7 @@ namespace m {
 		mImage = image;
 		mbAffectedCamera = affactedCamera;
 		mAlpha = alphaCheck;
-
+		mSpriteIndex = 0;
 		for (size_t i = 0; i < spriteLength; i++) {
 			Sprite sprite;
 
@@ -132,8 +148,36 @@ namespace m {
 		}
 
 	}
+	void Animation::Create(
+		Image* image, Vector2 leftTop, Vector2 size
+		, Vector2 offset, UINT spriteLength, float duration
+		, bool reverse, UINT alphaCheck, bool affactedCamera)
+	{
+		mImage = image;
+		mbAffectedCamera = affactedCamera;
+		mbReverse = reverse;
+		mAlpha = alphaCheck;
+		mSpriteIndex = spriteLength - 1;
+		mMaxIndex = spriteLength - 1;
+
+		for (size_t i = 0; i < spriteLength; i++)
+		{
+			Sprite sprite;
+
+			sprite.leftTop.x = leftTop.x + (size.x * float(i));
+			sprite.leftTop.y = leftTop.y;
+			sprite.size = size;
+			sprite.offset = offset;
+			sprite.duration = duration;
+
+			mSpriteSheet.push_back(Sprite(sprite));
+		}
+
+	}
 	void Animation::Reset() {
-		mSpriteIndex = 0;
+		if(mbReverse) mSpriteIndex = mMaxIndex;
+		else mSpriteIndex = 0;
+		
 		mTime = 0.0f;
 		mbComplete = false;
 	}

@@ -77,6 +77,29 @@ namespace m {
 		mAnimations.insert(std::make_pair(name, animation));
 
 	}
+	void Animator::CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset
+		, UINT spriteLength, float duration, bool reverse, UINT alphaCheck, bool bAffectedCamera)
+	{
+		Animation* animation = FindAnimation(name);
+		if (animation != nullptr)
+		{
+			MessageBox(nullptr, L"Animation 이름 중복", L"Animation 생성 실패", MB_OK);
+			return;
+		}
+
+		animation = new Animation();
+		animation->Create(image, leftTop, size, offset, spriteLength, duration, reverse, alphaCheck, bAffectedCamera);
+		animation->SetReverse(reverse);
+		if (reverse)
+		{
+			animation->SetSpriteIdx(spriteLength - 1);
+		}
+		animation->SetName(name);
+		animation->SetAnimator(this);
+
+		mAnimations.insert(std::make_pair(name, animation));
+
+	}
 	void Animator::CreateAnimations(const wstring& path, const wstring& name, Vector2 offset, float duration) {
 		UINT width = 0;
 		UINT height = 0;
@@ -142,6 +165,27 @@ namespace m {
 		mbLoop = loop;
 
 		if (prevAnimation != mActiveAnimation) {
+			if (events != nullptr) events->mEndEvent();
+		}
+	}
+	void Animator::Play(const wstring& name, bool loop, bool reverse)
+	{
+		stopAnimator = false;
+		if (FindAnimation(name) == mActiveAnimation)
+			return;
+		Animator::Events* events = FindEvents(name);
+		if (events != nullptr) events->mStartEvent();
+
+
+		Animation* prevAnimation = mActiveAnimation;
+
+		mActiveAnimation = FindAnimation(name);
+
+		mActiveAnimation->Reset();
+		mbLoop = loop;
+
+		if (prevAnimation != mActiveAnimation)
+		{
 			if (events != nullptr) events->mEndEvent();
 		}
 	}

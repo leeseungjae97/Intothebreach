@@ -20,6 +20,7 @@ namespace m
 			Death,
 			Emerge,		
 			Emerge_loop,
+			Retreat,
 			// 오브젝트 상태 설정
 			Invisible,	// 보이지 않게만
 			Visible,	// 보이지 않았던 오브젝트 보이게

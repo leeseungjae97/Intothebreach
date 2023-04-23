@@ -56,6 +56,10 @@ namespace m
 	{
 		return (float)mImage->GetHeight();
 	}
+	void UI::SetTex(const wstring& key, const wstring& path)
+	{
+		mImage = Resources::Load<Image>(key, path);
+	}
 	void UI::SetTex(const wstring& key, const wstring& path, ISLAND_T type)
 	{
 		mImage = Resources::Load<Image>(key, path);

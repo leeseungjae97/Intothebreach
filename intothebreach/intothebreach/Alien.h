@@ -26,6 +26,7 @@ namespace m
 
 		void emerge();
 		void emerger_loop();
+		void retreat();
 
 		bool AlienMoveToAttackCheck(Vector2 _alienCoord);
 		void AlienMoveCheck(int& curAlien);

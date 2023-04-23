@@ -33,6 +33,8 @@ namespace m {
 	private:
 		vector<Background*> combatBack;
 		bool bSetPosition;
+		bool endGame;
+		bool showEnd;
 		//bool bConfirm;
 		Button* textDeploy;
 		Button* btnConfirm;

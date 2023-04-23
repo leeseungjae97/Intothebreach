@@ -58,7 +58,8 @@ void m::Button::Update()
 		}
 		if (bReSzieable)
 		{
-			if (mSize.x <= 400.f) mSize.x += 50.f;
+			if (mSize.x <= resizeMax.x) mSize.x += resizeUnit.x;
+			if (mSize.y <= resizeMax.y) mSize.y += resizeUnit.y;
 		}
 
 	}
@@ -67,9 +68,9 @@ void m::Button::Update()
 		bHover = false;
 		if (bReSzieable)
 		{
-			if (mSize.x > 300.f) mSize.x -= 50.f;
+			if (mSize.x > resizeMax.x) mSize.x -= resizeUnit.x;
+			if (mSize.y > resizeMax.y) mSize.x -= resizeUnit.y;
 		}
-
 	}
 }
 void m::Button::Render(HDC hdc)

@@ -71,7 +71,7 @@ namespace m {
 				, COMBAT_ANIM_TIME_OFFSET[(UINT)_type]
 				, len
 				, 0.2f
-				, AC_SRC_ALPHA
+				, (UINT)AC_SRC_ALPHA
 			);
 		}
 		mAnimator->Play(MAKE_TILE_KEY(_type), true);
@@ -99,7 +99,7 @@ namespace m {
 				, DIR_EFFECT_T_OFFSET[(UINT)_type]
 				, len
 				, 0.05f
-				, AC_SRC_OVER
+				, (UINT)AC_SRC_OVER
 			);
 		}
 		if(mAnimator->GetStopAnimator())
@@ -128,7 +128,7 @@ namespace m {
 				, IMMO_EFFECT_T_OFFSET[(UINT)_type]
 				, len
 				, 0.05f
-				, AC_SRC_OVER
+				, (UINT)AC_SRC_OVER
 			);
 		}
 		if (mAnimator->GetStopAnimator())

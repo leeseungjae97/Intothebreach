@@ -35,6 +35,9 @@ namespace m
 		BYTE GetConstant() { return btConstant; }
 		int GetIdVar() { return idVar; }
 
+		void SetOSize(Vector2 _os) { originSize = _os; }
+		void SetResize(Vector2 _r) { resizeMax = _r; }
+		void SetResizeUnit(Vector2 _u) { resizeUnit = _u; }
 		void SetInner(bool _t) { bInner = _t; }
 		void SetClicked(bool _b) { bClicked = _b; }
 		void ChangeInner(const wstring& _path) { btnName = _path; }
@@ -54,6 +57,9 @@ namespace m
 
 	private:
 		Vector2 innerPos;
+		Vector2 resizeMax;
+		Vector2 resizeUnit;
+		Vector2 originSize;
 		wstring btnName;
 
 		SCENE_TYPE eBtnMoveScene;

@@ -4,48 +4,65 @@
 #include "mInput.h"
 #include "mTransform.h"
 #include "mBackground.h"
+#include "mButton.h"
+#include "mImage.h"
 #include "mSelectGDI.h"
 #include "mApplication.h"
 extern m::Application application;
-namespace m {
+namespace m
+{
 	InLandScene::InLandScene(ISLAND_T _type)
-		: mType(_type)
+		: Scene()
+		, mType(_type)
+	{}
+	InLandScene::~InLandScene()
+	{}
+	void InLandScene::Initialize()
 	{
-	}
-	InLandScene::~InLandScene() {
-	}
-	void InLandScene::Initialize() {
 		Background* b = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
 
 		AddGameObject(b, LAYER_TYPE::BACKGROUND);
 
-		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2 , false, CENTER);
+		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2, false, CENTER);
 		b0->SetPos(Vector2(100.f, 100.f));
 		AddGameObject(b0, LAYER_TYPE::BACKGROUND);
 		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mType];
-		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++) {
+		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++)
+		{
 			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i), MAKE_SECTION_PATH(mType, i), 2);
 			b_->SetPos(pos[i]);
 			mSections.push_back(b_);
 			AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 		}
+
+		upUiBox = new Button(L"..\\Resources\\texture\\ui\\selectLand\\up_box.bmp", NO_BACK);
+		upUiBox->SetInner(true);
+		upUiBox->UseInnerAlpha(false);
+		upUiBox->SetPos(Vector2(application.GetResolutionWidth() / 2 + upUiBox->GetInnerImage()->GetWidth() / 2, 0));
+		upUiBox->SetInnerPos(Vector2(application.GetResolutionWidth() / 2 + upUiBox->GetInnerImage()->GetWidth() / 2, 0));
+
+		AddGameObject(upUiBox, LAYER_TYPE::UI);
 	}
-	void InLandScene::Update() {
+	void InLandScene::Update()
+	{
 		Scene::Update();
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN)) {
+		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+		{
 			SceneManager::LoadScene(SCENE_TYPE::COMBAT);
 		}
-		if (KEY_DOWN(KEYCODE_TYPE::RBTN)) {
+		if (KEY_DOWN(KEYCODE_TYPE::RBTN))
+		{
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
 	}
-	void InLandScene::Render(HDC hdc) {
+	void InLandScene::Render(HDC hdc)
+	{
 		Scene::Render(hdc);
 	}
-	void InLandScene::Release() {
-	}
-	void InLandScene::OnEnter() {
-	}
-	void InLandScene::OnExit() {
-	}
+	void InLandScene::Release()
+	{}
+	void InLandScene::OnEnter()
+	{}
+	void InLandScene::OnExit()
+	{}
 }

@@ -25,6 +25,7 @@ namespace m{
 			return Vector2(GetWidth(), GetHeight()); 
 		}
 		void SetSize(Vector2 _size) {mSize = _size;}
+		void SetTex(const wstring& key, const wstring& path);
 		void SetTex(const wstring& key, const wstring& path, ISLAND_T type);
 		void Clear();
 

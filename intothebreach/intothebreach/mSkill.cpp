@@ -350,7 +350,12 @@ namespace m
 			else
 			{
 				for (int i = 0; i < units.size(); i++)
+				{
+					if(units[i]->GetState() != GameObject::STATE::Death
+						|| units[i]->GetState() != GameObject::STATE::Emerge_loop
+						|| units[i]->GetState() != GameObject::STATE::Emerge)
 					scene->MoveAffectUnit(units[i], Vector2((float)_dx, (float)_dy));
+				}
 			}
 		}
 	}

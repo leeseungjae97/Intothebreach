@@ -69,6 +69,7 @@ namespace m
 		bool SearchBlockUnit(int y, int x);
 		bool CheckMouseOutRange();
 
+		void ClearAffectUnit();;
 		void ReSortAffectUnits(int y, int x);
 		void ReSortAffectUnits(float y, float x);
 		void HitAffectUnit(int y, int x, int damage);
@@ -80,8 +81,8 @@ namespace m
 		void RobotDrag();
 		void MoveAffectUnit(Unit* unit);
 		void MoveAffectUnit(Unit* unit, Vector2 _coord);
-		void RemoveEffectUnit(Vector2 _coord);
-		void RemoveEffectUnit(Vector2 _coord, Unit* unit);
+		void RemoveAffectUnit(Vector2 _coord);
+		void RemoveAffectUnit(Vector2 _coord, Unit* unit);
 		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);
 
 

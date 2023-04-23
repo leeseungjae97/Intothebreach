@@ -110,7 +110,7 @@ namespace m
 			GetState() == GameObject::STATE::Broken)
 		{
 			if(mCoord != Vector2::Minus)
-				SceneManager::GetActiveScene()->RemoveEffectUnit(mCoord);
+				SceneManager::GetActiveScene()->RemoveAffectUnit(mCoord);
 		}
 		pathQueue.clear();
 	}

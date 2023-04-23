@@ -35,11 +35,11 @@ namespace m {
 					MAKE_TILE_KEY(mapType, TILE_HEAD_T::mountain_explode)
 					, im
 					, Vector2::Zero
-					, Vector2((im->GetWidth() / 13.f), im->GetHeight())
+					, Vector2((im->GetWidth() / 13.f), (float)im->GetHeight())
 					, im->GetOffset()
 					, 13
 					, 0.1f
-					, AC_SRC_OVER
+					, (UINT)AC_SRC_OVER
 				);
 			}
 		}
@@ -112,7 +112,7 @@ namespace m {
 		//mPos.x += GetCurImage()->GetWidth() / 2;
 		if (gridIcon)
 		{
-			Vector2 mCenterPos = SceneManager::GetActiveScene()->GetPosTile(GetCoord().y, GetCoord().x)->GetCenterPos();
+			Vector2 mCenterPos = SceneManager::GetActiveScene()->GetPosTile((int)GetCoord().y, (int)GetCoord().x)->GetCenterPos();
 			mCenterPos.y -= GetCurImage()->GetHeight();
 			//mCenterPos.x += gridIcon->GetWidth();
 			TransparentBlt(hdc

@@ -31,12 +31,16 @@ namespace m {
         // 한 파일에 이어져있는 애니메이션
         void CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset
             , UINT spriteLength, float duration, UINT alphaCheck = 0, bool bAffectedCamera = false);
+        void CreateAnimation(const wstring& name, Image* image, Vector2 leftTop, Vector2 size, Vector2 offset
+            , UINT spriteLength, float duration, bool reverse, UINT alphaCheck = 0, bool bAffectedCamera = false);
         // 파일별로 있는 애니메이션
         void CreateAnimations(const wstring& path, const wstring& name, Vector2 offset = Vector2::Zero, float duration = 0.1f);
+        Animation* GetActiveAnimation() { return mActiveAnimation; }
         void SetConstant(BYTE _constant) { mConstant = _constant; }
         BYTE GetConstant() { return mConstant; }
         Animation* FindAnimation(const wstring& name);
         void Play(const wstring& name, bool loop);
+        void Play(const wstring& name, bool loop, bool reverse);
         void Stop();
 
         Events* FindEvents(const wstring name);

@@ -32,7 +32,10 @@ namespace m {
 			btn->UseInnerAlpha(true);
 			btn->SetPos(Vector2(-300.f, yPos));
 			btn->SetSize(Vector2(300.f, 45.f));
+			btn->SetOSize(Vector2(300.f, 45.f));
 			btn->SetReSizeable(true);
+			btn->SetResize(Vector2(400, 300));
+			btn->SetResizeUnit(Vector2(50, 50));
 			yPos += 52.f;
 
 			AddGameObject(btn, LAYER_TYPE::UI);

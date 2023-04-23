@@ -32,9 +32,12 @@ namespace m {
         void Render(HDC hdc);
         void Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset,
             UINT spriteLength, float duration, UINT alphaCheck = 0, bool affactedCamera = false);
+        void Create(Image* image, Vector2 leftTop, Vector2 size, Vector2 offset,
+            UINT spriteLength, float duration, bool reverse, UINT alphaCheck = 0, bool affactedCamera = false);
 
         void Reset();
-
+        void SetReverse(bool _b) { mbReverse = _b; }
+        void SetSpriteIdx(int _idx) { mSpriteIndex = _idx; }
         bool IsComplete() { return mbComplete; }
         void SetAnimator(Animator* animator) { mAnimator = animator; }
 
@@ -44,10 +47,11 @@ namespace m {
         vector<Sprite> mSpriteSheet;
 
         int mSpriteIndex;
+        int mMaxIndex;
         int mAlpha;
         float mTime;
         bool mbComplete;
         bool mbAffectedCamera;
-
+        bool mbReverse;
     };
 };

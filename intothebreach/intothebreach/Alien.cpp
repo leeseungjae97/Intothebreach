@@ -1,5 +1,6 @@
 #include "Alien.h"
 #include "mAnimator.h"
+#include "mAnimation.h"
 #include "mTransform.h"
 #include "mResources.h"
 #include "mInput.h"
@@ -50,7 +51,7 @@ namespace m
 				, vImage[vImage.size() - 1]->GetOffset()
 				, 6
 				, 0.1f
-				, AC_SRC_OVER
+				, (UINT)AC_SRC_OVER
 			);
 		}
 		for (int i = 0; i < 3; i++)
@@ -66,8 +67,22 @@ namespace m
 				, vImage[i]->GetOffset()
 				, len
 				, 0.2f
-				, AC_SRC_OVER
+				, (UINT)AC_SRC_OVER
 			);
+			if (i == (int)ALIEN_CONDITION::EMERGE)
+			{
+				GetAnimator()->CreateAnimation(
+					L"reverse_emerge"
+					, vImage[i]
+					, Vector2(Vector2::Zero)
+					, Vector2(size.x, size.y)
+					, vImage[i]->GetOffset()
+					, len
+					, 0.2f
+					, (bool)true
+					, (UINT)AC_SRC_OVER
+				);
+			}
 		}
 		GetAnimator()->Play(MAKE_UNIT_KEY((ALIENS)GetUnitName(), ALIEN_CONDITION::IDLE), true);
 		SetState(STATE::Emerge_loop);
@@ -86,22 +101,22 @@ namespace m
 	void Alien::Update()
 	{
 		Unit::Update();
-		if (KEY_PRESSED(KEYCODE_TYPE::Q))
-		{
-			SetState(STATE::Broken);
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::R))
-		{
-			SetState(STATE::Emerge);
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::E))
-		{
-			SetState(STATE::Idle);
-		}
-		if (KEY_PRESSED(KEYCODE_TYPE::T))
-		{
-			SetState(STATE::Emerge_loop);
-		}
+		//if (KEY_PRESSED(KEYCODE_TYPE::Q))
+		//{
+		//	SetState(STATE::Broken);
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::R))
+		//{
+		//	SetState(STATE::Emerge);
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::E))
+		//{
+		//	SetState(STATE::Idle);
+		//}
+		//if (KEY_PRESSED(KEYCODE_TYPE::T))
+		//{
+		//	SetState(STATE::Emerge_loop);
+		//}
 
 		if (Unit::GetCurHp() == 0)
 		{
@@ -120,7 +135,7 @@ namespace m
 			if (GetAnimator()->GetStopAnimator())
 			{
 				SetState(STATE::Death);
-				SceneManager::GetActiveScene()->RemoveEffectUnit(GetCoord(), this);
+				SceneManager::GetActiveScene()->RemoveAffectUnit(GetCoord(), this);
 			}
 			broken();
 			break;
@@ -147,6 +162,11 @@ namespace m
 		}
 			break;
 		case STATE::End:
+			break;
+		case STATE::Retreat:
+		{
+			retreat();
+		}
 			break;
 		default:
 			break;
@@ -295,8 +315,11 @@ namespace m
 		{
 			//DrawSkill(GetTargetCoord(), GetCurAttackSkill()->GetGuideLineCoord());
 			//ActiveSkill(GetTargetCoord());
-			GetCurAttackSkill()->SetStartRender(true);
-			ActiveSkill(GetTargetCoord());
+			if (GetTargetCoord() != Vector2::Minus)
+			{
+				GetCurAttackSkill()->SetStartRender(true);
+				ActiveSkill(GetTargetCoord());
+			}
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
@@ -562,6 +585,15 @@ namespace m
 	{
 		GetAnimator()->Stop();
 		GetAnimator()->Play(L"emerge_loop", true);
+		SetCurImage(nullptr);
+	}
+	void Alien::retreat()
+	{
+		GetAnimator()->Stop();
+		GetAnimator()->Play(L"reverse_emerge", false);
+		SetVisibleHp(false);
+		GetCurAttackSkill()->SetStartRender(false);
+		//GetAnimator()->GetActiveAnimation()->SetReverse(true);
 		SetCurImage(nullptr);
 	}
 }
