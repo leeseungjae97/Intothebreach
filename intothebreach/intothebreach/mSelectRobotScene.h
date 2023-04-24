@@ -18,7 +18,6 @@ namespace m
 		virtual void OnExit() override;
 
 	private:
-		Mech* mMech[3];
 
 		Background* moon;
 		Background* cloud[2];

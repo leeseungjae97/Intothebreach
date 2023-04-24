@@ -1,19 +1,20 @@
 #include "mInLandScene.h"
-#include "Mech.h"
-#include "mSceneManager.h"
 #include "mInput.h"
+#include "mSceneManager.h"
+#include "Mech.h"
 #include "mTransform.h"
 #include "mBackground.h"
+#include "mApplication.h"
 #include "mButton.h"
 #include "mImage.h"
 #include "mSelectGDI.h"
-#include "mApplication.h"
+#include "mPlayerInfo.h"
 extern m::Application application;
 namespace m
 {
 	InLandScene::InLandScene(ISLAND_T _type)
-		: Scene()
-		, mType(_type)
+		: mType(_type)
+		//, Scene()
 	{}
 	InLandScene::~InLandScene()
 	{}
@@ -38,10 +39,63 @@ namespace m
 		upUiBox = new Button(L"..\\Resources\\texture\\ui\\selectLand\\up_box.bmp", NO_BACK);
 		upUiBox->SetInner(true);
 		upUiBox->UseInnerAlpha(false);
-		upUiBox->SetPos(Vector2(application.GetResolutionWidth() / 2 + upUiBox->GetInnerImage()->GetWidth() / 2, 0));
-		upUiBox->SetInnerPos(Vector2(application.GetResolutionWidth() / 2 + upUiBox->GetInnerImage()->GetWidth() / 2, 0));
+		upUiBox->SetPos(Vector2(application.GetResolutionWidth() / 2 - upUiBox->GetInnerImage()->GetWidth() / 2, 0));
+		//upUiBox->SetInnerPos(Vector2(application.GetResolutionWidth() / 2 + upUiBox->GetInnerImage()->GetWidth() / 2, 0));
 
 		AddGameObject(upUiBox, LAYER_TYPE::UI);
+
+		for (int i = 0; i < MAX_GRID_POWER; i++)
+		{
+			wstring gridImageStr = L"";
+			if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+
+			Button* gridPower = new Button(gridImageStr, NO_BACK);
+			gridPower->SetInner(true);
+			gridPower->UseInnerAlpha(false);
+			gridPower->SetPos(Vector2(upUiBox->GetPos().x + 415 + (i * 20 + gridPower->GetInnerImage()->GetWidth())
+				, upUiBox->GetInnerImage()->GetHeight() / 2 - 30 / 2));
+			gridPower->SetState(GameObject::STATE::Visible);
+			AddGameObject(gridPower, LAYER_TYPE::UI);
+			gridPowers.push_back(gridPower);
+		}
+
+
+		for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
+		{
+			Button* back = new Button(L"", A_BTN_BACK);
+			back->SetSize(Vector2(110, 45));
+			back->SetPos(Vector2(45, 205 + 130 * i));
+			back->SetState(GameObject::STATE::Visible);
+			back->SetOSize(Vector2(110, 45));
+			back->SetResize(Vector2(110, 110));
+			back->SetResizeUnit(Vector2(30, 30));
+			AddGameObject(back, LAYER_TYPE::UI);
+
+			//Mech* mech = new Mech(
+			//	PlayerInfo::mMechs[i]->GetUnitName()
+			//	, Vector2::Minus
+			//	, 0
+			//	, PlayerInfo::mMechs[i]->GetFullHp()
+			//	, 99
+			//);
+			//mech->SetState(GameObject::STATE::NoMove);
+			//Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
+			////mech->SetHpCOffset(false);
+			////mech->SetHpBackOffset(Vector2(8, -35));
+			////mech->SetHpOffset(Vector2(3, -41));
+			//Vector2 offset = img->GetOffset();
+			//mech->SetPos(Vector2(back->GetPos().x + offset.x + back->GetSize().x / 2 - img->GetWidth()
+			//	, back->GetPos().y + img->GetHeight() - offset.y / 2));
+			//mech->SetVisibleHp(false);
+			//mech->SetImageMag(2);
+			////mech->SetState(GameObject::STATE::Visible);
+
+			//infoUnits.push_back(mech);
+			//clickableMechs.push_back(back);
+			//AddGameObject(mech, LAYER_TYPE::UI);
+		}
 	}
 	void InLandScene::Update()
 	{

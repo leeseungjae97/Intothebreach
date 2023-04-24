@@ -25,16 +25,17 @@ namespace m {
 		float yPos = 210.f;
 		for (int i = 0; i < 5; i++)
 		{
-			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp", 2, false, LEFT);
+			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp");
 			btn->SetInner(true);
-			btn->SetAlpha(true);
-			btn->SetMoveScene(SCENE_TYPE::SELECT_ROBOT);
 			btn->UseInnerAlpha(true);
+			btn->SetAlpha(true);
+			btn->SetConstant(125);
+			//btn->SetMoveScene(SCENE_TYPE::SELECT_ROBOT);
 			btn->SetPos(Vector2(-300.f, yPos));
 			btn->SetSize(Vector2(300.f, 45.f));
 			btn->SetOSize(Vector2(300.f, 45.f));
 			btn->SetReSizeable(true);
-			btn->SetResize(Vector2(400, 300));
+			btn->SetResize(Vector2(400, 45.f));
 			btn->SetResizeUnit(Vector2(50, 50));
 			yPos += 52.f;
 

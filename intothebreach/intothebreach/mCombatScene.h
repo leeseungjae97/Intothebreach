@@ -4,6 +4,7 @@ namespace m {
 	class Tile;
 	class TileHead;
 	class Button;
+	class Alien;
 	class CombatScene : public Scene {
 	public:
 		CombatScene();
@@ -58,14 +59,7 @@ namespace m {
 
 		Button* endMissionBox;
 		vector<Mech*> infoUnits;
-		//Button* unit1;
-		//Button* unit1Hp;
-
-		//Button* unit2;
-		//Button* unit2Hp;
-
-		//Button* unit3;
-		//Button* unit3Hp;
+		//vector<Alien*> mAliens;
 
 		int mechIdx;
 		int iTurn;

@@ -581,13 +581,14 @@ namespace m
 			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
 			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
 			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+			GetCurAttackSkill()->SetStartRender(true);
 			DrawSkill(endCoord, drawGuideLineEndCoord);
-			if (GetLayerType() == LAYER_TYPE::MONSTER)
-			{
-				if (GetCurAttackSkill()->GetStartRender())
-					scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-						, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-			}else  GetCurAttackSkill()->SetStartRender(true);
+			//if (GetLayerType() == LAYER_TYPE::MONSTER)
+			//{
+			//	if (GetCurAttackSkill()->GetStartRender())
+			//		scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+			//			, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+			//}else  GetCurAttackSkill()->SetStartRender(true);
 		}
 		// 공격완료하면 clear
 		ClearSkillRangeMap();

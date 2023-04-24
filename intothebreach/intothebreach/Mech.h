@@ -28,6 +28,7 @@ namespace m
 			bDeploy = false;
 			bCancelDeploy = false;
 			bSwap = false;
+			bDeployed = false;
 		}
 		void SetDeploy(bool _b)
 		{

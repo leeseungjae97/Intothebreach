@@ -1,6 +1,7 @@
 #pragma once
 #include "mScene.h"
 namespace m {
+	class Mech;
 	class Button;
 	class Background;
     class InLandScene :
@@ -22,6 +23,9 @@ namespace m {
 		vector<Background*> mSections;
 
 		Button* upUiBox;
+		vector<Button*> gridPowers;
+		vector<Mech*> infoUnits;
+		vector<Button*> clickableMechs;
     };
 }
 

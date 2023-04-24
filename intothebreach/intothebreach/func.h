@@ -49,24 +49,24 @@ namespace m::object
 			gameObj = new Mech(unitName, coord
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
-				, PlayerInfo::mMechs.size());
-
-			PlayerInfo::mMechs.push_back((Mech*)gameObj);
-			//gameObj->SetMIdx(PlayerInfo::mMechs.size() - 1);
+				, GameComp::mMechs.size());
+			//gameObj->SetMIdx(GameComp::mMechs.size() - 1);
 			gameObj->SetMove(true);
 			gameObj->SetState(GameObject::STATE::Invisible);
 		}
 		if(type == LAYER_TYPE::MONSTER)
 		{
-			gameObj = new Alien(GET_UNIT_NUM(unitName), coord, scene->GetAliens().size());
-			scene->GetAliens().push_back((Alien*)gameObj);
+			gameObj = new Alien(GET_UNIT_NUM(unitName), coord, GameComp::mAliens.size());
+			GameComp::mAliens.push_back((Alien*)gameObj);
+			//scene->GetAliens().insert(scene->GetAliens().end(), (Alien*)gameObj);
+			//scene->GetAliens().emplace_back((Alien*)gameObj);
 		}
 		if (type == LAYER_TYPE::CLONE)
 		{
 			gameObj = new Mech(unitName, coord
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
-				, PlayerInfo::mMechs.size());
+				, GameComp::mMechs.size());
 			if (nullptr != _origin)
 			{
 				//((Mech*)gameObj)->SetState(_origin->GetState());
@@ -86,6 +86,7 @@ namespace m::object
 			gameObj->SetPos(Vector2(-200.f, -200.f));
 		else 
 			gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
+
 		gameObj->SetFinalPos(gameObj->GetPos());
 		gameObj->SetLayerType(type);
 

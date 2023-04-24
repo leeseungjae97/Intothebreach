@@ -132,12 +132,13 @@ namespace m
 			idle();
 			break;
 		case STATE::Broken:
+
+			broken();
 			if (GetAnimator()->GetStopAnimator())
 			{
 				SetState(STATE::Death);
 				SceneManager::GetActiveScene()->RemoveAffectUnit(GetCoord(), this);
 			}
-			broken();
 			break;
 		case STATE::Water:
 			water();
@@ -166,6 +167,11 @@ namespace m
 		case STATE::Retreat:
 		{
 			retreat();
+			if (GetAnimator()->GetStopAnimator())
+			{
+				SetState(STATE::Death);
+				SceneManager::GetActiveScene()->RemoveAffectUnit(GetCoord(), this);
+			}
 		}
 			break;
 		default:

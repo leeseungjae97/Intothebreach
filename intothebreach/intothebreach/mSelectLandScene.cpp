@@ -16,7 +16,7 @@ extern m::Application application;
 namespace m
 {
 	SelectLandScene::SelectLandScene()
-		: Scene()
+		//: Scene()
 	{}
 	SelectLandScene::~SelectLandScene()
 	{}
@@ -67,9 +67,9 @@ namespace m
 		for (int i = 0; i < MAX_GRID_POWER; i++)
 		{
 			wstring gridImageStr = L"";
-			if (i < PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
-			if (i == PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
-			if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+			if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
 
 			Button* gridPower = new Button(gridImageStr, NO_BACK);
 			gridPower->SetInner(true);
@@ -82,20 +82,22 @@ namespace m
 		}
 
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
 		{
 			Button* back = new Button(L"", A_BTN_BACK);
 			back->SetSize(Vector2(110, 45));
 			back->SetPos(Vector2(45, 205 + 130 * i));
 			back->SetState(GameObject::STATE::Visible);
-
+			back->SetOSize(Vector2(110, 45));
+			back->SetResize(Vector2(110, 110));
+			back->SetResizeUnit(Vector2(30, 30));
 			AddGameObject(back, LAYER_TYPE::UI);
 
 			Mech* mech = new Mech(
-				PlayerInfo::mMechs[i]->GetUnitName()
+				GameComp::mSaveMechs[i]->GetUnitName()
 				, Vector2::Minus
 				, 0
-				, PlayerInfo::mMechs[i]->GetFullHp()
+				, GameComp::mSaveMechs[i]->GetFullHp()
 				, 99
 			);
 			mech->SetState(GameObject::STATE::NoMove);
@@ -115,7 +117,6 @@ namespace m
 			AddGameObject(mech, LAYER_TYPE::UI);
 
 		}
-
 		Scene::Initialize();
 	}
 	void SelectLandScene::Update()
@@ -127,11 +128,12 @@ namespace m
 			{
 				clickableMechs[i]->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
 			}
-			else clickableMechs[i]->SetTex(A_BTN_BACK, A_BTN_BACK);
+			else
+			{
+				clickableMechs[i]->SetTex(A_BTN_BACK, A_BTN_BACK);
+			}
 			if (clickableMechs[i]->GetClicked())
 			{
-				clickableMechs[i]->SetReSizeable(true);
-				clickableMechs[i]->SetResize(Vector2(110, 110));
 				clickableMechs[i]->SetClicked(false);
 			}
 		}

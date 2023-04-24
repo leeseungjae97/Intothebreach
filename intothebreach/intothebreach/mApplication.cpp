@@ -54,7 +54,7 @@ namespace m
 
 ;		Time::Initiailize();
 		Input::Initialize();
-		PlayerInfo::Initialize();
+		GameComp::Initialize();
 		SceneManager::Initialize();
 		Camera::Initialize();
 		

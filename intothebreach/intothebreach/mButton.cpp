@@ -58,8 +58,10 @@ void m::Button::Update()
 		}
 		if (bReSzieable)
 		{
-			if (mSize.x <= resizeMax.x) mSize.x += resizeUnit.x;
-			if (mSize.y <= resizeMax.y) mSize.y += resizeUnit.y;
+			if (mSize.x < resizeMax.x) mSize.x += resizeUnit.x;
+			if (mSize.y < resizeMax.y) { mSize.y += resizeUnit.y; }
+			if (mSize.x == resizeMax.x) mSize.x = resizeMax.x;
+			if (mSize.y == resizeMax.y) mSize.y = resizeMax.y;
 		}
 
 	}
@@ -68,8 +70,8 @@ void m::Button::Update()
 		bHover = false;
 		if (bReSzieable)
 		{
-			if (mSize.x > resizeMax.x) mSize.x -= resizeUnit.x;
-			if (mSize.y > resizeMax.y) mSize.x -= resizeUnit.y;
+			if (mSize.x > originSize.x) mSize.x -= resizeUnit.x;
+			if (mSize.y > originSize.y) mSize.y -= resizeUnit.y;
 		}
 	}
 }

@@ -8,10 +8,28 @@ namespace m
 	}
 	Layer::~Layer()
 	{
-		for (GameObject* gameObj : mGameObjects) {
-			delete gameObj;
-			gameObj = nullptr;
+		//for (GameObject* gameObj : mGameObjects) {
+		//	delete gameObj;
+		//	gameObj = nullptr;
+		//}
+		for (auto game : mGameObjects)
+		{
+			delete game;
+			game = nullptr;
 		}
+		//vector<GameObject*>::iterator iter = mGameObjects.begin();
+		//while (iter != mGameObjects.end())
+		//{
+		//	if ((*iter))
+		//	{
+		//		//iter = mGameObjects.erase(iter);
+		//		delete (*iter);
+		//		(*iter) = nullptr;
+		//	}
+		//	else iter++;
+		//}
+		//Safe_Delete_X_Vec(mGameObjects);
+		//mGameObjects.clear();
 	}
 	void Layer::Initialize()
 	{

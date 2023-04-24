@@ -27,13 +27,16 @@ namespace m
 		, showEnd(false)
 	{}
 	CombatScene::~CombatScene()
-	{}
+	{
+		//Safe_Delete_X_Vec(GameComp::mMechs);
+		//Safe_Delete_X_Vec(GameComp::mAliens);
+	}
 	void CombatScene::Initialize()
 	{
 		Scene::Initialize();
 		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
 		mechIdx = 0;
-		iTurn = 7;
+		iTurn = 4;
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
 
@@ -67,6 +70,9 @@ namespace m
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
+		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]));
+		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]));
+		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]));
 
 		textDeploy = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT], A_BTN_BACK);
 		textDeploy->SetInner(true);
@@ -113,9 +119,9 @@ namespace m
 		for (int i = 0; i < MAX_GRID_POWER; i++)
 		{
 			wstring gridImageStr = L"";
-			if (i < PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
-			if (i == PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
-			if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+			if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
 
 			Button* gridPower = new Button(gridImageStr, NO_BACK);
 			gridPower->SetInner(true);
@@ -248,33 +254,8 @@ namespace m
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
+		
 
-		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
-		{
-			Mech* mech = new Mech(
-				PlayerInfo::mMechs[i]->GetUnitName()
-				, Vector2::Minus
-				, 0
-				, PlayerInfo::mMechs[i]->GetFullHp()
-				, 99
-			);
-			mech->SetState(GameObject::STATE::NoMove);
-			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
-			//Image* img = mech->GetCurImage(COMBAT_CONDITION_T::BROKEN);
-			mech->SetHpCOffset(false);
-			mech->SetHpBackOffset(Vector2(8, -35));
-			mech->SetHpOffset(Vector2(3, -41));
-			Vector2 offset = img->GetOffset();
-			mech->SetPos(Vector2(playerUnitInfo->GetPos().x - offset.x + playerUnitInfo->GetSize().x / 2 + (img->GetWidth()) / 2
-				,playerUnitInfo->GetPos().y - offset.y + 70 * (i + 1) - 30));
-			mech->SetVisibleHp(true);
-			mech->SetImageMag(1);
-			mech->SetState(GameObject::STATE::Invisible);
-			AddGameObject(mech, LAYER_TYPE::UI);
-			infoUnits.push_back(mech);
-		}
-
-		//RandSpawnAlien(10);
 
 		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
@@ -305,8 +286,8 @@ namespace m
 	}
 	void CombatScene::RandSpawnAlien(int number)
 	{
-		size_t maxNum = GetAliens().size();
-		while (GetAliens().size() != number + maxNum)
+		size_t maxNum = GameComp::mAliens.size();
+		while (GameComp::mAliens.size() != number + maxNum)
 		{
 			srand((unsigned int)time(NULL));
 			//int randNum = rand();
@@ -318,13 +299,13 @@ namespace m
 			randX += 5.f;
 			int randAlien[2] = { 6,7 };
 			int randUnit = rand() % 2;
-			if (GetAliens().size() == 0)
-				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/6]);
+			if (GameComp::mAliens.size() == 0)
+				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
 			else
 			{
 				bool f = false;
-				vector<Alien*>::iterator iter = GetAliens().begin();
-				while (iter != GetAliens().end())
+				vector<Alien*>::iterator iter = GameComp::mAliens.begin();
+				while (iter != GameComp::mAliens.end())
 				{
 					if ((*iter)->GetCoord() == Vector2(randX, randY))
 					{
@@ -355,7 +336,7 @@ namespace m
 				//}
 				if (!f)
 				{
-					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[/*randAlien[randUnit]*/6]);
+					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
 				}
 			}
 		}
@@ -400,10 +381,10 @@ namespace m
 			}
 		}
 		bool bConfirm = true;
-		for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+		for (int i = 0; i < GameComp::mMechs.size(); i++)
 		{
-			PlayerInfo::mMechs[i]->SetDeploy(true);
-			if (!PlayerInfo::mMechs[i]->GetDeployed())
+			GameComp::mMechs[i]->SetDeploy(true);
+			if (!GameComp::mMechs[i]->GetDeployed())
 			{
 				bConfirm = false;
 			}
@@ -419,17 +400,17 @@ namespace m
 				Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
 				bSetPosition = true;
 				SetMouseFollower(nullptr);
-				for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+				for (int i = 0; i < GameComp::mMechs.size(); i++)
 				{
-					PlayerInfo::mMechs[i]->SetState(GameObject::STATE::Idle);
-					PlayerInfo::mMechs[i]->EndDeploy();
-					PlayerInfo::mMechs[i]->SetFinalCoord(PlayerInfo::mMechs[i]->GetCoord());
-					PlayerInfo::mMechs[i]->SetVisibleHp(true);
-					MoveAffectUnit(PlayerInfo::mMechs[i]);
+					GameComp::mMechs[i]->SetState(GameObject::STATE::Idle);
+					GameComp::mMechs[i]->EndDeploy();
+					GameComp::mMechs[i]->SetFinalCoord(GameComp::mMechs[i]->GetCoord());
+					GameComp::mMechs[i]->SetVisibleHp(true);
+					MoveAffectUnit(GameComp::mMechs[i]);
 				}
-				for (int i = 0; i < GetAliens().size(); i++)
+				for (int i = 0; i < GameComp::mAliens.size(); i++)
 				{
-					GetAliens()[i]->SetState(GameObject::STATE::Emerge);
+					GameComp::mAliens[i]->SetState(GameObject::STATE::Emerge);
 				}
 				textDeploy->SetState(GameObject::STATE::Invisible);
 				btnConfirm->SetState(GameObject::STATE::Invisible);
@@ -441,17 +422,17 @@ namespace m
 		{
 			if (nullptr == GetMouseFollower())
 			{
-				for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+				for (int i = 0; i < GameComp::mMechs.size(); i++)
 				{
-					if (!PlayerInfo::mMechs[i]->GetDeployed())
+					if (!GameComp::mMechs[i]->GetDeployed())
 					{
 						mechIdx = i;
 						break;
 					}
 				}
-				PlayerInfo::mMechs[mechIdx]->SetState(GameObject::STATE::NoMove);
-				ObjectGoFront(PlayerInfo::mMechs[mechIdx], PlayerInfo::mMechs[mechIdx]->GetLayerType());
-				SetMouseFollower(PlayerInfo::mMechs[mechIdx]);
+				GameComp::mMechs[mechIdx]->SetState(GameObject::STATE::NoMove);
+				ObjectGoFront(GameComp::mMechs[mechIdx], GameComp::mMechs[mechIdx]->GetLayerType());
+				SetMouseFollower(GameComp::mMechs[mechIdx]);
 			}
 		}
 		// MouseFollower 범위 벗어나는거 체크
@@ -485,12 +466,12 @@ namespace m
 						//}
 					}
 					Mech* mech = nullptr;
-					for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
+					for (int i = 0; i < GameComp::mMechs.size(); i++)
 					{
-						if (p->GetCoord() == PlayerInfo::mMechs[i]->GetCoord()
+						if (p->GetCoord() == GameComp::mMechs[i]->GetCoord()
 							&& i != mechIdx)
 						{
-							mech = PlayerInfo::mMechs[i];
+							mech = GameComp::mMechs[i];
 							break;
 						}
 					}
@@ -706,7 +687,7 @@ namespace m
 	}
 	void CombatScene::AlienIndexReSort()
 	{
-		vector<Alien*>::iterator iter = GetAliens().begin();
+		vector<Alien*>::iterator iter = GameComp::mAliens.begin();
 		int idx = 0;
 		//while (iter != GetAliens().end())
 		//{
@@ -714,9 +695,9 @@ namespace m
 		//	i++;
 		//	iter++;
 		//}
-		for (int i = 0; i < GetAliens().size(); i++)
+		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
-			GetAliens()[i]->SetMIdx(idx);
+			GameComp::mAliens[i]->SetMIdx(idx);
 			idx++;
 		}
 		int a = 0;
@@ -729,8 +710,8 @@ namespace m
 			for (int i = 0; i < gridPowers.size(); i++)
 			{
 				wstring gridImageStr = L"";
-				if (i <= PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_hover.bmp";
-				if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off_hover.bmp";
+				if (i <= GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_hover.bmp";
+				if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off_hover.bmp";
 				gridPowers[i]->ChangeInner(gridImageStr);
 				gridPowers[i]->SetState(GameObject::STATE::Visible);
 			}
@@ -742,9 +723,9 @@ namespace m
 			for (int i = 0; i < gridPowers.size(); i++)
 			{
 				wstring gridImageStr = L"";
-				if (i < PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
-				if (i == PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
-				if (i > PlayerInfo::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+				if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+				if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+				if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
 				gridPowers[i]->ChangeInner(gridImageStr);
 				gridPowers[i]->SetState(GameObject::STATE::Visible);
 			}
@@ -823,13 +804,13 @@ namespace m
 				for (int i = 0; i < infoUnits.size(); i++)
 				{
 					if (nullptr == GetMouseFollower())selectUnitBox->SetState(GameObject::STATE::Invisible);
-					if (PlayerInfo::mMechs[i]->GetSelected())
+					if (GameComp::mMechs[i]->GetSelected())
 					{
 						selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5
 							+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * i)));
 						selectUnitBox->SetState(GameObject::STATE::Visible);
 					}
-					infoUnits[i]->SetCurHp(PlayerInfo::mMechs[i]->GetCurHp());
+					infoUnits[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
 				}
 				AlienIndexReSort();
 				ButtonActivationCondition();
@@ -852,12 +833,13 @@ namespace m
 			btnUndoMove->SetState(GameObject::STATE::Invisible);
 			btnInitTurn->SetState(GameObject::STATE::Invisible);
 			playerUnitInfo->SetState(GameObject::STATE::Invisible);
+
 			for (int i = 0; i < infoUnits.size(); i++)
-				infoUnits[i]->SetState(GameObject::STATE::Death);
+				infoUnits[i]->SetState(GameObject::STATE::Delete);
 			for (int i = 0; i < gridPowers.size(); i++)
 				gridPowers[i]->SetState(GameObject::STATE::Invisible);
-			for (int i = 0; i < GetAliens().size(); i++)
-				GetAliens()[i]->SetState(GameObject::STATE::Retreat);
+			for (int i = 0; i < GameComp::mAliens.size(); i++)
+				GameComp::mAliens[i]->SetState(GameObject::STATE::Retreat);
 
 			textTurnNum->SetState(GameObject::STATE::Invisible);
 			textTurn->SetState(GameObject::STATE::Invisible);
@@ -870,7 +852,11 @@ namespace m
 		}
 		if (!endMissionBox->GetApDAp() && endGame && !showEnd)
 		{
-			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_Out, 1.f);
+			//Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_Out, 1.f);
+			//for (int i = 0; i < GameComp::mMechs.size(); i++)
+			//{
+			//	GameComp::mMechs[i]->SetState(GameObject::STATE::NoMove);
+			//}
 			SceneManager::LoadScene(SceneManager::GetSelectLand());
 		}
 	}
@@ -883,8 +869,94 @@ namespace m
 		Scene::Release();
 	}
 	void CombatScene::OnEnter()
-	{}
+	{
+		//GameComp::mMechs.clear();
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[GameComp::playerUnits[0]]));
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[GameComp::playerUnits[1]]));
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[GameComp::playerUnits[2]]));
+		//Safe_Delete_X_Vec(GameComp::mMechs);
+		//GameComp::mMechs.clear();
+		//for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
+		//{
+		//	Mech* mech = new Mech(
+		//		GameComp::mSaveMechs[i]->GetUnitName()
+		//	, Vector2::Minus
+		//	, GameComp::mSaveMechs[i]->GetMoveRange()
+		//	, GameComp::mSaveMechs[i]->GetFullHp()
+		//	, i);
+		//	GameComp::mMechs.push_back(mech);
+		//	AddGameObject(mech, LAYER_TYPE::PLAYER);
+		//}
+		
+		//Safe_Delete_X_Vec(infoUnits);
+		//Scene::ClearAffectUnit();
+		//Scene::SetPlayerTurn(false);
+		textDeploy->ChangeInner(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT]);
+		textTurnNum->SetState(GameObject::STATE::Visible);
+		textTurn->SetState(GameObject::STATE::Visible);
+		textDeploy->SetState(GameObject::STATE::Visible);
+		btnConfirm->SetState(GameObject::STATE::Visible);
+
+		RandSpawnAlien(1);
+
+		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
+		infoUnits.clear();
+		for (int i = 0; i < GameComp::mMechs.size(); i++)
+		{
+			//GameComp::mMechs[i]->SetCoord(Vector2::Minus);
+			//GameComp::mMechs[i]->SetFinalCoord(Vector2::Minus);
+			//GameComp::mMechs[i]->SetPos(Vector2(-200.f, -200.f));
+			//GameComp::mMechs[i]->SetCurHp(GameComp::mMechs[i]->GetFullHp());
+			
+			Mech* mech = new Mech(
+				GameComp::mMechs[i]->GetUnitName()
+				, Vector2::Minus
+				, 0
+				, GameComp::mMechs[i]->GetFullHp()
+				, 99
+			);
+			//mech->SetState(GameObject::STATE::NoMove);
+			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
+			//Image* img = mech->GetCurImage(COMBAT_CONDITION_T::BROKEN);
+			mech->SetHpCOffset(false);
+			mech->SetHpBackOffset(Vector2(8, -35));
+			mech->SetHpOffset(Vector2(3, -41));
+			Vector2 offset = img->GetOffset();
+			mech->SetPos(Vector2(playerUnitInfo->GetPos().x - offset.x + playerUnitInfo->GetSize().x / 2 + (img->GetWidth()) / 2
+				, playerUnitInfo->GetPos().y - offset.y + 70 * (i + 1) - 30));
+			mech->SetVisibleHp(true);
+			mech->SetImageMag(1);
+			mech->SetState(GameObject::STATE::Invisible);
+			AddGameObject(mech, LAYER_TYPE::UI);
+			infoUnits.push_back(mech);
+		}
+	}
 	void CombatScene::OnExit()
-	{}
+	{
+		/*for (int i = 0; i < GameComp::mMechs.size(); i++)
+		{
+			[i];
+		}*/
+		//Safe_Delete_X_Vec(GameComp::mAliens);
+		//Safe_Delete_X_Vec(GameComp::mMechs);
+		//GameComp::mMechs.clear();
+		//for (int i = 0; i < GameComp::mMechs.size(); i++)
+		//{
+		//	GameComp::mMechs[i]->SetCoord(Vector2::Minus);
+		//	GameComp::mMechs[i]->SetFinalCoord(Vector2::Minus);
+		//	GameComp::mMechs[i]->SetPos(Vector2::Minus);
+		//	GameComp::mMechs[i]->SetFinalPos(Vector2::Minus);
+		//	GameComp::mMechs[i]->SetDeploy(true);
+		//}
+		for (int i = 0; i < GameComp::mAliens.size(); i++)
+		{
+			GameComp::mAliens[i]->SetState(GameObject::STATE::Delete);
+		}
+		GameComp::mAliens.clear();
+		iTurn = 4;
+		endGame = false;
+		bSetPosition = false;
+		//SceneManager::GetActiveScene()->ClearAffectUnit();
+	}
 
 }

@@ -56,7 +56,7 @@ namespace m
 		TILES& GetBoundaryTiles() { return mBoundaryTiles; }
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
 		//vector<Mech*>& GetMechs() { return mMechs; }
-		vector<Alien*>& GetAliens() { return mAliens; }
+		vector<Alien*>&	GetAliens() { return mAliens; }
 		vector<Building*>& GetStructures() {return mStrutures;}
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
 		vector<Unit*>& GetAffectUnits(int y, int x) { return affectUnits[y][x]; }
@@ -119,8 +119,6 @@ namespace m
 		TILES mPosOutLineTiles;		// 타일 외곽선 타일 Highlight
 		TILES mBoundaryTiles;		// 타일 반경 외곽선 타일
 		TILES mArrowTiles;			// 최단 이동거리 표시 타일
-		//TILES mEffectedTiles;
-		//TILES mEnemyEmerge;
 
 		vector<Tile*> mBackTiles;			// 기타 타일들 (그리지 않고 저장공간 용도로만 사용)
 
@@ -129,7 +127,7 @@ namespace m
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
 		vector<Vector2_3> turnSave; 
 		vector<Building*> mStrutures;	// 건물, 영향받는 환경
-		vector<Alien*> mAliens;				// Alien 벡터.
+		vector<Alien*> mAliens;			// Alien 벡터.
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;

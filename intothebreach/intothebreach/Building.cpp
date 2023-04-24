@@ -141,7 +141,7 @@ namespace m {
 		{
 			if (mType != STRUCTURES::mountain)
 			{
-				PlayerInfo::gridPower -= 1;
+				GameComp::gridPower -= 1;
 				gridIcon = nullptr;
 			}
 			SetState(STATE::Broken);
