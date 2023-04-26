@@ -11,10 +11,12 @@ enum class SKILL_T
 	ST,
 	RANGE_ST,
 	RANGE_ARC,
+	NONE,
 	END,
 };
 enum class WEAPON_T
 {
+	NONE,
 	titan_fist,
 	artemis_artillery,
 	taurus_cannon,
@@ -23,7 +25,6 @@ enum class WEAPON_T
 	fangs,					// leaper
 	stinger,				// hornet
 	accelerating_thorax,	// firefly
-	NONE,
 	END,
 };
 int WEAPON_TYPE[(UINT)WEAPON_T::END]{
@@ -32,6 +33,7 @@ int WEAPON_TYPE[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::ST,
 };
 wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
+	L"",
 	L"punch1_",
 	L"shotup_tribomb_missile",
 	L"shot_mechtank_",
@@ -40,6 +42,17 @@ wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
 	L"",
 	L"hornet_",
 	L"shot_firefly_",
+};
+wstring WEAPON_IMAGES[(UINT)WEAPON_T::END]{
+	L"",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_punchmech.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\ranged_artillery.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\brute_tankmech.bmp",
+
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\enemy_hornet1.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\enemy_firefly1.bmp",
 };
 enum class SKILL_DIR
 {
@@ -56,6 +69,7 @@ wstring SKILL_DIR_PATH[(UINT)SKILL_DIR::NONE]{
 	L"L",
 };
 int WEAPON_LEN[(UINT)WEAPON_T::END]{
+	0,
 	6,
 	1,
 	1,
@@ -66,6 +80,7 @@ int WEAPON_LEN[(UINT)WEAPON_T::END]{
 	1,
 };
 int WEAPON_RANGE[(UINT)WEAPON_T::END]{
+	0,
 	1,
 	99,
 	99,
@@ -120,6 +135,7 @@ WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//Spider,
 };
 int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
+	0,
 	1,//titan_fist,
 	4,//artemis_artillery,
 	1,//taurus_cannon,
@@ -131,6 +147,7 @@ int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	//NONE,
 };
 int WEAPON_SKILL[(UINT)WEAPON_T::END]{
+	(int)SKILL_T::NONE,
 	(int)SKILL_T::RANGE_ST,//titan_fist,
 	(int)SKILL_T::ARC,//artemis_artillery,
 	(int)SKILL_T::ST,//taurus_cannon,

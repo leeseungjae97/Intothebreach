@@ -52,7 +52,7 @@ void m::Button::Update()
 	if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
 	{
 		bHover = true;
-		if (KEY_PRESSED(KEYCODE_TYPE::LBTN))
+		if (KEY_UP(KEYCODE_TYPE::LBTN))
 		{
 			bClicked = true;
 		}
@@ -63,10 +63,13 @@ void m::Button::Update()
 			if (mSize.x == resizeMax.x) mSize.x = resizeMax.x;
 			if (mSize.y == resizeMax.y) mSize.y = resizeMax.y;
 		}
-
 	}
 	else
 	{
+		if (KEY_UP(KEYCODE_TYPE::LBTN))
+		{
+			bClicked = false;
+		}
 		bHover = false;
 		if (bReSzieable)
 		{

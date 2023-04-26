@@ -697,7 +697,7 @@ namespace m
 	}
 	void Unit::SetSkill(int idx, WEAPON_T type)
 	{
-		object::Instantiate(mSkills, (WEAPON_T)type, idx);
+		object::Instantiate(mSkills, (WEAPON_T)type, idx, this);
 	}
 	Skill* Unit::GetSkill(int idx)
 	{

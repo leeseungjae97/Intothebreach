@@ -154,6 +154,7 @@
     <ClInclude Include="mTile.h" />
     <ClInclude Include="mUI.h" />
     <ClInclude Include="mUnit.h" />
+    <ClInclude Include="PilotEnums.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SkillEnums.h" />
     <ClInclude Include="StructureEnums.h" />

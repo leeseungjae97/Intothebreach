@@ -30,6 +30,16 @@ namespace m
 		/*GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]));
 		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]));
 		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]));*/
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::artillery, {BASIC_WEAPON_TYPE[(UINT)MECHS::artillery]} });
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::tank, {BASIC_WEAPON_TYPE[(UINT)MECHS::tank]} });
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::punch, {BASIC_WEAPON_TYPE[(UINT)MECHS::punch]} });
+		GameComp::mPilots[0] = PILOT_T::Pilot_Original;
+		GameComp::mPilots[1] = PILOT_T::Pilot_Ice;
+		GameComp::mPilots[2] = PILOT_T::Pilot_Sand;
+
+		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
+		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
+		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
 
 		//GameComp::playerUnits[0] = (UINT)MECHS::artillery;
 		//GameComp::playerUnits[1] = (UINT)MECHS::tank;

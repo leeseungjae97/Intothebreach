@@ -125,6 +125,36 @@ wstring MAKE_SECTION_PATH(ISLAND_T _type, int sectionIdx) {
 
 	return path;
 };
+wstring MAKE_SECTION_OL_KEY(ISLAND_T _type, int sectionIdx)
+{
+	wstring key = L"";
+
+	key.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	if (sectionIdx < 0) key.append(L"island");
+	else
+	{
+		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		key.append(std::to_wstring(sectionIdx)).append(L"_OL");
+	}
+	return key;
+};
+wstring MAKE_SECTION_OL_PATH(ISLAND_T _type, int sectionIdx)
+{
+	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
+	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	if (sectionIdx < 0)
+	{
+		path.append(L"island");
+	}
+	else
+	{
+		path.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		path.append(std::to_wstring(sectionIdx)).append(L"_OL");
+	}
+	path.append(L".bmp");
+
+	return path;
+};
 
 wstring MAKE_ISLAND_KEY(ISLAND_T _type) {
 	wstring key = L"";

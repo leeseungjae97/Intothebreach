@@ -70,9 +70,9 @@ namespace m
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
-		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]));
-		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]));
-		GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]));
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]));
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]));
+		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]));
 
 		textDeploy = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT], A_BTN_BACK);
 		textDeploy->SetInner(true);
@@ -200,17 +200,39 @@ namespace m
 		playerUnitInfo->SetPos(Vector2(10.f, (float)btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5));
 		playerUnitInfo->SetInnerPos(Vector2((float)playerUnitInfo->GetSize().x / 2 - 57 / 2, (float)playerUnitInfo->GetSize().y / 2 - 195 / 2));
 		playerUnitInfo->SetState(GameObject::STATE::Invisible);
-		
+
 		selectUnitBox = new Button(L"..\\Resources\\texture\\ui\\combat\\select_player_unit.bmp", NO_BACK);
 		selectUnitBox->SetInner(true);
 		//selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5));
 		selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5
-		 + ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * 2)));
+			+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * 2)));
 		selectUnitBox->SetSize(Vector2((float)selectUnitBox->GetInnerImage()->GetWidth(),
 			(float)selectUnitBox->GetInnerImage()->GetHeight()));
 		//selectUnitBox->SetInnerPos(Vector2();
 		selectUnitBox->SetState(GameObject::STATE::Invisible);
 
+		boxWeaponPilot = new Button(L"..\\Resources\\texture\\ui\\combat\\pw.bmp", NO_BACK);
+		boxWeaponPilot->SetInner(true);
+		boxWeaponPilot->SetPos(Vector2(0, application.GetResolutionHeight() - boxWeaponPilot->GetInnerImage()->GetHeight()));
+		boxWeaponPilot->SetSize(boxWeaponPilot->GetSize());
+		boxWeaponPilot->SetState(GameObject::STATE::Invisible);
+
+		boxWPBack = new Button(L"", L"..\\Resources\\texture\\ui\\combat\\pw_back.bmp");
+		boxWPBack->SetPos(boxWeaponPilot->GetPos());
+		boxWPBack->SetSize(boxWeaponPilot->GetSize());
+		boxWPBack->SetState(GameObject::STATE::Invisible);
+
+		boxPilotBack = new Button(L"..\\Resources\\texture\\pilot\\back_1.bmp",NO_BACK);
+		boxPilotBack->SetInner(true);
+		boxPilotBack->SetInnerMag(2);
+		boxPilotBack->SetPos(Vector2(9, boxWeaponPilot->GetPos().y + 3));
+		boxPilotBack->SetState(GameObject::STATE::Invisible);
+
+		boxWeapon = new Button(WEAPON_IMAGES[1], NO_BACK);
+		boxWeapon->SetInner(true);
+		boxWeapon->SetInnerMag(2);
+		boxWeapon->SetPos(Vector2(204, boxWeaponPilot->GetPos().y - boxWeaponPilot->GetSize().y / 2 + boxWeapon->GetInnerImage()->GetHeight() / 2));
+		boxWeapon->SetState(GameObject::STATE::Invisible);
 		//textTurnNum->SetSize(Vector2(300.f, 50.f));
 		//textTurn->SetState(GameObject::STATE::Invisible);
 		//textTurnInfo = new Button();
@@ -220,6 +242,13 @@ namespace m
 		//textDefence1->SetPos(Vector2(textTurn->GetPos()));
 		//textDefence1->SetTextMag(2);
 		//textDefence1->SetTextPos(Vector2(textTurn->GetTextPos().x + 60.f, 0.f));
+
+		boxPilot = new Button(L"..\\Resources\\texture\\pilot\\ice1.bmp", NO_BACK);
+		boxPilot ->SetInner(true);
+		boxPilot ->SetInnerMag(2);
+		boxPilot ->SetPos(Vector2(boxPilot->GetPos().x/* + boxPilotBack->GetSize().x - boxPilot->GetInnerImage()->GetWidth()*/, boxPilotBack->GetPos().y));
+		boxPilot ->SetState(GameObject::STATE::Invisible);
+
 		AddGameObject(textDeploy, LAYER_TYPE::UI);
 		AddGameObject(btnConfirm, LAYER_TYPE::UI);
 		AddGameObject(textTurn, LAYER_TYPE::UI);
@@ -233,6 +262,11 @@ namespace m
 		AddGameObject(endMissionBox, LAYER_TYPE::UI);
 		AddGameObject(alienTurnBox, LAYER_TYPE::UI);
 		AddGameObject(selectUnitBox, LAYER_TYPE::UI);
+		AddGameObject(boxWeapon, LAYER_TYPE::UI);
+		AddGameObject(boxWeaponPilot, LAYER_TYPE::UI);
+		AddGameObject(boxPilotBack, LAYER_TYPE::UI);
+		AddGameObject(boxPilot, LAYER_TYPE::UI);
+		AddGameObject(boxWPBack, LAYER_TYPE::UI);
 
 		// 임시로 메카위치 설정
 		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
@@ -254,24 +288,7 @@ namespace m
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
 		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
-		
 
-
-		object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(0, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(0, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-
-		object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(4, 0), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-
-		object::Instantiate(Vector2(4, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(4, 6), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(4, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-
-		object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		object::Instantiate(Vector2(4, 2), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		//object::Instantiate(Vector2(4, 3), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 		//object::Instantiate(Vector2(4, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
 
@@ -281,8 +298,7 @@ namespace m
 		//object::Instantiate(Vector2(5, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 		//object::Instantiate(Vector2(5, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
-		object::Instantiate(Vector2(0, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower, TILE_T::GREEN);
-		object::Instantiate(Vector2(1, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield, TILE_T::GREEN);
+
 	}
 	void CombatScene::RandSpawnAlien(int number)
 	{
@@ -290,17 +306,15 @@ namespace m
 		while (GameComp::mAliens.size() != number + maxNum)
 		{
 			srand((unsigned int)time(NULL));
-			//int randNum = rand();
 			float randY = (float)(rand() % 7);
 			float randX = (float)(rand() % 3);
-			//int randNum2 = rand();
 
 			randY += 1.f;
 			randX += 5.f;
 			int randAlien[2] = { 6,7 };
 			int randUnit = rand() % 2;
 			if (GameComp::mAliens.size() == 0)
-				object::Instantiate(Vector2(6, 5), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
 			else
 			{
 				bool f = false;
@@ -358,7 +372,7 @@ namespace m
 	}
 	void CombatScene::AlienTurnBackground()
 	{
-		if(playerTurnBox->GetApDAp())
+		if (playerTurnBox->GetApDAp())
 			playerTurnBox->SetApDAp(false);
 
 		alienTurnBox->SetState(GameObject::STATE::Visible);
@@ -762,9 +776,77 @@ namespace m
 		//btnUndoMove->SetState(GameObject::STATE::Visible);
 		//btnInitTurn->SetState(GameObject::STATE::Visible);
 	}
+	void CombatScene::LoadMap()
+	{
+		if (bLoadMap) return;
+		bLoadMap = true;
+		object::Instantiate(Vector2(0, 0), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(0, 1), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(0, 2), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+
+		object::Instantiate(Vector2(1, 0), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(2, 0), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(3, 0), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 0), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+
+		//object::Instantiate(Vector2(4, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 6), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		//object::Instantiate(Vector2(4, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
+
+		object::Instantiate(Vector2(4, 1), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+		object::Instantiate(Vector2(4, 2), LAYER_TYPE::TERRAIN, STRUCTURES::mountain, TILE_T::GREEN);
+
+		object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower, TILE_T::GREEN);
+		object::Instantiate(Vector2(6, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield, TILE_T::GREEN);
+	}
+	void CombatScene::ShowMechInfo(Mech* mech, bool show)
+	{
+		if (show)
+		{
+			GetWeaponPilotBox()->SetState(GameObject::STATE::Visible);
+			GetWeaponBox()->SetState(GameObject::STATE::Visible);
+			GetPilotBackBox()->SetState(GameObject::STATE::Visible);
+			GetPilotBox()->SetState(GameObject::STATE::Visible);
+			WEAPON_T type = mech->GetSkills()[0]->GetWeaponType();
+			GetWeaponBox()->ChangeInner(WEAPON_IMAGES[(UINT)type]);
+			GetPilotBox()->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[mech->GetMIdx()]]);
+		}
+		else
+		{
+			GetWeaponPilotBox()->SetState(GameObject::STATE::Invisible);
+			GetWeaponBox()->SetState(GameObject::STATE::Invisible);
+			GetPilotBackBox()->SetState(GameObject::STATE::Invisible);
+			GetPilotBox()->SetState(GameObject::STATE::Invisible);
+		}
+		
+	}
+	void CombatScene::SetWPBow(int selection)
+	{
+		switch (selection)
+		{
+		case 0:
+		{
+			GetWeaponPilotBox()->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\pw_rc.bmp");
+		}
+		break;
+		case 1:
+		{
+			GetWeaponPilotBox()->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\pw_wc.bmp");
+			
+		}break;
+		case 2:
+		{
+			GetWeaponPilotBox()->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\pw.bmp");
+		}
+			break;
+		default:
+			break;
+		}
+	}
 	void CombatScene::Update()
 	{
 		Scene::Update();
+		LoadMap();
 		if (!endGame)
 		{
 			if (!bSetPosition)
@@ -846,7 +928,7 @@ namespace m
 
 			endMissionBox->SetState(GameObject::STATE::Visible);
 			endMissionBox->SetApDAp(true);
-			
+
 			endGame = true;
 			showEnd = false;
 		}
@@ -857,6 +939,7 @@ namespace m
 			//{
 			//	GameComp::mMechs[i]->SetState(GameObject::STATE::NoMove);
 			//}
+			GameComp::combatEnd = true;
 			SceneManager::LoadScene(SceneManager::GetSelectLand());
 		}
 	}
@@ -870,6 +953,22 @@ namespace m
 	}
 	void CombatScene::OnEnter()
 	{
+		GameComp::combatEnd = false;
+		//for (int i = 0; i < GameComp::mMechs.size(); i++)
+		//	GameComp::mMechs[i]->SetState(GameObject::STATE::Delete);
+
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		{
+			Mech* mech = (Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, GameComp::mechInfos[i].unitNum);
+			for (int j = 0; j < MAX_WEAPONS; j++)
+			{
+				if (GameComp::mechInfos[i].weapons[j] != WEAPON_T::NONE)
+				{
+					mech->SetSkill(j, GameComp::mechInfos[i].weapons[j]);
+				}
+			}
+			GameComp::mMechs.push_back(mech);
+		}
 		//GameComp::mMechs.clear();
 		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[GameComp::playerUnits[0]]));
 		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[GameComp::playerUnits[1]]));
@@ -887,10 +986,10 @@ namespace m
 		//	GameComp::mMechs.push_back(mech);
 		//	AddGameObject(mech, LAYER_TYPE::PLAYER);
 		//}
-		
 		//Safe_Delete_X_Vec(infoUnits);
-		//Scene::ClearAffectUnit();
-		//Scene::SetPlayerTurn(false);
+		Scene::ClearAffectUnit();
+		Scene::SetPlayerTurn(false);
+		bLoadMap = false;
 		textDeploy->ChangeInner(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT]);
 		textTurnNum->SetState(GameObject::STATE::Visible);
 		textTurn->SetState(GameObject::STATE::Visible);
@@ -907,7 +1006,7 @@ namespace m
 			//GameComp::mMechs[i]->SetFinalCoord(Vector2::Minus);
 			//GameComp::mMechs[i]->SetPos(Vector2(-200.f, -200.f));
 			//GameComp::mMechs[i]->SetCurHp(GameComp::mMechs[i]->GetFullHp());
-			
+
 			Mech* mech = new Mech(
 				GameComp::mMechs[i]->GetUnitName()
 				, Vector2::Minus
@@ -948,11 +1047,38 @@ namespace m
 		//	GameComp::mMechs[i]->SetFinalPos(Vector2::Minus);
 		//	GameComp::mMechs[i]->SetDeploy(true);
 		//}
+		
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
+			for (int j = 0; j < GameComp::mAliens[i]->GetSkills().size(); j++)
+			{
+				if (nullptr != GameComp::mAliens[i]->GetSkills()[j])
+					GameComp::mAliens[i]->GetSkills()[j]->SetState(GameObject::STATE::Delete);
+			}
 			GameComp::mAliens[i]->SetState(GameObject::STATE::Delete);
 		}
 		GameComp::mAliens.clear();
+
+		for (int i = 0; i < GameComp::mMechs.size(); i++)
+		{
+			if (GameComp::mMechs[i]->GetState() == GameObject::STATE::Broken)
+			{
+				GameComp::mPilots[i] = PILOT_T::Pilot_Artificial;
+			}
+			for (int j = 0; j < GameComp::mMechs[i]->GetSkills().size(); j++)
+			{
+				if(nullptr != GameComp::mMechs[i]->GetSkills()[j])
+					GameComp::mMechs[i]->GetSkills()[j]->SetState(GameObject::STATE::Delete);
+			}
+			GameComp::mMechs[i]->SetState(GameObject::STATE::Delete);
+		}
+			
+
+		GameComp::mMechs.clear();
+		for(int i = 0; i < GetStructures().size(); i++) 
+			GetStructures()[i]->SetState(GameObject::STATE::Delete);
+
+		GetStructures().clear();
 		iTurn = 4;
 		endGame = false;
 		bSetPosition = false;

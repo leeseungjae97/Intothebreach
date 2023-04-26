@@ -56,7 +56,7 @@ namespace m
 		TILES& GetBoundaryTiles() { return mBoundaryTiles; }
 		vector<Tile*>& GetBackTiles() { return mBackTiles; }
 		//vector<Mech*>& GetMechs() { return mMechs; }
-		vector<Alien*>&	GetAliens() { return mAliens; }
+		//vector<Alien*>&	GetAliens() { return mAliens; }
 		vector<Building*>& GetStructures() {return mStrutures;}
 		vector<Vector2_2>& GetMoveSave() { return moveSave; }
 		vector<Unit*>& GetAffectUnits(int y, int x) { return affectUnits[y][x]; }
@@ -64,6 +64,7 @@ namespace m
 		bool SearchAffectUnit(int y, int x);
 		bool SearchAffectUnit(int y, int x, LAYER_TYPE type, GameObject::STATE state);
 		bool SearchAffectUnit(int y, int x, LAYER_TYPE type);
+		bool SearchAffectUnitM(int y, int x, LAYER_TYPE type);
 		bool SearchAffectUnit(int y, int x, GameObject::STATE state);
 		bool SearchAffectUnit(int y, int x, GameObject::STATE state, bool contain);
 		bool SearchBlockUnit(int y, int x);
@@ -126,8 +127,10 @@ namespace m
 
 		vector<Vector2_2> moveSave;	//	undoMove를 할때 불러올 move, attack시 초기화.
 		vector<Vector2_3> turnSave; 
+		int saveGridPower;
 		vector<Building*> mStrutures;	// 건물, 영향받는 환경
-		vector<Alien*> mAliens;			// Alien 벡터.
+		//vector<Alien*> mAliens;			// Alien 벡터.
+		//vector<Mech*> mMechs;
 
 		Mech* mMouseFollower;
 		Mech* mAlphaFollower;

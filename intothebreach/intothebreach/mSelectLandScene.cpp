@@ -80,9 +80,7 @@ namespace m
 			AddGameObject(gridPower, LAYER_TYPE::UI);
 			gridPowers.push_back(gridPower);
 		}
-
-
-		for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
+		for (int i = 0; i < 3; i++)
 		{
 			Button* back = new Button(L"", A_BTN_BACK);
 			back->SetSize(Vector2(110, 45));
@@ -92,30 +90,7 @@ namespace m
 			back->SetResize(Vector2(110, 110));
 			back->SetResizeUnit(Vector2(30, 30));
 			AddGameObject(back, LAYER_TYPE::UI);
-
-			Mech* mech = new Mech(
-				GameComp::mSaveMechs[i]->GetUnitName()
-				, Vector2::Minus
-				, 0
-				, GameComp::mSaveMechs[i]->GetFullHp()
-				, 99
-			);
-			mech->SetState(GameObject::STATE::NoMove);
-			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
-			//mech->SetHpCOffset(false);
-			//mech->SetHpBackOffset(Vector2(8, -35));
-			//mech->SetHpOffset(Vector2(3, -41));
-			Vector2 offset = img->GetOffset();
-			mech->SetPos(Vector2(back->GetPos().x + offset.x + back->GetSize().x / 2 - img->GetWidth()
-				, back->GetPos().y + img->GetHeight() - offset.y / 2));
-			mech->SetVisibleHp(false);
-			mech->SetImageMag(2);
-			//mech->SetState(GameObject::STATE::Visible);
-
-			infoUnits.push_back(mech);
 			clickableMechs.push_back(back);
-			AddGameObject(mech, LAYER_TYPE::UI);
-
 		}
 		Scene::Initialize();
 	}
@@ -172,7 +147,40 @@ namespace m
 		Scene::Release();
 	}
 	void SelectLandScene::OnEnter()
-	{}
+	{
+		for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
+		{
+
+			Mech* mech = new Mech(
+				GameComp::mSaveMechs[i]->GetUnitName()
+				, Vector2::Minus
+				, 0
+				, GameComp::mSaveMechs[i]->GetFullHp()
+				, 99
+			);
+			mech->SetState(GameObject::STATE::NoMove);
+			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
+			//mech->SetHpCOffset(false);
+			//mech->SetHpBackOffset(Vector2(8, -35));
+			//mech->SetHpOffset(Vector2(3, -41));
+			Vector2 offset = img->GetOffset();
+			mech->SetPos(Vector2(clickableMechs[i]->GetPos().x + offset.x + clickableMechs[i]->GetSize().x / 2 - img->GetWidth()
+				, clickableMechs[i]->GetPos().y + img->GetHeight() - offset.y / 2));
+			mech->SetVisibleHp(false);
+			mech->SetImageMag(2);
+			//mech->SetState(GameObject::STATE::Visible);
+
+			infoUnits.push_back(mech);
+			AddGameObject(mech, LAYER_TYPE::UI);
+
+		}
+	}
 	void SelectLandScene::OnExit()
-	{}
+	{
+		for (int i = 0; i < infoUnits.size(); i++)
+		{
+			infoUnits[i]->SetState(GameObject::STATE::Delete);
+		}
+		infoUnits.clear();
+	}
 }

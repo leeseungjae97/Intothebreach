@@ -2,6 +2,7 @@
 #include "mTime.h"
 #include "func.h"
 #include "mSceneManager.h"
+#include "mCombatScene.h"
 #include "mResources.h"
 #include "mAnimator.h"
 #include "mBackground.h"
@@ -89,6 +90,7 @@ namespace m
 		//}
 		if (KEY_PRESSED(KEYCODE_TYPE::R))
 		{
+			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
 			Repair(1);
 		}
 		if (Unit::GetCurHp() == 0 && GetLayerType() == LAYER_TYPE::PLAYER)
@@ -210,6 +212,7 @@ namespace m
 
 			if (!GetMove()) // 공격이 취소되고 이동가능상태로
 			{
+				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);
 				SetMove(true);
 				if(GetCurAttackSkill())
 					GetCurAttackSkill()->SetStartRender(false);
@@ -218,6 +221,8 @@ namespace m
 			}
 			else // 이동이 취소되고 공격가능상태로
 			{
+				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(1);
+
 				if(scene->GetAlphaFollower())
 					//scene->GetAlphaFollower()->SetState(GameObject::STATE::Death);
 

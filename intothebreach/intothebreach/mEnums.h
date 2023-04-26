@@ -11,7 +11,7 @@
 #include "UIEnums.h"
 #include "EffectEnums.h"
 #include "UnitEnums.h"
-
+#include "PilotEnums.h"
 enum class SCENE_TYPE
 {
 	IN_LAND0,
@@ -33,6 +33,7 @@ enum class LAYER_TYPE
 	BACKGROUND,
 	TILE_0,
 	TILE,
+	TERRAIN,
 	STRUCT,
 	MONSTER,
 	PLAYER,
@@ -41,6 +42,8 @@ enum class LAYER_TYPE
 	EFFECT,
 	SKILL,
 	UI,
+	DRAG_PI,
+	DRAG_WE,
 	END,
 };
 enum class PLAYERINFO_TYPE {

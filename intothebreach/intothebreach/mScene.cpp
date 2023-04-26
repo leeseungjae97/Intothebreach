@@ -594,6 +594,7 @@ namespace m
 		{
 			mMouseFollower->GetCurAttackSkill()->SetStartRender(false);
 			mMouseFollower->SetMove(true);
+			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
@@ -620,6 +621,7 @@ namespace m
 	}
 	void Scene::SaveTurn()
 	{
+		saveGridPower = GameComp::gridPower;
 		turnSave.clear();
 		for (int i = 0; i < GameComp::mMechs.size(); i++)
 		{
@@ -662,7 +664,7 @@ namespace m
 		GameComp::resetTurn -= 1;
 
 		moveSave.clear();
-
+		if(saveGridPower!=0) GameComp::gridPower = saveGridPower;
 		for (int i = 0; i < turnSave.size(); i++)
 		{
 			Vector2_3 info = turnSave[i];
@@ -740,6 +742,11 @@ namespace m
 	}
 	void Scene::MoveMech()
 	{
+		if (nullptr == mMouseFollower)
+		{
+			((CombatScene*)SceneManager::GetActiveScene())->ShowMechInfo(nullptr, false);
+			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);
+		}
 		if (!playerTurn || curTurnEnd) return;
 		drawTile();
 
@@ -786,12 +793,17 @@ namespace m
 
 		if (nullptr != mMouseFollower)
 		{
+			((CombatScene*)SceneManager::GetActiveScene())->ShowMechInfo(mMouseFollower, true);
 			if (mMouseFollower->GetMove() && !mMouseFollower->GetEndMove())
 			{
 				mMouseFollower->DrawMoveRangeTile();
 				mMouseFollower->DrawMoveDirectionTile();
 			}
 			Scene::OutOfMapRange();
+		}
+		else
+		{
+			((CombatScene*)SceneManager::GetActiveScene())->ShowMechInfo(nullptr, false);
 		}
 
 		if (KEY_DOWN(KEYCODE_TYPE::LSHIFT))
@@ -804,7 +816,7 @@ namespace m
 		{
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
-
+			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);
 			SetMouseFollower(nullptr);
 		}
 
@@ -917,8 +929,32 @@ namespace m
 			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
 				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 
+			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::STRUCT) { GameComp::savedPeople -= 1; }
+
 			GetAffectUnits(y, x)[i]->Hit(damage);
 		}
+	}
+	bool Scene::SearchAffectUnitM(int y, int x, LAYER_TYPE type)
+	{
+		if (GetAffectUnits(y, x).size() == 0) return false;
+		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
+		{
+			if (GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Explo
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible
+				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
+			//if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+			//	&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
+
+			if (GetAffectUnits(y, x)[i]->GetLayerType() != type
+				&& GetAffectUnits(y, x)[i]->GetLayerType() != LAYER_TYPE::TERRAIN)
+			{
+				return true;
+			}
+
+		}
+		return false;
 	}
 	bool Scene::SearchAffectUnit(int y, int x, LAYER_TYPE type)
 	{
@@ -1015,9 +1051,6 @@ namespace m
 		//		|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
 		//	if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
 		//		&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
-
-		//	return true;
-		//}
 		return false;
 	}
 	bool Scene::SearchBlockUnit(int y, int x)

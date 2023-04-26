@@ -25,7 +25,7 @@ namespace m {
 		float yPos = 210.f;
 		for (int i = 0; i < 5; i++)
 		{
-			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], L"..\\Resources\\texture\\ui\\btnBack.bmp");
+			Button* btn = new Button(TITLE_UI_TEXT_PATH[i], ALPHA_BACK);
 			btn->SetInner(true);
 			btn->UseInnerAlpha(true);
 			btn->SetAlpha(true);

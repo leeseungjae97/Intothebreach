@@ -1,11 +1,13 @@
 #pragma once
 #include "mScene.h"
-namespace m {
+namespace m
+{
 	class Tile;
 	class TileHead;
 	class Button;
 	class Alien;
-	class CombatScene : public Scene {
+	class CombatScene : public Scene
+	{
 	public:
 		CombatScene();
 		~CombatScene();
@@ -18,7 +20,7 @@ namespace m {
 
 		virtual void OnEnter() override;
 		virtual void OnExit() override;;
-		
+
 		int GetTextTurnNumber() { return iTurn; }
 		void RandSpawnAlien(int number);
 		void SetTextTurnNumber(int _turn);
@@ -27,15 +29,23 @@ namespace m {
 		void AlienTurnBackground();
 		void AlienIndexReSort();
 		void ButtonActivationCondition();
+		void LoadMap();
 
 		Button* GetTurnBox1() { return playerTurnBox; }
 		Button* GetTurnBox2() { return alienTurnBox; }
+		void ShowMechInfo(Mech* mech, bool show);
+		void SetWPBow(int selection);
+		Button* GetWeaponPilotBox() { return boxWeaponPilot; }
+		Button* GetPilotBackBox() { return boxPilotBack; }
+		Button* GetWeaponBox() { return boxWeapon; }
+		Button* GetPilotBox() { return boxPilot; }
 
 	private:
 		vector<Background*> combatBack;
 		bool bSetPosition;
 		bool endGame;
 		bool showEnd;
+		bool bLoadMap;
 		//bool bConfirm;
 		Button* textDeploy;
 		Button* btnConfirm;
@@ -50,12 +60,18 @@ namespace m {
 		Button* btnTurnEnd;
 		Button* btnUndoMove;
 		Button* btnInitTurn;
-		
+
 		Button* playerTurnBox;
 		Button* alienTurnBox;
 
 		Button* playerUnitInfo;
 		Button* selectUnitBox;
+
+		Button* boxWeaponPilot;
+		Button* boxWPBack;
+		Button* boxPilotBack;
+		Button* boxPilot;
+		Button* boxWeapon;
 
 		Button* endMissionBox;
 		vector<Mech*> infoUnits;

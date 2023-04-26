@@ -188,9 +188,38 @@ namespace m::object
 
 		return gameObj;
 	}
-	static inline void Instantiate(vector<Skill*>& vS, WEAPON_T _type, int idx)
+	static inline void Instantiate(vector<Skill*>& vS, WEAPON_T _type, int idx, Unit* unit)
 	{
-		Skill* gameObj = vS[idx];
+		if (vS[idx])
+		{
+			vS[idx]->SetState(GameObject::STATE::Delete);
+		}
+		Skill* gameObj = nullptr;
+		switch (WEAPON_SKILL[(UINT)_type])
+		{
+		case (int)SKILL_T::ARC:
+		{
+			gameObj = new Skill_Arc(_type, unit);
+		}
+		break;
+		case (int)SKILL_T::ST:
+		{
+			gameObj = new Skill_St(_type, unit);
+		}
+		break;
+		case (int)SKILL_T::RANGE_ST:
+		{
+			gameObj = new Skill_RS(_type, unit);
+		}
+		break;
+		case (int)SKILL_T::END:
+			break;
+		default:
+			break;
+		}
+		vS[idx] = gameObj;
+		Scene* scene = SceneManager::GetActiveScene();
+		scene->AddGameObject(gameObj, LAYER_TYPE::SKILL);
 	}
 	template <typename T>
 	static inline void DestoryUnitVector(vector<T>& _vec)

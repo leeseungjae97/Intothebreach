@@ -310,6 +310,9 @@
     <ClInclude Include="mSkill_RS.h">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClInclude>
+    <ClInclude Include="PilotEnums.h">
+      <Filter>Engine\Common\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">

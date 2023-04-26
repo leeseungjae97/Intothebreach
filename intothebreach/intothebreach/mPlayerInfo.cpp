@@ -1,28 +1,34 @@
 #include "mPlayerInfo.h"
 #include "Mech.h"
 #include "Alien.h"
-#include "mPilot.h"
+//#include "mPilot.h"
 namespace m {
 
-	int GameComp::playerUnits[3] = {};
 	vector<Mech*> GameComp::mMechs;
 	vector<Mech*> GameComp::mSaveMechs;
+	vector<GameComp::MechInfo> GameComp::mechInfos;
 	vector<Alien*> GameComp::mAliens;
-	vector<Pilot*> GameComp::mPilots;
+	//vector<Pilot*> GameComp::mPilots;
 	int GameComp::gridPower;
 	int GameComp::defence;
 	int GameComp::resetTurn;
 	int GameComp::reactor;
 	int GameComp::star;
-	int GameComp::savePeople;
+	int GameComp::savedPeople;
+	int GameComp::saveTurnPeople;
+	PILOT_T GameComp::mPilots[3]{};
+	vector<int> GameComp::inventoryItems;
+	bool GameComp::combatEnd;
 	void GameComp::Initialize()
 	{
+		combatEnd = false;
 		gridPower = 5;
 		defence = 15;
 		resetTurn = 1;
 		reactor = 0;
 		star = 0;
-		savePeople = 0;
+		savedPeople = 0;
+		saveTurnPeople = 500;
 	}
 
 }

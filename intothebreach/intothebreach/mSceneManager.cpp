@@ -39,6 +39,7 @@ namespace m
 		}
 
 		mActiveScene = mScenes[(UINT)SCENE_TYPE::IN_LAND0];
+		LoadScene(SCENE_TYPE::IN_LAND0);
 	}
 
 	void SceneManager::Update()

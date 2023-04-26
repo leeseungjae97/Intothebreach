@@ -208,7 +208,7 @@ namespace m
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
-				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				//if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
 				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
 				if (WEAPON_RANGE[(UINT)GetWeaponType()] < now.level + 1)
 				{
@@ -235,7 +235,7 @@ namespace m
 						//	SetTargetCoord(Vector2(dx, dy));
 						//	return true;
 						//}
-					if (scene->SearchAffectUnit((int)dy, (int)dx, LAYER_TYPE::PLAYER))
+					if (scene->SearchAffectUnitM((int)dy, (int)dx, LAYER_TYPE::MONSTER))
 					{
 						//GetCurAttackSkill()->SetGuideLinePos();
 						if (!scene->GetPlayerTurn())

@@ -20,7 +20,7 @@ namespace m {
 		UINT GetHeight() { return mHeight; }
 		void SetOffset(Vector2 _offset) { mOffset = _offset; }
 		Vector2 GetOffset() { return mOffset; }
-
+		Vector2 GetSize() { return Vector2((float)mWidth, (float)mHeight); }
 	private:
 		HBITMAP mHBitmap;
 		void* mBitmap;
