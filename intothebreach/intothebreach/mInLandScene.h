@@ -33,26 +33,27 @@ namespace m {
 		vector<Button*> clickableMechs;
 
 		Button* mechInfo;
-		Button* inventory;
-		Button* inventoryPagingNumber;
 		Button* boxDragPilot;
 		Button* boxDragSkill1;
 		Button* boxDragSkill2;
-
 		Button* boxPilot;
 		Button* boxSkill1;
 		Button* boxSkill2;
-
-		Button* btnInvenUp;
-		Button* btnInvenDown;
-		vector<Button*> inventoryColumns;
-
 		vector<Button*> reactors;
 		Button* btnReactorDeploy;
 		Button* btnReactorCancel;
 		Button* mM;
-		bool bMouseDrag;
+		int curMech;
 
+		Button* inventory;
+		Button* inventoryPagingNumber;
+		Button* btnInvenUp;
+		Button* btnInvenDown;
+		vector<Button*> inventoryColumns;
+		int curItemIndex;
+		vector<Button*> inventoryParts;
+
+		bool bMouseDrag;
 		vector<Button*> dragBack;
     };
 }

@@ -74,4 +74,11 @@ enum class PEN_TYPE {
 	BLUE,
 	END
 };
-
+enum class BTN_TYPE
+{
+	NONE,
+	DRAG_PI,
+	DRAG_WE,
+	DRAG,
+	END
+};

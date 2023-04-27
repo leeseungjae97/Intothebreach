@@ -12,6 +12,7 @@ enum class PILOT_T
 };
 wstring PILOT_PATH[(UINT)PILOT_T::END]{
 	L"..\\Resources\\texture\\pilot\\Pilot_Artificial.bmp",
+	L"..\\Resources\\texture\\pilot\\Pilot_Original.bmp",
 	L"..\\Resources\\texture\\pilot\\ice1.bmp",
 	L"..\\Resources\\texture\\pilot\\sand1.bmp",
 	L"..\\Resources\\texture\\pilot\\Pilot_Genius.bmp",

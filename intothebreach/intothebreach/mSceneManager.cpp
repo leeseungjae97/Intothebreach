@@ -38,8 +38,8 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::IN_LAND0];
-		LoadScene(SCENE_TYPE::IN_LAND0);
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::SELECT_LAND];
+		LoadScene(SCENE_TYPE::SELECT_LAND);
 	}
 
 	void SceneManager::Update()

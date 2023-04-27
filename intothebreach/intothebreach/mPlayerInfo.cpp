@@ -17,8 +17,9 @@ namespace m {
 	int GameComp::savedPeople;
 	int GameComp::saveTurnPeople;
 	PILOT_T GameComp::mPilots[3]{};
-	vector<int> GameComp::inventoryItems;
+	vector<GameComp::Inven> GameComp::inventoryItems;
 	bool GameComp::combatEnd;
+	GameComp::Inven GameComp::Inven::None = Inven(-1, -1);
 	void GameComp::Initialize()
 	{
 		combatEnd = false;

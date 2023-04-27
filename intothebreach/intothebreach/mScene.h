@@ -35,8 +35,8 @@ namespace m
 
 		void AlienAlgorithm();
 
-		void AddGameObject(GameObject* obj, LAYER_TYPE lType);
-		void ObjectGoFront(GameObject* obj, LAYER_TYPE lType);
+		void AddGameObject(GameObject* obj, LAYER_TYPE bType);
+		void ObjectGoFront(GameObject* obj, LAYER_TYPE bType);
 		void MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2);
 		void MakeVariTile(int iX, int iY);
 		void HighlightTile();

@@ -30,6 +30,15 @@ namespace m {
 			return Vector2(-x, -y);
 		}
 
+        Vector2 operator+(const float other)
+        {
+            Vector2 temp;
+            temp.x = x + other;
+            temp.y = y + other;
+
+            return temp;
+        }
+
         Vector2 operator+(const Vector2& other) {
             Vector2 temp;
             temp.x = x + other.x;
@@ -173,16 +182,16 @@ namespace m {
         Vector2 pos;
         size_t idx;
         int state;
-        int lType;
+        int bType;
         int curHp;
 
         bool operator == (const Vector2_3& other)
         {
-            return (coord == other.coord && pos == other.pos && idx == other.idx && lType == other.lType);
+            return (coord == other.coord && pos == other.pos && idx == other.idx && bType == other.bType);
         }
         bool operator != (const Vector2_3& other)
         {
-            return (coord != other.coord || pos != other.pos || idx != other.idx || lType != other.lType);
+            return (coord != other.coord || pos != other.pos || idx != other.idx || bType != other.bType);
         }
     };
 	typedef Vector2 Pos;

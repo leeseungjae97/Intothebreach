@@ -35,7 +35,7 @@ namespace m
 		void SetFinalCoord(Vector2 _coord) { mFinalCoord = _coord; }
 		void SetCurAttackSkill();
 		void SetCurImage(Image* m) { curImage = m; }
-		void SetLayerType(LAYER_TYPE _type) { lType = _type; }
+		void SetButtonType(LAYER_TYPE _type) { bType = _type; }
 		//void SetUnitCoord(Vector2 _coord) { unitCoord = _coord; }
 		void SetCurHp(int _hp) { curHp = _hp; }
 		void SetMIdx(int _idx) { mIdx = _idx; }
@@ -111,7 +111,7 @@ namespace m
 
 		Image* GetCurImage() { return curImage; }
 		Image* GetCurImage(COMBAT_CONDITION_T type) { return GetMImages()[(UINT)type]; }
-		LAYER_TYPE GetLayerType() { return lType; }
+		LAYER_TYPE GetButtonType() { return bType; }
 
 		Skill* GetCurAttackSkill() { return curAttactSkill; }
 		Vector2 GetHpBackOffset() { return mHpBackOffset; }
@@ -141,7 +141,7 @@ namespace m
 		Image* hpImage;
 		Image* hpBack;
 		vector<Image*> hpBar;
-		LAYER_TYPE lType;
+		LAYER_TYPE bType;
 
 		Vector2 mCoord;
 		Vector2 mHpBackOffset;

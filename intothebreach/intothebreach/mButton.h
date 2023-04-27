@@ -28,12 +28,17 @@ namespace m
 		bool GetEndApDAp() { return endApDAp; }
 		bool GetSmoothAppear() { return bSmoothAppear; }
 		bool GetSmoothDisappear() { return bSmoothDisappear; }
+		bool GetFromInven() { return bFromInven; }
 		wstring GetBtnName() { return btnName; }
 		Vector2 GetInnerPos() { return innerPos; }
+		Vector2 GetOriginPos() { return originPos; }
 		Image* GetInnerImage() { return innerImage; }
 		BYTE GetInnerConstant() { return innerConstant; }
 		BYTE GetConstant() { return btConstant; }
 		int GetIdVar() { return idVar; }
+		int GetItem() { return iItem; }
+		int GetSkillBoxNum() { return skillBoxNum; }
+		int GetInvenIdx() { return invenIdx; }
 
 		void SetOSize(Vector2 _os) { originSize = _os; }
 		void SetResize(Vector2 _r) { resizeMax = _r; }
@@ -54,12 +59,18 @@ namespace m
 		void SmoothAppear(bool _b) { bSmoothAppear = _b; }
 		void SmoothDisappear(bool _b) { bSmoothDisappear = _b; }
 		void SetApDAp(bool _b) { bApDAp = _b; }
-
+		void SetItem(int item) { iItem = item; }
+		void SetOriginPos(Vector2 _pos) { originPos = _pos; }
+		void SetSkillBoxNum(int num) { skillBoxNum = num; }
+		void SetMag(int _t) { iScale = _t; }
+		void SetFromInven(bool _b) { bFromInven = _b; }
+		void SetInvenIdx(bool _idx) { invenIdx = _idx; }
 	private:
 		Vector2 innerPos;
 		Vector2 resizeMax;
 		Vector2 resizeUnit;
 		Vector2 originSize;
+		Vector2 originPos;
 		wstring btnName;
 
 		SCENE_TYPE eBtnMoveScene;
@@ -73,13 +84,19 @@ namespace m
 		bool bSmoothDisappear;
 		bool bApDAp;
 		bool endApDAp;
+		bool bFromInven;
 
 		int idDir;
 		int idVar;
+		int iItem;
+		int invenIdx;
+		int skillBoxNum;
 		bool bBlink;
 
 		BYTE btConstant;
 		BYTE innerConstant;
 		int iInnerScale;
+
+		int iScale;
 	};
 }

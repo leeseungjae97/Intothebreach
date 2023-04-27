@@ -207,7 +207,7 @@ namespace m
 			ARROW_ETC_T _type2;
 
 			//if (scene->GetEffectUnit(dy, dx).size() != 0)
-			if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER)
+			if (mOwner->GetButtonType() == LAYER_TYPE::MONSTER)
 			{
 				_type = arrows[i];
 				_type2 = ARROW_ETC_T::push_box;

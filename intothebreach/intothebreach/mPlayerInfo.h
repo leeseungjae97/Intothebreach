@@ -13,6 +13,21 @@ namespace m {
 			int unitNum;
 			WEAPON_T weapons[MAX_WEAPONS]{ WEAPON_T::NONE, WEAPON_T::NONE};
 		};
+		struct Inven
+		{
+			static Inven None;
+			int type;
+			int item;
+
+			bool operator== (const Inven& other)
+			{
+				return (type == other.type && item == other.item);
+			}
+			bool operator!= (const Inven& other)
+			{
+				return (type != other.type || item != other.item);
+			}
+		};
 		static vector<Mech*>& GetMechs() { return mMechs; };
 		static void Initialize();
 		static vector<MechInfo> mechInfos;
@@ -23,7 +38,7 @@ namespace m {
 		static vector<Weapon*> mWeapons;
 		//static vector<Pilot*> mPilots;
 		static PILOT_T mPilots[3];
-		static vector<int> inventoryItems;
+		static vector<Inven> inventoryItems;
 		static int gridPower;
 		static int defence;
 		static int resetTurn;
@@ -34,6 +49,7 @@ namespace m {
 		static int structResident;
 		static int buildingResident;
 		static bool combatEnd;
+		
 	private:
 	};
 }

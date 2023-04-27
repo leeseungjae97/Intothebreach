@@ -24,6 +24,28 @@ namespace m {
 		vector<Button*> gridPowers;
 		vector<Mech*> infoUnits;
 		vector<Button*> clickableMechs;
+		Background* boxBlackFade;
+
+		Button* mechInfo;
+		Button* boxDragPilot;
+		Button* boxDragSkill1;
+		Button* boxDragSkill2;
+		Button* boxPilot;
+		Button* boxSkill1;
+		Button* boxSkill2;
+		vector<Button*> reactors;
+		Button* btnReactorDeploy;
+		Button* btnReactorCancel;
+		Button* mM;
+		int curMech;
+
+		Button* inventory;
+		Button* inventoryPagingNumber;
+		Button* btnInvenUp;
+		Button* btnInvenDown;
+		vector<Button*> inventoryColumns;
+		int curItemIndex;
+		vector<Button*> inventoryParts;
     };
 }
 

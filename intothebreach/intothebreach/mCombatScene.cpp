@@ -445,7 +445,7 @@ namespace m
 					}
 				}
 				GameComp::mMechs[mechIdx]->SetState(GameObject::STATE::NoMove);
-				ObjectGoFront(GameComp::mMechs[mechIdx], GameComp::mMechs[mechIdx]->GetLayerType());
+				ObjectGoFront(GameComp::mMechs[mechIdx], GameComp::mMechs[mechIdx]->GetButtonType());
 				SetMouseFollower(GameComp::mMechs[mechIdx]);
 			}
 		}
@@ -522,7 +522,7 @@ namespace m
 
 							if (mech) // ±³È¯
 							{
-								ObjectGoFront(mech, mech->GetLayerType());
+								ObjectGoFront(mech, mech->GetButtonType());
 								SetMouseFollower(mech);
 								//mech->SetDeployed(true);
 								mechIdx = (int)mech->GetMIdx();
@@ -540,7 +540,7 @@ namespace m
 						{
 							if (mech)
 							{
-								ObjectGoFront(mech, mech->GetLayerType());
+								ObjectGoFront(mech, mech->GetButtonType());
 								SetMouseFollower(mech);
 								mechIdx = (int)mech->GetMIdx();
 							}

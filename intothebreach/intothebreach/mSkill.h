@@ -28,7 +28,7 @@ namespace m
 		void CalEndFire();
 
 		Unit* GetOwner() { return mOwner; }
-		LAYER_TYPE GetLayerType() { return mLayerType; }
+		LAYER_TYPE GetButtonType() { return mLayerType; }
 		SKILL_T GetSkillType() { return mType; }
 		WEAPON_T GetWeaponType() { return mWeaponType; }
 		Vector2 GetEndPos() { return mFinalEdPos; }
@@ -45,7 +45,7 @@ namespace m
 
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
 
-		void SetLayerType(LAYER_TYPE _type) { mLayerType = _type; }
+		void SetButtonType(LAYER_TYPE _type) { mLayerType = _type; }
 		void SetSkillType(SKILL_T _type) { mType = _type; }
 		void SetRealPos(Vector2 _pos) { ; }
 		void SetEndPos(Vector2 _pos) { mFinalEdPos = _pos; }

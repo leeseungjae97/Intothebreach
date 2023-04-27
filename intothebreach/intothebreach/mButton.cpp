@@ -21,8 +21,12 @@ m::Button::Button(const wstring& inner
 	, btConstant(0)
 	, innerConstant(0)
 	, iInnerScale(1)
+	, iScale(1)
 	, idVar(1)
 	, idDir(1)
+	, iItem(0)
+	, invenIdx(-1)
+	, bFromInven(false)
 	, bBlink(false)
 	, innerPos(Vector2::Minus)
 	, bReSzieable(false)
@@ -66,10 +70,10 @@ void m::Button::Update()
 	}
 	else
 	{
-		if (KEY_UP(KEYCODE_TYPE::LBTN))
-		{
-			bClicked = false;
-		}
+		//if (KEY_UP(KEYCODE_TYPE::LBTN))
+		//{
+		//	bClicked = false;
+		//}
 		bHover = false;
 		if (bReSzieable)
 		{
@@ -140,8 +144,8 @@ void m::Button::Render(HDC hdc)
 		AlphaBlend(hdc
 			, (int)(mPos.x)
 			, (int)(mPos.y)
-			, (int)(mSize.x)
-			, (int)(mSize.y)
+			, (int)(mSize.x * iScale)
+			, (int)(mSize.y * iScale)
 			, mImage->GetHdc()
 			, 0
 			, 0
@@ -154,8 +158,8 @@ void m::Button::Render(HDC hdc)
 		TransparentBlt(hdc
 			, (int)(mPos.x)
 			, (int)(mPos.y)
-			, (int)(mSize.x)
-			, (int)(mSize.y)
+			, (int)(mSize.x * iScale)
+			, (int)(mSize.y * iScale)
 			, mImage->GetHdc()
 			, 0
 			, 0

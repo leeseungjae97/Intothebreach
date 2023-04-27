@@ -91,7 +91,7 @@ namespace m
 
 		Vector2 mPos = mStPos;
 		Image* im;
-		if (mOwner->GetLayerType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
+		if (mOwner->GetButtonType() == LAYER_TYPE::MONSTER) im = Resources::Load<Image>(L"dot_r", L"..\\Resources\\texture\\combat\\artillery_dot_r.bmp");
 		else im = Resources::Load<Image>(L"dot", L"..\\Resources\\texture\\combat\\artillery_dot.bmp");
 
 		float diff = (GetGuideLinePos() - mStPos).Length();
@@ -136,7 +136,7 @@ namespace m
 		Vector2 rPos(pos.x + scale.x * 2, pos.y + scale.y * 2);
 		HitEffectDir();
 
-		if (GetOwner()->GetLayerType() == LAYER_TYPE::MONSTER) unit = GetOwner();
+		if (GetOwner()->GetButtonType() == LAYER_TYPE::MONSTER) unit = GetOwner();
 		else unit = scene->GetMouseFollower();
 
 		for (int y = 0; y < mPosTiles.size(); y++)

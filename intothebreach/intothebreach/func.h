@@ -88,7 +88,7 @@ namespace m::object
 			gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
 
 		gameObj->SetFinalPos(gameObj->GetPos());
-		gameObj->SetLayerType(type);
+		gameObj->SetButtonType(type);
 
 		assert(gameObj);
 
@@ -104,7 +104,7 @@ namespace m::object
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
 		gameObj->SetFinalPos(gameObj->GetPos());
 		gameObj->GetAnimator()->SetConstant(255);
-		gameObj->SetLayerType(type);
+		gameObj->SetButtonType(type);
 
 		scene->GetStructures().push_back(gameObj);
 
@@ -135,7 +135,7 @@ namespace m::object
 
 
 		gameObj->Initialize();
-		gameObj->SetLayerType(type);
+		gameObj->SetButtonType(type);
 		gameObj->SetEndCoord(edPos);
 
 		gameObj->SetPos(scene->GetPosTiles()[(int)stPos.y][(int)stPos.x]->GetCenterPos());

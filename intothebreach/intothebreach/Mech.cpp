@@ -93,7 +93,7 @@ namespace m
 			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
 			Repair(1);
 		}
-		if (Unit::GetCurHp() == 0 && GetLayerType() == LAYER_TYPE::PLAYER)
+		if (Unit::GetCurHp() == 0 && GetButtonType() == LAYER_TYPE::PLAYER)
 		{
 			SetState(STATE::Broken);
 		}

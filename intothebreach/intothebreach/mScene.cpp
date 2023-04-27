@@ -630,7 +630,7 @@ namespace m
 				, GameComp::mMechs[i]->GetFinalPos()
 				, GameComp::mMechs[i]->GetMIdx()
 				, (int)GameComp::mMechs[i]->GetState()
-				, (int)GameComp::mMechs[i]->GetLayerType()
+				, (int)GameComp::mMechs[i]->GetButtonType()
 				, GameComp::mMechs[i]->GetCurHp()
 			));
 		}
@@ -641,7 +641,7 @@ namespace m
 				, GameComp::mAliens[i]->GetFinalPos()
 				, GameComp::mAliens[i]->GetMIdx()
 				, (int)GameComp::mAliens[i]->GetState()
-				, (int)GameComp::mAliens[i]->GetLayerType()
+				, (int)GameComp::mAliens[i]->GetButtonType()
 				, GameComp::mAliens[i]->GetCurHp()
 			));
 		}
@@ -652,7 +652,7 @@ namespace m
 				, mStrutures[i]->GetFinalPos()
 				, mStrutures[i]->GetMIdx()
 				, (int)mStrutures[i]->GetState()
-				, (int)mStrutures[i]->GetLayerType()
+				, (int)mStrutures[i]->GetButtonType()
 				, 0
 			));
 		}
@@ -668,7 +668,7 @@ namespace m
 		for (int i = 0; i < turnSave.size(); i++)
 		{
 			Vector2_3 info = turnSave[i];
-			if (info.lType == (int)LAYER_TYPE::PLAYER)
+			if (info.bType == (int)LAYER_TYPE::PLAYER)
 			{
 				GameComp::mMechs[info.idx]->SetCoord(info.coord);
 				GameComp::mMechs[info.idx]->SetPos(info.pos);
@@ -683,7 +683,7 @@ namespace m
 					GameComp::mMechs[info.idx]->GetSkills()[i]->Clear();
 				}
 			}
-			if (info.lType == (int)LAYER_TYPE::MONSTER)
+			if (info.bType == (int)LAYER_TYPE::MONSTER)
 			{
 				GameComp::mAliens[info.idx]->SetCoord(info.coord);
 				GameComp::mAliens[info.idx]->SetPos(info.pos);
@@ -694,7 +694,7 @@ namespace m
 				GameComp::mAliens[info.idx]->SetEndMove(false);
 				GameComp::mAliens[info.idx]->SetEndAttack(false);
 			}
-			if (info.lType == (int)LAYER_TYPE::STRUCT)
+			if (info.bType == (int)LAYER_TYPE::STRUCT)
 			{
 				mStrutures[info.idx]->SetCoord(info.coord);
 				mStrutures[info.idx]->SetPos(info.pos);
@@ -926,10 +926,10 @@ namespace m
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge_loop
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
-			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::MONSTER
 				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 
-			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::STRUCT) { GameComp::savedPeople -= 1; }
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::STRUCT) { GameComp::savedPeople -= 1; }
 
 			GetAffectUnits(y, x)[i]->Hit(damage);
 		}
@@ -947,8 +947,8 @@ namespace m
 			//if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
 			//	&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 
-			if (GetAffectUnits(y, x)[i]->GetLayerType() != type
-				&& GetAffectUnits(y, x)[i]->GetLayerType() != LAYER_TYPE::TERRAIN)
+			if (GetAffectUnits(y, x)[i]->GetButtonType() != type
+				&& GetAffectUnits(y, x)[i]->GetButtonType() != LAYER_TYPE::TERRAIN)
 			{
 				return true;
 			}
@@ -961,7 +961,7 @@ namespace m
 		if (GetAffectUnits(y, x).size() == 0) return false;
 		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
 		{
-			if (GetAffectUnits(y, x)[i]->GetLayerType() == type)
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == type)
 			{
 				return true;
 			}
@@ -975,7 +975,7 @@ namespace m
 		for (int i = 0; i < GetAffectUnits(y, x).size(); i++)
 		{
 			if (GetAffectUnits(y, x)[i]->GetState() == state
-				&& GetAffectUnits(y, x)[i]->GetLayerType() == type)
+				&& GetAffectUnits(y, x)[i]->GetButtonType() == type)
 			{
 				return true;
 			}
@@ -1034,7 +1034,7 @@ namespace m
 				iter++;
 				continue;
 			}
-			if ((*iter)->GetLayerType() == LAYER_TYPE::MONSTER
+			if ((*iter)->GetButtonType() == LAYER_TYPE::MONSTER
 				&& (*iter)->GetState() == GameObject::STATE::Broken)
 			{
 				iter++;
@@ -1064,7 +1064,7 @@ namespace m
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Death
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Emerge
 				|| GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Invisible) continue;
-			if (GetAffectUnits(y, x)[i]->GetLayerType() == LAYER_TYPE::MONSTER
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::MONSTER
 				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 			return true;
 		}
@@ -1092,13 +1092,13 @@ namespace m
 		mBoundaryTiles[y][x]->SetETCTiles(MAKE_TILE_KEY(_type)
 			, MAKE_TILE_PATH(_type));
 	}
-	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE lType)
+	void Scene::AddGameObject(GameObject* obj, LAYER_TYPE bType)
 	{
-		mLayers[(UINT)lType].AddGameObject(obj);
-		if (lType == LAYER_TYPE::BACKGROUND)
+		mLayers[(UINT)bType].AddGameObject(obj);
+		if (bType == LAYER_TYPE::BACKGROUND)
 			mBacks.push_back(dynamic_cast<Background*>(obj));
 
-		if (nullptr != dynamic_cast<Unit*>(obj) && lType != LAYER_TYPE::CLONE)
+		if (nullptr != dynamic_cast<Unit*>(obj) && bType != LAYER_TYPE::CLONE)
 		{
 			Vector2 idx = ((Unit*)obj)->GetCoord();
 			//if (idx == Vector2::Minus);
@@ -1130,9 +1130,9 @@ namespace m
 
 
 	}
-	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE lType)
+	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE bType)
 	{
-		mLayers[(UINT)lType].ObjectFront(obj);
+		mLayers[(UINT)bType].ObjectFront(obj);
 	}
 	void Scene::RemoveAffectUnit(Vector2 _coord)
 	{

@@ -44,7 +44,7 @@ wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
 	L"shot_firefly_",
 };
 wstring WEAPON_IMAGES[(UINT)WEAPON_T::END]{
-	L"",
+	L"..\\Resources\\texture\\ui\\inventory\\inven_skill_box_.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_punchmech.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\ranged_artillery.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\brute_tankmech.bmp",
