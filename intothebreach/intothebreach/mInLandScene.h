@@ -21,6 +21,8 @@ namespace m {
 	private:
 		ISLAND_T mType;
 		vector<Background*> mSections;
+		vector<Background*> mSectionsOL;
+		vector<Background*> mFunctionSections;
 
 		Button* upUiBox;
 		Button* boxBattleResult;

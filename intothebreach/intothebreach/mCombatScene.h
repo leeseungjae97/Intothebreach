@@ -9,7 +9,7 @@ namespace m
 	class CombatScene : public Scene
 	{
 	public:
-		CombatScene();
+		CombatScene(TILE_T mapType, int mapNum);
 		~CombatScene();
 
 	public:
@@ -76,7 +76,8 @@ namespace m
 		Button* endMissionBox;
 		vector<Mech*> infoUnits;
 		//vector<Alien*> mAliens;
-
+		TILE_T mapTileType;
+		int mapNum;
 		int mechIdx;
 		int iTurn;
 	};

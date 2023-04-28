@@ -31,11 +31,30 @@ namespace m
 		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mType];
 		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++)
 		{
-			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i), MAKE_SECTION_PATH(mType, i), 2);
+			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i, i != 0 ? true : false)
+				, MAKE_SECTION_PATH(mType, i, i != 0 ? true : false), 2);
+			Background* b_b = new Background(MAKE_SECTION_OL_KEY(mType, i, i != 0 ? true : false)
+				, MAKE_SECTION_OL_PATH(mType, i, i != 0 ? true : false), 2);
 			b_->SetPos(pos[i]);
+			b_b->SetPos(pos[i]);
 			mSections.push_back(b_);
+			mSectionsOL.push_back(b_b);
 			AddGameObject(b_, LAYER_TYPE::BACKGROUND);
+			AddGameObject(b_b, LAYER_TYPE::BACKGROUND);
 		}
+		
+		//if (mType == ISLAND_T::ISLAND0)
+		//{
+		//	for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++)
+		//	{
+		//		Background* b_ = new Background(MAKE_SECTION_DETECT_KEY(mType, i), MAKE_SECTION_DETECT_PATH(mType, i), 2);
+		//		b_->SetPos(pos[i]);
+		//		mFunctionSections.push_back(b_);
+		//		AddGameObject(b_, LAYER_TYPE::FUNCTIONCAL_BACK);
+		//	}
+		//}
+		
+
 		boxBlackFade = new Background(ALPHA_BACK, ALPHA_BACK, 0, true, CENTER);
 		boxBlackFade->SetAlpha(true);
 		boxBlackFade->SetAlphaConstant(200);
@@ -216,6 +235,21 @@ namespace m
 	void InLandScene::Update()
 	{
 		Scene::Update();
+		Vector2 m = MOUSE_POS;
+		COLORREF color = GetPixel(application.GetHdc(), MOUSE_POS.x, MOUSE_POS.y);
+		for (int i = 0; i < mSections.size(); i++)
+		{
+			/*if (math::CheckRectPos(mSections[i]->GetPos(), mSections[i]->GetSize() * 2, MOUSE_POS))
+			{
+				
+			}*/
+			if (color == ISLAND_SECTION_DETECT_COLOR2[i])
+			{
+				mSectionsOL[i]->SetTex(MAKE_SECTION_OL_KEY(mType, i, true), MAKE_SECTION_OL_PATH(mType, i, true));
+			}
+			else mSectionsOL[i]->SetTex(MAKE_SECTION_OL_KEY(mType, i), MAKE_SECTION_OL_PATH(mType, i));
+		
+		}
 		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
 		{
 			if (GameComp::inventoryItems.size() <= i)

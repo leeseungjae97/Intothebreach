@@ -147,6 +147,7 @@
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
     <ClInclude Include="mEffect.h" />
+    <ClInclude Include="MissionEnums.h" />
     <ClInclude Include="mSkill_RS.h" />
     <ClInclude Include="mSkill.h" />
     <ClInclude Include="mSkill_Arc.h" />

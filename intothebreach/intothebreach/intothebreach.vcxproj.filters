@@ -313,6 +313,9 @@
     <ClInclude Include="PilotEnums.h">
       <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="MissionEnums.h">
+      <Filter>Engine\Common\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">

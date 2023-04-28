@@ -74,18 +74,12 @@ namespace m {
 
 		return S_OK;
 	}
-	Pixel Image::GetPixel(int x, int y) {
-		y = mHeight - (y + 1);
-
-		Pixel* pPixel = (Pixel*)mBitmap;
-		pPixel += (mWidth * y + x);
-		return *pPixel;
+	COLORREF Image::GetPixel(int x, int y)
+	{
+		return ::GetPixel(mHdc, x, y);
 	}
-	void Image::SetPixel(int x, int y, Pixel pixel) {
-		y = mHeight - (y + 1);
-
-		Pixel* pPixel = (Pixel*)mBitmap;
-		pPixel += (mWidth * y + x);
-		*pPixel = pixel;
+	void Image::SetPixel(int x, int y, COLORREF color)
+	{
+		::SetPixel(mHdc, x, y, color);
 	}
 }

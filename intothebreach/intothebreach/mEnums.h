@@ -2,6 +2,7 @@
 #include "def.h"
 #include "mMath.h"
 #include "CommonInclude.h"
+#include "MissionEnums.h"
 #include "MechEnums.h"
 #include "AlienEnums.h"
 #include "IslandEnums.h"
@@ -30,6 +31,7 @@ enum class SCENE_TYPE
 
 enum class LAYER_TYPE
 {
+	FUNCTIONCAL_BACK,
 	BACKGROUND,
 	TILE_0,
 	TILE,

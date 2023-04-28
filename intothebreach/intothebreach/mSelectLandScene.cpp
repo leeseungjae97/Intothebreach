@@ -503,31 +503,36 @@ namespace m
 				}
 			}
 		}
-		for (int i = 0; i < Islands.size(); i++)
-		{
-			Background* p = Islands[i];
-			if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
-			{
-				outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
-			}
-			else
-			{
-				outLine[i]->Clear();
-			}
-		}
 
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+		if (boxBlackFade->GetState() == GameObject::STATE::Invisible)
 		{
-			for (int i = 0; i < Islands.size() - 1; i++)
+			for (int i = 0; i < Islands.size(); i++)
 			{
 				Background* p = Islands[i];
 				if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
-					SceneManager::LoadScene((SCENE_TYPE)i);
-					SceneManager::SelectLand(i);
+					outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
+				}
+				else
+				{
+					outLine[i]->Clear();
+				}
+			}
+
+			if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+			{
+				for (int i = 0; i < Islands.size() - 1; i++)
+				{
+					Background* p = Islands[i];
+					if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+					{
+						SceneManager::LoadScene((SCENE_TYPE)i);
+						SceneManager::SelectLand(i);
+					}
 				}
 			}
 		}
+		
 	}
 	void SelectLandScene::Render(HDC hdc)
 	{
@@ -539,14 +544,13 @@ namespace m
 	}
 	void SelectLandScene::OnEnter()
 	{
-		for (int i = 0; i < GameComp::mSaveMechs.size(); i++)
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
-
 			Mech* mech = new Mech(
-				GameComp::mSaveMechs[i]->GetUnitName()
+				GameComp::mechInfos[i].unitNum
 				, Vector2::Minus
 				, 0
-				, GameComp::mSaveMechs[i]->GetFullHp()
+				, 1
 				, 99
 			);
 			mech->SetState(GameObject::STATE::NoMove);
@@ -563,7 +567,6 @@ namespace m
 
 			infoUnits.push_back(mech);
 			AddGameObject(mech, LAYER_TYPE::UI);
-
 		}
 	}
 	void SelectLandScene::OnExit()

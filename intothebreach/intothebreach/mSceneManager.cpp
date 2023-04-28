@@ -24,7 +24,7 @@ namespace m
 		mScenes[(UINT)SCENE_TYPE::INTRO] = new IntroScene();
 		mScenes[(UINT)SCENE_TYPE::SELECT_LAND] = new SelectLandScene();
 		mScenes[(UINT)SCENE_TYPE::SELECT_ROBOT] = new SelectRobotScene();
-		mScenes[(UINT)SCENE_TYPE::COMBAT] = new CombatScene();
+		mScenes[(UINT)SCENE_TYPE::COMBAT] = new CombatScene(TILE_T::GREEN, 0);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND0] = new InLandScene(ISLAND_T::ISLAND0);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND1] = new InLandScene(ISLAND_T::ISLAND1);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND2] = new InLandScene(ISLAND_T::ISLAND2);

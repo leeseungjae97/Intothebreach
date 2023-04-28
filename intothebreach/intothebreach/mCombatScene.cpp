@@ -20,11 +20,13 @@
 extern m::Application application;
 namespace m
 {
-	CombatScene::CombatScene()
+	CombatScene::CombatScene(TILE_T _mapTileType, int _mapNum)
 		: Scene()
 		, endGame(false)
 		, bSetPosition(false)
 		, showEnd(false)
+		, mapTileType(_mapTileType)
+		, mapNum(_mapNum)
 	{}
 	CombatScene::~CombatScene()
 	{
@@ -34,7 +36,46 @@ namespace m
 	void CombatScene::Initialize()
 	{
 		Scene::Initialize();
-		Scene::MakeTile(TILE_X, TILE_Y, TILE_T::GREEN, TILE_HEAD_T::ground);
+		//OPENFILENAME ofn = {};
+
+		//wchar_t szFilePath[256] = {};
+
+		//ZeroMemory(&ofn, sizeof(ofn));
+		//ofn.lStructSize = sizeof(ofn);
+		//ofn.hwndOwner = NULL;
+		//ofn.lpstrFile = szFilePath;
+		//ofn.lpstrFile[0] = '\0';
+		//ofn.nMaxFile = 256;
+		//ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
+		//ofn.nFilterIndex = 1;
+		//ofn.lpstrFileTitle = NULL;
+		//ofn.nMaxFileTitle = 0;
+		//ofn.lpstrInitialDir = NULL;
+		//ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+		//if (false == GetOpenFileName(&ofn))
+		//	return;
+
+		//FILE* file = nullptr;
+		//_wfopen_s(&file, szFilePath, L"rb");
+
+		//if (file == nullptr)
+		//	return;
+
+		//while (true)
+		//{
+		//	int index = -1;
+		//	TileID id;
+
+		//	if (fread(&index, sizeof(int), 1, file) == NULL)
+		//		break;
+
+		//	if (fread(&id.id, sizeof(TileID), 1, file) == NULL)
+		//		break;
+
+		//}
+		//fclose(file);
+		Scene::MakeTile(TILE_X, TILE_Y, mapTileType, TILE_HEAD_T::ground);
 		mechIdx = 0;
 		iTurn = 4;
 		Background* b0 = new Background(L"combatBackground1"

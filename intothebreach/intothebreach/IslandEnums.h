@@ -28,6 +28,36 @@ enum class ISLAND_T {
 	ISLAND4,
 	END
 };
+COLORREF ISLAND_SECTION_DETECT_COLOR[8]{
+	RGB(255, 0, 254),
+	RGB(255, 0, 253),
+	RGB(255, 0, 252),
+	RGB(255, 0, 251),
+	RGB(255, 0, 250),
+	RGB(255, 0, 249),
+	RGB(255, 0, 248),
+	RGB(255, 0, 247),
+};
+COLORREF ISLAND_SECTION_DETECT_COLOR2[8]{
+	RGB(70, 92, 61),
+	RGB(70, 92, 60),
+	RGB(70, 92, 59),
+	RGB(70, 92, 58),
+	RGB(70, 92, 57),
+	RGB(70, 92, 56),
+	RGB(70, 92, 55),
+	RGB(70, 92, 54),
+};
+COLORREF ISLAND_SECTION_DETECT_COLOR3[8]{
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+	RGB(149, 69, 69),
+};
 m::Vector2 ISLAND_OUTLINE_OFFSET[(UINT)ISLAND_T::END]{
    {0, 0},
    {-8, 18},
@@ -100,7 +130,39 @@ m::Vector2* ISLANDS_SECTION_POS[(UINT)ISLAND_T::END]{
 	ISLAND2_POS,
 	ISLAND3_POS,
 };
-wstring MAKE_SECTION_KEY(ISLAND_T _type, int sectionIdx) {
+wstring MAKE_SECTION_DETECT_KEY(ISLAND_T _type, int sectionIdx)
+{
+	wstring key = L"";
+
+	key.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	if (sectionIdx < 0) key.append(L"island");
+	else
+	{
+		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		key.append(std::to_wstring(sectionIdx));
+		key.append(L"_detect");
+	}
+	return key;
+};
+wstring MAKE_SECTION_DETECT_PATH(ISLAND_T _type, int sectionIdx)
+{
+	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
+	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
+	path.append(L"detect\\");
+	if (sectionIdx < 0)
+	{
+		path.append(L"island");
+	}
+	else
+	{
+		path.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
+		path.append(std::to_wstring(sectionIdx));
+	}
+	path.append(L"_detect.bmp");
+
+	return path;
+};
+wstring MAKE_SECTION_KEY(ISLAND_T _type, int sectionIdx, bool red = false) {
 	wstring key = L"";
 
 	key.append(ISLAND_FOLDER_PATH[(UINT)_type]);
@@ -108,10 +170,11 @@ wstring MAKE_SECTION_KEY(ISLAND_T _type, int sectionIdx) {
 	else {
 		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
 		key.append(std::to_wstring(sectionIdx));
+		if (red) key.append(L"_r");
 	}
 	return key;
 };
-wstring MAKE_SECTION_PATH(ISLAND_T _type, int sectionIdx) {
+wstring MAKE_SECTION_PATH(ISLAND_T _type, int sectionIdx, bool red = false) {
 	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
 	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
 	if (sectionIdx < 0) {
@@ -120,12 +183,13 @@ wstring MAKE_SECTION_PATH(ISLAND_T _type, int sectionIdx) {
 	else {
 		path.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
 		path.append(std::to_wstring(sectionIdx));
+		if (red) path.append(L"_r");
 	}
 	path.append(L".bmp");
 
 	return path;
 };
-wstring MAKE_SECTION_OL_KEY(ISLAND_T _type, int sectionIdx)
+wstring MAKE_SECTION_OL_KEY(ISLAND_T _type, int sectionIdx, bool red = false)
 {
 	wstring key = L"";
 
@@ -135,10 +199,11 @@ wstring MAKE_SECTION_OL_KEY(ISLAND_T _type, int sectionIdx)
 	{
 		key.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
 		key.append(std::to_wstring(sectionIdx)).append(L"_OL");
+		if (red) key.append(L"_r");
 	}
 	return key;
 };
-wstring MAKE_SECTION_OL_PATH(ISLAND_T _type, int sectionIdx)
+wstring MAKE_SECTION_OL_PATH(ISLAND_T _type, int sectionIdx, bool red = false)
 {
 	wstring path = L"..\\Resources\\texture\\ui\\inLand\\";
 	path.append(ISLAND_FOLDER_PATH[(UINT)_type]);
@@ -150,6 +215,7 @@ wstring MAKE_SECTION_OL_PATH(ISLAND_T _type, int sectionIdx)
 	{
 		path.append(ISLANDS_SECTIONS_PATH[(UINT)_type]);
 		path.append(std::to_wstring(sectionIdx)).append(L"_OL");
+		if (red) path.append(L"_r");
 	}
 	path.append(L".bmp");
 

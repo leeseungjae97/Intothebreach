@@ -11,9 +11,6 @@ namespace m {
 		virtual ~Image() override;
 		virtual HRESULT Load(const wstring& path) override;
 
-		Pixel GetPixel(int x, int y);
-		void SetPixel(int x, int y, Pixel pixel);
-
 		HDC GetHdc() { return mHdc; }
 		HBITMAP GetBitmap() { return mHBitmap; }
 		UINT GetWidth() { return mWidth; }
@@ -21,6 +18,8 @@ namespace m {
 		void SetOffset(Vector2 _offset) { mOffset = _offset; }
 		Vector2 GetOffset() { return mOffset; }
 		Vector2 GetSize() { return Vector2((float)mWidth, (float)mHeight); }
+		COLORREF GetPixel(int x, int y);
+		void SetPixel(int x, int y, COLORREF color);
 	private:
 		HBITMAP mHBitmap;
 		void* mBitmap;
