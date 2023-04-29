@@ -22,6 +22,7 @@ namespace m {
 		ISLAND_T mType;
 		vector<Background*> mSections;
 		vector<Background*> mSectionsOL;
+		vector<Background*> mMissionsPreview;
 		vector<Background*> mFunctionSections;
 
 		Button* upUiBox;

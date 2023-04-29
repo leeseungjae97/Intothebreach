@@ -85,7 +85,7 @@ namespace m
 		void RemoveAffectUnit(Vector2 _coord);
 		void RemoveAffectUnit(Vector2 _coord, Unit* unit);
 		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);
-
+		void SetMapType(TILE_T _mapType) { mapType = _mapType; }
 
 		bool GetPlayerTurn() { return playerTurn; }
 		bool GetCurTurnEnd() { return curTurnEnd; }

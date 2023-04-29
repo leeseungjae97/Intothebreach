@@ -33,21 +33,27 @@ namespace m {
 		static vector<MechInfo> mechInfos;
 		static vector<Mech*> mMechs;
 		static vector<Mech*> mSaveMechs;
-		
+		static int clearLandMatric[4][8];
+		static int checkClearLand[5];
 		static vector<Alien*> mAliens;
-		static vector<Weapon*> mWeapons;
-		//static vector<Pilot*> mPilots;
 		static PILOT_T mPilots[3];
 		static vector<Inven> inventoryItems;
+
+		static int curLandSection;
+		static int curLand;
 		static int gridPower;
 		static int defence;
 		static int resetTurn;
+
 		static int reactor;
 		static int star;
+
 		static int savedPeople;
 		static int saveTurnPeople;
+
 		static int structResident;
 		static int buildingResident;
+
 		static bool combatEnd;
 		
 	private:

@@ -3,6 +3,7 @@
 namespace m
 {
 	class Mech;
+	class Button;
 	class SelectRobotScene : public Scene
 	{
 	public:
@@ -23,6 +24,11 @@ namespace m
 		Background* cloud[2];
 		Background* lights[3];
 		Background* swapFake;
+
+		Button* btnStart;
+		Button* btnChangeSquad;
+		Button* btnChangePilot;
+
 		float cloudDiff;
 	};
 }

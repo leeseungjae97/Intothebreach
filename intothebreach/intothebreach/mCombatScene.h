@@ -9,7 +9,7 @@ namespace m
 	class CombatScene : public Scene
 	{
 	public:
-		CombatScene(TILE_T mapType, int mapNum);
+		CombatScene();
 		~CombatScene();
 
 	public:

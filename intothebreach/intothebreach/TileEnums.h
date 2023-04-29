@@ -198,7 +198,6 @@ m::Vector2 ARROW_TILE_DIRECTION[(UINT)ARROW_TILE_T::END]{
 wstring MAKE_TILE_KEY(ARROW_TILE_T _type)
 {
 	wstring key = L"";
-
 	key.append(ARROW_TILE_PATH[(UINT)_type]);
 
 	return key;

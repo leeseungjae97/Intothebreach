@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlienEnums.h" />
+    <ClInclude Include="BattleFieldEnums.h" />
     <ClInclude Include="def.h" />
     <ClInclude Include="EffectEnums.h" />
     <ClInclude Include="func.h" />

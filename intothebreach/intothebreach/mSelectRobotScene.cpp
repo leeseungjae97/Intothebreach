@@ -7,6 +7,7 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mCamera.h"
+#include "mButton.h"
 #include "func.h"
 extern m::Application application;
 namespace m

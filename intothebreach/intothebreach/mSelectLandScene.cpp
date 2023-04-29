@@ -508,15 +508,23 @@ namespace m
 		{
 			for (int i = 0; i < Islands.size(); i++)
 			{
-				Background* p = Islands[i];
-				if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+				if (GameComp::checkClearLand[i] == 1)
 				{
-					outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
+					outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i, true), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i, true), (ISLAND_T)i);
 				}
 				else
 				{
-					outLine[i]->Clear();
+					Background* p = Islands[i];
+					if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
+					{
+						outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
+					}
+					else
+					{
+						outLine[i]->Clear();
+					}
 				}
+				
 			}
 
 			if (KEY_DOWN(KEYCODE_TYPE::LBTN))

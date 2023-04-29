@@ -39,6 +39,24 @@
 #define TILE_X_DIVIDE_RECT	2.f
 #define TILE_Y_DIVIDE_RECT	3.53f
 
+#define MOUNTAIN			 2
+#define COAL_PLANT			 3
+#define HQ					 4
+#define ESF					 5
+#define RESEARCH			 6
+
+#define MOVE				 1
+#define BUILDING			-1
+#define MECH				-2
+#define ALIEN				-3
+
+#define LEADER_FIREFLY		-4
+#define LEADER_HORNET		-5
+
+#define CLEAR 1
+#define INVASION 2
+#define NOR 3
+
 #define ONE_BUILDING_SCALE	Vector2(31.f , 0.f)
 #define ONE_BUILDING_POS	Vector2(10.f, 5.f)
 
@@ -62,11 +80,6 @@
 #define MOUSE_POS m::Input::GetMousePos()
 
 #define CLONE(type) type* Clone() {return new type(*this);}
-
-#define MOVE				 1
-#define MECH				-2
-#define ALIEN				-3
-#define BUILDING			-1
 
 template <typename T>
 void Safe_Delete_X_Vec(vector<T>& _vec) {

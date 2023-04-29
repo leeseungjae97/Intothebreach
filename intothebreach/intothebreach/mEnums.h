@@ -2,6 +2,7 @@
 #include "def.h"
 #include "mMath.h"
 #include "CommonInclude.h"
+#include "BattleFieldEnums.h"
 #include "MissionEnums.h"
 #include "MechEnums.h"
 #include "AlienEnums.h"

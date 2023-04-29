@@ -28,7 +28,6 @@ namespace m
 	{
 		//mLayers.reserve((UINT)LAYER_TYPE::END);
 		mLayers.resize((UINT)LAYER_TYPE::END);
-		mapType = TILE_T::GREEN;
 	}
 	Scene::~Scene()
 	{
@@ -144,7 +143,6 @@ namespace m
 			for (int x = 0; x < iX; x++)
 			{
 				Tile* tile = new Tile(Vector2((float)x, (float)y));
-				//Building* b_ = new Building(STRUCTURES_T::Mountain, Vector2((float)x, (float)y));
 				fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
 				fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
 				tile->SetPos(Vector2(fX * 2, fY * 2));
@@ -416,9 +414,9 @@ namespace m
 				mPosTiles[y][x]->SetTileType(TILE_T::COMMON);
 				mPosTiles[y][x]->SetSourceConstantAlpha(50);
 				mPosTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				mTiles[y][x]->SetTileType(TILE_T::GREEN);
-				mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(TILE_T::GREEN, TILE_HEAD_T::ground)
-					, MAKE_TILE_PATH(TILE_T::GREEN, TILE_HEAD_T::ground));
+				mTiles[y][x]->SetTileType(mapType);
+				mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(mapType, TILE_HEAD_T::ground)
+					, MAKE_TILE_PATH(mapType, TILE_HEAD_T::ground));
 			}
 		}
 		ClearBackTiles();
@@ -491,7 +489,13 @@ namespace m
 		//for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		//	if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
 		//if (!n) return;
-
+		for (int i = 0; i < GameComp::mAliens.size(); i++)
+		{
+			if (GameComp::mAliens[i]->GetState() == GameObject::STATE::Broken)
+			{
+				return;
+			}
+		}
 		if (GameComp::mAliens.size() <= curAttackAlien)
 		{
 			((CombatScene*)SceneManager::GetActiveScene())->SetTextTurnNumber(
@@ -614,7 +618,7 @@ namespace m
 	}
 	void Scene::drawTile()
 	{
-		Scene::ClearMTiles(TILE_T::GREEN, TILE_HEAD_T::ground);
+		Scene::ClearMTiles(mapType, TILE_HEAD_T::ground);
 
 		Scene::DrawFootTile();
 		Scene::HighlightTile();

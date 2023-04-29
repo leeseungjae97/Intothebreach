@@ -316,6 +316,9 @@
     <ClInclude Include="MissionEnums.h">
       <Filter>Engine\Common\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="BattleFieldEnums.h">
+      <Filter>Engine\Common\Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">

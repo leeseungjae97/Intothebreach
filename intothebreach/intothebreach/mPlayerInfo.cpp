@@ -20,6 +20,10 @@ namespace m {
 	vector<GameComp::Inven> GameComp::inventoryItems;
 	bool GameComp::combatEnd;
 	GameComp::Inven GameComp::Inven::None = Inven(-1, -1);
+	int GameComp::clearLandMatric[4][8]{};
+	int GameComp::curLandSection = 0;
+	int GameComp::curLand = 0;
+	int GameComp::checkClearLand[5]{};
 	void GameComp::Initialize()
 	{
 		combatEnd = false;

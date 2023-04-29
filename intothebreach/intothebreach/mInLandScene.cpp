@@ -31,15 +31,27 @@ namespace m
 		Vector2* pos = ISLANDS_SECTION_POS[(UINT)mType];
 		for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++)
 		{
-			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i, i != 0 ? true : false)
-				, MAKE_SECTION_PATH(mType, i, i != 0 ? true : false), 2);
-			Background* b_b = new Background(MAKE_SECTION_OL_KEY(mType, i, i != 0 ? true : false)
-				, MAKE_SECTION_OL_PATH(mType, i, i != 0 ? true : false), 2);
+			Background* b_ = new Background(MAKE_SECTION_KEY(mType, i)
+				, MAKE_SECTION_PATH(mType, i), 2);
 			b_->SetPos(pos[i]);
-			b_b->SetPos(pos[i]);
 			mSections.push_back(b_);
-			mSectionsOL.push_back(b_b);
 			AddGameObject(b_, LAYER_TYPE::BACKGROUND);
+
+			Background* mission = new Background(MAKE_MISSION_KEY((int)mType, i)
+			, MAKE_MISSION_PATH((int)mType, i));
+			if(b_->GetPos().x + b_->GetSize().x * 2 + mission->GetSize().x > application.GetResolutionWidth())
+				mission->SetPos(Vector2(b_->GetPos().x - b_->GetSize().x * 3, b_->GetPos().y));
+			else 
+				mission->SetPos(Vector2(b_->GetPos().x + b_->GetSize().x * 2, b_->GetPos().y));
+			mMissionsPreview.push_back(mission);
+			mission->SetState(GameObject::STATE::Invisible);
+			AddGameObject(mission, LAYER_TYPE::UI);
+
+			Background* b_b = new Background(MAKE_SECTION_OL_KEY(mType, i,true)
+				, MAKE_SECTION_OL_PATH(mType, i, true), 2);
+			b_b->SetPos(pos[i]);
+			b_b->SetState(GameObject::STATE::Invisible);
+			mSectionsOL.push_back(b_b);
 			AddGameObject(b_b, LAYER_TYPE::BACKGROUND);
 		}
 		
@@ -235,20 +247,89 @@ namespace m
 	void InLandScene::Update()
 	{
 		Scene::Update();
-		Vector2 m = MOUSE_POS;
 		COLORREF color = GetPixel(application.GetHdc(), MOUSE_POS.x, MOUSE_POS.y);
+		int checkFinal = 0;
 		for (int i = 0; i < mSections.size(); i++)
 		{
 			/*if (math::CheckRectPos(mSections[i]->GetPos(), mSections[i]->GetSize() * 2, MOUSE_POS))
 			{
 				
 			}*/
-			if (color == ISLAND_SECTION_DETECT_COLOR2[i])
+			if (GameComp::clearLandMatric[GameComp::curLand][i] == CLEAR)
 			{
-				mSectionsOL[i]->SetTex(MAKE_SECTION_OL_KEY(mType, i, true), MAKE_SECTION_OL_PATH(mType, i, true));
+				checkFinal++;
+				mSections[i]->SetTex(MAKE_SECTION_KEY(mType, i, true), MAKE_SECTION_PATH(mType, i, true));
+				mSectionsOL[i]->SetState(GameObject::STATE::Invisible);
+				for (int _i = 0; _i < 8; _i++)
+				{
+					if (landAdjacencyMatrix[GameComp::curLand][i][_i] == CLEAR)
+					{
+						if (GameComp::clearLandMatric[GameComp::curLand][_i] != CLEAR
+							&& GameComp::curLandSection != _i)
+						{
+							GameComp::clearLandMatric[GameComp::curLand][_i] = INVASION;
+
+							mSections[_i]->SetTex(MAKE_SECTION_KEY(mType, _i, false, true)
+								, MAKE_SECTION_PATH(mType, _i, false, true));
+							mSectionsOL[_i]->SetState(GameObject::STATE::Visible);
+							mMissionsPreview[_i]->SetState(GameObject::STATE::Invisible);
+						}		
+					}
+				}
 			}
-			else mSectionsOL[i]->SetTex(MAKE_SECTION_OL_KEY(mType, i), MAKE_SECTION_OL_PATH(mType, i));
-		
+			else
+			{
+				if (color == ISLAND_SECTION_DETECT_COLOR3[i])
+				{
+					mSections[i]->SetTex(MAKE_SECTION_KEY(mType, i, false, true, true)
+						, MAKE_SECTION_PATH(mType, i, false, true, true));
+					mSectionsOL[i]->SetState(GameObject::STATE::Invisible);
+					GameComp::curLandSection = i;
+				}
+				else if (color == RGB(255, 79, 76))
+				{
+					mMissionsPreview[GameComp::curLandSection]->SetState(GameObject::STATE::Visible);
+					if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+					{
+						GameComp::clearLandMatric[GameComp::curLand][GameComp::curLandSection] = CLEAR;
+						mMissionsPreview[GameComp::curLandSection]->SetState(GameObject::STATE::Invisible);
+						SceneManager::LoadScene(SCENE_TYPE::COMBAT);
+						return;
+					}
+					// select
+				}
+				else if (color == RGB(70, 92, 61))
+				{
+					// green
+				}
+				else
+				{
+					if (GameComp::clearLandMatric[GameComp::curLand][i] == NOR
+						&& GameComp::curLandSection != i)
+					{
+						mSections[i]->SetTex(MAKE_SECTION_KEY(mType, i)
+							, MAKE_SECTION_PATH(mType, i));
+						mSectionsOL[i]->SetState(GameObject::STATE::Invisible);
+					}
+					//mSections[GameComp::curLandSection]->SetTex(MAKE_SECTION_KEY(mType, GameComp::curLandSection, false, true)
+					//	, MAKE_SECTION_PATH(mType, GameComp::curLandSection, false, true));
+					//mSectionsOL[GameComp::curLandSection]->SetState(GameObject::STATE::Visible);
+					mMissionsPreview[GameComp::curLandSection]->SetState(GameObject::STATE::Invisible);
+				}
+			}
+		}
+		if (checkFinal == 5)
+		{
+			for (int i = 1; i < 8; i++)
+			{
+				GameComp::clearLandMatric[GameComp::curLand][i] = CLEAR;
+			}
+			GameComp::clearLandMatric[GameComp::curLand][0] = INVASION;
+		}
+		if (checkFinal > 7)
+		{
+			GameComp::checkClearLand[GameComp::curLand] = CLEAR;
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
 		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
 		{
@@ -560,7 +641,12 @@ namespace m
 		//	boxResultPilots[i]->SetState(GameObject::STATE::Delete);
 		//}
 		//boxResultPilots.clear();
-
+		GameComp::curLand = (int)mType;
+		GameComp::clearLandMatric[GameComp::curLand][0] = 1;
+		if (GameComp::checkClearLand[GameComp::curLand])
+		{
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+		}
 		for (int i = 0; i < 3; i++)
 		{
 			Button* pilot = new Button(PILOT_PATH[(UINT)GameComp::mPilots[i]], NO_BACK);
@@ -574,6 +660,16 @@ namespace m
 		//GameComp::combatEnd = true;
 		if (GameComp::combatEnd)
 		{
+			//GameComp::clearLandMatric[GameComp::curLand][GameComp::curLandSection] = 1;
+			//for (int i = GameComp::curLandSection; i < 8; i++)
+			//{
+			//	if (land1AdjacencyMatrix[GameComp::curLandSection][i] == 1)
+			//	{
+			//		mSections[i];
+			//	}
+			//}
+				
+
 			boxBattleResult->SetState(GameObject::STATE::Visible);
 			btnResultClose->SetState(GameObject::STATE::Visible);
 			boxBlackFade->SetState(GameObject::STATE::Visible);
@@ -581,6 +677,7 @@ namespace m
 			{
 				boxResultPilots[i]->SetState(GameObject::STATE::Visible);
 			}
+			GameComp::combatEnd = false;
 		}
 
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
