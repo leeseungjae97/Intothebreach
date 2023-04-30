@@ -25,7 +25,7 @@ namespace m{
 			return Vector2(GetWidth(), GetHeight()); 
 		}
 		BTN_TYPE GetButtonType() { return bType; }
-		void SetSize(Vector2 _size) {mSize = _size;}
+		void SetSize(Vector2 _size) { mSize = _size; }
 		void SetTex(const wstring& key, const wstring& path);
 		void SetTex(const wstring& key, const wstring& path, ISLAND_T type);
 		void Clear();

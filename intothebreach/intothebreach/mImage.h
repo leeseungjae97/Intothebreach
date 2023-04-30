@@ -15,6 +15,7 @@ namespace m {
 		HBITMAP GetBitmap() { return mHBitmap; }
 		UINT GetWidth() { return mWidth; }
 		UINT GetHeight() { return mHeight; }
+		//void SetSize(Vector2 size);
 		void SetOffset(Vector2 _offset) { mOffset = _offset; }
 		Vector2 GetOffset() { return mOffset; }
 		Vector2 GetSize() { return Vector2((float)mWidth, (float)mHeight); }

@@ -137,7 +137,8 @@ namespace m
 	void Skill_Arc::Active(HDC hdc)
 	{
 		Vector2 mPos = GetPos();
-		Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_L.bmp");
+		Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(mWeaponType, SKILL_DIR::NONE), MAKE_SKILL_PATH(mWeaponType, SKILL_DIR::NONE));
+		//Image* im = Resources::Load<Image>(L"missile", L"..\\Resources\\texture\\effect\\shotup_tribomb_missile_L.bmp");
 
 		bitmap::RotateBitmap(hdc, mPos, im->GetBitmap(),
 			arcTheta, im->GetHdc());

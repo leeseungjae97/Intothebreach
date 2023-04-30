@@ -45,6 +45,7 @@ enum class LAYER_TYPE
 	EFFECT,
 	SKILL,
 	UI,
+	FRONT_UI,
 	DRAG_PI,
 	DRAG_WE,
 	END,

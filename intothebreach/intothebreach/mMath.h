@@ -38,7 +38,14 @@ namespace m {
 
             return temp;
         }
+        Vector2 operator-(const float other)
+        {
+            Vector2 temp;
+            temp.x = x - other;
+            temp.y = y - other;
 
+            return temp;
+        }
         Vector2 operator+(const Vector2& other) {
             Vector2 temp;
             temp.x = x + other.x;

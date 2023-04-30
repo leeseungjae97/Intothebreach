@@ -22,6 +22,7 @@ namespace m
 
 		bool GetInner() { return bInner; }
 		bool GetClicked() { return bClicked; }
+		bool GetRClicked() { return bRClicked; }
 		bool GetHover() { return bHover; }
 		bool GetBlink() { return bBlink; }
 		bool GetApDAp() { return bApDAp; }
@@ -45,7 +46,7 @@ namespace m
 		void SetResizeUnit(Vector2 _u) { resizeUnit = _u; }
 		void SetInner(bool _t) { bInner = _t; }
 		void SetClicked(bool _b) { bClicked = _b; }
-		void ChangeInner(const wstring& _path) { btnName = _path; }
+		void ChangeInner(const wstring& _path);
 		void UseInnerAlpha(bool _t) { bInnerAlpha = _t; }
 		void SetInnerConstant(BYTE _a) { innerConstant = _a; }
 		void SetMoveScene(SCENE_TYPE _type) { eBtnMoveScene = _type; }
@@ -65,6 +66,7 @@ namespace m
 		void SetMag(int _t) { iScale = _t; }
 		void SetFromInven(bool _b) { bFromInven = _b; }
 		void SetInvenIdx(bool _idx) { invenIdx = _idx; }
+		void SetRClicked(bool _b) { bRClicked = _b; }
 	private:
 		Vector2 innerPos;
 		Vector2 resizeMax;
@@ -79,6 +81,7 @@ namespace m
 		bool bInnerAlpha;
 		bool bReSzieable;
 		bool bClicked;
+		bool bRClicked;
 		bool bHover;
 		bool bSmoothAppear;
 		bool bSmoothDisappear;

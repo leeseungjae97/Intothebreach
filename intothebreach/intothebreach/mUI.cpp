@@ -56,6 +56,10 @@ namespace m
 	{
 		return (float)mImage->GetHeight();
 	}
+	//void UI::SetSize(Vector2 _size)
+	//{
+	//	mImage->GetSize();
+	//}
 	void UI::SetTex(const wstring& key, const wstring& path)
 	{
 		mImage = Resources::Load<Image>(key, path);

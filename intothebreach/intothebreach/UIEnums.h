@@ -1,6 +1,8 @@
 #pragma once
 wstring A_BTN_BACK = L"..\\Resources\\texture\\ui\\in_btn.bmp";
+wstring A_BTN_BACK_2 = L"..\\Resources\\texture\\ui\\in_btn_2.bmp";
 wstring A_BTN_SELECT_BACK = L"..\\Resources\\texture\\ui\\select_btn.bmp";
+wstring A_BTN_SELECT_BACK_2 = L"..\\Resources\\texture\\ui\\clicked_btn.bmp";
 wstring NO_BACK = L"..\\Resources\\texture\\ui\\no_back.bmp";
 wstring TURN_BACK = L"..\\Resources\\texture\\ui\\combat\\turn_box.bmp";
 wstring ALPHA_BACK = L"..\\Resources\\texture\\ui\\btnBack.bmp";
@@ -59,4 +61,16 @@ wstring UNDERLINE_PATH[(UINT)LINE_T::END]{
 	L"..\\Resources\\texture\\combat\\icons\\warn_line1.bmp"
 	L"..\\Resources\\texture\\combat\\icons\\warn_line2.bmp",
 	L"..\\Resources\\texture\\combat\\icons\\warn_spawn_tile_red.bmp",
+};
+wstring BOLD_NUM_PATH[10]{
+	L"..\\Resources\\texture\\ui\\num0.bmp",
+	L"..\\Resources\\texture\\ui\\num1.bmp",
+	L"..\\Resources\\texture\\ui\\num2.bmp",
+	L"..\\Resources\\texture\\ui\\num3.bmp",
+	L"..\\Resources\\texture\\ui\\num4.bmp",
+	L"..\\Resources\\texture\\ui\\num5.bmp",
+	L"..\\Resources\\texture\\ui\\num6.bmp",
+	L"..\\Resources\\texture\\ui\\num7.bmp",
+	L"..\\Resources\\texture\\ui\\num8.bmp",
+	L"..\\Resources\\texture\\ui\\num9.bmp",
 };

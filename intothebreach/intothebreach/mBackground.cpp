@@ -74,6 +74,11 @@ namespace m {
 			{
 				iWidth = mImage->GetWidth();
 				iHeight = mImage->GetHeight();
+				if (mSize != Vector2::Zero)
+				{
+					iWidth = mSize.x;
+					iHeight = mSize.y;
+				}
 			}
 
 			if (mSizeUp != 0)
@@ -137,7 +142,7 @@ namespace m {
 				if (bBlink)
 				{
 					iConstant += idVar * idDir;
-					if (iConstant >= 255 || iConstant <= 0) idDir *= -1;
+					if (iConstant + idVar >= 255 || iConstant - idVar <= 0) idDir *= -1;
 				}
 				
 				if(iConstant != -1 ) func.SourceConstantAlpha = iConstant;

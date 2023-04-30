@@ -7,6 +7,11 @@ enum class MECH_T {
 	Cyborg,
 	END,
 };
+wstring MECH_T_NAME_PATH[(UINT)MECH_T::END]{
+	L"..\\Resources\\texture\\ui\\selectRobot\\mech_class_text_prime.bmp",
+	L"..\\Resources\\texture\\ui\\selectRobot\\mech_class_text_brute.bmp",
+	L"..\\Resources\\texture\\ui\\selectRobot\\mech_class_text_range.bmp",
+};
 enum class COMMON_CONDITION_T {
 	NONE,
 	HOLO,
@@ -66,11 +71,11 @@ int MECH_HP[(UINT)MECHS::END]{
 	3,//charge,
 	4,//jet,
 	3,//mirror,
-	3,//tank,
+	4,//tank,
 	3,//unstable,
 	3,//wall,
 
-	3,//artillery,
+	2,//artillery,
 	3,//dstrike,
 	3,//ice,
 	3,//ignite,
@@ -169,6 +174,37 @@ int MECHS_T_HT[(UINT)MECHS::END]{
 	(int)MECH_T::Science,
 	(int)MECH_T::Science,
 	(int)MECH_T::Science,
+};
+m::Vector2 MECHS_HANGAR_OFFSET[(UINT)MECHS::END]{
+	// S_SIZE, IDLE, BROKEN, WATER, WATER_BROKEN, NO_SHADOW, HOLO,
+	//x, y
+	{}, //   L"mech_electrice",
+	{}, //  L"mech_flame",
+	{}, //  L"mech_guard",
+	{}, //  L"mech_judo",
+	{10.f, -10.f}, //  L"mech_laser",
+	{}, //  L"mech_leap",
+	{}, //  L"mech_punch",
+
+	{}, //  L"mech_charge",
+	{}, //  L"mech_jet",
+	{0, 10.f}, //  L"mech_mirror",
+	{0,15.f}, //  L"mech_tank",
+	{}, //  L"mech_unstable",
+	{}, //  L"mech_wall",
+
+	{}, //  L"mech_artillery",
+	{}, //  L"mech_dstrike",
+	{}, //  L"mech_ice",
+	{}, //  L"mech_ignite",
+	{0, -10.f}, //  L"mech_rockart",
+	{0, -10.f}, //  L"mech_rocket",
+
+	{}, //  L"mech_grav",
+	{}, //  L"mech_nano",
+	{}, //  L"mech_pulse",
+	{}, //  L"mech_science",
+	{}, //  L"mech_tele",
 };
 m::Vector2 MECHS_OFFSET[(UINT)MECHS::END][(UINT)COMBAT_CONDITION_T::END]{
 	// S_SIZE, IDLE, BROKEN, WATER, WATER_BROKEN, NO_SHADOW, HOLO,
@@ -314,24 +350,40 @@ wstring SCIENCE_MECH_NAMES[(UINT)SCIENCE_T::END]{
    L"mech_science",
    L"mech_tele"
 };
-
-wstring RESOURCES_PATH[RESOURCES_1]{
-   L"alien",
-   L"combat",
-   L"effect",
-   L"player",
-   L"skill",
-   L"structures",
-   L"terrain",
-   L"ui",
-   L"units",
-   L"weapons",
-};
 wstring MECH_S_PATH[(UINT)MECH_T::END]{
    L"prime\\",
    L"brute\\",
    L"range\\",
    L"science\\"
+};
+wstring MECH_NAMES_PATH[(UINT)MECHS::END]{
+   L"",//L"mech_electrice",
+   L"..\\Resources\\texture\\ui\\selectRobot\\flame_mech.bmp",//L"mech_flame",
+   L"",//L"mech_guard",
+   L"",//L"mech_judo",
+   L"..\\Resources\\texture\\ui\\selectRobot\\laser_mech.bmp",//L"mech_laser",
+   L"",//L"mech_leap",
+   L"..\\Resources\\texture\\ui\\selectRobot\\combat_mech.bmp",//L"mech_punch",
+   //
+   L"",//L"mech_charge",
+   L"",//L"mech_jet",
+   L"..\\Resources\\texture\\ui\\selectRobot\\mirror_mech.bmp",//L"mech_mirror",
+   L"..\\Resources\\texture\\ui\\selectRobot\\canno_mech.bmp",//L"mech_tank",
+   L"",//L"mech_unstable",
+   L"",//L"mech_wall",
+   //
+   L"..\\Resources\\texture\\ui\\selectRobot\\artillery_mech.bmp",//L"mech_artillery",
+   L"",//L"mech_dstrike",
+   L"",//L"mech_ice",
+   L"",//L"mech_ignite",
+   L"..\\Resources\\texture\\ui\\selectRobot\\rock_mech.bmp",//L"mech_rockart",
+   L"",//L"mech_rocket",
+   //
+   L"",//L"mech_grav",
+   L"",//L"mech_nano",
+   L"",//L"mech_pulse",
+   L"",//L"mech_science",
+   L"",//L"mech_tele",
 };
 wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 	wstring key = L"";

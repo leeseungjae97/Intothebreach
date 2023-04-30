@@ -75,6 +75,7 @@
 #define SQUARE_Y_LINE__KEY	L"square_yellow_line"
 
 #define HP_BAR				L"..\\Resources\\texture\\combat\\overlay\\icon_healthbar.bmp"
+#define HP_BAR_2			L"..\\Resources\\texture\\combat\\overlay\\icon_healthbar_2.bmp"
 #define HP_BAR_BACK			L"..\\Resources\\texture\\combat\\overlay\\healthbar_back.bmp"
 
 #define MOUSE_POS m::Input::GetMousePos()

@@ -20,6 +20,10 @@ enum class WEAPON_T
 	titan_fist,
 	artemis_artillery,
 	taurus_cannon,
+	flame_thrower,
+	brust_beam,
+	rock_launcher,
+	janus_cannon,
 
 	stinging,				// scorpion
 	fangs,					// leaper
@@ -35,7 +39,11 @@ int WEAPON_TYPE[(UINT)WEAPON_T::END]{
 wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
 	L"",
 	L"punch1_",
-	L"shotup_tribomb_missile",
+	L"shotup_tribomb_missile_L",
+	L"shot_mechtank_",
+	L"flamethrower1_"
+	L"laser_",
+	L"shotup_rock_L",
 	L"shot_mechtank_",
 
 	L"",
@@ -48,6 +56,10 @@ wstring WEAPON_IMAGES[(UINT)WEAPON_T::END]{
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_punchmech.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\ranged_artillery.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\brute_tankmech.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_flamethrower.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_lasermech.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\ranged_rockthrow.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\brute_mirror.bmp",
 
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
@@ -73,6 +85,10 @@ int WEAPON_LEN[(UINT)WEAPON_T::END]{
 	6,
 	1,
 	1,
+	9,
+	1,
+	1,
+
 
 	1,
 	1,
@@ -84,6 +100,10 @@ int WEAPON_RANGE[(UINT)WEAPON_T::END]{
 	1,
 	99,
 	99,
+	1,
+	99,
+	99,
+	99,
 
 	1,
 	1,
@@ -92,16 +112,16 @@ int WEAPON_RANGE[(UINT)WEAPON_T::END]{
 };
 WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//electrice,
-	WEAPON_T::NONE,//flame,
+	WEAPON_T::flame_thrower,//flame,
 	WEAPON_T::NONE,//guard,
 	WEAPON_T::NONE,//judo,
-	WEAPON_T::NONE,//laser,
+	WEAPON_T::brust_beam,//laser,
 	WEAPON_T::NONE,//leap,
 	WEAPON_T::titan_fist,//punch,
 
 	WEAPON_T::NONE,//charge,
 	WEAPON_T::NONE,//jet,
-	WEAPON_T::NONE,//mirror,
+	WEAPON_T::janus_cannon,//mirror,
 	WEAPON_T::taurus_cannon,//tank,
 	WEAPON_T::NONE,//unstable,
 	WEAPON_T::NONE,//wall,
@@ -110,7 +130,7 @@ WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//dstrike,
 	WEAPON_T::NONE,//ice,
 	WEAPON_T::NONE,//ignite,
-	WEAPON_T::NONE,//rockart,
+	WEAPON_T::rock_launcher,//rockart,
 	WEAPON_T::NONE,//rocket,
 
 	WEAPON_T::NONE,//grav,
@@ -139,6 +159,10 @@ int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	1,//titan_fist,
 	4,//artemis_artillery,
 	1,//taurus_cannon,
+	1,//flame
+	0,//laser
+	0,//rock
+	1,//mirror
 
 	0,//stinging,				// scorpion
 	0,//fangs,					// leaper
@@ -151,6 +175,10 @@ int WEAPON_SKILL[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::RANGE_ST,//titan_fist,
 	(int)SKILL_T::ARC,//artemis_artillery,
 	(int)SKILL_T::ST,//taurus_cannon,
+	(int)SKILL_T::RANGE_ST,//flame
+	(int)SKILL_T::ST,//laser,
+	(int)SKILL_T::ARC,//rock,
+	(int)SKILL_T::ST,//mirror,
 
 	(int)SKILL_T::RANGE_ST,//stinging,				
 	(int)SKILL_T::RANGE_ST,//fangs,				

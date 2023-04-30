@@ -60,6 +60,10 @@ void m::Button::Update()
 		{
 			bClicked = true;
 		}
+		if (KEY_UP(KEYCODE_TYPE::RBTN))
+		{
+			bRClicked = true;
+		}
 		if (bReSzieable)
 		{
 			if (mSize.x < resizeMax.x) mSize.x += resizeUnit.x;
@@ -170,7 +174,7 @@ void m::Button::Render(HDC hdc)
 
 	if (bInner)
 	{
-		innerImage = Resources::Load<Image>(btnName, btnName);
+		//innerImage = Resources::Load<Image>(btnName, btnName);
 		BLENDFUNCTION func = {};
 		func.BlendOp = AC_SRC_OVER;
 		func.BlendFlags = 0;
@@ -211,3 +215,9 @@ void m::Button::Render(HDC hdc)
 
 void m::Button::Release()
 {}
+
+void m::Button::ChangeInner(const wstring & _path)
+{
+	btnName = _path;
+	innerImage = Resources::Load<Image>(_path, _path);
+}
