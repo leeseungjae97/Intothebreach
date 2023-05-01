@@ -1,4 +1,11 @@
 #pragma once
+enum class ALIENS_RANK
+{
+	NORMAL,
+	ELITE,
+	BOSS,
+	END,
+};
 enum class ALIENS
 {
 	Beetle,
@@ -77,7 +84,7 @@ m::Vector2 ALIENS_IDLE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Jelly,
 	{42,37},//Leaper,
 	{0,0},//Scarab,
-	{0,0},//Scorpion,
+	{39,36},//Scorpion,
 	{0,0},//Slime,
 	{0,0},//Spider,
 };
@@ -93,7 +100,7 @@ m::Vector2 ALIENS_DEATH_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Jelly,
 	{54,38},//Leaper,
 	{0,0},//Scarab,
-	{0,0},//Scorpion,
+	{51,43},//Scorpion,
 	{0,0},//Slime,
 	{0,0},//Spider,
 };
@@ -109,7 +116,7 @@ m::Vector2 ALIENS_EMERGE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Jelly,
 	{43,44},//Leaper,
 	{0,0},//Scarab,
-	{0,0},//Scorpion,
+	{48,43},//Scorpion,
 	{0,0},//Slime,
 	{0,0},//Spider,
 };
@@ -190,7 +197,7 @@ int ALIEN_HP[(UINT)ALIENS::END]{
 	3,//Crab,
 	3,//Digger,
 	3,//Firefly,
-	3,//Hornet,
+	2,//Hornet,
 	3,//Jelly,
 	3,//Leaper,
 	3,//Scarab,

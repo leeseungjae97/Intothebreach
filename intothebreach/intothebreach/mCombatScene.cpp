@@ -76,7 +76,7 @@ namespace m
 		//}
 		//fclose(file);
 		mechIdx = 0;
-		iTurn = 4;
+		iTurn = 8;
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
 
@@ -855,12 +855,12 @@ namespace m
 				break;
 				case LEADER_FIREFLY:
 				{
-					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, 0);
+					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Hornet], ALIENS_RANK::BOSS, true);
 				}
 				break;
 				case LEADER_HORNET:
 				{
-					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, 0);
+					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Firefly], ALIENS_RANK::BOSS, true);
 				}
 				break;
 
@@ -1042,8 +1042,10 @@ namespace m
 	void CombatScene::OnEnter()
 	{
 		GameComp::combatEnd = false;
-		mapTileType = (TILE_T)GameComp::curLand;
-		mapNum = GameComp::curLandSection;
+		//GameComp::curLandSection = 4;
+		//mapTileType = (TILE_T)TILE_T::GREEN;
+		//mapNum = 4;
+		//mapTileType = GameComp::curLand;
 		Scene::MakeTile(TILE_X, TILE_Y, mapTileType, TILE_HEAD_T::ground);
 		SetMapType(mapTileType);
 		//for (int i = 0; i < GameComp::mMechs.size(); i++)
@@ -1116,7 +1118,6 @@ namespace m
 			mech->SetPos(Vector2(playerUnitInfo->GetPos().x - offset.x + playerUnitInfo->GetSize().x / 2 + (img->GetWidth()) / 2
 				, playerUnitInfo->GetPos().y - offset.y + 70 * (i + 1) - 30));
 			mech->SetVisibleHp(true);
-			mech->SetImageMag(1);
 			mech->SetState(GameObject::STATE::Invisible);
 			AddGameObject(mech, LAYER_TYPE::UI);
 			infoUnits.push_back(mech);
@@ -1171,7 +1172,7 @@ namespace m
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 4;
+		iTurn = 8;
 		endGame = false;
 		bSetPosition = false;
 		//SceneManager::GetActiveScene()->ClearAffectUnit();

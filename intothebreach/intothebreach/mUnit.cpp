@@ -25,24 +25,52 @@ namespace m
 		, mFinalPos(Vector2::Minus)
 		, mHpBackOffset(Vector2::Minus)
 		, bHpCOffset(true)
-		//, unitCoord(Vector2::One)
 		, moveRange(_range)
 		, mHp(hp)
 		, curHp(hp)
 		, skillIdx(-1)
 		, mIdx(idx)
 		, affectUnitVectorIdx(0)
+		, hpBorder(4)
 	{
 		SetSkill(weaponType);
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
 
-		hpImage = Resources::Load<Image>(HP_BAR, HP_BAR);
-		hpImage->SetOffset(Vector2(10.f, -45.f));
+		//hpImage = Resources::Load<Image>(HP_BAR_2, HP_BAR_2);
+		//hpImage->SetOffset(Vector2(10.f, -45.f));
 
-		hpBack = Resources::Load<Image>(HP_BAR_BACK, HP_BAR_BACK);
-		hpBack->SetOffset(Vector2(16.f, -39.f));
+		//hpBack = Resources::Load<Image>(HP_BAR_BACK, HP_BAR_BACK);
+		//hpBack->SetOffset(Vector2(16.f, -39.f));
+
+		if (_range == 0 && _coord == Vector2::Minus)
+		{
+			iImageMag = 1;
+			hpBorder = 2;
+		}
+
+
+		mechHpBarBack = new Background(HP_BAR_2, HP_BAR_2);
+		mechHpBarBack->SetSize(Vector2(mechHpBarBack->GetSize().x * iImageMag + (mHp - 2) * 2
+			, mechHpBarBack->GetSize().y * iImageMag));
+		mechHpBarBack->SetState(GameObject::STATE::Invisible);
+		SceneManager::GetActiveScene()->AddGameObject(mechHpBarBack, LAYER_TYPE::UI);
+
+		for (int _i = 0; _i < mHp; _i++)
+		{
+			float fWid = 0;
+			if (_range == 0 && _coord == Vector2::Minus)
+			{
+				fWid = 17 / mHp;
+			}
+			else fWid = (mechHpBarBack->GetSize().x - (hpBorder * iImageMag)) / mHp;
+			Background* hpTick = new Background(HP_BAR_BACK, HP_BAR_BACK);
+			hpTick->SetState(GameObject::STATE::Invisible);
+			hpTick->SetSize(Vector2((float)fWid, mechHpBarBack->GetSize().y - (hpBorder * iImageMag)));
+			hpBar.push_back(hpTick);
+			SceneManager::GetActiveScene()->AddGameObject(hpTick, LAYER_TYPE::UI);
+		}
 
 		mSkills.resize(MAX_WEAPONS);
 	}
@@ -76,7 +104,6 @@ namespace m
 		AddComponent(new Animator());
 		AddComponent(new Transform());
 		mAnimator = GetComponent<Animator>();
-		int a = 0;
 	}
 	Unit::Unit()
 	{}
@@ -109,7 +136,7 @@ namespace m
 			||
 			GetState() == GameObject::STATE::Broken)
 		{
-			if(mCoord != Vector2::Minus)
+			if (mCoord != Vector2::Minus)
 				SceneManager::GetActiveScene()->RemoveAffectUnit(mCoord);
 		}
 		pathQueue.clear();
@@ -158,57 +185,95 @@ namespace m
 					, (int)(curImage->GetHeight())
 					, RGB(255, 0, 255));
 			}
-		
-			
+
+
 		}
 		//if (lType == LAYER_TYPE::CLONE) return;
 
 		if (visibleHp)
 		{
-			mPos = GetComponent<Transform>()->GetPos();
-			if (nullptr != hpImage && 0 != mHp)
+			if (curHp <= 0)
 			{
-				if(bHpCOffset)
-					mPos += hpImage->GetOffset();
-				if (mHpBackOffset != Vector2::Minus)
-					mPos += mHpBackOffset;
-				mPos = Camera::CalculatePos(mPos);
-				TransparentBlt(hdc
-					, (int)(mPos.x - hpImage->GetWidth() / iImageMag)
-					, (int)(mPos.y - hpImage->GetHeight() / iImageMag)
-					, (int)(hpImage->GetWidth() * iImageMag)
-					, (int)(hpImage->GetHeight() * iImageMag)
-					, hpImage->GetHdc()
-					, 0
-					, 0
-					, (int)(hpImage->GetWidth())
-					, (int)(hpImage->GetHeight())
-					, RGB(255, 0, 255));
+				visibleHp = false;
+				mechHpBarBack->SetState(GameObject::STATE::Invisible);
+				for (int i = 0; i < hpBar.size(); i++)hpBar[i]->SetState(GameObject::STATE::Invisible);
 			}
-			mPos = GetComponent<Transform>()->GetPos();
-			if (nullptr != hpBack && 0 != mHp)
+			else
 			{
-				if(bHpCOffset)
-					mPos += hpBack->GetOffset();
-				if (mHpOffset != Vector2::Minus)
-					mPos += mHpOffset;
-
-				mPos = Camera::CalculatePos(mPos);
-				int px = (int)(mPos.x - hpBack->GetWidth() / iImageMag);
-				int py = (int)(mPos.y - hpBack->GetHeight() / iImageMag);
-				if (mHp == 0) return;
-				int hpWidth = (hpBack->GetWidth() * iImageMag) / mHp;
-				int hpHeight = hpBack->GetHeight() * iImageMag;
-				for (int i = 0; i < curHp; i++)
+				if (mFinalCoord == Vector2::Minus)
 				{
-					SelectGDI p(hdc, BRUSH_TYPE::GREEN);
-					Rectangle(hdc
-						, (int)(px + hpWidth * i)
-						, (int)(py)
-						, (int)(px + hpWidth * (i + 1))
-						, (int)(py + hpHeight));
+					mechHpBarBack->SetState(GameObject::STATE::Visible);
+					mechHpBarBack->SetPos(Vector2(GetPos().x - 20.f, GetPos().y - 50.f));
+				}
+				else
+				{
+					mechHpBarBack->SetState(GameObject::STATE::Visible);
+					mechHpBarBack->SetPos(Vector2(GetPos().x, GetPos().y - 50.f));
+				}
+
+
+				for (int i = 0; i < hpBar.size(); i++)
+				{
+					if (i >= curHp)
+						hpBar[i]->SetState(GameObject::STATE::Invisible);
+					else
+						hpBar[i]->SetState(GameObject::STATE::Visible);
+					hpBar[i]->SetPos(Vector2(mechHpBarBack->GetPos().x + hpBorder + (hpBar[i]->GetSize().x + 1) * i
+						, mechHpBarBack->GetPos().y + mechHpBarBack->GetSize().y / 2 - hpBar[i]->GetSize().y / 2));
 				}
 			}
+
+			//float fWid = hpImage->GetWidth();
+			//fWid += (mHp - 2) * 2;
+			//float fHei = hpImage->GetHeight();
+			//mPos = GetComponent<Transform>()->GetPos();
+			//if (nullptr != hpImage && 0 != mHp)
+			//{
+			//	if(bHpCOffset)
+			//		mPos += hpImage->GetOffset();
+			//	if (mHpBackOffset != Vector2::Minus)
+			//		mPos += mHpBackOffset;
+			//	mPos = Camera::CalculatePos(mPos);
+			//	TransparentBlt(hdc
+			//		, (int)(mPos.x - hpImage->GetWidth() / iImageMag)
+			//		, (int)(mPos.y - hpImage->GetHeight() / iImageMag)
+			//		, (int)(hpImage->GetWidth() * iImageMag)
+			//		, (int)(hpImage->GetHeight() * iImageMag)
+			//		, hpImage->GetHdc()
+			//		, 0
+			//		, 0
+			//		, (int)(hpImage->GetWidth())
+			//		, (int)(hpImage->GetHeight())
+			//		, RGB(255, 0, 255));
+			//}
+			//mPos = GetComponent<Transform>()->GetPos();
+			//if (nullptr != hpBack && 0 != mHp)
+			//{
+			//	if(bHpCOffset)
+			//		mPos += hpBack->GetOffset();
+			//	if (mHpOffset != Vector2::Minus)
+			//		mPos += mHpOffset;
+			//	//Background* hpTick = new Background(HP_BAR_BACK, HP_BAR_BACK);
+			//	////hpTick->SetInner(true);
+			//	//float fWid = 17 / MECH_HP[(UINT)GameComp::mechInfos[i].unitNum];
+			//	//if (MECH_HP[(UINT)GameComp::mechInfos[i].unitNum] == 2) fWid -= 0.5f;
+			//	//hpTick->SetSize(Vector2((float)fWid, hpTick->GetSize().y - 2));
+			//	mPos = Camera::CalculatePos(mPos);
+			//	int px = (int)(mPos.x - hpBack->GetWidth() / iImageMag);
+			//	int py = (int)(mPos.y - hpBack->GetHeight() / iImageMag);
+			//	if (mHp == 0) return;
+			//	int hpWidth = (hpBack->GetWidth() * iImageMag) / mHp;
+			//	int hpHeight = hpBack->GetHeight() * iImageMag;
+			//	for (int i = 0; i < curHp; i++)
+			//	{
+			//		SelectGDI p(hdc, BRUSH_TYPE::GREEN);
+			//		Rectangle(hdc
+			//			, (int)(px + hpWidth * i)
+			//			, (int)(py)
+			//			, (int)(px + hpWidth * (i + 1))
+			//			, (int)(py + hpHeight));
+			//	}
+			//}
 		}
 	}
 	void Unit::Release()
@@ -357,7 +422,7 @@ namespace m
 			float randConstant = (float)(rand() % 255) + 125;
 			dust->SetAlphaConstant((int)randConstant);
 			int randPM = 1;
-			
+
 			if (c) randPM *= -1;
 
 			float randX = GetPos().x + (rand() % 30) * randPM;
@@ -475,8 +540,32 @@ namespace m
 	void Unit::ActiveSkill(Vector2 targetUnitPos)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Vector2 endCoord = Vector2::Minus;
-		Vector2 drawGuideLineEndCoord = Vector2::Minus;
+		Vector2 endCoord[9];
+		Vector2 drawGuideLineEndCoord[9];
+		Vector2 opDrawGuidLine[9];
+		Vector2 opEndCoord[9];
+		std::fill_n(endCoord, 9, Vector2::Minus);
+		std::fill_n(drawGuideLineEndCoord, 9, Vector2::Minus);
+		std::fill_n(opDrawGuidLine, 9, Vector2::Minus);
+		std::fill_n(opEndCoord, 9, Vector2::Minus);
+
+		//= Vector2::Minus
+		//	= Vector2::Minus
+		//	= Vector2::Minus
+		//	= Vector2::Minus
+
+
+		vector<Skill*> multiSkill;
+		if (nullptr != dynamic_cast<Skill_MultiDir_St*>(GetCurAttackSkill()))
+		{
+			multiSkill.resize(dynamic_cast<Skill_MultiDir_St*>(GetCurAttackSkill())->GetNum());
+		}
+
+		//vector<Skill_St*> multiSkill;
+		//if (nullptr != dynamic_cast<Skill_MultiDir_St*>(GetCurAttackSkill()))
+		//{
+		//	multiSkill = dynamic_cast<Skill_MultiDir_St*>(GetCurAttackSkill())->GetMSkills();
+		//}
 		for (int y = 0; y < TILE_Y; y++)
 		{
 			for (int x = 0; x < TILE_X; x++)
@@ -495,19 +584,109 @@ namespace m
 					{
 						if (p->GetCoord().x > GetCoord().x)
 						{
-							endCoord = Vector2(GetCoord().x + WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+							endCoord[0] = Vector2(GetCoord().x + WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
 						}
 						if (p->GetCoord().x < GetCoord().x)
 						{
-							endCoord = Vector2(GetCoord().x - WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
+							endCoord[0] = Vector2(GetCoord().x - WEAPON_RANGE[(UINT)GetWeaponType()], GetCoord().y);
 						}
 						if (p->GetCoord().y > GetCoord().y)
 						{
-							endCoord = Vector2(GetCoord().x, GetCoord().y + WEAPON_RANGE[(UINT)GetWeaponType()]);
+							endCoord[0] = Vector2(GetCoord().x, GetCoord().y + WEAPON_RANGE[(UINT)GetWeaponType()]);
 						}
 						if (p->GetCoord().y < GetCoord().y)
 						{
-							endCoord = Vector2(GetCoord().x, GetCoord().y - WEAPON_RANGE[(UINT)GetWeaponType()]);
+							endCoord[0] = Vector2(GetCoord().x, GetCoord().y - WEAPON_RANGE[(UINT)GetWeaponType()]);
+						}
+					}
+					if (GetCurAttackSkill()->GetSkillType()
+						== SKILL_T::MULTI_ST)
+					{
+						for (int i = 0; i < multiSkill.size(); i++)
+						{
+							int st = 0;
+							int end = 0;
+							int IDVar = 1;
+							bool cY = false;
+							bool reverse = false;
+							if (i == 1) reverse = true;
+							if (p->GetCoord().x > GetCoord().x)
+							{
+								if (reverse)
+								{
+									st = (int)GetCoord().x - 1;
+									end = 0;
+								}
+								else
+								{
+									st = (int)GetCoord().x + 1;
+									end = TILE_X - 1;
+								}
+								endCoord[i] = Vector2((float)end, p->GetCoord().y);
+							}
+							if (p->GetCoord().x < GetCoord().x)
+							{
+								if (reverse)
+								{
+									st = (int)GetCoord().x + 1;
+									end = TILE_X - 1;
+								}
+								else
+								{
+									st = (int)GetCoord().x - 1;
+									end = 0;
+								}
+								endCoord[i] = Vector2((float)end, p->GetCoord().y);
+							}
+							if (p->GetCoord().y > GetCoord().y)
+							{
+								if (reverse)
+								{
+									st = (int)GetCoord().y - 1;
+									end = 0;
+								}
+								else
+								{
+									st = (int)GetCoord().y + 1;
+									end = TILE_Y - 1;
+								}
+								endCoord[i] = Vector2(p->GetCoord().x, (float)end);
+								cY = true;
+
+							}
+							if (p->GetCoord().y < GetCoord().y)
+							{
+								if (reverse)
+								{
+									st = (int)GetCoord().y + 1;
+									end = TILE_Y - 1;
+								}
+								else
+								{
+									st = (int)GetCoord().y - 1;
+									end = 0;
+								}
+								endCoord[i] = Vector2(p->GetCoord().x, (float)end);
+								cY = true;
+
+							}
+							if (end == 0) IDVar *= -1;
+							for (int _i = st; _i != end + IDVar; _i += IDVar)
+							{
+								if (cY && scene->SearchAffectUnit(_i, (int)GetCoord().x))
+								{
+									endCoord[i] = Vector2(p->GetCoord().x, (float)_i);
+									break;
+								}
+								if (!cY && scene->SearchAffectUnit((int)GetCoord().y, _i))
+								{
+									endCoord[i] = Vector2((float)_i, p->GetCoord().y);
+									break;
+								}
+
+								if (cY)drawGuideLineEndCoord[i] = Vector2(p->GetCoord().x, (float)_i);
+								else drawGuideLineEndCoord[i] = Vector2((float)_i, p->GetCoord().y);
+							}
 						}
 					}
 					if (GetCurAttackSkill()->GetSkillType()
@@ -521,76 +700,102 @@ namespace m
 						{
 							st = (int)GetCoord().x + 1;
 							end = TILE_X - 1;
-							endCoord = Vector2((float)end, p->GetCoord().y);
+							endCoord[0] = Vector2((float)end, p->GetCoord().y);
 						}
 						if (p->GetCoord().x < GetCoord().x)
 						{
 							st = (int)GetCoord().x - 1;
 							end = 0;
-							endCoord = Vector2((float)end, p->GetCoord().y);
+							endCoord[0] = Vector2((float)end, p->GetCoord().y);
 						}
 						if (p->GetCoord().y > GetCoord().y)
 						{
 							st = (int)GetCoord().y + 1;
 							end = TILE_Y - 1;
-							endCoord = Vector2(p->GetCoord().x, (float)end);
+							endCoord[0] = Vector2(p->GetCoord().x, (float)end);
 							cY = true;
 						}
 						if (p->GetCoord().y < GetCoord().y)
 						{
 							st = (int)GetCoord().y - 1;
 							end = 0;
-							endCoord = Vector2(p->GetCoord().x, (float)end);
+							endCoord[0] = Vector2(p->GetCoord().x, (float)end);
 							cY = true;
 						}
-						if (end == 0)
-						{
-							IDVar *= -1;
-						}
+						if (end == 0) IDVar *= -1;
 						for (int i = st; i != end + IDVar; i += IDVar)
 						{
 							if (cY && scene->SearchAffectUnit(i, (int)GetCoord().x))
 							{
-								endCoord = Vector2(p->GetCoord().x, (float)i);
+								endCoord[0] = Vector2(p->GetCoord().x, (float)i);
 								break;
 							}
 							if (!cY && scene->SearchAffectUnit((int)GetCoord().y, i))
 							{
-								endCoord = Vector2((float)i, p->GetCoord().y);
+								endCoord[0] = Vector2((float)i, p->GetCoord().y);
 								break;
 							}
 
-							if (cY)drawGuideLineEndCoord = Vector2(p->GetCoord().x, (float)i);
-							else drawGuideLineEndCoord = Vector2((float)i, p->GetCoord().y);
+							if (cY)drawGuideLineEndCoord[0] = Vector2(p->GetCoord().x, (float)i);
+							else drawGuideLineEndCoord[0] = Vector2((float)i, p->GetCoord().y);
 						}
 					}
 					if (GetCurAttackSkill()->GetSkillType()
 						== SKILL_T::ARC)
 					{
-						endCoord = p->GetCoord();
+						endCoord[0] = p->GetCoord();
 						break;
 					}
 				}
 			}
 		}
-		if (drawGuideLineEndCoord == Vector2::Minus) drawGuideLineEndCoord = endCoord;
-		if (endCoord != Vector2::Minus)
+		if (multiSkill.size() != 0)
 		{
-			//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
-			//Scene* scene = SceneManager::GetActiveScene();
-			//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
-			GetCurAttackSkill()->SetStartRender(true);
-			DrawSkill(endCoord, drawGuideLineEndCoord);
-			//if (GetLayerType() == LAYER_TYPE::MONSTER)
-			//{
-			//	if (GetCurAttackSkill()->GetStartRender())
-			//		scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
-			//			, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
-			//}else  GetCurAttackSkill()->SetStartRender(true);
+			for (int i = 0; i < multiSkill.size(); i++)
+			{
+				if (drawGuideLineEndCoord[i] == Vector2::Minus) drawGuideLineEndCoord[i] = endCoord[i];
+				//if (opDrawGuidLine[i] == Vector2::Minus) opDrawGuidLine[i] = opEndCoord[i];
+			}
+			//curAttactSkill->ReInit(this->GetFinalCoord(), pos, guideLinePos, curAttactSkill->GetSkillType());
+			((Skill_MultiDir_St*)GetCurAttackSkill())->ReInit(GetFinalCoord(), endCoord, drawGuideLineEndCoord, SKILL_T::ST);
 		}
-		// 공격완료하면 clear
+		else
+		{
+			if (drawGuideLineEndCoord[0] == Vector2::Minus) drawGuideLineEndCoord[0] = endCoord[0];
+			if (opDrawGuidLine[0] == Vector2::Minus) opDrawGuidLine[0] = opEndCoord[0];
+			if (endCoord[0] != Vector2::Minus)
+			{
+				//scene->GetPosTiles()[endCoord.y][endCoord.x]->GetCenterPos();
+				//Scene* scene = SceneManager::GetActiveScene();
+				//scene->SetPosTiles(drawGuideLineEndCoord.y, drawGuideLineEndCoord.x, TILE_T::MOVE_RANGE, COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				//scene->GetPosTiles()[endCoord.y][endCoord.x]->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				//scene->GetPosTile(endCoord.y, endCoord.x)->SetCombatTileAnimator(COMBAT_ANIM_TILE_T::warning_sprite, 100);
+				GetCurAttackSkill()->SetStartRender(true);
+				DrawSkill(endCoord[0], drawGuideLineEndCoord[0]);
+
+
+
+
+				//if (GetCurAttackSkill()->GetWeaponType() == WEAPON_T::janus_cannon
+				//	&& opEndCoord != Vector2::Minus
+				//	&& opEndCoord != GetCoord())
+				//{
+
+				//	DrawSkill(endCoord, drawGuideLineEndCoord);
+				//	GetCurAttackSkill()->SetOppsite(true);
+				//	GetCurAttackSkill()->SetOppsiteDraw(opEndCoord, opDrawGuidLine);
+				//}else GetCurAttackSkill()->SetOppsite(false);
+
+
+				////if (GetLayerType() == LAYER_TYPE::MONSTER)
+				//{
+				//	if (GetCurAttackSkill()->GetStartRender())
+				//		scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
+				//			, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
+				//}else  GetCurAttackSkill()->SetStartRender(true);
+			}
+			// 공격완료하면 clear
+		}
 		ClearSkillRangeMap();
 	}
 	void Unit::DrawSkillRangeTile()
@@ -618,7 +823,7 @@ namespace m
 			for (int i = 0; i < 4; i++)
 			{
 				float dy = now.coord.y + direct[i][0];
-				float dx = now.coord.x + direct[i][1]; 
+				float dx = now.coord.x + direct[i][1];
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (skill_range_map[(int)dy][(int)dx] != 0) continue;

@@ -10,6 +10,7 @@ enum class SKILL_T
 	ARC,
 	ST,
 	RANGE_ST,
+	MULTI_ST,
 	RANGE_ARC,
 	NONE,
 	END,
@@ -31,17 +32,18 @@ enum class WEAPON_T
 	accelerating_thorax,	// firefly
 	END,
 };
-int WEAPON_TYPE[(UINT)WEAPON_T::END]{
-	(int)SKILL_T::RANGE_ST,
-	(int)SKILL_T::ARC,
-	(int)SKILL_T::ST,
-};
+//int WEAPON_TYPE[(UINT)WEAPON_T::END]{
+//	(int)SKILL_T::RANGE_ST,
+//	(int)SKILL_T::ARC,
+//	(int)SKILL_T::ST,
+//	(int)SKILL_T::MULTI_ST,
+//};
 wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
 	L"",
 	L"punch1_",
 	L"shotup_tribomb_missile_L",
 	L"shot_mechtank_",
-	L"flamethrower1_"
+	L"flamethrower1_",
 	L"laser_",
 	L"shotup_rock_L",
 	L"shot_mechtank_",
@@ -161,7 +163,7 @@ int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	1,//taurus_cannon,
 	1,//flame
 	0,//laser
-	0,//rock
+	4,//rock
 	1,//mirror
 
 	0,//stinging,				// scorpion
@@ -178,7 +180,7 @@ int WEAPON_SKILL[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::RANGE_ST,//flame
 	(int)SKILL_T::ST,//laser,
 	(int)SKILL_T::ARC,//rock,
-	(int)SKILL_T::ST,//mirror,
+	(int)SKILL_T::MULTI_ST,//mirror,
 
 	(int)SKILL_T::RANGE_ST,//stinging,				
 	(int)SKILL_T::RANGE_ST,//fangs,				

@@ -27,16 +27,19 @@ namespace m
 	{
 		Scene::Initialize();
 
-		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::artillery, {BASIC_WEAPON_TYPE[(UINT)MECHS::artillery]} });
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::flame, {BASIC_WEAPON_TYPE[(UINT)MECHS::flame]} });
 		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::tank, {BASIC_WEAPON_TYPE[(UINT)MECHS::tank]} });
-		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::punch, {BASIC_WEAPON_TYPE[(UINT)MECHS::punch]} });
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::mirror, {BASIC_WEAPON_TYPE[(UINT)MECHS::mirror]} });
 		GameComp::mPilots[0] = PILOT_T::Pilot_Original;
 		GameComp::mPilots[1] = PILOT_T::Pilot_Ice;
 		GameComp::mPilots[2] = PILOT_T::Pilot_Sand;
+		platformOpenIdx = 2;
+		moveScene = false;
 
 		Background* hangarBack = new Background(L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main2.bmp"
 			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main2.bmp", 2);
 		hangarBack->SetPos(Vector2(-100.f, -70.f));
+		hangarBack->SetEC(true);
 		AddGameObject(hangarBack, LAYER_TYPE::UI);
 
 		btnStart = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\btn_start.bmp", A_BTN_BACK_2);
@@ -121,7 +124,6 @@ namespace m
 		AddGameObject(hangar, LAYER_TYPE::BACKGROUND);
 
 
-
 		float _x = 264.f;
 		float _y = 328.f;
 		for (int i = 0; i < 3; i++)
@@ -146,13 +148,25 @@ namespace m
 			platformR[i]->SetPos(Vector2(platformL[i]->GetPos().x + platformR[i]->GetSize().x * 2,
 				platformL[i]->GetPos().y));
 			platformR[i]->SetEC(true);
+			platformR[i]->SetOriginPos(platformR[i]->GetPos());
 
+
+			reflectShadows[i] = new Background(L"firstBack", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_platform_shadow_f.bmp", 2);
+			reflectShadows[i]->SetCutPos(true);
+			reflectShadows[i]->SetAlpha(true);
+			reflectShadows[i]->SetAlphaConstant(200);
+
+			//reflectShadows[i] = new Background(L"firstBack", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_platform_shadow.bmp", 2);
+			//reflectShadows[i]->SetAnimation(true);
+			reflectShadows[i]->SetPos(Vector2(platformR[i]->GetPos().x
+				, platformR[i]->GetPos().y + platformR[i]->GetSize().y));
 			AddGameObject(platformR[i], LAYER_TYPE::UI);
 			AddGameObject(platformL[i], LAYER_TYPE::UI);
 
 			_x += 90.f;
 			_y -= 68.f;
 		}
+
 		for (int i = 0; i < 3; i++)
 		{
 			hangarMechs[i] = new Background(MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
@@ -161,28 +175,37 @@ namespace m
 				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::HOLO), 2);
 			//mechImage->SetPos(Vector2(500 - (i * 100), 205 + (i * (10 + (mechImage->GetSize().x * 2)))));
 			Vector2 offset = MECHS_HANGAR_OFFSET[GameComp::mechInfos[i].unitNum];
-			hangarMechs[i]->SetPos(Vector2(lights[i]->GetPos().x + lights[i]->GetSize().x - hangarMechs[i]->GetSize().x +offset.x
-				,lights[i]->GetPos().y + lights[i]->GetSize().y - 55.f + offset.y));
+			hangarMechs[i]->SetPos(Vector2(lights[i]->GetPos().x + lights[i]->GetSize().x - hangarMechs[i]->GetSize().x + offset.x
+				, lights[i]->GetPos().y + lights[i]->GetSize().y - 55.f + offset.y));
+			hangarMechs[i]->SetEC(true);
 			shadows[i]->SetPos(hangarMechs[i]->GetPos());
 			shadows[i]->SetAlpha(true);
+			shadows[i]->SetEC(true);
 			shadows[i]->SetAlphaConstant(200);
 
 			hangarMechs[i]->SetState(GameObject::STATE::Visible);
 			shadows[i]->SetState(GameObject::STATE::Visible);
-			AddGameObject(lights[i], LAYER_TYPE::UI);
-			AddGameObject(hangarMechs[i], LAYER_TYPE::UI);
-			AddGameObject(shadows[i], LAYER_TYPE::UI);
+			AddGameObject(lights[i], LAYER_TYPE::FRONT_UI2);
+			AddGameObject(hangarMechs[i], LAYER_TYPE::FRONT_UI);
+			AddGameObject(shadows[i], LAYER_TYPE::FRONT_UI);
 		}
 
 		DrawMechInfos();
 		//hangar_platform.bmp;
 
-		Background* hangarFront = new Background(L"selectRobotHangarFront", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main4.bmp", 2, false);
+		hangarFront = new Background(L"selectRobotHangarFront", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main_front.bmp", 2, false);
 		hangarFront->SetCutPos(true);
 		hangarFront->SetPos(Vector2(-100.f, -70.f));
 		hangarFront->SetEC(true);
-		AddGameObject(hangarFront, LAYER_TYPE::BEHIND_UI);
-		
+		AddGameObject(hangarFront, LAYER_TYPE::UI);
+
+		Background* hangarFront2 = new Background(L"selectRobotHangarFront", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main4.bmp", 2, false);
+		hangarFront2->SetCutPos(true);
+		hangarFront2->SetPos(Vector2(-100.f, -70.f));
+		hangarFront2->SetEC(true);
+		AddGameObject(hangarFront2, LAYER_TYPE::FRONT_UI);
+
+		for (int i = 0; i < 3; i++) AddGameObject(reflectShadows[i], LAYER_TYPE::FRONT_UI);
 
 		Background* line = new Background(L"line", L"..\\Resources\\texture\\ui\\selectRobot\\waterbg_transition.bmp", 2, false);
 		line->SetCutPos(true);
@@ -202,7 +225,7 @@ namespace m
 		boxBlackFade->SetAlphaConstant(200);
 		boxBlackFade->SetSize(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight()));
 		boxBlackFade->SetState(GameObject::STATE::Invisible);
-		AddGameObject(boxBlackFade, LAYER_TYPE::FRONT_UI);
+		AddGameObject(boxBlackFade, LAYER_TYPE::FRONT_UI3);
 
 		boxEditSquad = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\preview_squad_box.bmp", NO_BACK);
 		boxEditSquad->SetInner(true);
@@ -211,14 +234,14 @@ namespace m
 		boxEditSquad->SetPos(Vector2(application.GetResolutionWidth() / 2 - boxEditSquad->GetSize().x / 2
 			, 10));
 		boxEditSquad->SetState(GameObject::STATE::Invisible);
-		AddGameObject(boxEditSquad, LAYER_TYPE::FRONT_UI);
+		AddGameObject(boxEditSquad, LAYER_TYPE::FRONT_UI3);
 
 		squadPreview = new Background(L"preview_select_squad", L"..\\Resources\\texture\\ui\\selectRobot\\preview_select_squad.bmp");
 		//squadPreview->SetSize(squadPreview->GetImage()->GetSize());
 		squadPreview->SetPos(Vector2(boxEditSquad->GetPos().x + boxEditSquad->GetSize().x - squadPreview->GetSize().x
 			, boxEditSquad->GetPos().y + boxEditSquad->GetSize().y + 10));
 		squadPreview->SetState(GameObject::STATE::Invisible);
-		AddGameObject(squadPreview, LAYER_TYPE::FRONT_UI);
+		AddGameObject(squadPreview, LAYER_TYPE::FRONT_UI3);
 
 		btnEditConfirm = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\select_squad_before_confirm.bmp", A_BTN_BACK_2);
 		btnEditConfirm->SetInner(true);
@@ -229,7 +252,7 @@ namespace m
 		btnEditConfirm->SetInnerPos(Vector2(btnEditConfirm->GetSize().x / 2 - btnEditConfirm->GetInnerImage()->GetWidth() / 2
 			, btnEditConfirm->GetSize().y / 2 - btnEditConfirm->GetInnerImage()->GetHeight() / 2));
 		btnEditConfirm->SetState(GameObject::STATE::Invisible);
-		AddGameObject(btnEditConfirm, LAYER_TYPE::FRONT_UI);
+		AddGameObject(btnEditConfirm, LAYER_TYPE::FRONT_UI3);
 
 		btnPrime = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\prime_btn.bmp", A_BTN_BACK_2);
 		btnPrime->SetInner(true);
@@ -240,7 +263,7 @@ namespace m
 		btnPrime->SetInnerPos(Vector2(btnPrime->GetSize().x / 2 - btnPrime->GetInnerImage()->GetWidth() / 2
 			, btnPrime->GetSize().y / 2 - btnPrime->GetInnerImage()->GetHeight() / 2));
 		btnPrime->SetState(GameObject::STATE::Invisible);
-		AddGameObject(btnPrime, LAYER_TYPE::FRONT_UI);
+		AddGameObject(btnPrime, LAYER_TYPE::FRONT_UI3);
 		btnBrute = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\brute_btn.bmp", A_BTN_BACK_2);
 		btnBrute->SetInner(true);
 		btnBrute->UseInnerAlpha(false);
@@ -250,7 +273,7 @@ namespace m
 		btnBrute->SetInnerPos(Vector2(btnBrute->GetSize().x / 2 - btnBrute->GetInnerImage()->GetWidth() / 2
 			, btnBrute->GetSize().y / 2 - btnBrute->GetInnerImage()->GetHeight() / 2));
 		btnBrute->SetState(GameObject::STATE::Invisible);
-		AddGameObject(btnBrute, LAYER_TYPE::FRONT_UI);
+		AddGameObject(btnBrute, LAYER_TYPE::FRONT_UI3);
 
 		btnRange = new Button(L"..\\Resources\\texture\\ui\\selectRobot\\range_btn.bmp", A_BTN_BACK_2);
 		btnRange->SetInner(true);
@@ -261,8 +284,8 @@ namespace m
 		btnRange->SetInnerPos(Vector2(btnRange->GetSize().x / 2 - btnRange->GetInnerImage()->GetWidth() / 2
 			, btnRange->GetSize().y / 2 - btnRange->GetInnerImage()->GetHeight() / 2));
 		btnRange->SetState(GameObject::STATE::Invisible);
-		AddGameObject(btnRange, LAYER_TYPE::FRONT_UI);
-		
+		AddGameObject(btnRange, LAYER_TYPE::FRONT_UI3);
+
 		for (int i = 0; i < 3; i++)
 		{
 			Button* back = new Button(L"", A_BTN_BACK_2);
@@ -276,7 +299,7 @@ namespace m
 			//back->SetResizeUnit(Vector2(30, 30));
 			back->SetState(GameObject::STATE::Invisible);
 
-			AddGameObject(back, LAYER_TYPE::FRONT_UI);
+			AddGameObject(back, LAYER_TYPE::FRONT_UI3);
 			clickableMechs.push_back(back);
 		}
 
@@ -292,7 +315,7 @@ namespace m
 			mechImage->SetInnerPos(Vector2::Zero);
 			mechImage->SetState(GameObject::STATE::Invisible);
 			previewMechs.push_back(mechImage);
-			AddGameObject(mechImage, LAYER_TYPE::FRONT_UI);
+			AddGameObject(mechImage, LAYER_TYPE::FRONT_UI3);
 		}
 
 	}
@@ -331,7 +354,7 @@ namespace m
 				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::HOLO));
 			//mechImage->SetPos(Vector2(500 - (i * 100), 205 + (i * (10 + (mechImage->GetSize().x * 2)))));
 			Vector2 offset = MECHS_HANGAR_OFFSET[GameComp::mechInfos[i].unitNum];
-			hangarMechs[i]->SetPos(Vector2(lights[i]->GetPos().x + lights[i]->GetSize().x - hangarMechs[i]->GetSize().x +offset.x,
+			hangarMechs[i]->SetPos(Vector2(lights[i]->GetPos().x + lights[i]->GetSize().x - hangarMechs[i]->GetSize().x + offset.x,
 				lights[i]->GetPos().y + lights[i]->GetSize().y - 55.f + offset.y));
 			shadows[i]->SetPos(hangarMechs[i]->GetPos());
 			shadows[i]->SetAlpha(true);
@@ -405,29 +428,106 @@ namespace m
 	void SelectRobotScene::Update()
 	{
 		Scene::Update();
-		if (btnStart->GetClicked())
+		//if (btnStart->GetClicked())
+		//{
+		//	
+		//}
+		if (platformR[0]->GetOriginPos().y + 30.f <= platformR[0]->GetPos().y)
 		{
-			for (int i = 0; i < 3; i++)
+			btnStart->SetClicked(false);
+			hangarFront->SetTex(L"hangar_main3"
+				, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main3.bmp");
+			//for (int i = 0; i < 3; i++)
+			//{
+			//	ObjectGoFront(hangarMechs[i], LAYER_TYPE::UI);
+			//	ObjectGoFront(shadows[i], LAYER_TYPE::UI);
+			//}
+			if (platformOpenIdx > -1)
 			{
-				platformL[i]->SetPos(Vector2(platformL[i]->GetPos().x, platformL[i]->GetPos().y + 40.f * Time::fDeltaTime()));
-				platformR[i]->SetPos(Vector2(platformR[i]->GetPos().x, platformL[i]->GetPos().y + 40.f * Time::fDeltaTime()));
+				platformR[platformOpenIdx]->SetPos(Vector2(platformR[platformOpenIdx]->GetPos().x + 200.f * Time::fDeltaTime()
+					, platformR[platformOpenIdx]->GetPos().y));
+				platformL[platformOpenIdx]->SetPos(Vector2(platformL[platformOpenIdx]->GetPos().x - 200.f * Time::fDeltaTime()
+					, platformL[platformOpenIdx]->GetPos().y));
+				if (platformR[platformOpenIdx]->GetOriginPos().x + 50.f < platformR[platformOpenIdx]->GetPos().x)
+				{
+					platformR[platformOpenIdx]->SetState(GameObject::STATE::Invisible);
+					platformL[platformOpenIdx]->SetState(GameObject::STATE::Invisible);
+					hangarMechs[platformOpenIdx]->SetPos(Vector2(hangarMechs[platformOpenIdx]->GetPos().x, hangarMechs[platformOpenIdx]->GetPos().y + 300.f * Time::fDeltaTime()));
+					shadows[platformOpenIdx]->SetPos(Vector2(shadows[platformOpenIdx]->GetPos().x, shadows[platformOpenIdx]->GetPos().y + 300.f * Time::fDeltaTime()));
+
+					if (shadows[platformOpenIdx]->GetPos().y > platformL[platformOpenIdx]->GetPos().y + 100)
+					{
+						lights[platformOpenIdx]->SetBlink(false);
+						lights[platformOpenIdx]->SetAlphaConstant(255);
+						if (platformOpenIdx == 0) moveScene = true;
+						platformOpenIdx--;
+					}
+					//platformOpenIdx--;
+				}
 			}
+			//else
+			//{
+			//	Camera::SetMoveTime(1.f);
+			//	Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
+
+			//	if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
+			//	{
+			//		SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+			//	}
+			//}
 		}
-		//if(platformL[0]->GetPos() )
+		//if (KEY_UP(KEYCODE_TYPE::LBTN))
+		//{
+		//	Camera::SetMoveTime(1.f);
+		//	Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
+		//}
+		//if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
+		//{
+		//	SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+		//}
+		if (moveScene)
+		{
+			Camera::SetMoveTime(1.f);
+			Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
+			moveScene = false;
+		}
+		if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
+		{
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+		}
 		if (btnStart->GetHover()) btnStart->SetTex(A_BTN_SELECT_BACK_2, A_BTN_SELECT_BACK_2);
 		else btnStart->SetTex(A_BTN_BACK_2, A_BTN_BACK_2);
 		if (btnStart->GetClicked())
 		{
-			//if (KEY_DOWN(KEYCODE_TYPE::LBTN))
-			//{
-			//	Camera::SetMoveTime(1.f);
-			//	Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
-			//}
-			//if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
-			//{
-			//	SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
-			//}
-			btnStart->SetClicked(false);
+			btnStart->SetState(GameObject::STATE::Invisible);
+			boxSquad->SetState(GameObject::STATE::Invisible);
+			boxSquadInfo->SetState(GameObject::STATE::Invisible);
+			btnChangeSquad->SetState(GameObject::STATE::Invisible);
+
+			for (int i = 0; i < mechs.size(); i++)
+			{
+				mechs[i]->SetState(GameObject::STATE::Delete);
+				skills[i]->SetState(GameObject::STATE::Delete);
+				mechNames[i]->SetState(GameObject::STATE::Delete);
+				mechMoves[i]->SetState(GameObject::STATE::Delete);
+				mechHps[i]->SetState(GameObject::STATE::Delete);
+				classNames[i]->SetState(GameObject::STATE::Delete);
+				hpBacks[i]->SetState(GameObject::STATE::Delete);
+			}
+			for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
+
+			for (int i = 0; i < 3; i++)
+			{
+				lights[i]->SetTex(L"light_red", L"..\\Resources\\texture\\ui\\selectRobot\\hangar_lights_start.bmp");
+				lights[i]->SetIdVar(20);
+				reflectShadows[i]->CreateAnimationBack(L"reflectShadowAnim"
+					, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_platform_shadow.bmp", 13, 0.1f);
+				platformL[i]->SetPos(Vector2(platformL[i]->GetPos().x, platformL[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+				platformR[i]->SetPos(Vector2(platformR[i]->GetPos().x, platformL[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+
+				hangarMechs[i]->SetPos(Vector2(hangarMechs[i]->GetPos().x, hangarMechs[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+				shadows[i]->SetPos(Vector2(shadows[i]->GetPos().x, shadows[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+			}
 		}
 		if (btnChangeSquad->GetHover()) btnChangeSquad->SetTex(A_BTN_SELECT_BACK_2, A_BTN_SELECT_BACK_2);
 		else btnChangeSquad->SetTex(A_BTN_BACK_2, A_BTN_BACK_2);

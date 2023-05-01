@@ -129,6 +129,7 @@ namespace m
 		vector<Vector2_1> arrowDirectQueue;
 		vector<Vector2_2> mechMoveSave;
 		vector<Skill*> mSkills;
+		
 		Skill* curAttactSkill;
 		vector<Image*> mImages; // 전체 이미지
 		float moveDelay;
@@ -140,7 +141,9 @@ namespace m
 		Image* curImage;
 		Image* hpImage;
 		Image* hpBack;
-		vector<Image*> hpBar;
+		vector<Background*> hpBar;
+		Background* mechHpBarBack;
+		int hpBorder;
 		LAYER_TYPE bType;
 
 		Vector2 mCoord;

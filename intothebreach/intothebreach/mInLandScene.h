@@ -31,8 +31,9 @@ namespace m {
 		Button* savePeople;
 		vector<Button*> boxResultPilots;
 		Background* boxBlackFade;
+		Background* boxBlackFade2;
 		vector<Button*> gridPowers;
-		vector<Mech*> infoUnits;
+		vector<Background*> infoUnits;
 		vector<Button*> clickableMechs;
 
 		Button* mechInfo;

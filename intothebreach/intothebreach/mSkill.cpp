@@ -76,6 +76,17 @@ namespace m
 
 		if (mStPos == Vector2::Zero || mFinalEdPos == Vector2::One) endFire = false;
 		else diff <= 0.f ? endFire = true : endFire = false;
+
+		//if (bOppsite)
+		//{
+		//	Vector2 vec2 = opPos;
+		//	float absD2 = abs(opEndPos.x - mStPos.x);
+		//	float absMD2 = abs(vec2.x - mStPos.x);
+		//	float diff2 = absD2 - absMD2;
+
+		//	if (mStPos == Vector2::Zero || opEndPos == Vector2::One) endFire = false;
+		//	else diff <= 0.f ? endFire = true : endFire = false;
+		//}
 	}
 	void Skill::CheckDirection()
 	{
@@ -87,6 +98,12 @@ namespace m
 		if (mOwner->GetCoord().y > guideLineCoord.y) iDir = UP_NUM;
 		if (mOwner->GetCoord().x < guideLineCoord.x) iDir = RIGHT_NUM;
 		if (mOwner->GetCoord().x > guideLineCoord.x) iDir = LEFT_NUM;
+
+
+		//if (mOwner->GetCoord().y < opGuideEndCoord.y) pIDir = DOWN_NUM;
+		//if (mOwner->GetCoord().y > opGuideEndCoord.y) pIDir = UP_NUM;
+		//if (mOwner->GetCoord().x < opGuideEndCoord.x) pIDir = RIGHT_NUM;
+		//if (mOwner->GetCoord().x > opGuideEndCoord.x) pIDir = LEFT_NUM;
 	}
 	void Skill::ClearPushTile()
 	{
@@ -112,6 +129,17 @@ namespace m
 		}
 		return false;
 	}
+
+	//void Skill::SetOppsiteDraw(Vector2 _coord, Vector2 guideCoord)
+	//{
+	//	Scene* scene = SceneManager::GetActiveScene();
+	//	opEndCoord = _coord; 
+	//	opGuideEndCoord = guideCoord; 
+	//	opEndPos = scene->GetPosTiles()[opEndCoord.y][opEndCoord.x]->GetCenterPos();
+	//	opMissile_vec = opEndPos - mStPos;
+	//	opPos = mStPos;
+	//	opMissile_vec.Normalize();
+	//}
 
 	void Skill::Clear()
 	{
@@ -196,6 +224,15 @@ namespace m
 				dy = (int)GetEndCoord().y;
 				dx = (int)GetEndCoord().x;
 			}
+			//if (reverse)
+			//{
+			//	dy = (int)opEndCoord.y;
+			//	dx = (int)opEndCoord.x;
+			//}
+			//if (GetWeaponType() == WEAPON_T::janus_cannon)
+			//{
+
+			//}
 			//if (GetSkillType() == SKILL_T::ST)
 			//{
 			//	
@@ -257,7 +294,7 @@ namespace m
 		case WEAPON_T::titan_fist:
 		{
 			
-			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 4));
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + (int)DIR_EFFECT_T::pun_r));
 		}
 		break;
 		case WEAPON_T::artemis_artillery:
@@ -265,10 +302,26 @@ namespace m
 			blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
 		}
 		break;
+		case WEAPON_T::janus_cannon:
 		case WEAPON_T::taurus_cannon:
 		{
-			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 8));
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + (int)DIR_EFFECT_T::st_r));
 
+		}
+		break;
+		case WEAPON_T::flame_thrower:
+		{
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + (int)DIR_EFFECT_T::flame1_r));
+		}
+		break;
+		case WEAPON_T::brust_beam:
+		{
+
+		}
+		break;
+		case WEAPON_T::rock_launcher:
+		{
+			blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
 		}
 		break;
 		case WEAPON_T::stinging:
@@ -283,7 +336,7 @@ namespace m
 		break;
 		case WEAPON_T::stinger:
 		{
-			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + 16));
+			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + (int)DIR_EFFECT_T::hornet1_r));
 		}
 		break;
 		case WEAPON_T::accelerating_thorax:

@@ -46,6 +46,8 @@ enum class LAYER_TYPE
 	SKILL,
 	UI,
 	FRONT_UI,
+	FRONT_UI2,
+	FRONT_UI3,
 	DRAG_PI,
 	DRAG_WE,
 	END,

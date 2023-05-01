@@ -27,6 +27,7 @@ m::Button::Button(const wstring& inner
 	, iItem(0)
 	, invenIdx(-1)
 	, bFromInven(false)
+	, bFromInfos(false)
 	, bBlink(false)
 	, innerPos(Vector2::Minus)
 	, bReSzieable(false)

@@ -28,9 +28,11 @@ namespace m
 		Background* platformR[3];
 		Background* shadows[3];
 		Background* hangarMechs[3];
+		Background* reflectShadows[3];
 
 		Background* swapFake;
 		Background* boxBlackFade;
+		Background* hangarFront;
 
 		Button* btnStart;
 		Button* btnChangeSquad;
@@ -59,6 +61,10 @@ namespace m
 		vector<Background*> mechBacks;
 		int previewMechsUnitNum[3]{};
 
+		int platformOpenIdx;
+		int fallIdx;
+
+		bool moveScene;
 		vector<Button*> clickableMechs;
 
 

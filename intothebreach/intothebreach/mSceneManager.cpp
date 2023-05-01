@@ -38,8 +38,8 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::SELECT_ROBOT];
-		LoadScene(SCENE_TYPE::SELECT_ROBOT);
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::SELECT_LAND];
+		LoadScene(SCENE_TYPE::SELECT_LAND);
 	}
 
 	void SceneManager::Update()

@@ -2,6 +2,7 @@
 #include "mGameObject.h"
 namespace m
 {
+	class Animator;
 	class Skill :
 		public GameObject
 	{
@@ -25,7 +26,7 @@ namespace m
 		void DrawPushTile(ARROW_TILE_T *arrows, int size);
 		void ClearPushTile();
 		void SetEndCoord(Vector2 _coord) { endCoord = _coord; }
-		void CalEndFire();
+		virtual void CalEndFire();
 
 		Unit* GetOwner() { return mOwner; }
 		LAYER_TYPE GetButtonType() { return mLayerType; }
@@ -34,16 +35,20 @@ namespace m
 		Vector2 GetEndPos() { return mFinalEdPos; }
 		Vector2 GetGuideLinePos() { return guideLinePos; }
 		Vector2 GetGuideLineCoord() { return guideLineCoord; }
-		Vector2 GetEndCoord() { return endCoord; }
+		virtual Vector2 GetEndCoord() { return endCoord; }
 		Animator* GetAnimator() { return mAnimator; }
 
-		bool GetEndFire(){return endFire;}
-		bool GetStartFire(){return startFire;}
-		bool GetStartRender() { return startRender; }
+		virtual bool GetStartFire(){return startFire;}
+		virtual bool GetEndFire(){return endFire;}
+		virtual bool GetStartRender() { return startRender; }
 		bool CheckSkillFiring();
 		int GetSkillDir() { return iDir; }
 
 		void SetWeaponType(WEAPON_T _type) { mWeaponType = _type; }
+
+		virtual void SetEndFire(bool _endFire) { endFire = _endFire; }
+		virtual void SetStartFire(bool _stFire) { startFire = _stFire; }
+		virtual void SetStartRender(bool _sR) { startRender = _sR; }
 
 		void SetButtonType(LAYER_TYPE _type) { mLayerType = _type; }
 		void SetSkillType(SKILL_T _type) { mType = _type; }
@@ -52,9 +57,9 @@ namespace m
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
 		void SetGuideLinePos(Vector2 _glp) { guideLinePos = _glp; }
 		void SetGuideLineCoord(Vector2 _glc) { guideLineCoord = _glc; }
-		void SetEndFire(bool _endFire) { endFire = _endFire; }
-		void SetStartFire(bool _stFire) { startFire = _stFire; }
-		void SetStartRender(bool _sR) { startRender = _sR; }
+
+		//void SetOppsite(bool _b) { bOppsite = _b; }
+		//void SetOppsiteDraw(Vector2 _coord, Vector2 guideCoord);
 		void Clear();
 
 	protected:
@@ -63,6 +68,7 @@ namespace m
 		bool endFire;
 		bool startFire;
 		bool startRender;
+		bool bOppsite;
 
 		float offsetHeight;
 		float maxTheta;
@@ -80,6 +86,7 @@ namespace m
 		float theta;
 
 		int iDir;
+		int pIDir;
 
 		Animator* mAnimator;
 		LAYER_TYPE mLayerType;
@@ -93,6 +100,12 @@ namespace m
 		Vector2 endCoord;
 		Vector2 mStPos;
 		Vector2 mFinalEdPos;
+
+		Vector2 opPos;
+		Vector2 opEndCoord;
+		Vector2 opEndPos;
+		Vector2 opGuideEndCoord;
+		Vector2 opMissile_vec;
 	};
 }
 

@@ -18,6 +18,7 @@ namespace m
         virtual void Active(HDC hdc) override;
         virtual void GuideWire(HDC hdc) override;
         virtual void CheckDirection();
+        virtual void CalEndFire() override;
     private:
     };
 }

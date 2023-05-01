@@ -386,7 +386,7 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill1->GetPos(), boxSkill1->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
 					GameComp::mechInfos[curMech].weapons[0] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
@@ -405,7 +405,7 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill2->GetPos(), boxSkill2->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
 					GameComp::mechInfos[curMech].weapons[1] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
@@ -466,7 +466,11 @@ namespace m
 				&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+				{
 					mM = boxDragPilot;
+					mM->SetFromInfos(true);
+				}
+
 			}
 			if (boxSkill1->GetState() == GameObject::STATE::Visible
 				&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
@@ -474,7 +478,10 @@ namespace m
 				&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
+				{
 					mM = boxDragSkill1;
+					mM->SetFromInfos(true);
+				}
 				//boxDragSkill1->SetClicked(false);
 			}
 			if (boxSkill2->GetState() == GameObject::STATE::Visible
@@ -483,7 +490,10 @@ namespace m
 				&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+				{
 					mM = boxDragSkill2;
+					mM->SetFromInfos(true);
+				}
 			}
 
 		}
@@ -554,27 +564,14 @@ namespace m
 	{
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
-			Mech* mech = new Mech(
-				GameComp::mechInfos[i].unitNum
-				, Vector2::Minus
-				, 0
-				, 1
-				, 99
-			);
-			mech->SetState(GameObject::STATE::NoMove);
-			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
-			//mech->SetHpCOffset(false);
-			//mech->SetHpBackOffset(Vector2(8, -35));
-			//mech->SetHpOffset(Vector2(3, -41));
-			Vector2 offset = img->GetOffset();
-			mech->SetPos(Vector2(clickableMechs[i]->GetPos().x + offset.x + clickableMechs[i]->GetSize().x / 2 - img->GetWidth()
-				, clickableMechs[i]->GetPos().y + img->GetHeight() - offset.y / 2));
-			mech->SetVisibleHp(false);
-			mech->SetImageMag(2);
-			//mech->SetState(GameObject::STATE::Visible);
+			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
 
-			infoUnits.push_back(mech);
-			AddGameObject(mech, LAYER_TYPE::UI);
+			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 -bM->GetHeight()));
+
+			infoUnits.push_back(bM);
+			AddGameObject(bM, LAYER_TYPE::UI);
 		}
 	}
 	void SelectLandScene::OnExit()

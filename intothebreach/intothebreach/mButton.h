@@ -30,6 +30,7 @@ namespace m
 		bool GetSmoothAppear() { return bSmoothAppear; }
 		bool GetSmoothDisappear() { return bSmoothDisappear; }
 		bool GetFromInven() { return bFromInven; }
+		bool GetFromInfos() { return bFromInfos; }
 		wstring GetBtnName() { return btnName; }
 		Vector2 GetInnerPos() { return innerPos; }
 		Vector2 GetOriginPos() { return originPos; }
@@ -65,6 +66,7 @@ namespace m
 		void SetSkillBoxNum(int num) { skillBoxNum = num; }
 		void SetMag(int _t) { iScale = _t; }
 		void SetFromInven(bool _b) { bFromInven = _b; }
+		void SetFromInfos(bool _b) { bFromInfos = _b; }
 		void SetInvenIdx(bool _idx) { invenIdx = _idx; }
 		void SetRClicked(bool _b) { bRClicked = _b; }
 	private:
@@ -88,6 +90,7 @@ namespace m
 		bool bApDAp;
 		bool endApDAp;
 		bool bFromInven;
+		bool bFromInfos;
 
 		int idDir;
 		int idVar;

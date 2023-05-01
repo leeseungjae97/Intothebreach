@@ -114,5 +114,4 @@ namespace m
 		STATE mState;
 		STATE mVisible;
 	};
-
 }

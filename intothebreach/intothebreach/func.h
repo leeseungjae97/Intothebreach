@@ -8,6 +8,7 @@
 #include "mSkill_Arc.h"
 #include "mSkill_St.h"
 #include "mSkill_RS.h"
+#include "mSkill_MultiDir_St.h"
 #include "mTile.h"
 #include "CommonInclude.h"
 #include "mPlayerInfo.h"
@@ -39,7 +40,7 @@ namespace m::object
 	}
 
 	
-	static inline Unit* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName, Unit* _origin = nullptr)
+	static inline Unit* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName, ALIENS_RANK _rType = ALIENS_RANK::NORMAL , bool first = false)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		Unit* gameObj = nullptr;
@@ -56,7 +57,8 @@ namespace m::object
 		}
 		if(type == LAYER_TYPE::MONSTER)
 		{
-			gameObj = new Alien(GET_UNIT_NUM(unitName), coord, GameComp::mAliens.size());
+			gameObj = new Alien(GET_UNIT_NUM(unitName), coord, GameComp::mAliens.size(), _rType);
+			if (first) gameObj->SetState(GameObject::STATE::Idle);
 			GameComp::mAliens.push_back((Alien*)gameObj);
 			//scene->GetAliens().insert(scene->GetAliens().end(), (Alien*)gameObj);
 			//scene->GetAliens().emplace_back((Alien*)gameObj);
@@ -67,18 +69,8 @@ namespace m::object
 				, MECH_MOVE_RANGE[(UINT)unitName]
 				, MECH_HP[(UINT)unitName]
 				, GameComp::mMechs.size());
-			if (nullptr != _origin)
-			{
-				//((Mech*)gameObj)->SetState(_origin->GetState());
-				((Mech*)gameObj)->SetDeploy(((Mech*)_origin)->GetDeploy());
-				((Mech*)gameObj)->SetCancelDeploy(((Mech*)_origin)->GetCancelDeploy());
-				((Mech*)gameObj)->SetSwap(((Mech*)_origin)->GetSwap());
-			}
-			else
-			{
-				gameObj->GetAnimator()->SetConstant(100);
-				gameObj->SetState(GameObject::STATE::Invisible);
-			}
+			gameObj->GetAnimator()->SetConstant(100);
+			gameObj->SetState(GameObject::STATE::Invisible);
 		}
 
 		gameObj->Initialize();
@@ -169,6 +161,11 @@ namespace m::object
 			gameObj = new Skill_RS(weapon, unit);
 		}
 			break;
+		case (int)SKILL_T::MULTI_ST:
+		{
+			gameObj = new Skill_MultiDir_St(weapon, unit, 2);
+		}
+		break;
 		case (int)SKILL_T::END:
 			break;
 		default:
@@ -210,6 +207,11 @@ namespace m::object
 		case (int)SKILL_T::RANGE_ST:
 		{
 			gameObj = new Skill_RS(_type, unit);
+		}
+		break;
+		case (int)SKILL_T::MULTI_ST:
+		{
+			gameObj = new Skill_MultiDir_St(_type, unit, 2);
 		}
 		break;
 		case (int)SKILL_T::END:

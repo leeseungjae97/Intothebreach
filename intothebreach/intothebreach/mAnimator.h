@@ -47,8 +47,9 @@ namespace m {
         function<void()>& GetStartEvent(const wstring name);
         function<void()>& GetCompleteEvent(const wstring name);
         function<void()>& GetEndEvent(const wstring name);
-
+        bool GetBackAnim() { return bBackAnim; }
         bool GetStopAnimator() { return stopAnimator; }
+        void BackAnim(bool _b) { bBackAnim = _b; }
 
     private:
         map<wstring, Animation*> mAnimations;
@@ -59,6 +60,7 @@ namespace m {
 
         bool mbLoop;
         bool stopAnimator;
+        bool bBackAnim;
 
         BYTE mConstant;
     };

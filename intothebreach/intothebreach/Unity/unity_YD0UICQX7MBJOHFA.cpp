@@ -44,6 +44,9 @@
 #include "E:\intothebreach\intothebreach\intothebreach\mPlayerInfo.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mSkill_MultiDir_St.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mSkill_RS.cpp"
 
 

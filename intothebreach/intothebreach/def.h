@@ -21,6 +21,7 @@
 
 #define WEAPONS_			3
 #define MAX_WEAPONS			2
+#define MAX_GRID_POWER		7
 
 #define ARC_CONST			3
 

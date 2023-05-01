@@ -25,6 +25,11 @@ enum class DIR_EFFECT_T
 	leaper1_u,
 	leaper1_d,
 	leaper1_l,
+	flame1_r,
+	flame1_u,
+	flame1_d,
+	flame1_l,
+
 	END,
 };
 enum class SINGLE_EFFECT_T
@@ -80,11 +85,19 @@ wstring DIR_EFFECT_T_PATH[(UINT)DIR_EFFECT_T::END]{
 	L"hornet_U",
 	L"hornet_D",
 	L"hornet_L",
+	L"",
+	L"",
+	L"",
+	L"",
+	L"flamethrower1_R",
+	L"flamethrower1_U",
+	L"flamethrower1_D",
+	L"flamethrower1_L",
 };
 m::Vector2 DIR_EFFECT_T_OFFSET[(UINT)DIR_EFFECT_T::END]{
 	{20.f, 20.f},//{-20.f,-20.f},//L"airpush_R",
 	{30.f, -15.f},//{0.f,0.f},//L"airpush_U",
-	{-20.f,25.f},//{-5.f, 20.f},//L"airpush_D",
+	{-20.f, 25.f},//{-5.f, 20.f},//L"airpush_D",
 	{-10.f, -10.f},//{-5.f, 5.f},//L"airpush_L",
 	{},//L"punch1_R",
 	{},//L"punch1_D",
@@ -102,6 +115,14 @@ m::Vector2 DIR_EFFECT_T_OFFSET[(UINT)DIR_EFFECT_T::END]{
 	{-5, -30.f},//L"hornet_U",
 	{5, -30.f},//L"hornet_D",
 	{20, -30.f},//L"hornet_L",
+	{},//L"leaper_R",
+	{},//L"leaper_U",
+	{},//L"leaper_D",
+	{},//L"leaper_L",
+	{-50.f, -40.f},//L"flame_R",
+	{-50.f, 0.f},//L"flame_U",
+	{10, -30.f},//L"flame_D",
+	{25.f, 10.f},//L"flame_L",
 };
 m::Vector2 IMMO_EFFECT_T_OFFSET[(UINT)IMMO_EFFECT_T::END]{
 	{10.f, -5.f},
@@ -129,6 +150,15 @@ int DIR_EFFECT_T_LEN[(UINT)DIR_EFFECT_T::END]{
 	12,
 	12,
 	12,
+	1,
+	1,
+	1,
+	1,
+	9,
+	9,
+	9,
+	9,
+
 };
 int IMMO_EFFECT_T_LEN[(UINT)IMMO_EFFECT_T::END]{
 	10,

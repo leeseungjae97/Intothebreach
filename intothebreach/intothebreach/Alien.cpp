@@ -9,16 +9,18 @@
 #include "mTile.h"
 #include "mTime.h"
 #include "mSceneManager.h"
+#include "mPlayerInfo.h"
 namespace m
 {
-	Alien::Alien(int unitType, Vector2 _coord, size_t idx)
+	Alien::Alien(int unitType, Vector2 _coord, size_t idx, ALIENS_RANK _rType)
 		: Unit(_coord
 			, ALIEN_MOVE_RANGE[unitType - (int)MECHS::tele - 1]
-			, ALIEN_HP[unitType - (int)MECHS::tele - 1]
+			, ALIEN_HP[unitType - (int)MECHS::tele - 1] + (int)(_rType == ALIENS_RANK::NORMAL ? 0 :(int)_rType+1)
 			, BASIC_WEAPON_TYPE[unitType]
 			, idx
 			, unitType
 		)
+		, rType(_rType)
 	{
 		finalMoveCoord = Vector2::Minus;
 		tarGetCoord = Vector2::Minus;
@@ -62,7 +64,7 @@ namespace m
 			GetAnimator()->CreateAnimation(
 				MAKE_UNIT_KEY((ALIENS)GetUnitName(), (ALIEN_CONDITION)i)
 				, vImage[i]
-				, Vector2(Vector2::Zero)
+				, Vector2(0, size.y * (int)rType)
 				, Vector2(size.x, size.y)
 				, vImage[i]->GetOffset()
 				, len
@@ -74,7 +76,7 @@ namespace m
 				GetAnimator()->CreateAnimation(
 					L"reverse_emerge"
 					, vImage[i]
-					, Vector2(Vector2::Zero)
+					, Vector2(0, size.y * (int)rType)
 					, Vector2(size.x, size.y)
 					, vImage[i]->GetOffset()
 					, len
@@ -136,6 +138,12 @@ namespace m
 			{
 				SetState(STATE::Death);
 				SceneManager::GetActiveScene()->RemoveAffectUnit(GetCoord(), this);
+				vector<Alien*>::iterator iter = GameComp::mAliens.begin();
+				while (iter != GameComp::mAliens.end())
+				{
+					if ((*iter) == this) iter = GameComp::mAliens.erase(iter);
+					else iter++;
+				}
 			}
 			broken();
 			
@@ -558,6 +566,42 @@ namespace m
 	void Alien::Render(HDC hdc)
 	{
 		Unit::Render(hdc);
+		if (rType == ALIENS_RANK::BOSS)
+		{
+			Image* bossIcon = Resources::Load<Image>(L"bossIcon", L"..\\Resources\\texture\\combat\\overlay\\icon_boss.bmp");
+			Image* bossIconShadow = Resources::Load<Image>(L"bossIconShadow", L"..\\Resources\\texture\\combat\\overlay\\icon_boss_glow.bmp");
+			Vector2 mCenterPos = SceneManager::GetActiveScene()->GetPosTile((int)GetCoord().y, (int)GetCoord().x)->GetCenterPos();
+			TransparentBlt(hdc
+				,(int)(mCenterPos.x + 20)
+				,(int)(mCenterPos.y - 20.f)
+				,(int)(bossIcon->GetWidth() * 2)
+				,(int)(bossIcon->GetHeight() * 2)
+				, bossIcon->GetHdc()
+				, 0
+				, 0
+				, (int)bossIcon->GetWidth()
+				, (int)bossIcon->GetHeight()
+				, RGB(255, 0 , 255)
+			);
+			BLENDFUNCTION func = {};
+			func.BlendOp = AC_SRC_OVER;
+			func.BlendFlags = 0;
+			func.AlphaFormat = AC_SRC_ALPHA;
+			func.SourceConstantAlpha = 50;
+
+			AlphaBlend(hdc
+				, (int)(mCenterPos.x + 20)
+				, (int)(mCenterPos.y - 20)
+				, (int)(bossIconShadow->GetWidth() * 2)
+				, (int)(bossIconShadow->GetHeight() * 2)
+				, bossIconShadow->GetHdc()
+				, 0
+				, 0
+				, (int)bossIconShadow->GetWidth()
+				, (int)bossIconShadow->GetHeight()
+				, func
+			);
+		}
 	}
 	void Alien::Release()
 	{

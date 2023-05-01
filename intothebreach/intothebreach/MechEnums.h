@@ -71,7 +71,7 @@ int MECH_HP[(UINT)MECHS::END]{
 	3,//charge,
 	4,//jet,
 	3,//mirror,
-	4,//tank,
+	3,//tank,
 	3,//unstable,
 	3,//wall,
 
@@ -210,7 +210,7 @@ m::Vector2 MECHS_OFFSET[(UINT)MECHS::END][(UINT)COMBAT_CONDITION_T::END]{
 	// S_SIZE, IDLE, BROKEN, WATER, WATER_BROKEN, NO_SHADOW, HOLO,
 	//x, y
 	{{}}, //   L"mech_electrice",
-	{{}}, //  L"mech_flame",
+	{{9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {9.f,-6.f}, {10.f, -50.f},}, //  L"mech_flame",
 	{{}}, //  L"mech_guard",
 	{{}}, //  L"mech_judo",
 	{{}}, //  L"mech_laser",
@@ -219,7 +219,7 @@ m::Vector2 MECHS_OFFSET[(UINT)MECHS::END][(UINT)COMBAT_CONDITION_T::END]{
 
 	{{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{8.f, 0.f},{10.f, -50}}, //  L"mech_charge",
 	{{}}, //  L"mech_jet",
-	{{}}, //  L"mech_mirror",
+	{{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{10.f, -50}}, //  L"mech_mirror",
 	{{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{15.f, 6.f},{10.f, -50}}, //  L"mech_tank",
 	{{}}, //  L"mech_unstable",
 	{{}}, //  L"mech_wall",
@@ -228,7 +228,7 @@ m::Vector2 MECHS_OFFSET[(UINT)MECHS::END][(UINT)COMBAT_CONDITION_T::END]{
 	{{}}, //  L"mech_dstrike",
 	{{}}, //  L"mech_ice",
 	{{}}, //  L"mech_ignite",
-	{{}}, //  L"mech_rockart",
+	{{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{15.f, -5.f},{10.f, -50}}, //  L"mech_rockart",
 	{{}}, //  L"mech_rocket",
 
 	{{}}, //  L"mech_grav",

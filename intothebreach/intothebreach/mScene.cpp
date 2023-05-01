@@ -585,6 +585,7 @@ namespace m
 		{
 			mMouseFollower->GetCurAttackSkill()->CheckDirection();
 		}
+		
 
 		if (mMouseFollower->CheckSkillFiring()) return;
 
@@ -668,7 +669,7 @@ namespace m
 		GameComp::resetTurn -= 1;
 
 		moveSave.clear();
-		if(saveGridPower!=0) GameComp::gridPower = saveGridPower;
+		if (saveGridPower != 0) GameComp::gridPower = saveGridPower;
 		for (int i = 0; i < turnSave.size(); i++)
 		{
 			Vector2_3 info = turnSave[i];
@@ -1131,8 +1132,6 @@ namespace m
 				affectUnits[y][x].clear();
 			}
 		}
-
-
 	}
 	void Scene::ObjectGoFront(GameObject* obj, LAYER_TYPE bType)
 	{

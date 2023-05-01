@@ -38,23 +38,23 @@ namespace m
 			AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 
 			Background* mission = new Background(MAKE_MISSION_KEY((int)mType, i)
-			, MAKE_MISSION_PATH((int)mType, i));
-			if(b_->GetPos().x + b_->GetSize().x * 2 + mission->GetSize().x > application.GetResolutionWidth())
+				, MAKE_MISSION_PATH((int)mType, i));
+			if (b_->GetPos().x + b_->GetSize().x * 2 + mission->GetSize().x > application.GetResolutionWidth())
 				mission->SetPos(Vector2(b_->GetPos().x - b_->GetSize().x * 3, b_->GetPos().y));
-			else 
+			else
 				mission->SetPos(Vector2(b_->GetPos().x + b_->GetSize().x * 2, b_->GetPos().y));
 			mMissionsPreview.push_back(mission);
 			mission->SetState(GameObject::STATE::Invisible);
 			AddGameObject(mission, LAYER_TYPE::UI);
 
-			Background* b_b = new Background(MAKE_SECTION_OL_KEY(mType, i,true)
+			Background* b_b = new Background(MAKE_SECTION_OL_KEY(mType, i, true)
 				, MAKE_SECTION_OL_PATH(mType, i, true), 2);
 			b_b->SetPos(pos[i]);
 			b_b->SetState(GameObject::STATE::Invisible);
 			mSectionsOL.push_back(b_b);
 			AddGameObject(b_b, LAYER_TYPE::BACKGROUND);
 		}
-		
+
 		//if (mType == ISLAND_T::ISLAND0)
 		//{
 		//	for (UINT i = 0; i < ISLANDS_SECTIONS[(UINT)mType]; i++)
@@ -65,7 +65,7 @@ namespace m
 		//		AddGameObject(b_, LAYER_TYPE::FUNCTIONCAL_BACK);
 		//	}
 		//}
-		
+
 
 		boxBlackFade = new Background(ALPHA_BACK, ALPHA_BACK, 0, true, CENTER);
 		boxBlackFade->SetAlpha(true);
@@ -111,6 +111,13 @@ namespace m
 			AddGameObject(back, LAYER_TYPE::UI);
 			clickableMechs.push_back(back);
 		}
+		boxBlackFade2 = new Background(ALPHA_BACK, ALPHA_BACK, 0, true, CENTER);
+		boxBlackFade2->SetAlpha(true);
+		boxBlackFade2->SetAlphaConstant(200);
+		boxBlackFade2->SetSize(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight()));
+		boxBlackFade2->SetState(GameObject::STATE::Invisible);
+		AddGameObject(boxBlackFade2, LAYER_TYPE::FRONT_UI);
+
 		boxBattleResult = new Button(L"..\\Resources\\texture\\ui\\inLand\\secur_area_box.bmp", NO_BACK);
 		boxBattleResult->SetInner(true);
 		boxBattleResult->UseInnerAlpha(false);
@@ -118,7 +125,7 @@ namespace m
 		boxBattleResult->SetPos(Vector2(application.GetResolutionWidth() / 2 - boxBattleResult->GetInnerImage()->GetWidth() / 2
 			, application.GetResolutionHeight() / 2 - boxBattleResult->GetInnerImage()->GetHeight() / 2));
 		boxBattleResult->SetState(GameObject::STATE::Invisible);
-		AddGameObject(boxBattleResult, LAYER_TYPE::UI);
+		AddGameObject(boxBattleResult, LAYER_TYPE::FRONT_UI);
 
 		btnResultClose = new Button(L"..\\Resources\\texture\\ui\\inLand\\result_okay.bmp", NO_BACK);
 		btnResultClose->SetInner(true);
@@ -127,7 +134,7 @@ namespace m
 		btnResultClose->SetPos(Vector2(boxBattleResult->GetPos().x + boxBattleResult->GetInnerImage()->GetWidth() - btnResultClose->GetInnerImage()->GetWidth()
 			, boxBattleResult->GetPos().y + boxBattleResult->GetInnerImage()->GetHeight()));
 		btnResultClose->SetState(GameObject::STATE::Invisible);
-		AddGameObject(btnResultClose, LAYER_TYPE::UI);
+		AddGameObject(btnResultClose, LAYER_TYPE::FRONT_UI);
 
 		mechInfo = new Button(L"..\\Resources\\texture\\ui\\inventory\\mech_info.bmp", NO_BACK);
 		mechInfo->SetInner(true);
@@ -243,6 +250,8 @@ namespace m
 		inventoryParts.push_back(inventory);
 		inventoryParts.push_back(btnInvenUp);
 		inventoryParts.push_back(btnInvenDown);
+
+
 	}
 	void InLandScene::Update()
 	{
@@ -253,7 +262,7 @@ namespace m
 		{
 			/*if (math::CheckRectPos(mSections[i]->GetPos(), mSections[i]->GetSize() * 2, MOUSE_POS))
 			{
-				
+
 			}*/
 			if (GameComp::clearLandMatric[GameComp::curLand][i] == CLEAR)
 			{
@@ -273,7 +282,7 @@ namespace m
 								, MAKE_SECTION_PATH(mType, _i, false, true));
 							mSectionsOL[_i]->SetState(GameObject::STATE::Visible);
 							mMissionsPreview[_i]->SetState(GameObject::STATE::Invisible);
-						}		
+						}
 					}
 				}
 			}
@@ -509,7 +518,7 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill1->GetPos(), boxSkill1->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
 					GameComp::mechInfos[curMech].weapons[0] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
@@ -528,7 +537,7 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill2->GetPos(), boxSkill2->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
 					GameComp::mechInfos[curMech].weapons[1] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
@@ -589,7 +598,11 @@ namespace m
 				&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+				{
 					mM = boxDragPilot;
+					mM->SetFromInfos(true);
+				}
+
 			}
 			if (boxSkill1->GetState() == GameObject::STATE::Visible
 				&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
@@ -597,7 +610,10 @@ namespace m
 				&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
+				{
 					mM = boxDragSkill1;
+					mM->SetFromInfos(true);
+				}
 				//boxDragSkill1->SetClicked(false);
 			}
 			if (boxSkill2->GetState() == GameObject::STATE::Visible
@@ -606,7 +622,10 @@ namespace m
 				&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 			{
 				if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+				{
 					mM = boxDragSkill2;
+					mM->SetFromInfos(true);
+				}
 			}
 
 		}
@@ -660,15 +679,27 @@ namespace m
 		//GameComp::combatEnd = true;
 		if (GameComp::combatEnd)
 		{
-			//GameComp::clearLandMatric[GameComp::curLand][GameComp::curLandSection] = 1;
-			//for (int i = GameComp::curLandSection; i < 8; i++)
-			//{
-			//	if (land1AdjacencyMatrix[GameComp::curLandSection][i] == 1)
-			//	{
-			//		mSections[i];
-			//	}
-			//}
-				
+			GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
+			if(MAX_GRID_POWER >= 8) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+			else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+
+			for (int i = 0; MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0]; i++)
+			{
+				Background* star = new Background(L"mission_star_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star_off.bmp", 2);
+				star->SetPos(Vector2(boxBattleResult->GetPos().x + 80 , boxBattleResult->GetPos().y + 80));
+				AddGameObject(star, LAYER_TYPE::FRONT_UI);
+			}
+			Background* text1 = new Background(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
+				MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0], 2);
+
+
+			for (int i = 0; MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1]; i++)
+			{
+				Background* gridPower = new Background(L"mission_power_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power_off.bmp", 2);
+				AddGameObject(gridPower, LAYER_TYPE::FRONT_UI);
+			}
+			Background* text2 = new Background(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
+				MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0], 2);
 
 			boxBattleResult->SetState(GameObject::STATE::Visible);
 			btnResultClose->SetState(GameObject::STATE::Visible);
@@ -682,27 +713,14 @@ namespace m
 
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
-			Mech* mech = new Mech(
-				GameComp::mechInfos[i].unitNum
-				, Vector2::Minus
-				, 0
-				, 1
-				, 99
-			);
-			mech->SetState(GameObject::STATE::NoMove);
-			Image* img = mech->GetCurImage(COMBAT_CONDITION_T::NO_SHADOW);
-			//mech->SetHpCOffset(false);
-			//mech->SetHpBackOffset(Vector2(8, -35));
-			//mech->SetHpOffset(Vector2(3, -41));
-			Vector2 offset = img->GetOffset();
-			mech->SetPos(Vector2(clickableMechs[i]->GetPos().x + offset.x + clickableMechs[i]->GetSize().x / 2 - img->GetWidth()
-				, clickableMechs[i]->GetPos().y + img->GetHeight() - offset.y / 2));
-			mech->SetVisibleHp(false);
-			mech->SetImageMag(2);
-			//mech->SetState(GameObject::STATE::Visible);
+			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
 
-			infoUnits.push_back(mech);
-			AddGameObject(mech, LAYER_TYPE::UI);
+			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
+
+			infoUnits.push_back(bM);
+			AddGameObject(bM, LAYER_TYPE::UI);
 		}
 	}
 	void InLandScene::OnExit()

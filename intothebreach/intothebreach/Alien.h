@@ -10,7 +10,7 @@ namespace m
 	{
 	public:
 
-		Alien(int unitType, Vector2 _coord, size_t idx);
+		Alien(int unitType, Vector2 _coord, size_t idx, ALIENS_RANK _rType);
 		Alien(Alien& _origin);
 		~Alien();
 
@@ -39,6 +39,7 @@ namespace m
 		bool GetFirstEmerge() { return bFirstEmerge; }
 		Vector2 GetTargetCoord() { return tarGetCoord; }
 		Vector2 GetFinalMoveCoord() { return finalMoveCoord; }
+		ALIENS_RANK GetRType() { return rType; }
 
 	private:
 		int moveCnt;
@@ -46,6 +47,7 @@ namespace m
 		Vector2 tarGetCoord;
 		Vector2 finalMoveCoord;
 		vector<Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
+		ALIENS_RANK rType;
 	};
 }
 

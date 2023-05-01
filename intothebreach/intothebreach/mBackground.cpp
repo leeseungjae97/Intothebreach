@@ -3,6 +3,9 @@
 #include "mSelectGDI.h"
 #include "mApplication.h"
 #include "mCamera.h"
+#include "mImage.h"
+#include "mAnimator.h"
+#include "mAnimation.h"
 #include "func.h"
 #include "mTime.h"
 extern m::Application application;
@@ -28,6 +31,7 @@ namespace m {
 		vMovement = Vector2::Zero;
 		bSmoothDisappear = false;
 		bSmoothAppear = false;
+		//mAnimator = GetComponent<Animator>();
 	}
 	Background::~Background() {
 	}
@@ -36,8 +40,7 @@ namespace m {
 		
 	}
 	void Background::Update() {
-		GameObject::Update();
-		
+		UI::Update();
 		if (vMovement != Vector2::Zero)
 		{
 			if (GetAlphaConstant() < 10) object::Destory(this);
@@ -51,12 +54,13 @@ namespace m {
 	}
 
 	void Background::Render(HDC hdc) {
-		//GameObject::Render(hdc);
+		UI::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
 
 		UINT iWidth;
 		UINT iHeight;
+		if (bCreateAnimation) return;
 		if (mImage == nullptr)
 		{
 			SelectGDI tmp(hdc, BRUSH_TYPE::CUSTOM_BLACK);
@@ -131,7 +135,6 @@ namespace m {
 			SetScale(Vector2((float)iWidth, (float)iHeight));
 			if (effectCamera)
 				mPos = Camera::CalculatePos(mPos);
-
 			if (mAlpha)
 			{
 				BLENDFUNCTION func = {};
@@ -200,5 +203,32 @@ namespace m {
 	}
 	void Background::Release() {
 		GameObject::Release();
+	}
+	void Background::CreateAnimationBack(const wstring& key, const wstring& path, int len, float duration)
+	{
+		bCreateAnimation = true;
+
+		Animator* animator = GetComponent<Animator>();
+		animator->Stop();
+		Image* im = Resources::Load<Image>(key, path);
+		if (nullptr == animator->FindAnimation(key + L"_anim"))
+		{
+			float fWid = (float)im->GetWidth() / len;
+			float fHei = (float)im->GetHeight();
+			animator->CreateAnimation(
+				key + L"_anim"
+				, im
+				, Vector2::Zero
+				, Vector2(fWid, fHei)
+				, Vector2::Zero
+				, len
+				, duration
+				, (UINT)AC_SRC_ALPHA
+			);
+			animator->SetConstant(200);
+			animator->BackAnim(true);
+		}
+		if(animator->GetStopAnimator())
+			animator->Play(key+L"_anim", false);
 	}
 }

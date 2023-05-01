@@ -1,6 +1,7 @@
 #include "mUI.h"
 #include "mResources.h"
 #include "mApplication.h"
+#include "mAnimator.h"
 #include "mSelectGDI.h"
 #include "mCamera.h"
 extern m::Application application;
@@ -24,6 +25,7 @@ namespace m
 		, cutPos(false)
 	{
 		AddComponent(new Transform());
+		AddComponent(new Animator());
 		if (mKey.empty() && mPath.empty()) return;
 		mImage = Resources::Load<Image>(mKey, mPath);
 
@@ -38,9 +40,11 @@ namespace m
 	}
 	void UI::Update()
 	{
+		GameObject::Update();
 	}
 	void UI::Render(HDC hdc)
 	{
+		GameObject::Render(hdc);
 		Transform* tr = GetComponent<Transform>();
 		Vector2 mPos = tr->GetPos();
 

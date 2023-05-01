@@ -91,9 +91,16 @@ namespace m {
 			func.AlphaFormat = mAlpha;
 			func.SourceConstantAlpha = mAnimator->GetConstant();
 
+			float fPosX = pos.x - mSpriteSheet[mSpriteIndex].size.x / 2.0;
+			float fPosY = pos.y - mSpriteSheet[mSpriteIndex].size.y / 2.0;
+			if (mAnimator->GetBackAnim())
+			{
+				fPosX = pos.x;
+				fPosY = pos.y;
+			}
 			AlphaBlend(hdc
-				, int(pos.x - mSpriteSheet[mSpriteIndex].size.x /2.0)
-				, int(pos.y - mSpriteSheet[mSpriteIndex].size.y /2.0)
+				, int(fPosX)
+				, int(fPosY)
 				, int(mSpriteSheet[mSpriteIndex].size.x * 2)
 				, int(mSpriteSheet[mSpriteIndex].size.y * 2)
 				, mImage->GetHdc()
