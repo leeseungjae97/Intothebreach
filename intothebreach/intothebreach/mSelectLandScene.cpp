@@ -72,7 +72,31 @@ namespace m
 
 		AddGameObject(upUiBox, LAYER_TYPE::UI);
 
+		for (int i = 0; i < 5; i++)
+		{
+			savePeopleNum[i] = new Background(L"", L"", 2);
+			reactorNum[i] = new Background(L"", L"", 2);
+			starNum[i] = new Background(L"", L"", 2);
+			defenceNum[i] = new Background(L"", L"", 2);
 
+			starNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 75 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			reactorNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 215 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			savePeopleNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 780 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			defenceNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 610 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+
+			savePeopleNum[i]->SetState(GameObject::STATE::Invisible);
+			starNum[i]->SetState(GameObject::STATE::Invisible);
+			reactorNum[i]->SetState(GameObject::STATE::Invisible);
+			defenceNum[i]->SetState(GameObject::STATE::Invisible);
+			AddGameObject(defenceNum[i], LAYER_TYPE::UI);
+			AddGameObject(reactorNum[i], LAYER_TYPE::UI);
+			AddGameObject(starNum[i], LAYER_TYPE::UI);
+			AddGameObject(savePeopleNum[i], LAYER_TYPE::UI);
+		}
 
 		for (int i = 0; i < MAX_GRID_POWER; i++)
 		{
@@ -102,6 +126,17 @@ namespace m
 			AddGameObject(back, LAYER_TYPE::UI);
 			clickableMechs.push_back(back);
 		}
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		{
+			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
+			bM->SetEC(false);
+			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
+			infoUnits.push_back(bM);
+			AddGameObject(bM, LAYER_TYPE::UI);
+		}
+
 		mechInfo = new Button(L"..\\Resources\\texture\\ui\\inventory\\mech_info.bmp", NO_BACK);
 		mechInfo->SetInner(true);
 		mechInfo->UseInnerAlpha(false);
@@ -221,6 +256,37 @@ namespace m
 	{
 
 		Scene::Update();
+		wstring wstr1 = std::to_wstring(GameComp::defence);
+		for (int i = 0; i < wstr1.size(); i++)
+		{
+			wchar_t ch = wstr1[i];
+			defenceNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			defenceNum[i]->SetState(GameObject::STATE::Visible);
+			defenceNum[i + 1]->SetTex(L"percente", L"..\\Resources\\texture\\ui\\percent.bmp");
+			defenceNum[i + 1]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr2 = std::to_wstring(GameComp::savedPeople);
+		for (int i = 0; i < wstr2.size(); i++)
+		{
+			wchar_t ch = wstr2[i];
+			savePeopleNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			savePeopleNum[i]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr3 = std::to_wstring(GameComp::reactor);
+		for (int i = 0; i < wstr3.size(); i++)
+		{
+			wchar_t ch = wstr3[i];
+			reactorNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			reactorNum[i]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr4 = std::to_wstring(GameComp::star);
+		for (int i = 0; i < wstr4.size(); i++)
+		{
+			wchar_t ch = wstr4[i];
+			starNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			starNum[i]->SetState(GameObject::STATE::Visible);
+		}
+
 		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
 		{
 			if (GameComp::inventoryItems.size() <= i)
@@ -539,13 +605,23 @@ namespace m
 
 			if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 			{
-				for (int i = 0; i < Islands.size() - 1; i++)
+				for (int i = 0; i < Islands.size(); i++)
 				{
 					Background* p = Islands[i];
 					if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 					{
-						SceneManager::LoadScene((SCENE_TYPE)i);
-						SceneManager::SelectLand(i);
+						GameComp::curLand = i;
+						if (i + (int)SCENE_TYPE::IN_LAND0 == (int)SCENE_TYPE::IN_LAND4)
+						{
+							SceneManager::LoadScene(SCENE_TYPE::COMBAT);
+							SceneManager::SelectLand((i + (int)SCENE_TYPE::IN_LAND0));
+						}
+						else
+						{
+							SceneManager::LoadScene((SCENE_TYPE)(i + (int)SCENE_TYPE::IN_LAND0));
+							SceneManager::SelectLand((i + (int)SCENE_TYPE::IN_LAND0));
+						}
+
 					}
 				}
 			}
@@ -562,24 +638,7 @@ namespace m
 	}
 	void SelectLandScene::OnEnter()
 	{
-		for (int i = 0; i < GameComp::mechInfos.size(); i++)
-		{
-			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
-				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
-
-			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
-				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 -bM->GetHeight()));
-
-			infoUnits.push_back(bM);
-			AddGameObject(bM, LAYER_TYPE::UI);
-		}
 	}
 	void SelectLandScene::OnExit()
-	{
-		for (int i = 0; i < infoUnits.size(); i++)
-		{
-			infoUnits[i]->SetState(GameObject::STATE::Delete);
-		}
-		infoUnits.clear();
-	}
+	{}
 }

@@ -36,45 +36,6 @@ namespace m
 	void CombatScene::Initialize()
 	{
 		Scene::Initialize();
-		//OPENFILENAME ofn = {};
-
-		//wchar_t szFilePath[256] = {};
-
-		//ZeroMemory(&ofn, sizeof(ofn));
-		//ofn.lStructSize = sizeof(ofn);
-		//ofn.hwndOwner = NULL;
-		//ofn.lpstrFile = szFilePath;
-		//ofn.lpstrFile[0] = '\0';
-		//ofn.nMaxFile = 256;
-		//ofn.lpstrFilter = L"All\0*.*\0Text\0*.TXT\0";
-		//ofn.nFilterIndex = 1;
-		//ofn.lpstrFileTitle = NULL;
-		//ofn.nMaxFileTitle = 0;
-		//ofn.lpstrInitialDir = NULL;
-		//ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-		//if (false == GetOpenFileName(&ofn))
-		//	return;
-
-		//FILE* file = nullptr;
-		//_wfopen_s(&file, szFilePath, L"rb");
-
-		//if (file == nullptr)
-		//	return;
-
-		//while (true)
-		//{
-		//	int index = -1;
-		//	TileID id;
-
-		//	if (fread(&index, sizeof(int), 1, file) == NULL)
-		//		break;
-
-		//	if (fread(&id.id, sizeof(TileID), 1, file) == NULL)
-		//		break;
-
-		//}
-		//fclose(file);
 		mechIdx = 0;
 		iTurn = 8;
 		Background* b0 = new Background(L"combatBackground1"
@@ -110,9 +71,7 @@ namespace m
 				AddGameObject(b_, LAYER_TYPE::BACKGROUND);
 			}
 		}
-		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]));
-		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]));
-		//GameComp::mMechs.push_back((Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]));
+
 
 		textDeploy = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT], A_BTN_BACK);
 		textDeploy->SetInner(true);
@@ -289,6 +248,17 @@ namespace m
 		boxPilot->SetPos(Vector2(boxPilot->GetPos().x/* + boxPilotBack->GetSize().x - boxPilot->GetInnerImage()->GetWidth()*/, boxPilotBack->GetPos().y));
 		boxPilot->SetState(GameObject::STATE::Invisible);
 
+		//Background* blackBack = new Background(L"", L"", 1, true);
+		//blackBack->SetBrush(BRUSH_TYPE::CUSTOM_BLACK2);
+		//blackBack->SetState(GameObject::STATE::Visible);
+		//blackBack->SetPos(Vector2(0, 0));
+		//AddGameObject(blackBack, LAYER_TYPE::BACKGROUND);
+
+		//Background* finalBack = new Background(L"bg_temp1.bmp", L"..\\Resources\\texture\\terrain\\cave\\bg_temp1.bmp", 2, false);
+		//finalBack->SetState(GameObject::STATE::Visible);
+		//finalBack->SetPos(Vector2(140, -135.f));
+		//AddGameObject(finalBack, LAYER_TYPE::BACKGROUND);
+
 		AddGameObject(textDeploy, LAYER_TYPE::UI);
 		AddGameObject(btnConfirm, LAYER_TYPE::UI);
 		AddGameObject(textTurn, LAYER_TYPE::UI);
@@ -308,13 +278,16 @@ namespace m
 		AddGameObject(boxPilot, LAYER_TYPE::UI);
 		AddGameObject(boxWPBack, LAYER_TYPE::UI);
 
-		// 임시로 메카위치 설정
-		// 마우스로 클릭한 땅에 메카가 떨어지게 설정해야됨
-		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
+
+		explosion = new Background(L"explosion", L"..\\Resources\\texture\\ui\\end\\final_bomb_explosion.bmp");
+		explosion->SetState(GameObject::STATE::Invisible);
+		AddGameObject(explosion, LAYER_TYPE::FRONT_UI3);
 		//object::Instantiate(Vector2(1, 0), LAYER_TYPE::STRUCT, STRUCTURES::bar);
+		//object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::factory);
+		
 		//object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::battry);
 		//object::Instantiate(Vector2(2, 0), LAYER_TYPE::STRUCT, STRUCTURES::energy);
-		//object::Instantiate(Vector2(3, 0), LAYER_TYPE::STRUCT, STRUCTURES::factory);
+		//object::Instantiate(Vector2(0, 0), LAYER_TYPE::STRUCT, STRUCTURES::airfield);
 		//object::Instantiate(Vector2(4, 0), LAYER_TYPE::STRUCT, STRUCTURES::hospital);
 		//object::Instantiate(Vector2(5, 0), LAYER_TYPE::STRUCT, STRUCTURES::military);
 		//object::Instantiate(Vector2(6, 0), LAYER_TYPE::STRUCT, STRUCTURES::power);
@@ -325,18 +298,6 @@ namespace m
 		//object::Instantiate(Vector2(3, 1), LAYER_TYPE::STRUCT, STRUCTURES::supply);
 		//object::Instantiate(Vector2(2, 1), LAYER_TYPE::STRUCT, STRUCTURES::timelab);
 		//object::Instantiate(Vector2(4, 1), LAYER_TYPE::STRUCT, STRUCTURES::wind);
-		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::artillery]);
-		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::tank]);
-		//object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, UNITS[(UINT)MECHS::punch]);
-
-		//object::Instantiate(Vector2(4, 3), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-		//object::Instantiate(Vector2(4, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain, TILE_T::GREEN);
-
-		//object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-
-		//object::Instantiate(Vector2(5, 3), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		//object::Instantiate(Vector2(5, 4), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
-		//object::Instantiate(Vector2(5, 5), LAYER_TYPE::STRUCT, STRUCTURES::mountain);
 
 
 	}
@@ -353,22 +314,20 @@ namespace m
 			randX += 5.f;
 			int randAlien[2] = { 6,7 };
 			int randUnit = rand() % 2;
-			if (GameComp::mAliens.size() == 0)
-				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
-			else
-			{
-				bool f = false;
-				vector<Alien*>::iterator iter = GameComp::mAliens.begin();
-				while (iter != GameComp::mAliens.end())
-				{
-					if ((*iter)->GetCoord() == Vector2(randX, randY))
-					{
-						f = true;
-						break;
-					}
-					else iter++;
-				}
 
+			bool f = false;
+			vector<Alien*>::iterator iter = GameComp::mAliens.begin();
+			while (iter != GameComp::mAliens.end())
+			{
+				if ((*iter)->GetCoord() == Vector2(randX, randY))
+				{
+					f = true;
+					break;
+				}
+				else iter++;
+			}
+			if (!f)
+			{
 				vector<Building*>::iterator iter2 = GetStructures().begin();
 				while (iter2 != GetStructures().end())
 				{
@@ -379,20 +338,62 @@ namespace m
 					}
 					else iter2++;
 				}
-				//for (int i = 0; i < GetStructuresTiles().size(); i++)
-				//{
-				//	if (f) break;
-				//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
-				//	{
-				//		f = true;
-				//		break;
-				//	}
-				//}
-				if (!f)
-				{
-					object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
-				}
 			}
+			
+			//for (int i = 0; i < GetStructuresTiles().size(); i++)
+			//{
+			//	if (f) break;
+			//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
+			//	{
+			//		f = true;
+			//		break;
+			//	}
+			//}
+			if (!f)
+			{
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+			}
+
+			//if (GameComp::mAliens.size() == 0)
+			//	object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+			//else
+			//{
+			//	bool f = false;
+			//	vector<Alien*>::iterator iter = GameComp::mAliens.begin();
+			//	while (iter != GameComp::mAliens.end())
+			//	{
+			//		if ((*iter)->GetCoord() == Vector2(randX, randY))
+			//		{
+			//			f = true;
+			//			break;
+			//		}
+			//		else iter++;
+			//	}
+
+			//	vector<Building*>::iterator iter2 = GetStructures().begin();
+			//	while (iter2 != GetStructures().end())
+			//	{
+			//		if ((*iter2)->GetCoord() == Vector2(randX, randY))
+			//		{
+			//			f = true;
+			//			break;
+			//		}
+			//		else iter2++;
+			//	}
+			//	//for (int i = 0; i < GetStructuresTiles().size(); i++)
+			//	//{
+			//	//	if (f) break;
+			//	//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
+			//	//	{
+			//	//		f = true;
+			//	//		break;
+			//	//	}
+			//	//}
+			//	if (!f)
+			//	{
+			//		object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+			//	}
+			//}
 		}
 	}
 	void CombatScene::PlayerTurnBackground()
@@ -825,6 +826,7 @@ namespace m
 		{
 			for (int x = 0; x < TILE_X; x++)
 			{
+				//switch (LAND_BATTLEFIELD[1][5][y][x])
 				switch (LAND_BATTLEFIELD[GameComp::curLand][GameComp::curLandSection][y][x])
 				{
 				case MOUNTAIN:
@@ -863,7 +865,11 @@ namespace m
 					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Firefly], ALIENS_RANK::BOSS, true);
 				}
 				break;
-
+				case BOMB:
+				{
+					object::Instantiate(Vector2(x, y), LAYER_TYPE::STRUCT, STRUCTURES::bomb, mapTileType, 3);
+				}
+				break;
 				}
 			}
 		}
@@ -934,7 +940,35 @@ namespace m
 	void CombatScene::Update()
 	{
 		Scene::Update();
-		LoadMap();
+		//if (KEY_PRESSED(KEYCODE_TYPE::B))
+		//{
+		//	GameComp::bomb->SetBlink(true);
+		//}
+		if (nullptr != GameComp::bomb)
+		{
+			if (GameComp::bomb->GetBombExplosive() || iTurn > 8)
+			{
+				GameComp::bomb->SetBlink(true);
+			}
+			if (GameComp::bomb->GetBlink())
+			{
+				GameComp::bomb->SetIdVar(GameComp::bomb->GetIdVar() + 0.5f);
+				if (GameComp::bomb->GetBlinkCnt() > 40)
+				{
+					explosion->SetSizeUpxUnit(1.05f);
+					explosion->SetSizeUpyUnit(1.05f);
+					explosion->SetPos(Vector2(GameComp::bomb->GetPos().x - explosion->GetWid() / 2
+						, GameComp::bomb->GetPos().y - explosion->GetHei() / 2));
+					explosion->SetState(GameObject::STATE::Visible);
+					explosion->SetSizeUp(true);
+				}
+			}
+		}
+		if (explosion->GetWid() / 5 > application.GetResolutionWidth())
+		{
+			SceneManager::LoadScene(SCENE_TYPE::ENDING);
+		}
+
 		if (!endGame)
 		{
 			if (!bSetPosition)
@@ -985,8 +1019,10 @@ namespace m
 				AlienIndexReSort();
 				ButtonActivationCondition();
 			}
-			if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1 + 1)
+			if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1 + 1
+				&& nullptr == GameComp::bomb)
 			{
+
 				showEnd = true;
 			}
 		}
@@ -1028,7 +1064,13 @@ namespace m
 			//	GameComp::mMechs[i]->SetState(GameObject::STATE::NoMove);
 			//}
 			GameComp::combatEnd = true;
-			SceneManager::LoadScene(SceneManager::GetSelectLand());
+			if (GameComp::curLand + (int)SCENE_TYPE::IN_LAND0 == (int)SCENE_TYPE::IN_LAND4)
+			{
+				GameComp::curLand = 5;
+				GameComp::curLandSection = 0;
+				SceneManager::LoadScene(SCENE_TYPE::COMBAT);
+			}else SceneManager::LoadScene(SceneManager::GetSelectLand());
+			
 		}
 	}
 	void CombatScene::Render(HDC hdc)
@@ -1042,12 +1084,21 @@ namespace m
 	void CombatScene::OnEnter()
 	{
 		GameComp::combatEnd = false;
-		//GameComp::curLandSection = 4;
+		GameComp::startGame();
+		//GameComp::curLandSection = 0;
+		//GameComp::curLand = 5;
+
 		//mapTileType = (TILE_T)TILE_T::GREEN;
 		//mapNum = 4;
-		//mapTileType = GameComp::curLand;
+		mapTileType = (TILE_T)GameComp::curLand;
 		Scene::MakeTile(TILE_X, TILE_Y, mapTileType, TILE_HEAD_T::ground);
 		SetMapType(mapTileType);
+
+		//if (GameComp::curLand == (int)SCENE_TYPE::IN_LAND4)
+		//{
+		//	GameComp::curLand = 5;
+		//	GameComp::curLandSection = 0;
+		//}
 		//for (int i = 0; i < GameComp::mMechs.size(); i++)
 		//	GameComp::mMechs[i]->SetState(GameObject::STATE::Delete);
 
@@ -1090,8 +1141,6 @@ namespace m
 		textDeploy->SetState(GameObject::STATE::Visible);
 		btnConfirm->SetState(GameObject::STATE::Visible);
 
-		RandSpawnAlien(1);
-
 		Scene::ClearMTiles(mapTileType, TILE_HEAD_T::ground);
 		infoUnits.clear();
 		for (int i = 0; i < GameComp::mMechs.size(); i++)
@@ -1122,24 +1171,12 @@ namespace m
 			AddGameObject(mech, LAYER_TYPE::UI);
 			infoUnits.push_back(mech);
 		}
+
+		LoadMap();
+		RandSpawnAlien(3);
 	}
 	void CombatScene::OnExit()
 	{
-		/*for (int i = 0; i < GameComp::mMechs.size(); i++)
-		{
-			[i];
-		}*/
-		//Safe_Delete_X_Vec(GameComp::mAliens);
-		//Safe_Delete_X_Vec(GameComp::mMechs);
-		//GameComp::mMechs.clear();
-		//for (int i = 0; i < GameComp::mMechs.size(); i++)
-		//{
-		//	GameComp::mMechs[i]->SetCoord(Vector2::Minus);
-		//	GameComp::mMechs[i]->SetFinalCoord(Vector2::Minus);
-		//	GameComp::mMechs[i]->SetPos(Vector2::Minus);
-		//	GameComp::mMechs[i]->SetFinalPos(Vector2::Minus);
-		//	GameComp::mMechs[i]->SetDeploy(true);
-		//}
 
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{

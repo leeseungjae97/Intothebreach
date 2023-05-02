@@ -137,6 +137,7 @@ namespace m
 			if (GetAnimator()->GetStopAnimator())
 			{
 				SetState(STATE::Death);
+				if (rType == ALIENS_RANK::BOSS) GameComp::bKillLeader = true;
 				SceneManager::GetActiveScene()->RemoveAffectUnit(GetCoord(), this);
 				vector<Alien*>::iterator iter = GameComp::mAliens.begin();
 				while (iter != GameComp::mAliens.end())

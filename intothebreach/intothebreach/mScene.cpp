@@ -371,6 +371,11 @@ namespace m
 			Vector2 mp = GameComp::mMechs[i]->GetFinalCoord();
 			map[(int)mp.y][(int)mp.x] = MECH;
 		}
+		if (nullptr != GameComp::bomb)
+		{
+			Vector2 mp = GameComp::bomb->GetFinalCoord();
+			map[(int)mp.y][(int)mp.x] = MECH;
+		}
 	}
 	void Scene::DrawFootTile()
 	{
@@ -519,6 +524,7 @@ namespace m
 			else
 			{
 				HitAffectUnit((int)curAlien->GetCoord().y, (int)curAlien->GetCoord().x, 1);
+				GameComp::iBlockCnt++;
 				curAttackAlien++;
 			}
 			return;
@@ -934,7 +940,16 @@ namespace m
 			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::MONSTER
 				&& GetAffectUnits(y, x)[i]->GetState() == GameObject::STATE::Broken) continue;
 
-			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::STRUCT) { GameComp::savedPeople -= 1; }
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::STRUCT) { 
+				GameComp::saveTurnPeople -= 20; 
+				GameComp::bStructureAlive = false;
+				GameComp::iGridDamageCnt++;
+				GameComp::iStructDesCnt++;
+			}
+			if (GetAffectUnits(y, x)[i]->GetButtonType() == LAYER_TYPE::PLAYER)
+			{
+				GameComp::iMechDamageCnt++;
+			}
 
 			GetAffectUnits(y, x)[i]->Hit(damage);
 		}

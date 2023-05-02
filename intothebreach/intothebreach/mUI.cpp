@@ -67,6 +67,7 @@ namespace m
 	void UI::SetTex(const wstring& key, const wstring& path)
 	{
 		mImage = Resources::Load<Image>(key, path);
+		/*SetSize(mImage->GetSize());*/
 	}
 	void UI::SetTex(const wstring& key, const wstring& path, ISLAND_T type)
 	{

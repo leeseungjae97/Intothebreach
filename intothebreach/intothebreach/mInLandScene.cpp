@@ -96,8 +96,34 @@ namespace m
 				, upUiBox->GetInnerImage()->GetHeight() / 2 - 30 / 2));
 			gridPower->SetState(GameObject::STATE::Visible);
 			AddGameObject(gridPower, LAYER_TYPE::UI);
-			gridPowers.push_back(gridPower);
+			upGridPowers.push_back(gridPower);
 		}
+		for (int i = 0; i < 5; i++)
+		{
+			savePeopleNum[i] = new Background(L"", L"",2);
+			reactorNum[i] = new Background(L"", L"",2);
+			starNum[i] = new Background(L"", L"",2);
+			defenceNum[i] = new Background(L"", L"",2);
+
+			starNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 75 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			reactorNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 215 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			savePeopleNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 780 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+			defenceNum[i]->SetPos(Vector2(upUiBox->GetPos().x + 610 + (i * 17)
+				, upUiBox->GetPos().y + upUiBox->GetSize().y / 2));
+
+			savePeopleNum[i]->SetState(GameObject::STATE::Invisible);
+			starNum[i] ->SetState(GameObject::STATE::Invisible);
+			reactorNum[i]->SetState(GameObject::STATE::Invisible);
+			defenceNum[i] ->SetState(GameObject::STATE::Invisible);
+			AddGameObject(defenceNum[i], LAYER_TYPE::UI);
+			AddGameObject(reactorNum[i], LAYER_TYPE::UI);
+			AddGameObject(starNum[i], LAYER_TYPE::UI);
+			AddGameObject(savePeopleNum[i], LAYER_TYPE::UI);
+		}
+		
 
 		for (int i = 0; i < 3; i++)
 		{
@@ -105,11 +131,19 @@ namespace m
 			back->SetSize(Vector2(110, 45));
 			back->SetPos(Vector2(45, 205 + 130 * i));
 			back->SetState(GameObject::STATE::Visible);
-			back->SetOSize(Vector2(110, 45));
-			back->SetResize(Vector2(110, 110));
-			back->SetResizeUnit(Vector2(30, 30));
 			AddGameObject(back, LAYER_TYPE::UI);
+
 			clickableMechs.push_back(back);
+		}
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		{
+			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
+			bM->SetEC(false);
+			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
+			infoUnits.push_back(bM);
+			AddGameObject(bM, LAYER_TYPE::UI);
 		}
 		boxBlackFade2 = new Background(ALPHA_BACK, ALPHA_BACK, 0, true, CENTER);
 		boxBlackFade2->SetAlpha(true);
@@ -126,6 +160,46 @@ namespace m
 			, application.GetResolutionHeight() / 2 - boxBattleResult->GetInnerImage()->GetHeight() / 2));
 		boxBattleResult->SetState(GameObject::STATE::Invisible);
 		AddGameObject(boxBattleResult, LAYER_TYPE::FRONT_UI);
+
+
+		for (int i = 0; i < 3; i++)
+		{
+			Button* pilot = new Button(L"", L"");
+			pilot->SetInner(true);
+			pilot->UseInnerAlpha(false);
+			pilot->SetPos(Vector2(420 + 95 * i, 415));
+			pilot->SetState(GameObject::STATE::Invisible);
+			AddGameObject(pilot, LAYER_TYPE::FRONT_UI);
+			boxResultPilots.push_back(pilot);
+		}
+
+		text1 = new Background(L"", L"");
+		text1->SetState(GameObject::STATE::Invisible);
+		text2 = new Background(L"", L"");
+		text2->SetState(GameObject::STATE::Invisible);
+
+		AddGameObject(text1, LAYER_TYPE::FRONT_UI);
+		AddGameObject(text2, LAYER_TYPE::FRONT_UI);
+		for (int i = 0; i < 3; i++)
+		{
+			resultPeopleNum[i] = new Background(L"", L"", 2);
+			resultPeopleNum[i]->SetPos(Vector2(boxBattleResult->GetPos().x + 390 + (i * 17),
+				boxBattleResult->GetPos().y + boxBattleResult->GetSize().y - 100));
+			resultPeopleNum[i]->SetState(GameObject::STATE::Invisible);
+			AddGameObject(resultPeopleNum[i], LAYER_TYPE::FRONT_UI);
+		}
+		for (int i = 0; i < 2; i++)
+		{
+			Background* gridPower = new Background(L"", L"");
+			Background* star = new Background(L"", L"");
+			star->SetState(GameObject::STATE::Invisible);
+			gridPower->SetState(GameObject::STATE::Invisible);
+			stars.push_back(star);
+			gridPowers.push_back(gridPower);
+
+			AddGameObject(gridPower, LAYER_TYPE::FRONT_UI);
+			AddGameObject(star, LAYER_TYPE::FRONT_UI);
+		}
 
 		btnResultClose = new Button(L"..\\Resources\\texture\\ui\\inLand\\result_okay.bmp", NO_BACK);
 		btnResultClose->SetInner(true);
@@ -256,6 +330,49 @@ namespace m
 	void InLandScene::Update()
 	{
 		Scene::Update();
+		if (KEY_PRESSED(KEYCODE_TYPE::RBTN))
+		{
+			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
+		}
+		//int n1 = 10;
+		wstring wstr1 = std::to_wstring(GameComp::defence);
+		for (int i = 0; i < wstr1.size(); i++)
+		{
+			wchar_t ch = wstr1[i];
+			defenceNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			defenceNum[i]->SetState(GameObject::STATE::Visible);
+			defenceNum[i + 1]->SetTex(L"percente", L"..\\Resources\\texture\\ui\\percent.bmp");
+			defenceNum[i + 1]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr2 = std::to_wstring(GameComp::savedPeople);
+		for (int i = 0; i < wstr2.size(); i++)
+		{
+			wchar_t ch = wstr2[i];
+			savePeopleNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			savePeopleNum[i]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr3 = std::to_wstring(GameComp::reactor);
+		for (int i = 0; i < wstr3.size(); i++)
+		{
+			wchar_t ch = wstr3[i];
+			reactorNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			reactorNum[i]->SetState(GameObject::STATE::Visible);
+		}
+		wstring wstr4 = std::to_wstring(GameComp::star);
+		for (int i = 0; i < wstr4.size(); i++)
+		{
+			wchar_t ch = wstr4[i];
+			starNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
+			starNum[i]->SetState(GameObject::STATE::Visible);
+		}
+		for (int i = 0; i < MAX_GRID_POWER; i++)
+		{
+			wstring gridImageStr = L"";
+			if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+			upGridPowers[i]->ChangeInner(gridImageStr);
+		}
 		COLORREF color = GetPixel(application.GetHdc(), MOUSE_POS.x, MOUSE_POS.y);
 		int checkFinal = 0;
 		for (int i = 0; i < mSections.size(); i++)
@@ -302,6 +419,7 @@ namespace m
 					{
 						GameComp::clearLandMatric[GameComp::curLand][GameComp::curLandSection] = CLEAR;
 						mMissionsPreview[GameComp::curLandSection]->SetState(GameObject::STATE::Invisible);
+						//SceneManager::SelectLand(GameComp::curLandSection);
 						SceneManager::LoadScene(SCENE_TYPE::COMBAT);
 						return;
 					}
@@ -388,10 +506,19 @@ namespace m
 			boxBattleResult->SetState(GameObject::STATE::Invisible);
 			btnResultClose->SetState(GameObject::STATE::Invisible);
 			boxBlackFade->SetState(GameObject::STATE::Invisible);
+			text1->SetState(GameObject::STATE::Invisible);
+			text2->SetState(GameObject::STATE::Invisible);
+			GameComp::savedPeople += GameComp::saveTurnPeople;
+			for (int i = 0; i < 2; i++)
+			{
+				stars[i]->SetState(GameObject::STATE::Invisible);
+				gridPowers[i]->SetState(GameObject::STATE::Invisible);
+			}
 			for (int i = 0; i < boxResultPilots.size(); i++)
 			{
 				boxResultPilots[i]->SetState(GameObject::STATE::Invisible);
 			}
+			for(int i = 0 ; i < 3; i++) resultPeopleNum[i]->SetState(GameObject::STATE::Invisible);
 			//GameComp::combatEnd = false;
 		}
 		for (int i = 0; i < clickableMechs.size(); i++)
@@ -666,40 +793,198 @@ namespace m
 		{
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
-		for (int i = 0; i < 3; i++)
-		{
-			Button* pilot = new Button(PILOT_PATH[(UINT)GameComp::mPilots[i]], NO_BACK);
-			pilot->SetInner(true);
-			pilot->UseInnerAlpha(false);
-			pilot->SetPos(Vector2(420 + 95 * i, 415));
-			pilot->SetState(GameObject::STATE::Invisible);
-			AddGameObject(pilot, LAYER_TYPE::UI);
-			boxResultPilots.push_back(pilot);
-		}
-		//GameComp::combatEnd = true;
+		GameComp::combatEnd = true;
+		//GameComp::curLandSection = 5;
+		//GameComp::curLand = 2;
 		if (GameComp::combatEnd)
 		{
-			GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
-			if(MAX_GRID_POWER >= 8) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
-			else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
-
-			for (int i = 0; MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0]; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				Background* star = new Background(L"mission_star_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star_off.bmp", 2);
-				star->SetPos(Vector2(boxBattleResult->GetPos().x + 80 , boxBattleResult->GetPos().y + 80));
-				AddGameObject(star, LAYER_TYPE::FRONT_UI);
+				boxResultPilots[i]->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[i]]);
+				boxResultPilots[i]->SetTex(NO_BACK, NO_BACK);
+				boxResultPilots[i]->SetState(GameObject::STATE::Visible);
 			}
-			Background* text1 = new Background(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
-				MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0], 2);
 
-
-			for (int i = 0; MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1]; i++)
+			wstring wstr1 = std::to_wstring(GameComp::saveTurnPeople);
+			for (int i = 0; i < wstr1.size(); i++)
 			{
-				Background* gridPower = new Background(L"mission_power_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power_off.bmp", 2);
-				AddGameObject(gridPower, LAYER_TYPE::FRONT_UI);
+				wchar_t ch = wstr1[i];
+				resultPeopleNum[i]->SetTex(BOLD_NUM_PATH[ch - 48]
+					, BOLD_NUM_PATH[ch - 48]);
+				resultPeopleNum[i]->SetState(GameObject::STATE::Visible);
 			}
-			Background* text2 = new Background(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
-				MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0], 2);
+			//GameComp::savedPeople += GameComp::saveTurnPeople;
+			//GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
+			//if (MAX_GRID_POWER >= 8) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+			//else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+
+			if (MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0] != 0)
+			{
+				int size = MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0] - 1;
+				bool questClear = false;
+				bool p2 = false;
+				switch ((MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+				{
+				case MISSIONS::LEADER:
+				{
+					if (GameComp::bKillLeader) questClear = true;
+				}
+				break;
+				case MISSIONS::KILLCNT:
+				{
+					if (GameComp::iKillEnCnt >= 5) questClear = true;
+				}
+				break;
+				case MISSIONS::PROTECT:
+				{
+					if (GameComp::bStructureAlive) questClear = true;
+				}
+				break;
+				case MISSIONS::GRID_D:
+				{
+					if (GameComp::iGridDamageCnt < 3) questClear = true;
+				}
+				break;
+				case MISSIONS::MECH_D3:
+				{
+					if (GameComp::iMechDamageCnt < 3) questClear = true;
+				}
+				break;
+				case MISSIONS::MECH_D4:
+				{
+					if (GameComp::iMechDamageCnt < 4) questClear = true;
+				}
+				break;
+				case MISSIONS::BLOCKCNT:
+				{
+					if (GameComp::iBlockCnt >= 3) questClear = true;
+				}
+				break;
+				case MISSIONS::NO_D:
+				{
+					if (GameComp::iMechDamageCnt == 0) questClear = true;
+				}
+				break;
+				}
+				for (int i = 0; i < MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0]; i++)
+				{
+					if (MISSIONS::PROTECT_2 == (MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+					{
+						if (i <= GameComp::iStructDesCnt) stars[i]->SetTex(L"mission_star_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star_off.bmp");
+						else
+						{
+							stars[i]->SetTex(L"mission_star_on", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star.bmp");
+							GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
+						}
+					}
+					else
+					{
+						if (!questClear) stars[i]->SetTex(L"mission_star_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star_off.bmp");
+						else
+						{
+							stars[i]->SetTex(L"mission_star_on", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\star.bmp");
+							GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
+						}
+					}
+					
+
+					stars[i]->SetPos(Vector2(boxBattleResult->GetPos().x + 160 + (i * stars[i]->GetSize().x), boxBattleResult->GetPos().y + 80));
+					stars[i]->SetState(GameObject::STATE::Visible);
+				}
+				text1->SetTex(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
+					MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0]);
+				text1->SetPos(Vector2(stars[size]->GetPos().x + stars[size]->GetSize().x + 15,
+					stars[size]->GetPos().y + stars[size]->GetSize().y / 2 - text1->GetSize().y / 2));
+				text1->SetState(GameObject::STATE::Visible);
+			}
+
+			if (MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1] != 0)
+			{
+				int size = MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1] - 1;
+				bool questClear = false;
+				bool p2 = false;
+				switch ((MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+				{
+				case MISSIONS::LEADER:
+				{
+					if (GameComp::bKillLeader) questClear = true;
+				}
+				break;
+				case MISSIONS::KILLCNT:
+				{
+					if (GameComp::iKillEnCnt >= 5) questClear = true;
+				}
+				break;
+				case MISSIONS::PROTECT:
+				{
+					if (GameComp::bStructureAlive) questClear = true;
+				}
+				case MISSIONS::PROTECT_2:
+				{
+					if (GameComp::iStructDesCnt < 2) questClear = true;
+					p2 = true;
+				}
+				break;
+				case MISSIONS::GRID_D:
+				{
+					if (GameComp::iGridDamageCnt < 3) questClear = true;
+				}
+				break;
+				case MISSIONS::MECH_D3:
+				{
+					if (GameComp::iMechDamageCnt < 3) questClear = true;
+				}
+				break;
+				case MISSIONS::MECH_D4:
+				{
+					if (GameComp::iMechDamageCnt < 4) questClear = true;
+				}
+				break;
+				case MISSIONS::BLOCKCNT:
+				{
+					if (GameComp::iBlockCnt >= 3) questClear = true;
+				}
+				break;
+				case MISSIONS::NO_D:
+				{
+					if (GameComp::iMechDamageCnt == 0) questClear = true;
+				}
+				break;
+				}
+
+				for (int i = 0; i < MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1]; i++)
+				{
+					if (MISSIONS::PROTECT_2 == (MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+					{
+						if (i <= GameComp::iStructDesCnt) gridPowers[i]->SetTex(L"mission_grid_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power_off.bmp");
+						else
+						{
+							gridPowers[i]->SetTex(L"mission_grid_on", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power.bmp");
+							if (GameComp::gridPower >= MAX_GRID_POWER) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+							else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+						}
+					}
+					else
+					{
+						if (!questClear) gridPowers[i]->SetTex(L"mission_power_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power_off.bmp");
+						else
+						{
+							gridPowers[i]->SetTex(L"mission_power_on", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power.bmp");
+							if (GameComp::gridPower >= MAX_GRID_POWER) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+							else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
+						}
+					}
+
+					gridPowers[i]->SetPos(Vector2(boxBattleResult->GetPos().x + 160 + (i * gridPowers[i]->GetSize().x), boxBattleResult->GetPos().y + 120));
+					gridPowers[i]->SetState(GameObject::STATE::Visible);
+				}
+				text2->SetTex(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
+					MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0]);
+				text2->SetPos(Vector2(gridPowers[size]->GetPos().x + gridPowers[size]->GetSize().x + 15
+					, gridPowers[size]->GetPos().y + gridPowers[size]->GetSize().y / 2 - text2->GetSize().y / 2));
+				text2->SetState(GameObject::STATE::Visible);
+			}
+
 
 			boxBattleResult->SetState(GameObject::STATE::Visible);
 			btnResultClose->SetState(GameObject::STATE::Visible);
@@ -711,29 +996,21 @@ namespace m
 			GameComp::combatEnd = false;
 		}
 
-		for (int i = 0; i < GameComp::mechInfos.size(); i++)
-		{
-			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
-				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
-
-			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
-				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
-
-			infoUnits.push_back(bM);
-			AddGameObject(bM, LAYER_TYPE::UI);
-		}
+		//for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		//{
+		//	//Background* getSizeback = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
+		//	//	, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
+		//	//infoUnits[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
+		//	//	, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
+		//	//float fwid = clickableMechs[i]->GetPos().x + (clickableMechs[i]->GetSize().x / 2) - abs(getSizeback->GetWidth());
+		//	//float fhei = clickableMechs[i]->GetPos().y + (clickableMechs[i]->GetSize().y / 2) - abs(getSizeback->GetHeight());
+		//	//infoUnits[i]->SetState(GameObject::STATE::Visible);
+		//	//infoUnits[i]->SetPos(Vector2::Zero);
+		//	//infoUnits[i]->SetPos(Vector2(fwid, fhei));
+		//	//delete getSizeback;
+		//}
 	}
 	void InLandScene::OnExit()
 	{
-		for (int i = 0; i < boxResultPilots.size(); i++)
-		{
-			boxResultPilots[i]->SetState(GameObject::STATE::Delete);
-		}
-		boxResultPilots.clear();
-		for (int i = 0; i < infoUnits.size(); i++)
-		{
-			infoUnits[i]->SetState(GameObject::STATE::Delete);
-		}
-		infoUnits.clear();
 	}
 }

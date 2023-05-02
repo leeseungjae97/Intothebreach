@@ -31,6 +31,12 @@ namespace m {
 		vMovement = Vector2::Zero;
 		bSmoothDisappear = false;
 		bSmoothAppear = false;
+		bSizeUp = false;
+		sizeUpUnity = 1;
+		sizeUpUnitx = 1;
+		iWid = 0;
+		iHei = 0;
+		mType = BRUSH_TYPE::CUSTOM_BLACK;
 		//mAnimator = GetComponent<Animator>();
 	}
 	Background::~Background() {
@@ -60,10 +66,12 @@ namespace m {
 
 		UINT iWidth;
 		UINT iHeight;
+		if(iWid == 0) iWid = mImage->GetWidth();
+		if (iHei == 0) iHei = mImage->GetHeight();
 		if (bCreateAnimation) return;
 		if (mImage == nullptr)
 		{
-			SelectGDI tmp(hdc, BRUSH_TYPE::CUSTOM_BLACK);
+			SelectGDI tmp(hdc, mType);
 			Rectangle(hdc, 0, 0, application.GetResolutionWidth()
 				, application.GetResolutionHeight());
 		}
@@ -90,7 +98,11 @@ namespace m {
 				iWidth *= mSizeUp;
 				iHeight *= mSizeUp;
 			}
-
+			if (bSizeUp)
+			{
+				iHei *= sizeUpUnity;
+				iWid *= sizeUpUnitx;
+			}
 			if (mDir & CENTER)
 			{
 				if (!cutPos)
@@ -172,32 +184,66 @@ namespace m {
 						iConstant += idVar * idDir;
 					}	
 				}
+				if (sizeUpUnity != 1.f)
+				{
+					AlphaBlend(hdc
+						, (int)(mPos.x)
+						, (int)(mPos.y)
+						, (int)(iWid)
+						, (int)(iHei)
+						, mImage->GetHdc()
+						, 0
+						, 0
+						, (int)(mImage->GetWidth())
+						, (int)(mImage->GetHeight())
+						, func);
+				}
+				else
+				{
+					AlphaBlend(hdc
+						, (int)(mPos.x)
+						, (int)(mPos.y)
+						, (int)(iWidth)
+						, (int)(iHeight)
+						, mImage->GetHdc()
+						, 0
+						, 0
+						, (int)(mImage->GetWidth())
+						, (int)(mImage->GetHeight())
+						, func);
+				}
 
-				AlphaBlend(hdc
-					, (int)(mPos.x)
-					, (int)(mPos.y)
-					, (int)(iWidth)
-					, (int)(iHeight)
-					, mImage->GetHdc()
-					, 0
-					, 0
-					, (int)(mImage->GetWidth())
-					, (int)(mImage->GetHeight())
-					, func);
 			}
 			else
 			{
-				TransparentBlt(hdc
-					, (int)(mPos.x)
-					, (int)(mPos.y)
-					, (int)(iWidth)
-					, (int)(iHeight)
-					, mImage->GetHdc()
-					, 0
-					, 0
-					, (int)(mImage->GetWidth())
-					, (int)(mImage->GetHeight())
-					, RGB(255, 0, 255));
+				if (sizeUpUnity != 1.f)
+				{
+					TransparentBlt(hdc
+						, (int)(mPos.x)
+						, (int)(mPos.y)
+						, (int)(iWid)
+						, (int)(iHei)
+						, mImage->GetHdc()
+						, 0
+						, 0
+						, (int)(mImage->GetWidth())
+						, (int)(mImage->GetHeight())
+						, RGB(255, 0, 255));
+				}
+				else
+				{
+					TransparentBlt(hdc
+						, (int)(mPos.x)
+						, (int)(mPos.y)
+						, (int)(iWidth)
+						, (int)(iHeight)
+						, mImage->GetHdc()
+						, 0
+						, 0
+						, (int)(mImage->GetWidth())
+						, (int)(mImage->GetHeight())
+						, RGB(255, 0, 255));
+				}
 			}
 		}
 	}

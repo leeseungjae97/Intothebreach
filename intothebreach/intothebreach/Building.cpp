@@ -9,14 +9,28 @@
 #include "mTile.h"
 #include "mImage.h"
 namespace m {
-	Building::Building(STRUCTURES _type, Vector2 _coord, int idx, TILE_T _mapType)
-		: Unit(_coord, 0, 0, WEAPON_T::NONE, idx, 0)
+	Building::Building(STRUCTURES _type, Vector2 _coord, int idx, TILE_T _mapType, int hp)
+		: Unit(_coord, 0, hp, WEAPON_T::NONE, idx, 0)
 		, mType(_type)
 		, mapType(_mapType)
+		, iBlinkCnt(0)
+		, iDVar(1)
+		, iDir(1)
+		, iConstant(1)
+		, bBlink(false)
 	{
 		
-
-		if (mType == STRUCTURES::mountain)
+		if (mType == STRUCTURES::bomb)
+		{
+			Image* imn = Resources::Load<Image>(L"..\\Resources\\texture\\units\\mission\\bomb.bmp"
+				, L"..\\Resources\\texture\\units\\mission\\bomb.bmp");
+			SetCurImage(imn);
+			//imn->SetOffset();
+			SetState(STATE::Idle);
+			SetVisibleHp(true);
+			GameComp::bomb = this;
+		}
+		else if (mType == STRUCTURES::mountain)
 		{
 			gridIcon = nullptr;
 			Image* imn = Resources::Load<Image>(MAKE_TILE_KEY(mapType, TILE_HEAD_T::mountain)
@@ -79,6 +93,7 @@ namespace m {
 	}
 	void Building::Update() {
 		Unit::Update();
+		
 		switch (GetState())
 		{
 		case m::GameObject::STATE::Idle:
@@ -108,7 +123,55 @@ namespace m {
 	void Building::Render(HDC hdc) {
 		Unit::Render(hdc);
 		//Vector2 mPos = GetPos();
+		Vector2 mPos = GetPos();
+		if (mType == STRUCTURES::bomb)
+		{
+			if (bBlink)
+			{
+				iConstant += iDVar * iDir;
+				if (iConstant + iDVar >= 255 || iConstant - iDVar <= 0)
+				{
+					iDir *= -1;
+					iBlinkCnt++;
+				}
+			}
+			
 
+			BLENDFUNCTION func = {};
+			func.BlendOp = AC_SRC_OVER;
+			func.BlendFlags = 0;
+			func.AlphaFormat = AC_SRC_ALPHA;
+			func.SourceConstantAlpha = iConstant;
+			Image* im1 = Resources::Load<Image>(L"bombGlow", L"..\\Resources\\texture\\units\\mission\\bomb_glow.bmp");
+			Image* im2 = Resources::Load<Image>(L"bombLight", L"..\\Resources\\texture\\units\\mission\\bomb_lights2.bmp");
+
+			AlphaBlend(
+				hdc
+				, (int)(mPos.x - im1->GetWidth() / 2)
+				, (int)(mPos.y - im1->GetHeight() / 2)
+				, (int)im1->GetWidth() * 2
+				, (int)im1->GetHeight() * 2
+				, im1->GetHdc()
+				, 0
+				, 0
+				, (int)im1->GetWidth()
+				, (int)im1->GetHeight()
+				, func);
+
+			AlphaBlend(
+				hdc
+				, (int)(mPos.x - im2->GetWidth() / 2)
+				, (int)(mPos.y - im2->GetHeight() / 2)
+				, (int)im2->GetWidth() * 2
+				, (int)im2->GetHeight() * 2
+				, im2->GetHdc()
+				, 0
+				, 0
+				, (int)im2->GetWidth()
+				, (int)im2->GetHeight()
+				, func);
+
+		}
 		//mPos.x += GetCurImage()->GetWidth() / 2;
 		if (gridIcon)
 		{
@@ -130,27 +193,43 @@ namespace m {
 	}
 	void Building::Hit(int damage)
 	{
-		if (GetState() == STATE::Broken)
+		if (mType == STRUCTURES::bomb)
 		{
-			if (mType == STRUCTURES::mountain)
-			{
-				SetState(STATE::Explo);
-			}
+			if (GetCurHp() < damage) SetCurHp(0);
+			else SetCurHp(GetCurHp() - damage);
+			if (GetCurHp() == 0) SetState(STATE::Broken);
 		}
 		else
 		{
-			if (mType != STRUCTURES::mountain)
+			if (GetState() == STATE::Broken)
 			{
-				GameComp::gridPower -= 1;
-				gridIcon = nullptr;
+				if (mType == STRUCTURES::mountain)
+				{
+					SetState(STATE::Explo);
+				}
 			}
-			SetState(STATE::Broken);
+			else
+			{
+				if (mType != STRUCTURES::mountain)
+				{
+					GameComp::gridPower -= 1;
+					gridIcon = nullptr;
+				}
+				SetState(STATE::Broken);
+			}
 		}
+		
 		
 	}
 	void Building::idle()
 	{
-		if (mType != STRUCTURES::mountain)
+		if (mType == STRUCTURES::bomb)
+		{
+			Image* imn = Resources::Load<Image>(L"..\\Resources\\texture\\units\\mission\\bomb.bmp"
+				, L"..\\Resources\\texture\\units\\mission\\bomb.bmp");
+			SetCurImage(imn);
+		}
+		else if (mType != STRUCTURES::mountain)
 		{
 			SetCurImage(GetMImages()[(UINT)STRUCTURES_CONDITION_T::On]);
 			if (nullptr == gridIcon)
@@ -166,7 +245,27 @@ namespace m {
 	}
 	void Building::broken()
 	{
-		if (mType == STRUCTURES::mountain)
+		if (mType == STRUCTURES::bomb)
+		{
+			bBombExplosive = true;
+			Image* imn = Resources::Load<Image>(L"bomb_death", L"..\\Resources\\texture\\units\\mission\\bomb_death.bmp");
+			GetAnimator()->Stop();
+			if (nullptr == GetAnimator()->FindAnimation(L"bomb_death"))
+			{
+				GetAnimator()->CreateAnimation(
+					L"bomb_death",
+					imn,
+					Vector2::Zero,
+					Vector2(45.f, 35.f),
+					Vector2::Zero,
+					11,
+					0.2f
+				);
+			}
+			if (GetAnimator()->GetStopAnimator())
+				GetAnimator()->Play(L"bomb_death", false);
+		}
+		else if (mType == STRUCTURES::mountain)
 		{
 			Image* im = Resources::Load<Image>(MAKE_TILE_KEY(mapType, TILE_HEAD_T::mountain_broken)
 				, MAKE_TILE_PATH(mapType, TILE_HEAD_T::mountain_broken));

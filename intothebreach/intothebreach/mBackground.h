@@ -26,9 +26,15 @@ namespace m {
         void SetIdVar(int _v) { idVar = _v; }
         void CreateAnimationBack(const wstring& key, const wstring& path, int len, float duration);
         void SetAnimation(bool _b) { bCreateAnimation = _b; }
-
+        void SetBrush(BRUSH_TYPE _type) { mType = _type; }
+        void SetSizeUp(bool _b) { bSizeUp = _b; }
+        void SetSizeUpxUnit(float _sizeup) { sizeUpUnitx = _sizeup; }
+        void SetSizeUpyUnit(float _sizeup) { sizeUpUnity = _sizeup; }
+        float GetWid() { return iWid; }
+        float GetHei() { return iHei; }
         bool GetSmoothAppear() { return bSmoothAppear; }
         bool GetSmoothDisappear() { return bSmoothDisappear; }
+        bool GetSizeUp() { return bSizeUp; }
         Vector2 GetOriginPos() { return originPos; }
     private :
         int iConstant;
@@ -38,10 +44,18 @@ namespace m {
         bool bSmoothAppear;
         bool bSmoothDisappear;
         bool bCreateAnimation;
+        bool bSizeUp;
+        float sizeUpUnitx;
+        float sizeUpUnity;
 
+        float iWid;
+        float iHei;
+        BRUSH_TYPE mType;
         Animator* mAnimator;
         Vector2 vMovement;
         Vector2 originPos;
+
+
     };
 
 }

@@ -53,6 +53,7 @@
 
 #define LEADER_FIREFLY		-4
 #define LEADER_HORNET		-5
+#define BOMB				-6
 
 #define CLEAR 1
 #define INVASION 2

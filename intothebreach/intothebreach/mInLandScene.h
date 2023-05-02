@@ -28,13 +28,26 @@ namespace m {
 		Button* upUiBox;
 		Button* boxBattleResult;
 		Button* btnResultClose;
-		Button* savePeople;
+		//Button* savePeople;
+		vector<Background*> stars;
+		vector<Background*> gridPowers;
+
+		Background* savePeopleNum[5];
+		Background* reactorNum[5];
+		Background* starNum[5];
+		Background* defenceNum[5];
+		Background* resultPeopleNum[3];
+
+
 		vector<Button*> boxResultPilots;
-		Background* boxBlackFade;
 		Background* boxBlackFade2;
-		vector<Button*> gridPowers;
+		Background* text1;
+		Background* text2;
+
+		Background* boxBlackFade;
 		vector<Background*> infoUnits;
 		vector<Button*> clickableMechs;
+		vector<Button*> upGridPowers;
 
 		Button* mechInfo;
 		Button* boxDragPilot;

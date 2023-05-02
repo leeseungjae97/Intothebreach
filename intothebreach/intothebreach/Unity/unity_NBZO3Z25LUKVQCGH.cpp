@@ -5,6 +5,9 @@
 #include "E:\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
+#include "E:\intothebreach\intothebreach\intothebreach\mBomb.cpp"
+
+
 #include "E:\intothebreach\intothebreach\intothebreach\mButton.cpp"
 
 

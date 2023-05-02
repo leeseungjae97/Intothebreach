@@ -1,5 +1,6 @@
 #include "mSkill_MultiDir_St.h"
 #include "mSkill_St.h"
+#include "mUnit.h"
 namespace m
 {
 	Skill_MultiDir_St::Skill_MultiDir_St(WEAPON_T _type, Unit* onwer, int _num)
@@ -26,6 +27,14 @@ namespace m
 	}
 	void Skill_MultiDir_St::Update()
 	{
+		if (GetOwner()->GetState() == GameObject::STATE::Death
+			|| GetOwner()->GetState() == GameObject::STATE::Delete)
+		{
+			for (int i = 0; i < mSkills.size(); i++)
+			{
+				mSkills[i]->SetState(GameObject::STATE::Delete);
+			}
+		}
 		for (int i = 0; i < mSkills.size(); i++)
 		{
 			mSkills[i]->Update();

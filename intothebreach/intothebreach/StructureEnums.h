@@ -19,6 +19,7 @@ enum class STRUCTURES {
 	wind,
 	train,
 	mountain,
+	bomb,
 	END,
 };
 enum class HITABLE_ENVI

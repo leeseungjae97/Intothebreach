@@ -20,10 +20,10 @@ namespace m
 		mScenes.resize((UINT)SCENE_TYPE::END);
 
 		mScenes[(UINT)SCENE_TYPE::TITLE] = new TitleScene();
+		mScenes[(UINT)SCENE_TYPE::SELECT_ROBOT] = new SelectRobotScene();
 		mScenes[(UINT)SCENE_TYPE::ENDING] = new EndingScene();
 		mScenes[(UINT)SCENE_TYPE::INTRO] = new IntroScene();
 		mScenes[(UINT)SCENE_TYPE::SELECT_LAND] = new SelectLandScene();
-		mScenes[(UINT)SCENE_TYPE::SELECT_ROBOT] = new SelectRobotScene();
 		mScenes[(UINT)SCENE_TYPE::COMBAT] = new CombatScene();
 		mScenes[(UINT)SCENE_TYPE::IN_LAND0] = new InLandScene(ISLAND_T::ISLAND0);
 		mScenes[(UINT)SCENE_TYPE::IN_LAND1] = new InLandScene(ISLAND_T::ISLAND1);
@@ -38,8 +38,8 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::SELECT_LAND];
-		LoadScene(SCENE_TYPE::SELECT_LAND);
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::TITLE];
+		//LoadScene(SCENE_TYPE::TITLE);
 	}
 
 	void SceneManager::Update()

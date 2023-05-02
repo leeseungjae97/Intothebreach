@@ -26,6 +26,11 @@ namespace m {
 		vector<Button*> clickableMechs;
 		Background* boxBlackFade;
 
+		Background* savePeopleNum[5];
+		Background* reactorNum[5];
+		Background* starNum[5];
+		Background* defenceNum[5];
+
 		Button* mechInfo;
 		Button* boxDragPilot;
 		Button* boxDragSkill1;

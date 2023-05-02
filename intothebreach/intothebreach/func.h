@@ -15,6 +15,7 @@
 #include "Building.h"
 #include "Mech.h"
 #include "Alien.h"
+#include "mBomb.h"
 namespace m::object
 {
 	template <typename T>
@@ -87,10 +88,10 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType, TILE_T mapType)
+	static inline Building* Instantiate(Vector2 coord, LAYER_TYPE type, STRUCTURES _sType, TILE_T mapType, int hp = 0)
 	{
 		Scene* scene = SceneManager::GetActiveScene();
-		Building* gameObj = new Building(_sType, coord, (int)scene->GetStructures().size(), mapType);
+		Building* gameObj = new Building(_sType, coord, (int)scene->GetStructures().size(), mapType, hp);
 
 		gameObj->Initialize();
 		gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
@@ -103,22 +104,6 @@ namespace m::object
 		scene->AddGameObject(gameObj, type);
 		return gameObj;
 	}
-	//static inline Alien* Instantiate(Vector2 coord, LAYER_TYPE type, int unitName)
-	//{
-	//	Scene* scene = SceneManager::GetActiveScene();
-	//	Alien* gameObj = new Alien(unitName, coord, scene->GetAliens().size());
-
-	//	gameObj->Initialize();
-	//	gameObj->SetPos(scene->GetPosTiles()[(int)coord.y][(int)coord.x]->GetCenterPos());
-	//	gameObj->SetFinalPos(gameObj->GetPos());
-	//	gameObj->GetAnimator()->SetConstant(255);
-	//	gameObj->SetLayerType(type);
-
-	//	scene->GetAliens().push_back(gameObj);
-
-	//	scene->AddGameObject(gameObj, type);
-	//	return gameObj;
-	//}
 
 	static inline Skill* Instantiate(Vector2 stPos, Vector2 edPos, LAYER_TYPE type, WEAPON_T _type, Unit* unit)
 	{

@@ -29,7 +29,7 @@ namespace m
 
 		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::flame, {BASIC_WEAPON_TYPE[(UINT)MECHS::flame]} });
 		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::tank, {BASIC_WEAPON_TYPE[(UINT)MECHS::tank]} });
-		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::mirror, {BASIC_WEAPON_TYPE[(UINT)MECHS::mirror]} });
+		GameComp::mechInfos.push_back(GameComp::MechInfo{ (int)MECHS::punch, {BASIC_WEAPON_TYPE[(UINT)MECHS::punch]} });
 		GameComp::mPilots[0] = PILOT_T::Pilot_Original;
 		GameComp::mPilots[1] = PILOT_T::Pilot_Ice;
 		GameComp::mPilots[2] = PILOT_T::Pilot_Sand;

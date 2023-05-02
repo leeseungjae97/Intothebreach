@@ -34,6 +34,7 @@ namespace m{
 		void SetCutPos(bool _cp) { cutPos = _cp; }
 		void SetEC(bool _ec) { effectCamera = _ec; }
 		void SetAlpha(bool _mA) { mAlpha = _mA; }
+		void SetSizeUp(int _sizeUpScale) { mSizeUp = _sizeUpScale; }
 		Image* GetImage() { return mImage; }
 
 	protected:

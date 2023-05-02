@@ -80,6 +80,8 @@ namespace m
 		int mapNum;
 		int mechIdx;
 		int iTurn;
+
+		Background* explosion;
 	};
 }
 

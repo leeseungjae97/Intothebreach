@@ -322,6 +322,7 @@
     <ClInclude Include="mSkill_MultiDir_St.h">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClInclude>
+    <ClInclude Include="mBomb.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -466,5 +467,6 @@
     <ClCompile Include="mSkill_MultiDir_St.cpp">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClCompile>
+    <ClCompile Include="mBomb.cpp" />
   </ItemGroup>
 </Project>

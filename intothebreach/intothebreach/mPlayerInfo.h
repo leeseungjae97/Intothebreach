@@ -4,6 +4,7 @@ namespace m {
 	class Mech;
 	class Alien;
 	class Skill;
+	class Building;
 	class Weapon;
 	class Pilot;
 	class GameComp {
@@ -30,9 +31,11 @@ namespace m {
 		};
 		static vector<Mech*>& GetMechs() { return mMechs; };
 		static void Initialize();
+		static void startGame();
 		static vector<MechInfo> mechInfos;
 		static vector<Mech*> mMechs;
 		static vector<Mech*> mSaveMechs;
+		static Building* bomb;
 		static int clearLandMatric[4][8];
 		static int checkClearLand[5];
 		static vector<Alien*> mAliens;
@@ -55,6 +58,14 @@ namespace m {
 		static int buildingResident;
 
 		static bool combatEnd;
+
+		static bool bKillLeader;
+		static int iBlockCnt;
+		static int iKillEnCnt;
+		static int iMechDamageCnt;
+		static int iGridDamageCnt;
+		static bool bStructureAlive;
+		static int iStructDesCnt;
 		
 	private:
 	};

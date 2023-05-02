@@ -91,12 +91,6 @@ namespace m
 		, mCoord(_coord)
 		, mFinalCoord(_coord)
 		, curImage(nullptr)
-		, mAnimator(nullptr)
-		, endMove(false)
-		, endAttack(false)
-		, drag(false)
-		, mFinalPos(Vector2::One)
-		//, unitCoord(Vector2::One)
 		, mHp(0)
 		, curHp(0)
 

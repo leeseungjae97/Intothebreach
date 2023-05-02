@@ -144,6 +144,7 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="IslandEnums.h" />
+    <ClInclude Include="mBomb.h" />
     <ClInclude Include="mButton.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
@@ -201,6 +202,7 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="mBomb.cpp" />
     <ClCompile Include="mButton.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />

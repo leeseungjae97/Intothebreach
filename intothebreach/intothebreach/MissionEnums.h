@@ -16,15 +16,27 @@ wstring MISSION_PREVIEW_PATH[8]{
 	L"mission6",
 	L"mission7",
 };
+enum class MISSIONS
+{
+	LEADER,
+	KILLCNT,
+	PROTECT,
+	PROTECT_2,
+	GRID_D,
+	MECH_D3,
+	MECH_D4,
+	BLOCKCNT,
+	NO_D,
+};
 enum class MISSION_T
 {
 	KILL_HORNET,
 	KILL_CEN,
 	KILL_FF,
 	KILL_STAR,
+
 	KILL_5_EN,
 
-	
 	PROTECT_RF,
 	PROTECT_POWER,
 	PROTECT_BAR,
@@ -45,10 +57,12 @@ wstring MISSION_TEXT_PATH[(UINT)MISSION_T::END]{
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_cen_leader.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_firefly_leader.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_star_leader.bmp",
+
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_kill_5_en.bmp",
 
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_robot_factory_protect.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_power_protect.bmp",
+	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_old_bar_protect.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_hq_protect.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_coal_protect.bmp",
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_research_protect.bmp",
@@ -60,7 +74,52 @@ wstring MISSION_TEXT_PATH[(UINT)MISSION_T::END]{
 
 	L"..\\Resources\\texture\\ui\\inLand\\mission\\text_mech_no_damage.bmp",
 };
-wstring MISSION_TEXT_PATH[4][8][2]{ 
+int MISSION_HASH_VALUE[4][8][2]{
+	{
+		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
+		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_1
+		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_2
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_3
+		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_4
+		{(int)MISSIONS::PROTECT},// mission_5
+		{(int)MISSIONS::PROTECT},// mission_6
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_7
+	},
+
+	{
+		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
+		{(int)MISSIONS::PROTECT},// mission_1
+		{(int)MISSIONS::PROTECT},// mission_2
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_3
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_4
+		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_5
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_6
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT_2},// mission_7
+	},
+
+	{
+		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_1
+		{(int)MISSIONS::PROTECT_2},// mission_2
+		{(int)MISSIONS::KILLCNT},// mission_3
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_4
+		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_5
+		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_6
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_7
+	},
+
+	{
+		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
+		{(int)MISSIONS::MECH_D4},// mission_1
+		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_2
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_3
+		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT_2},// mission_4
+		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_5
+		{(int)MISSIONS::PROTECT},// mission_6
+		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_7
+	},
+};
+wstring MISSION_TEXT[4][8][2]{ 
 	{
 		{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::KILL_HORNET],
