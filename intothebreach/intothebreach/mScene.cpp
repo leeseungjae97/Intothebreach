@@ -142,16 +142,27 @@ namespace m
 		{
 			for (int x = 0; x < iX; x++)
 			{
-				Tile* tile = new Tile(Vector2((float)x, (float)y));
-				fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
-				fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
-				tile->SetPos(Vector2(fX * 2, fY * 2));
-				tile->SetTileType(_type);
-				tile->SetTileTexture(MAKE_TILE_KEY(_type, _type2)
-					, MAKE_TILE_PATH(_type, _type2));
-				mTiles[y][x] = tile;
-
-				AddGameObject(tile, LAYER_TYPE::TILE);
+				if (nullptr == mTiles[y][x])
+				{
+					Tile* tile = new Tile(Vector2((float)x, (float)y));
+					fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
+					fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
+					tile->SetPos(Vector2(fX * 2, fY * 2));
+					tile->SetTileType(_type);
+					tile->SetTileTexture(MAKE_TILE_KEY(_type, _type2)
+						, MAKE_TILE_PATH(_type, _type2));
+					mTiles[y][x] = tile;
+					AddGameObject(tile, LAYER_TYPE::TILE);
+				}
+				else
+				{
+					fX = (float)((TILE_SIZE_X / TILE_X_DIVIDE_RECT) * (x - y) + mX);
+					fY = (float)((TILE_SIZE_Y / TILE_Y_DIVIDE_RECT) * (x + y) + mY);
+					mTiles[y][x]->SetPos(Vector2(fX * 2, fY * 2));
+					mTiles[y][x]->SetTileType(_type);
+					mTiles[y][x]->SetTileTexture(MAKE_TILE_KEY(_type, _type2)
+						, MAKE_TILE_PATH(_type, _type2));
+				}
 			}
 		}
 		MakeVariTile(iY, iX);
@@ -171,40 +182,46 @@ namespace m
 		{
 			for (int x = 0; x < iX; x++)
 			{
-				Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
-				Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
-				Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
-				//Building* stTile = new Building(STRUCTURES_T::C_Building, mTiles[y][x]->GetCoord());
-
-				posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				posTile->SetPos(mTiles[y][x]->GetPos());
-
-				awTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				awTile->SetPos(mTiles[y][x]->GetPos());
-
-				etcTile->InitETCTiles(4);
-				etcTile->SetPos(mTiles[y][x]->GetPos());
-				mPosTiles[y][x] = posTile;
-				mBoundaryTiles[y][x] = etcTile;
-				mArrowTiles[y][x] = awTile;
-				//mStruturesTiles[y][x] = stTile;
-
-				AddGameObject(etcTile, LAYER_TYPE::TILE);
-				//AddGameObject(stTile, LAYER_TYPE::TILE);
-				AddGameObject(awTile, LAYER_TYPE::TILE);
-				AddGameObject(posTile, LAYER_TYPE::TILE);
-
+				if (nullptr == mPosTiles[y][x])
+				{
+					Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
+					posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+					posTile->SetPos(mTiles[y][x]->GetPos());
+					mPosTiles[y][x] = posTile;
+					AddGameObject(posTile, LAYER_TYPE::TILE);
+				}
+				if (nullptr == mBoundaryTiles[y][x])
+				{
+					Tile* etcTile = new Tile(mTiles[y][x]->GetCoord());
+					etcTile->InitETCTiles(4);
+					etcTile->SetPos(mTiles[y][x]->GetPos());
+					mBoundaryTiles[y][x] = etcTile;
+					AddGameObject(etcTile, LAYER_TYPE::TILE);
+					
+				}
+				if (nullptr == mArrowTiles[y][x])
+				{
+					Tile* awTile = new Tile(mTiles[y][x]->GetCoord());
+					awTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+					awTile->SetPos(mTiles[y][x]->GetPos());
+					mArrowTiles[y][x] = awTile;
+					AddGameObject(awTile, LAYER_TYPE::TILE);
+				}
 			}
 		}
 		for (int y = 0; y < iY; y++)
 		{
 			for (int x = 0; x < iX; x++)
 			{
-				Tile* posLineTile = new Tile(mTiles[y][x]->GetCoord());
-				posLineTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
-				posLineTile->SetPos(mTiles[y][x]->GetPos());
-				mPosOutLineTiles[y][x] = posLineTile;
-				AddGameObject(posLineTile, LAYER_TYPE::TILE);
+				if (nullptr == mPosOutLineTiles[y][x])
+				{
+					Tile* posLineTile = new Tile(mTiles[y][x]->GetCoord());
+					posLineTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+					posLineTile->SetPos(mTiles[y][x]->GetPos());
+					mPosOutLineTiles[y][x] = posLineTile;
+					AddGameObject(posLineTile, LAYER_TYPE::TILE);
+				}
+				
 			}
 		}
 	}
@@ -489,14 +506,18 @@ namespace m
 	void Scene::AlienAlgorithm()
 	{
 		if (playerTurn || curTurnEnd) return;
-		drawTile();
+		//drawTile();
 		//bool n = false;
 		//for (int i = 0; i < PlayerInfo::mMechs.size(); i++)
 		//	if (PlayerInfo::mMechs[i]->GetState() == GameObject::STATE::Idle) n = true;
 		//if (!n) return;
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
-			if (GameComp::mAliens[i]->GetState() == GameObject::STATE::Broken)
+			if (GameComp::mAliens[i]->GetState() == GameObject::STATE::Broken
+				||
+				GameComp::mAliens[i]->GetState() == GameObject::STATE::Delete
+				||
+				GameComp::mAliens[i]->GetState() == GameObject::STATE::Death)
 			{
 				return;
 			}
@@ -565,24 +586,26 @@ namespace m
 		if (!playerTurn || curTurnEnd) return;
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
-			if (GameComp::mAliens[i]->GetState() == GameObject::STATE::Broken)
+			if (GameComp::mAliens[i]->GetState() == GameObject::STATE::Broken
+				||
+				GameComp::mAliens[i]->GetState() == GameObject::STATE::Delete
+				||
+				GameComp::mAliens[i]->GetState() == GameObject::STATE::Death)
 			{
 				return;
 			}
 		}
-
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
-			//if (GameComp::mAliens[i]->GetFinalMoveCoord() != Vector2::Minus)
-			//{
-			//	SetPosTiles((int)GameComp::mAliens[i]->GetFinalMoveCoord().y, (int)GameComp::mAliens[i]->GetFinalMoveCoord().x
-			//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
-			//}
-			//if (GameComp::mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
-			//GameComp::mAliens[i]->AlienMoveToAttackCheck(GameComp::mAliens[i]->GetCoord());
+		//	//if (GameComp::mAliens[i]->GetFinalMoveCoord() != Vector2::Minus)
+		//	//{
+		//	//	SetPosTiles((int)GameComp::mAliens[i]->GetFinalMoveCoord().y, (int)GameComp::mAliens[i]->GetFinalMoveCoord().x
+		//	//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+		//	//}
+		//	//if (GameComp::mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
+		//	//GameComp::mAliens[i]->AlienMoveToAttackCheck(GameComp::mAliens[i]->GetCoord());
 			GameComp::mAliens[i]->ActiveSkill(GameComp::mAliens[i]->GetTargetCoord());
 		}
-
 		if (nullptr == mMouseFollower
 			|| mMouseFollower->GetMove()
 			|| nullptr == mMouseFollower->GetCurAttackSkill()) return;
@@ -753,6 +776,17 @@ namespace m
 	}
 	void Scene::MoveMech()
 	{
+		//for (int i = 0; i < GameComp::mAliens.size(); i++)
+		//{
+		//	//if (GameComp::mAliens[i]->GetFinalMoveCoord() != Vector2::Minus)
+		//	//{
+		//	//	SetPosTiles((int)GameComp::mAliens[i]->GetFinalMoveCoord().y, (int)GameComp::mAliens[i]->GetFinalMoveCoord().x
+		//	//		, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_g);
+		//	//}
+		//	//if (GameComp::mAliens[i]->GetCurAttackSkill()->CheckSkillFiring()) continue;
+		//	//GameComp::mAliens[i]->AlienMoveToAttackCheck(GameComp::mAliens[i]->GetCoord());
+		//	GameComp::mAliens[i]->ActiveSkill(GameComp::mAliens[i]->GetTargetCoord());
+		//}
 		if (nullptr == mMouseFollower)
 		{
 			((CombatScene*)SceneManager::GetActiveScene())->ShowMechInfo(nullptr, false);
@@ -872,9 +906,15 @@ namespace m
 			affectUnits[y][x][i]->SetAffectUnitVectorIdx(i);
 		}
 	}
-	void Scene::MoveAffectUnit(Unit* unit, Vector2 _coord)
+	void Scene::MoveAffectUnit(Unit* unit, Vector2 _coord, bool push)
 	{
 		Vector2 idx = unit->GetFinalCoord();
+		if (push)
+		{
+			float x = _coord.x - idx.x;
+			float y = _coord.y - idx.y;
+			((Alien*)unit)->SetTargetCoord(((Alien*)unit)->GetTargetCoord() + Vector2(x, y));
+		}
 		//if (effectUnits[(UINT)_coord.y][(UINT)_coord.x].size() == 0)
 		//{
 		//	effectUnits[(UINT)_coord.y][(UINT)_coord.x]->GetState() != GameObject::STATE::Emerge_loop) return;

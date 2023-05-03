@@ -9,6 +9,8 @@
 #include "mButton.h"
 #include "Mech.h"
 #include "mPlayerInfo.h"
+#include "mGlobalSound.h"
+#include "mSound.h"
 #include "mImage.h"
 
 extern m::Application application;
@@ -638,6 +640,7 @@ namespace m
 	}
 	void SelectLandScene::OnEnter()
 	{
+		//GlobalSound::titleTheme->Stop(true);
 	}
 	void SelectLandScene::OnExit()
 	{}

@@ -124,6 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,17 +145,19 @@
     <ClInclude Include="Alien.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="IslandEnums.h" />
-    <ClInclude Include="mBomb.h" />
     <ClInclude Include="mButton.h" />
     <ClInclude Include="mCollisionManager.h" />
     <ClInclude Include="MechEnums.h" />
     <ClInclude Include="mEffect.h" />
     <ClInclude Include="MissionEnums.h" />
+    <ClInclude Include="mGlobalSound.h" />
     <ClInclude Include="mSkill_MultiDir_St.h" />
     <ClInclude Include="mSkill_RS.h" />
     <ClInclude Include="mSkill.h" />
     <ClInclude Include="mSkill_Arc.h" />
     <ClInclude Include="mSkill_St.h" />
+    <ClInclude Include="mSound.h" />
+    <ClInclude Include="mSoundManager.h" />
     <ClInclude Include="mTile.h" />
     <ClInclude Include="mUI.h" />
     <ClInclude Include="mUnit.h" />
@@ -202,7 +205,6 @@
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
     <ClCompile Include="Building.cpp" />
-    <ClCompile Include="mBomb.cpp" />
     <ClCompile Include="mButton.cpp" />
     <ClCompile Include="mCamera.cpp" />
     <ClCompile Include="main.cpp" />
@@ -216,6 +218,7 @@
     <ClCompile Include="mIntroScene.cpp" />
     <ClCompile Include="mPilot.cpp" />
     <ClCompile Include="mPlayerInfo.cpp" />
+    <ClCompile Include="mGlobalSound.cpp" />
     <ClCompile Include="mSkill_MultiDir_St.cpp" />
     <ClCompile Include="mSkill_RS.cpp" />
     <ClCompile Include="mSelectGDI.cpp" />
@@ -237,6 +240,8 @@
     <ClCompile Include="mSkill.cpp" />
     <ClCompile Include="mSkill_Arc.cpp" />
     <ClCompile Include="mSkill_St.cpp" />
+    <ClCompile Include="mSound.cpp" />
+    <ClCompile Include="mSoundManager.cpp" />
     <ClCompile Include="mTile.cpp" />
     <ClCompile Include="mTime.cpp" />
     <ClCompile Include="mTitleScene.cpp" />

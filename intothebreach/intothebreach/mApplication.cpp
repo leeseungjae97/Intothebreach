@@ -1,11 +1,13 @@
 #include "Resource.h"
 #include "mApplication.h"
 #include "mSceneManager.h"
+#include "mSoundManager.h"
 #include "mTime.h"
 #include "mInput.h"
 #include "mResources.h"
 #include "mSelectGDI.h"
 #include "mPlayerInfo.h"
+#include "mGlobalSound.h"
 #include "mCamera.h"
 namespace m
 {
@@ -55,6 +57,8 @@ namespace m
 ;		Time::Initiailize();
 		Input::Initialize();
 		GameComp::Initialize();
+		SoundManager::Initialize();
+		GlobalSound::InitSound();
 		SceneManager::Initialize();
 		Camera::Initialize();
 		

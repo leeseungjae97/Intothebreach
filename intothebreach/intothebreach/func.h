@@ -15,7 +15,6 @@
 #include "Building.h"
 #include "Mech.h"
 #include "Alien.h"
-#include "mBomb.h"
 namespace m::object
 {
 	template <typename T>

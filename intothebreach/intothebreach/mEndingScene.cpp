@@ -92,7 +92,7 @@ namespace m {
 		AddGameObject(explsion, LAYER_TYPE::UI);
 		AddGameObject(scrollText, LAYER_TYPE::UI);
 		timer = 0;
-		GameComp::savedPeople = 500;
+		//GameComp::savedPeople = 500;
 		wstring wstr2 = std::to_wstring(GameComp::savedPeople);
 		for (int i = 0; i < wstr2.size(); i++)
 		{

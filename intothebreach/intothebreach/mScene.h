@@ -81,7 +81,7 @@ namespace m
 		void SetArrowTiles(int _y, int _x, MOVE_ARROW_T _type);
 		void RobotDrag();
 		void MoveAffectUnit(Unit* unit);
-		void MoveAffectUnit(Unit* unit, Vector2 _coord);
+		void MoveAffectUnit(Unit* unit, Vector2 _coord, bool push = false);
 		void RemoveAffectUnit(Vector2 _coord);
 		void RemoveAffectUnit(Vector2 _coord, Unit* unit);
 		void SetBoundaryTiles(int y, int x, MOVE_TILE_T _type);

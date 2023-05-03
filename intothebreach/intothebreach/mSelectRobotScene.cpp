@@ -307,12 +307,13 @@ namespace m
 		{
 			Button* mechImage = new Button(MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
 				NO_BACK);
+			mechImage->SetItem(GameComp::mechInfos[i].unitNum);
 			mechImage->SetInner(true);
 			mechImage->SetInnerMag(2);
-			mechImage->SetSize(mechImage->GetInnerImage()->GetSize());
-			mechImage->SetPos(Vector2(squadPreview->GetPos().x + 20.f + (mechImage->GetInnerImage()->GetWidth() * 2 + 30.f) * i
-				, squadPreview->GetPos().y + squadPreview->GetSize().y / 2 - mechImage->GetInnerImage()->GetHeight()));
-			mechImage->SetInnerPos(Vector2::Zero);
+			mechImage->SetSize(mechImage->GetInnerImage()->GetSize() * 2);
+			//mechImage->SetPos(Vector2(mechImage->GetInnerImage()->GetWidth() * i
+			//	, squadPreview->GetPos().y + squadPreview->GetSize().y / 2 - mechImage->GetInnerImage()->GetHeight()));
+			//mechImage->SetInnerPos(Vector2::Zero);
 			mechImage->SetState(GameObject::STATE::Invisible);
 			previewMechs.push_back(mechImage);
 			AddGameObject(mechImage, LAYER_TYPE::FRONT_UI3);
@@ -428,6 +429,7 @@ namespace m
 	void SelectRobotScene::Update()
 	{
 		Scene::Update();
+		
 		//if (btnStart->GetClicked())
 		//{
 		//	
@@ -462,29 +464,9 @@ namespace m
 						if (platformOpenIdx == 0) moveScene = true;
 						platformOpenIdx--;
 					}
-					//platformOpenIdx--;
 				}
 			}
-			//else
-			//{
-			//	Camera::SetMoveTime(1.f);
-			//	Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
-
-			//	if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
-			//	{
-			//		SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
-			//	}
-			//}
 		}
-		//if (KEY_UP(KEYCODE_TYPE::LBTN))
-		//{
-		//	Camera::SetMoveTime(1.f);
-		//	Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f));
-		//}
-		//if (Camera::GetCurPos() == Vector2((float)application.GetResolutionWidth() / 2.f, (float)swapFake->GetPos().y + swapFake->GetHeight() / 2.f))
-		//{
-		//	SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
-		//}
 		if (moveScene)
 		{
 			Camera::SetMoveTime(1.f);
@@ -554,10 +536,6 @@ namespace m
 			}
 			btnChangeSquad->SetClicked(false);
 		}
-		//if (btnEditConfirm->GetClicked())
-		//{
-		//	
-		//}
 		bool all = true;
 		for (int i = 0; i < previewMechs.size(); i++)
 		{
@@ -587,8 +565,8 @@ namespace m
 				for (int i = 0; i < clickableMechs.size(); i++) clickableMechs[i]->SetState(GameObject::STATE::Invisible);
 				for (int i = 0; i < 3; i++)
 				{
-					GameComp::mechInfos[i].unitNum = previewMechsUnitNum[i];
-					GameComp::mechInfos[i].weapons[0] = BASIC_WEAPON_TYPE[previewMechsUnitNum[i]];
+					GameComp::mechInfos[i].unitNum = previewMechs[i]->GetItem();
+					GameComp::mechInfos[i].weapons[0] = BASIC_WEAPON_TYPE[previewMechs[i]->GetItem()];
 				}
 				DrawMechInfos();
 				btnEditConfirm->SetClicked(false);
@@ -689,7 +667,7 @@ namespace m
 				{
 					if (!previewMechs[_i]->GetInner())
 					{
-						previewMechsUnitNum[_i] = clickableMechs[i]->GetItem();
+						previewMechs[_i]->SetItem(clickableMechs[i]->GetItem());
 						previewMechs[_i]->ChangeInner(clickableMechs[i]->GetInnerImage()->GetPath());
 						previewMechs[_i]->SetInner(true);
 						bind = true;
@@ -702,9 +680,38 @@ namespace m
 		}
 		for (int i = 0; i < previewMechs.size(); i++)
 		{
-			previewMechs[i]->SetPos(Vector2(squadPreview->GetPos().x + 20.f + (previewMechs[i]->GetInnerImage()->GetWidth() * 2 + 30.f) * i
+			previewMechs[i]->SetPos(Vector2(squadPreview->GetPos().x + 20.f + ((previewMechs[i]->GetInnerImage()->GetWidth() + 10.f) * 2 * i)
 				, squadPreview->GetPos().y + squadPreview->GetSize().y / 2 - previewMechs[i]->GetInnerImage()->GetHeight()));
 			if (previewMechs[i]->GetClicked())
+			{
+				if (i == 2)
+				{
+					previewMechs[i]->SetInner(false);
+					previewMechs[i]->SetItem(-1);
+				}
+					
+				else
+				{
+					for (int _i = i; _i < 2; _i++)
+					{
+						if (previewMechs[_i + 1]->GetInner())
+						{
+							previewMechs[_i]->ChangeInner(previewMechs[_i + 1]->GetInnerImage()->GetPath());
+							previewMechs[_i]->SetItem(previewMechs[_i + 1]->GetItem());
+						}
+						else
+						{
+							previewMechs[_i]->SetInner(false);
+							previewMechs[_i]->SetItem(-1);
+						}
+					}
+					previewMechs[2]->SetInner(false);
+				}
+
+				previewMechs[i]->SetClicked(false);
+			}
+			 
+			/*	if (previewMechs[i]->GetClicked())
 			{
 				if (i + 1 < 3)
 				{
@@ -722,7 +729,7 @@ namespace m
 				else previewMechs[i]->SetInner(false);
 
 				previewMechs[i]->SetClicked(false);
-			}
+			}*/
 		}
 		for (int i = 0; i < 2; i++)
 		{

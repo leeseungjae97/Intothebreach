@@ -37,7 +37,7 @@ namespace m
 	{
 		Scene::Initialize();
 		mechIdx = 0;
-		iTurn = 8;
+		iTurn = 6;
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
 
@@ -351,7 +351,7 @@ namespace m
 			//}
 			if (!f)
 			{
-				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[6]);
 			}
 
 			//if (GameComp::mAliens.size() == 0)
@@ -1091,8 +1091,8 @@ namespace m
 		//mapTileType = (TILE_T)TILE_T::GREEN;
 		//mapNum = 4;
 		mapTileType = (TILE_T)GameComp::curLand;
-		Scene::MakeTile(TILE_X, TILE_Y, mapTileType, TILE_HEAD_T::ground);
 		SetMapType(mapTileType);
+		Scene::MakeTile(TILE_X, TILE_Y, mapTileType, TILE_HEAD_T::ground);
 
 		//if (GameComp::curLand == (int)SCENE_TYPE::IN_LAND4)
 		//{
@@ -1101,6 +1101,27 @@ namespace m
 		//}
 		//for (int i = 0; i < GameComp::mMechs.size(); i++)
 		//	GameComp::mMechs[i]->SetState(GameObject::STATE::Delete);
+		//if (GameComp::mMechs.size() == 0)
+		//{
+		//	for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		//	{
+		//		Mech* mech = (Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, GameComp::mechInfos[i].unitNum);
+		//		GameComp::mMechs.push_back(mech);
+		//	}
+		//}
+		//for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		//{
+		//	GameComp::mMechs[i]->SetCurHp(GameComp::mMechs[i]->GetFullHp());
+		//	//Mech* mech = (Mech*)object::Instantiate(Vector2::Minus, LAYER_TYPE::PLAYER, GameComp::mechInfos[i].unitNum);
+		//	for (int j = 0; j < MAX_WEAPONS; j++)
+		//	{
+		//		if (GameComp::mechInfos[i].weapons[j] != WEAPON_T::NONE)
+		//		{
+		//			GameComp::mMechs[i]->SetSkill(j, GameComp::mechInfos[i].weapons[j]);
+		//		}
+		//	}
+		//	//
+		//}
 
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
@@ -1185,6 +1206,7 @@ namespace m
 				if (nullptr != GameComp::mAliens[i]->GetSkills()[j])
 					GameComp::mAliens[i]->GetSkills()[j]->SetState(GameObject::STATE::Delete);
 			}
+			GameComp::mAliens[i]->SetVisibleHp(false);
 			GameComp::mAliens[i]->SetState(GameObject::STATE::Delete);
 		}
 		GameComp::mAliens.clear();
@@ -1200,16 +1222,16 @@ namespace m
 				if (nullptr != GameComp::mMechs[i]->GetSkills()[j])
 					GameComp::mMechs[i]->GetSkills()[j]->SetState(GameObject::STATE::Delete);
 			}
+			GameComp::mMechs[i]->SetVisibleHp(false);
 			GameComp::mMechs[i]->SetState(GameObject::STATE::Delete);
 		}
-
-
 		GameComp::mMechs.clear();
+
 		for (int i = 0; i < GetStructures().size(); i++)
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 8;
+		iTurn = 6;
 		endGame = false;
 		bSetPosition = false;
 		//SceneManager::GetActiveScene()->ClearAffectUnit();

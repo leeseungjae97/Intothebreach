@@ -103,6 +103,11 @@ namespace m
 	{}
 	Unit::~Unit()
 	{
+		if (nullptr != mechHpBarBack)
+			mechHpBarBack->SetState(GameObject::STATE::Delete);
+
+		for (int i = 0; i < hpBar.size(); i++) hpBar[i]->SetState(GameObject::STATE::Delete);
+		hpBar.clear();
 		//pathQueue.clear();
 		//directQueue.clear();
 		//arrowDirectQueue.clear();
@@ -128,10 +133,15 @@ namespace m
 		GameObject::Update();
 		if (GetState() == GameObject::STATE::Death
 			||
-			GetState() == GameObject::STATE::Broken)
+			GetState() == GameObject::STATE::Delete
+			||
+			GetState() == GameObject::STATE::Invisible)
 		{
 			if (mCoord != Vector2::Minus)
 				SceneManager::GetActiveScene()->RemoveAffectUnit(mCoord);
+			mechHpBarBack->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < hpBar.size(); i++) hpBar[i]->SetState(GameObject::STATE::Delete);
+			hpBar.clear();
 		}
 		pathQueue.clear();
 	}

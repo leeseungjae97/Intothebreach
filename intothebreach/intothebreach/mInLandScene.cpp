@@ -782,18 +782,13 @@ namespace m
 	{}
 	void InLandScene::OnEnter()
 	{
-		//for (int i = 0; i < boxResultPilots.size(); i++)
-		//{
-		//	boxResultPilots[i]->SetState(GameObject::STATE::Delete);
-		//}
-		//boxResultPilots.clear();
 		GameComp::curLand = (int)mType;
 		GameComp::clearLandMatric[GameComp::curLand][0] = 1;
 		if (GameComp::checkClearLand[GameComp::curLand])
 		{
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
-		GameComp::combatEnd = true;
+		//GameComp::combatEnd = true;
 		//GameComp::curLandSection = 5;
 		//GameComp::curLand = 2;
 		if (GameComp::combatEnd)

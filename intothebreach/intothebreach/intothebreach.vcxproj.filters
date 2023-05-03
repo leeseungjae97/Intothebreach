@@ -128,6 +128,9 @@
     <Filter Include="Contents\Unit\Building">
       <UniqueIdentifier>{7b9c731d-b2b1-4303-97df-aaa1d8b1936c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Contents\Sound">
+      <UniqueIdentifier>{8e20cd0d-950a-47da-b61a-fe485b1c01ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="intothebreach.h">
@@ -322,7 +325,15 @@
     <ClInclude Include="mSkill_MultiDir_St.h">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClInclude>
-    <ClInclude Include="mBomb.h" />
+    <ClInclude Include="mSound.h">
+      <Filter>Engine\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="mSoundManager.h">
+      <Filter>Engine\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="mGlobalSound.h">
+      <Filter>Contents\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="intothebreach.rc">
@@ -467,6 +478,14 @@
     <ClCompile Include="mSkill_MultiDir_St.cpp">
       <Filter>Contents\Attached\Skill\St</Filter>
     </ClCompile>
-    <ClCompile Include="mBomb.cpp" />
+    <ClCompile Include="mSound.cpp">
+      <Filter>Engine\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="mSoundManager.cpp">
+      <Filter>Engine\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="mGlobalSound.cpp">
+      <Filter>Contents\Sound</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

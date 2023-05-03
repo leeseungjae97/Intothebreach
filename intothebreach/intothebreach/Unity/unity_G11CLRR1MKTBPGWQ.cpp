@@ -5,9 +5,6 @@
 #include "E:\intothebreach\intothebreach\intothebreach\Building.cpp"
 
 
-#include "E:\intothebreach\intothebreach\intothebreach\mBomb.cpp"
-
-
 #include "E:\intothebreach\intothebreach\intothebreach\mButton.cpp"
 
 
@@ -45,6 +42,9 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mPlayerInfo.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mGlobalSound.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mSkill_MultiDir_St.cpp"
@@ -108,6 +108,12 @@
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mSkill_St.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mSound.cpp"
+
+
+#include "E:\intothebreach\intothebreach\intothebreach\mSoundManager.cpp"
 
 
 #include "E:\intothebreach\intothebreach\intothebreach\mTile.cpp"

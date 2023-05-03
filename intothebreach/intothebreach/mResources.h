@@ -1,6 +1,5 @@
 #pragma once
 #include "mResource.h"
-#include "mImage.h"
 namespace m {
 	class Resources {
 	public:
@@ -43,9 +42,9 @@ namespace m {
 		static void Insert(const std::wstring& key, T* resource) {
 			mResources.insert(make_pair(key, dynamic_cast<Resource*>(resource)));
 		}
-	private:
-		Resources() = delete;
-		~Resources() = delete;
+	//private:
+	//	Resources() = delete;
+	//	~Resources() = delete;
 	private:
 		static map<wstring, Resource*> mResources;
 	};

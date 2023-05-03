@@ -62,6 +62,7 @@ namespace m
 	{
 		for (int i = 0; i < mAliens.size(); i++)
 		{
+			mAliens[i]->SetVisibleHp(false);
 			mAliens[i]->SetState(GameObject::STATE::Delete);
 		}
 		mAliens.clear();

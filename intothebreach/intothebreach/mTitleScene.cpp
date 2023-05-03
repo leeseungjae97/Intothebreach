@@ -3,9 +3,11 @@
 #include "mSceneManager.h"
 #include "mBackground.h"
 #include "mApplication.h"
+#include "mGlobalSound.h"
 #include "mTime.h"
 #include "mCamera.h"
 #include "mButton.h"
+#include "mSound.h"
 extern m::Application application;
 namespace m {
 	TitleScene::TitleScene() {
@@ -21,7 +23,7 @@ namespace m {
 		Background* b4 = new Background(L"title4", L"..\\Resources\\texture\\ui\\title\\bg3.bmp", 2, false, BOTTOM | RIGHT);
 		Background* b5 = new Background(L"title5", L"..\\Resources\\texture\\ui\\title\\title_large.bmp", 2, false, TOP | LEFT);
 		Background* b6 = new Background(L"backTitle",L"..\\Resources\\texture\\ui\\title\\calibration.bmp", 0, true, DEFAULT);
-
+		GlobalSound::titleTheme->Play(true);
 		float yPos = 210.f;
 		for (int i = 0; i < 5; i++)
 		{
@@ -74,6 +76,7 @@ namespace m {
 		{
 			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
+			btns[1]->SetClicked(false);
 		}
 		if (GetFirstUpdate())
 		{
@@ -124,6 +127,7 @@ namespace m {
 		Scene::Release();
 	}
 	void TitleScene::OnEnter() {
+
 		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() /2));
 	}
 	void TitleScene::OnExit() {

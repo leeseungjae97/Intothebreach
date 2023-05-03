@@ -3,6 +3,7 @@
 namespace m
 {
 	class Image;
+	class Sound;
 	class Button :
 		public UI
 	{
@@ -91,6 +92,12 @@ namespace m
 		bool endApDAp;
 		bool bFromInven;
 		bool bFromInfos;
+
+		Sound* sHover;
+		bool sHoverPlayed;
+		Sound* sClick;
+		bool sClickPlayed;
+		Sound* sCancel;
 
 		int idDir;
 		int idVar;

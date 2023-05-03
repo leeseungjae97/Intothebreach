@@ -407,7 +407,7 @@ namespace m
 					if(units[i]->GetState() != GameObject::STATE::Death
 						|| units[i]->GetState() != GameObject::STATE::Emerge_loop
 						|| units[i]->GetState() != GameObject::STATE::Emerge)
-					scene->MoveAffectUnit(units[i], Vector2((float)_dx, (float)_dy));
+					scene->MoveAffectUnit(units[i], Vector2((float)_dx, (float)_dy), true);
 				}
 			}
 		}

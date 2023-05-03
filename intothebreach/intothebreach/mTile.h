@@ -25,17 +25,7 @@ namespace m
 		void SetETCTiles(const wstring& key, const wstring& path);
 		void SetSourceConstantAlpha(BYTE _constant) { mConstant = _constant; }
 		Vector2 GetCoord() { return mCoord; }
-		Vector2 GetCenterPos()
-		{
-			if (nullptr == mTileTex)
-			{
-				return Vector2(GetPos().x + 28.f, GetPos().y + 22.f);
-			}
-			else
-			{
-				return Vector2(GetPos().x + (mTileTex->GetWidth() / 2), GetPos().y + (mTileTex->GetHeight() / 2));
-			}
-		}
+		Vector2 GetCenterPos();
 	private:
 		virtual void Update() override;
 		virtual void Render(HDC hdc) override;

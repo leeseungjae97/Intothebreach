@@ -5,6 +5,7 @@
 #include "mImage.h"
 #include "mResources.h"
 #include "mSceneManager.h"
+#include "mSound.h"
 m::Button::Button(const wstring& inner
 	, const wstring& background
 	, int _sizeUp
@@ -39,6 +40,10 @@ m::Button::Button(const wstring& inner
 	if (L"" != btnName) innerImage = Resources::Load<Image>(btnName, btnName);
 	SetCutPos(true);
 	SetEC(false);
+	sHoverPlayed = false;
+	sHover = Resources::Load<Sound>(L"btnHover", L"..\\Resources\\sound\\sfx\\ui_general_highlight_button.wav");
+	sClick = Resources::Load<Sound>(L"btnClick", L"..\\Resources\\sound\\sfx\\ui_general_button_confirm.wav");
+	sCancel = Resources::Load<Sound>(L"btnCancel", L"..\\Resources\\sound\\sfx\\ui_general_button_cancel.wav");
 }
 
 m::Button::~Button()
@@ -56,13 +61,25 @@ void m::Button::Update()
 	GameObject::Update();
 	if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
 	{
+		if (!sHoverPlayed)
+		{
+			sHover->Play(false);
+			sHoverPlayed = true;
+		}
+
 		bHover = true;
 		if (KEY_UP(KEYCODE_TYPE::LBTN))
 		{
+			if (!bClicked)
+			{
+				sClick->Play(false);
+			}
 			bClicked = true;
 		}
 		if (KEY_UP(KEYCODE_TYPE::RBTN))
 		{
+			if(!bRClicked)
+				sClick->Play(false);
 			bRClicked = true;
 		}
 		if (bReSzieable)
@@ -79,13 +96,17 @@ void m::Button::Update()
 		//{
 		//	bClicked = false;
 		//}
+		bClicked = false;
+		sHoverPlayed = false;
 		bHover = false;
+		//sClick->SetPlayed(false);
 		if (bReSzieable)
 		{
 			if (mSize.x > originSize.x) mSize.x -= resizeUnit.x;
 			if (mSize.y > originSize.y) mSize.y -= resizeUnit.y;
 		}
 	}
+	
 }
 void m::Button::Render(HDC hdc)
 {

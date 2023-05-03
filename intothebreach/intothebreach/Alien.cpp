@@ -10,6 +10,7 @@
 #include "mTime.h"
 #include "mSceneManager.h"
 #include "mPlayerInfo.h"
+#include "mImage.h"
 namespace m
 {
 	Alien::Alien(int unitType, Vector2 _coord, size_t idx, ALIENS_RANK _rType)

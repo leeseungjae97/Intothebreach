@@ -2,6 +2,7 @@
 #include "mScene.h"
 namespace m {
 	class Button;
+	class Sound;
 	class TitleScene : public Scene {
 	public:
 		TitleScene();

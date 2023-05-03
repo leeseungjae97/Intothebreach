@@ -31,6 +31,17 @@ namespace m {
 	void Tile::Initialize()
 	{
 	}
+	Vector2 Tile::GetCenterPos()
+	{
+		if (nullptr == mTileTex)
+		{
+			return Vector2(GetPos().x + 28.f, GetPos().y + 22.f);
+		}
+		else
+		{
+			return Vector2(GetPos().x + (mTileTex->GetWidth() / 2), GetPos().y + (mTileTex->GetHeight() / 2));
+		}
+	}
 	void Tile::Update() {
 		GameObject::Update();
 	}
