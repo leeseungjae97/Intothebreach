@@ -37,7 +37,7 @@ namespace m
 	{
 		Scene::Initialize();
 		mechIdx = 0;
-		iTurn = 6;
+		iTurn = 4;
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
 
@@ -1231,7 +1231,7 @@ namespace m
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 6;
+		iTurn = 4;
 		endGame = false;
 		bSetPosition = false;
 		//SceneManager::GetActiveScene()->ClearAffectUnit();
