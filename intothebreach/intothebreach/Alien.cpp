@@ -11,17 +11,19 @@
 #include "mSceneManager.h"
 #include "mPlayerInfo.h"
 #include "mImage.h"
+#include "mSound.h"
 namespace m
 {
 	Alien::Alien(int unitType, Vector2 _coord, size_t idx, ALIENS_RANK _rType)
 		: Unit(_coord
 			, ALIEN_MOVE_RANGE[unitType - (int)MECHS::tele - 1]
-			, ALIEN_HP[unitType - (int)MECHS::tele - 1] + (int)(_rType == ALIENS_RANK::NORMAL ? 0 :(int)_rType+1)
+			, ALIEN_HP[unitType - (int)MECHS::tele - 1] + (int)(_rType == ALIENS_RANK::NORMAL ? 0 : (int)_rType + 1)
 			, BASIC_WEAPON_TYPE[unitType]
 			, idx
 			, unitType
 		)
 		, rType(_rType)
+		, randMoveSoundPlayed(false)
 	{
 		finalMoveCoord = Vector2::Minus;
 		tarGetCoord = Vector2::Minus;
@@ -155,6 +157,13 @@ namespace m
 			break;
 		case STATE::Emerge:
 		{
+			int i = rand() % 4;
+			Sound* emergeSound = Resources::Load<Sound>(EMERGE_SOUND[i], EMERGE_SOUND[i]);
+			if (!emergeSoundPlayed)
+			{
+				emergeSound->Play(false);
+				emergeSoundPlayed = true;
+			}
 			if (GetAnimator()->GetStopAnimator())
 			{
 				SetState(STATE::Idle);
@@ -218,8 +227,10 @@ namespace m
 
 				if (dx < 0 || dy < 0 || dx > TILE_X - 1 || dy > TILE_Y - 1) continue;
 				if (GetSkillMap((int)dy, (int)dx) != 0) continue;
-				//if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) == MOUNTAIN) continue;
+				if (scene->SearchAffectUnit((int)dy, (int)dx, GameObject::STATE::Broken)) continue;
 				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+
 				if (WEAPON_RANGE[(UINT)GetWeaponType()] < now.level + 1)
 				{
 					return false;
@@ -278,7 +289,7 @@ namespace m
 		if (GetFinalMoveCoord() == Vector2::Minus) return;
 		
 		moveDelay += Time::fDeltaTime();
-		if (moveDelay >= 0.2f)
+		if (moveDelay >= 0.1f)
 		{
 			moveDelay = 0.f;
 		}
@@ -319,7 +330,15 @@ namespace m
 		//Vector2 _pos = scene->GetPosTiles()[(int)curCoord.coord.y][(int)curCoord.coord.x]->GetCenterPos();
 
 		scene->MoveAffectUnit(this, _coord);
-
+		int i = rand() % 3;
+		randMoveSound = Resources::Load<Sound>(ALIEN_MOVE_SOUNDS[GetUnitName()][i], ALIEN_MOVE_SOUNDS[GetUnitName()][i]);
+		if (!randMoveSoundPlayed)
+		{
+			randMoveSound->SetVolume(10.f);
+			randMoveSound->Play(false);
+			randMoveSoundPlayed = true;
+		}
+		DrawMoveDust();
 		//SetPos(_pos);
 		//SetFinalPos(_pos);
 		//SetCoord(_coord);
@@ -339,12 +358,14 @@ namespace m
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
+			randMoveSoundPlayed = false;
 		}
 		if (moveCnt > moveLimit)
 		{
 			directQueue.clear();
 			moveCnt = 1;
 			curAlien++;
+			randMoveSoundPlayed = false;
 		}
 	}
 	void Alien::ActiveSkill(Vector2 otherPos)
@@ -419,7 +440,8 @@ namespace m
 			for (int i = st; i != end + IDVar; i += IDVar)
 			{
 				if (cY
-					&& scene->SearchAffectUnit(i, (int)GetCoord().x))
+					&& scene->SearchAffectUnit(i, (int)GetCoord().x)
+					/*&& !scene->SearchAffectUnit(i, (int)GetCoord().x, GameObject::STATE::Broken)*/)
 				{
 					endCoord = Vector2(GetCoord().x, (float)i);
 					break;
@@ -476,7 +498,8 @@ namespace m
 			DrawSkill(endCoord, drawGuideLineEndCoord);
 		}
 
-		if (GetCurAttackSkill()->GetStartRender() && endCoord != Vector2::Minus)
+		if (GetCurAttackSkill()->GetStartRender() &&
+			endCoord.x >= 0 && endCoord.y >= 0)
 			scene->SetPosTiles((int)endCoord.y, (int)endCoord.x
 				, TILE_T::COMMON, COMBAT_ANIM_TILE_T::warning_sprite, 125);
 
@@ -533,16 +556,18 @@ namespace m
 
 				if (stPos.x == dx
 					&& stPos.y == dy) continue;
-				if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
-				if (scene->GetMap((int)dy, (int)dx) == ALIEN) continue;
+				//if (scene->GetMap((int)dy, (int)dx) == MOUNTAIN) continue;
+				//if (scene->GetMap((int)dy, (int)dx) == BUILDING) continue;
+				if (scene->GetMap((int)dy, (int)dx) != 0) continue;
+				if (scene->SearchAffectUnit((int)dy, (int)dx, GameObject::STATE::Broken)) continue;
 				if (searchMap[(int)dy][(int)dx] != 0) continue;
 
 				if (AlienMoveToAttackCheck(Vector2(dx, dy)))
 				{
-					if (!scene->GetPlayerTurn())
-					{
-						
-					}
+					//if (!scene->GetPlayerTurn())
+					//{
+					//	
+					//}
 					//scene->SetPosTiles((int)dy, (int)dx
 					//	, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_r);
 					SetFinalMoveCoord(Vector2(dx, dy));

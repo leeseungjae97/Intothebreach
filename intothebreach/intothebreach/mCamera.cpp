@@ -12,12 +12,17 @@ namespace m
 	Vector2 Camera::mPrevLookPosition = {};
 	Vector2 Camera::mCurLookPosition = {};
 	Vector2 Camera::mDistance = {};
+	Vector2 Camera::mOriginPos = {};
 	GameObject* Camera::mTarget = nullptr;
 
 	queue<Camera::EffectInfo> Camera::mEffectQueue;
 	Image* Camera::mCutton = nullptr;
+	
 
+	int Camera::idVar = 1;
+	int Camera::increase = 20;
 	float Camera::mCuttonAlpha;
+	float Camera::lmfT = 0;
 	float Camera::speed;
 	float Camera::m_fAcctime;
 	float Camera::m_fTime = 2.5f;
@@ -45,23 +50,6 @@ namespace m
 				mCurLookPosition = mTarget->GetPos();
 			}
 		}
-		//Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 2.0f);
-		//if (KEY_PRESSED(KEYCODE_TYPE::W))
-		//{
-		//	mLookPosition.y -= Time::fDeltaTime() * 500.0f;
-		//}
-		//if (KEY_PRESSED(KEYCODE_TYPE::S))
-		//{
-		//	mLookPosition.y += Time::fDeltaTime() * 500.0f;
-		//}
-		//if (KEY_PRESSED(KEYCODE_TYPE::A))
-		//{
-		//	mLookPosition.x -= Time::fDeltaTime() * 500.0f;
-		//}
-		//if (KEY_PRESSED(KEYCODE_TYPE::D))
-		//{
-		//	mLookPosition.x += Time::fDeltaTime() * 500.0f;
-		//}
 		CalDiff();
 		CheckEffectEnd();
 	}
@@ -83,13 +71,13 @@ namespace m
 			, mCutton->GetWidth(), mCutton->GetHeight()
 			, tFunc);
 	}
-	void Camera::PushEffect(CAMERA_EFFECT_TYPE _effect, float _duration)
+	void Camera::PushEffect(CAMERA_EFFECT_TYPE _effect, float _duration, int _increase)
 	{
 		EffectInfo info = {};
 		info.time = 0.0f;
 		info.effect = _effect;
 		info.duration = _duration;
-
+		info.increase = _increase;
 		mEffectQueue.push(info);
 	}
 	void Camera::CalDiff()
@@ -142,21 +130,64 @@ namespace m
 		{
 			EffectInfo& info = mEffectQueue.front();
 			info.time += Time::fDeltaTime();
+			lmfT += Time::fDeltaTime();
 			float ratio = (info.time / info.duration);
 
 			if (ratio >= 1.0f)
 			{
 				ratio = 1.0f;
-				mEffectQueue.pop();
+				if (CAMERA_EFFECT_TYPE::Shake == info.effect)
+				{
+					mLookPosition = mOriginPos;
+				}
+
+				mEffectQueue.pop();	
 			}
 
 			if (CAMERA_EFFECT_TYPE::Fade_In == info.effect)
 				mCuttonAlpha = 1.0f - ratio;
 			else if (CAMERA_EFFECT_TYPE::Fade_Out == info.effect)
 				mCuttonAlpha = ratio;
+			else if (CAMERA_EFFECT_TYPE::Shake == info.effect)
+			{
+				if (mLookPosition == mOriginPos)
+				{
+
+					int o[2] = { 1, -1 };
+					int y = rand() % (int)info.increase;
+					int x = rand() % (int)info.increase;
+					int i = rand() % 2;
+					y *= o[i];
+					i = rand() % 2;
+					x *= o[i];
+					Vector2 dir(x, y);
+					//dir.Normalize();
+					mLookPosition.x = mLookPosition.x + dir.x;
+					mLookPosition.y = mLookPosition.y + dir.y;
+					if (lmfT >= 1)
+					{
+						lmfT = 0;
+						info.increase -= info.increase * info.duration * Time::fDeltaTime();
+					}
+					idVar *= -1;
+				}
+				else
+				{
+					mLookPosition = mOriginPos;
+				}
+				
+			}
 			else
 			{
 				mCuttonAlpha = 0.0f;
+			}
+			if (ratio >= 1.0f)
+			{
+				ratio = 1.0f;
+				if (CAMERA_EFFECT_TYPE::Shake == info.effect)
+				{
+					mLookPosition = mOriginPos;
+				}
 			}
 		}
 	}
@@ -170,6 +201,7 @@ namespace m
 		if (mLookPosition != pos)
 		{
 			mLookPosition = pos;
+			mOriginPos = pos;
 			float fMoveDist = (mLookPosition - mPrevLookPosition).Length();
 			speed = fMoveDist / m_fTime;
 		}

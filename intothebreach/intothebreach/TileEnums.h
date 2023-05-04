@@ -113,6 +113,10 @@ enum class MOVE_TILE_T
 	square_r_r,
 	square_r_u,
 	square_r_d,
+	square_y_l,
+	square_y_r,
+	square_y_u,
+	square_y_d,
 	END
 };
 enum class ARROW_TILE_T
@@ -230,6 +234,10 @@ wstring MOVE_TILE_PATH[(UINT)MOVE_TILE_T::END]{
 	L"square_line_r_r",
 	L"square_line_r_u",
 	L"square_line_r_d",
+	L"square_line_y_l",
+	L"square_line_y_r",
+	L"square_line_y_u",
+	L"square_line_y_d",
 };
 wstring MAKE_TILE_KEY(MOVE_TILE_T _type)
 {

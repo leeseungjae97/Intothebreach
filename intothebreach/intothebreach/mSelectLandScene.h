@@ -2,6 +2,7 @@
 #include "mScene.h"
 namespace m {
 	class Button;
+	class Sound;
 	class Mech;
     class SelectLandScene :
         public Scene {
@@ -51,6 +52,10 @@ namespace m {
 		vector<Button*> inventoryColumns;
 		int curItemIndex;
 		vector<Button*> inventoryParts;
+
+		Sound* selectLandAmbi;
+		Sound* mapHoverSound;
+		bool mapHoverPlayed[5];
     };
 }
 

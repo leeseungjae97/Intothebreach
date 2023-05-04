@@ -20,6 +20,7 @@ namespace m
 		else
 			assert(nullptr);
 
+		bStop = false;
 		return S_OK;
 	}
 	bool Sound::LoadWavFile(const std::wstring& path)
@@ -82,7 +83,7 @@ namespace m
 			mmioRead(hFile, (char*)pWrite2, dwlength2);
 
 		mSoundBuffer->Unlock(pWrite1, dwlength1, pWrite2, dwlength2);
-
+		//mSoundBuffer
 		mmioClose(hFile, 0);
 
 		// 초기 음량 절반으로 설정
@@ -93,7 +94,6 @@ namespace m
 	void Sound::Play(bool loop)
 	{
 		mSoundBuffer->SetCurrentPosition(0);
-
 		if (loop)
 			mSoundBuffer->Play(0, 0, DSBPLAY_LOOPING);
 		else
@@ -102,7 +102,6 @@ namespace m
 	void Sound::Stop(bool reset)
 	{
 		mSoundBuffer->Stop();
-
 		if (reset)
 			mSoundBuffer->SetCurrentPosition(0);
 	}
@@ -123,6 +122,10 @@ namespace m
 		mVolume = GetDecibel(volume);
 		mSoundBuffer->SetVolume(mVolume);
 	}
+	void Sound::SetSpeed(DWORD decspeed)
+	{
+		mSoundBuffer->SetFrequency(1);
+	}
 	int Sound::GetDecibel(float volume)
 	{
 		if (volume > 100.f)
@@ -136,5 +139,11 @@ namespace m
 		if (iVolume < -10000)
 			iVolume = -10000;
 		return  iVolume;
+	}
+	LPDWORD Sound::GetSoundBufferStatus()
+	{
+		LPDWORD status  = nullptr;
+		mSoundBuffer->GetStatus(status);
+		return status;
 	}
 }

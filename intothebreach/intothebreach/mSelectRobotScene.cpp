@@ -6,7 +6,9 @@
 #include "mBackground.h"
 #include "mSelectGDI.h"
 #include "mApplication.h"
+#include "mResources.h"
 #include "mCamera.h"
+#include "mSound.h"
 #include "mButton.h"
 #include "mImage.h"
 #include "mTime.h"
@@ -35,6 +37,13 @@ namespace m
 		GameComp::mPilots[2] = PILOT_T::Pilot_Sand;
 		platformOpenIdx = 2;
 		moveScene = false;
+		titleEndPlayed = false;
+		startSoundPlayed = false;
+		titleEnd2Played = false;
+
+		//Resources\sound\music
+		titleEnd = Resources::Load<Sound>(L"title_end", L"..\\Resources\\sound\\music\\mus_title_ending_transition.wav");
+		titleEnd2 = Resources::Load<Sound>(L"title_end2", L"..\\Resources\\sound\\music\\mus_title_ending.wav");
 
 		Background* hangarBack = new Background(L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main2.bmp"
 			, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_main2.bmp", 2);
@@ -434,6 +443,10 @@ namespace m
 		//{
 		//	
 		//}
+		if (titleEndPlayed && titleEnd->GetStop())
+		{
+			titleEnd2->Play(false);
+		}
 		if (platformR[0]->GetOriginPos().y + 30.f <= platformR[0]->GetPos().y)
 		{
 			btnStart->SetClicked(false);
@@ -466,6 +479,17 @@ namespace m
 					}
 				}
 			}
+
+			if (!titleEnd2Played)
+			{
+				titleEnd2->Play(false);
+				titleEnd2Played = true;
+
+			}
+			//if ((*titleEnd->GetSoundBufferStatus()) == DSBSTATUS_PLAYING)
+			//{
+			//	int a = 0;
+			//}
 		}
 		if (moveScene)
 		{
@@ -486,6 +510,17 @@ namespace m
 			boxSquadInfo->SetState(GameObject::STATE::Invisible);
 			btnChangeSquad->SetState(GameObject::STATE::Invisible);
 
+			if (!titleEndPlayed)
+			{
+				titleEnd->Play(false);
+				titleEndPlayed = true;
+			}
+			if (!startSoundPlayed)
+			{
+				Sound* startSound = Resources::Load<Sound>(L"start_game_", L"..\\Resources\\sound\\sfx\\ui_main_menu_start_game.wav");
+				startSound->Play(false);
+				startSoundPlayed = true;
+			}
 			for (int i = 0; i < mechs.size(); i++)
 			{
 				mechs[i]->SetState(GameObject::STATE::Delete);
@@ -504,11 +539,11 @@ namespace m
 				lights[i]->SetIdVar(20);
 				reflectShadows[i]->CreateAnimationBack(L"reflectShadowAnim"
 					, L"..\\Resources\\texture\\ui\\selectRobot\\hangar_platform_shadow.bmp", 13, 0.1f);
-				platformL[i]->SetPos(Vector2(platformL[i]->GetPos().x, platformL[i]->GetPos().y + 10.f * Time::fDeltaTime()));
-				platformR[i]->SetPos(Vector2(platformR[i]->GetPos().x, platformL[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+				platformL[i]->SetPos(Vector2(platformL[i]->GetPos().x, platformL[i]->GetPos().y + 15.f * Time::fDeltaTime()));
+				platformR[i]->SetPos(Vector2(platformR[i]->GetPos().x, platformL[i]->GetPos().y + 15.f * Time::fDeltaTime()));
 
-				hangarMechs[i]->SetPos(Vector2(hangarMechs[i]->GetPos().x, hangarMechs[i]->GetPos().y + 10.f * Time::fDeltaTime()));
-				shadows[i]->SetPos(Vector2(shadows[i]->GetPos().x, shadows[i]->GetPos().y + 10.f * Time::fDeltaTime()));
+				hangarMechs[i]->SetPos(Vector2(hangarMechs[i]->GetPos().x, hangarMechs[i]->GetPos().y + 15.f * Time::fDeltaTime()));
+				shadows[i]->SetPos(Vector2(shadows[i]->GetPos().x, shadows[i]->GetPos().y + 15.f * Time::fDeltaTime()));
 			}
 		}
 		if (btnChangeSquad->GetHover()) btnChangeSquad->SetTex(A_BTN_SELECT_BACK_2, A_BTN_SELECT_BACK_2);
@@ -754,11 +789,15 @@ namespace m
 	}
 	void SelectRobotScene::OnEnter()
 	{
+		ambiousHangar = Resources::Load<Sound>(L"hangar_ambi", L"..\\Resources\\sound\\ambience\\amb_hanger.wav");
+		ambiousHangar->SetVolume(10.f);
+		ambiousHangar->Play(true);
 		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 	}
 	void SelectRobotScene::OnExit()
 	{
-
+		if(ambiousHangar)
+			ambiousHangar->Stop(true);
 		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 	}
 }

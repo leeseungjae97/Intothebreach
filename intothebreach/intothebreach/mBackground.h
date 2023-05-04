@@ -35,6 +35,7 @@ namespace m {
         bool GetSmoothAppear() { return bSmoothAppear; }
         bool GetSmoothDisappear() { return bSmoothDisappear; }
         bool GetSizeUp() { return bSizeUp; }
+        bool GetHover() { return bHover; }
         Vector2 GetOriginPos() { return originPos; }
     private :
         int iConstant;
@@ -54,7 +55,7 @@ namespace m {
         Animator* mAnimator;
         Vector2 vMovement;
         Vector2 originPos;
-
+        bool bHover;
 
     };
 

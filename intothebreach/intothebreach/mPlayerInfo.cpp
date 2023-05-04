@@ -39,6 +39,11 @@ namespace m
 
 	void GameComp::Initialize()
 	{
+		//clearLandMatric[0][] = CLEAR;
+		//clearLandMatric[0][2] = CLEAR;
+		//clearLandMatric[0][3] = CLEAR;
+		//clearLandMatric[0][4] = CLEAR;
+		//clearLandMatric[0][1] = CLEAR;
 		combatEnd = false;
 		gridPower = 5;
 		defence = 15;

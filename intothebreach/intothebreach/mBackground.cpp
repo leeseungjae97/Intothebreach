@@ -8,6 +8,7 @@
 #include "mAnimation.h"
 #include "func.h"
 #include "mTime.h"
+#include "mInput.h"
 extern m::Application application;
 namespace m {
 	Background::Background(const wstring& key
@@ -47,6 +48,10 @@ namespace m {
 	}
 	void Background::Update() {
 		UI::Update();
+		if (math::CheckRectPos(GetPos(), GetSize(), MOUSE_POS))
+		{
+			bHover = true;
+		}else bHover = false;
 		if (vMovement != Vector2::Zero)
 		{
 			if (GetAlphaConstant() < 10) object::Destory(this);

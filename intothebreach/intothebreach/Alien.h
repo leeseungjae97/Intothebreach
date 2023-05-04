@@ -5,6 +5,7 @@ namespace m
 	class Image;
 	class Animator;
 	class Pilot;
+	class Sound;
 	class Alien :
 		public Unit
 	{
@@ -48,6 +49,17 @@ namespace m
 		Vector2 finalMoveCoord;
 		vector<Vector2_1> alienPathQueue; // 전체 이동해야하는 최단거리.
 		ALIENS_RANK rType;
+		wstring EMERGE_SOUND[4]{
+			L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_01.wav",
+			L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_02.wav",
+			L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_03.wav",
+			L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_04.wav",
+		};
+		bool emergeSoundPlayed;
+
+		Sound* randMoveSound;
+		
+		bool randMoveSoundPlayed;
 	};
 }
 

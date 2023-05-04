@@ -53,6 +53,8 @@
 
 #define LEADER_FIREFLY		-4
 #define LEADER_HORNET		-5
+#define ELITE_HORNET		-7
+#define ELITE_FIREFLY		-8
 #define BOMB				-6
 
 #define CLEAR 1

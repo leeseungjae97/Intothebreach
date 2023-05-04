@@ -172,6 +172,8 @@ namespace m
 		bool visibleHp;
 		WEAPON_T mWeaponType;
 		Pilot* mPilot;		// ¹Ì»ç¿ë
+
+		
 		//vector<SKILL_T> mSkills;
 	};
 }

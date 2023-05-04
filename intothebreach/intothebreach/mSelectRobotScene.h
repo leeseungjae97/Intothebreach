@@ -67,6 +67,12 @@ namespace m
 		bool moveScene;
 		vector<Button*> clickableMechs;
 
+		Sound* ambiousHangar;
+		bool startSoundPlayed;
+		Sound* titleEnd;
+		bool titleEndPlayed;
+		Sound* titleEnd2;
+		bool titleEnd2Played;
 
 		float cloudDiff;
 	};

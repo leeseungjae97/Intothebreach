@@ -8,39 +8,99 @@ enum class ALIENS_RANK
 };
 enum class ALIENS
 {
-	Beetle,
-	Blobber,
+	Beetle, // 
 	Burrower,
-	Centipede,
-	Crab,
-	Digger,
-	Firefly,
-	Hornet,
-	Jelly,
-	Leaper,
-	Scarab,
-	Scorpion,
-	Slime,
-	Spider,
+	Firefly, //
+	Hornet, //
+	StarFish, //
+	Mosquito,//
+	Dung, //
 	END
 };
 wstring ALIEN_PATH[(UINT)ALIENS::END]{
 	L"beetle",
-	L"blobber",
 	L"burrower",
-	L"centipede",
-	L"crab",
-	L"digger",
 	L"firefly",
 	L"hornet",
-	L"jelly",
-	L"leaper",
-	L"scarab",
-	L"scorpion",
-	L"slime",
-	L"spider",
+	L"starfish",
+	L"mosquito",
+	L"dungbeetle",
 };
+wstring ALIEN_DEATH_SOUNDS[(UINT)ALIENS::END]{
 
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_burnbug_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_hornet_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_starfish_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_death.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_death.wav",
+};
+wstring ALIEN_HURT_SOUNDS[(UINT)ALIENS::END]{
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_burnbug_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_hornet_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_starfish_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_hurt.wav",
+};
+wstring ALIEN_ATTACK_LAUNCH_SOUNDS[(UINT)ALIENS::END]{
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_attack_charge.wav",
+	L"..\\Resources\\sound\\sfx\\mech_prime_skill_sword.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_attack_split.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_hornet_1_attack_metal.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_starfish_1_attack_launch.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_attack_launch.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_attack_launch.wav",
+};
+wstring ALIEN_ATTACK_IMPACT_SOUNDS[(UINT)ALIENS::END]{
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_impact.wav",
+	L"",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_attack_impact.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_hornet_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_starfish_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_hurt.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_hurt.wav",
+};
+wstring ALIEN_MOVE_SOUNDS[(UINT)ALIENS::END][3]{
+	{
+		L"..\\Resources\\sound\\sfx\\enemy_beetle_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_beetle_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_beetle_1_move_03.wav",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_shared_crawl_out_03.wav",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_move_03.wav",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\enemy_hornet_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_hornet_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_hornet_1_move_03.wav",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\enemy_starfish_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_starfish_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_starfish_1_move_03.wav",
+	},
+			{
+		L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_move_03.wav",
+	},
+			{
+		L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_move_03.wav",
+	},
+
+};
 enum class ALIEN_CONDITION
 {
 	IDLE,
@@ -58,102 +118,60 @@ wstring ALIEN_CONDITION_PATH[(UINT)ALIEN_CONDITION::END]{
 m::Vector2 ALIEN_OFFSET[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
 	//x, y
 	{},//Beetle,
-	{},//Blobber,
 	{},//Burrower,
-	{},//Centipede,
-	{},//Crab,
-	{},//Digger,
 	{{10, -10.f},{10, -10.f},{2, -8.f},{10, -10.f}},//Firefly,
 	{{20, -25.f},{20, -25.f},{3, -21.f},{20, -25.f}},//Hornet,
-	{},//Jelly,
-	{{5, -10.f},{5, -10.f},{5, -10.f},{5, -10.f}},//Leaper,
-	{},//Scarab,
-	{},//Scorpion,
-	{},//Slime,
-	{},//Spider,
+	{},//starfish,
+	{},//mosquito,
+	{},//dungbeetle,
 };
 m::Vector2 ALIENS_IDLE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Beetle,
-	{0,0},//Blobber,
 	{0,0},//Burrower,
-	{0,0},//Centipede,
-	{0,0},//Crab,
-	{0,0},//Digger,
 	{37,37},//Firefly,
 	{32,48},//Hornet,
-	{0,0},//Jelly,
-	{42,37},//Leaper,
-	{0,0},//Scarab,
-	{39,36},//Scorpion,
-	{0,0},//Slime,
-	{0,0},//Spider,
+	{42,37},//starfish,
+	{0,0},//mosquito,
+	{39,36},//dung,
 };
 m::Vector2 ALIENS_DEATH_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Beetle,
-	{0,0},//Blobber,
 	{0,0},//Burrower,
-	{0,0},//Centipede,
-	{0,0},//Crab,
-	{0,0},//Digger,
 	{41,39},//Firefly,
 	{30,48},//Hornet,
-	{0,0},//Jelly,
-	{54,38},//Leaper,
-	{0,0},//Scarab,
-	{51,43},//Scorpion,
-	{0,0},//Slime,
-	{0,0},//Spider,
+	{0,0},//starfish,
+	{54,38},//mosquito,
+	{0,0},//dung,
 };
 m::Vector2 ALIENS_EMERGE_SIZE[(UINT)ALIENS::END]{
 	{0,0},//Beetle,
-	{0,0},//Blobber,
 	{0,0},//Burrower,
-	{0,0},//Centipede,
-	{0,0},//Crab,
-	{0,0},//Digger,
 	{42,43},//Firefly,
 	{41,52},//Hornet,
-	{0,0},//Jelly,
-	{43,44},//Leaper,
-	{0,0},//Scarab,
-	{48,43},//Scorpion,
-	{0,0},//Slime,
-	{0,0},//Spider,
+	{0,0},//starfish,
+	{48,43},//mosquito,
+	{0,0},//dung,
 };
 m::Vector2 ALIENS_IMAGE_SIZE[(UINT)ALIENS::END]{
 	//x, y
 	{0,0},//Beetle,
-	{0,0},//Blobber,
 	{0,0},//Burrower,
-	{0,0},//Centipede,
-	{0,0},//Crab,
-	{0,0},//Digger,
 	{0,0},//Firefly,
 	{30,48},//Hornet,
-	{0,0},//Jelly,
-	{42,37},//Leaper,
-	{0,0},//Scarab,
-	{0,0},//Scorpion,
-	{0,0},//Slime,
-	{0,0},//Spider,
+	{0,0},//starfish,
+	{0,0},//mosquito,
+	{0,0},//dung,
 };
 //
 int ALIENS_APL_COND[(UINT)ALIENS::END][(UINT)ALIEN_CONDITION::END]{
 	//idle, death, emeger, water
 	{1,1,1,1},//Beetle,
-	{1,1,1,1},//Blobber,
 	{1,1,1,0},//Burrower,
-	{1,1,1,1},//Centipede,
-	{1,1,1,1},//Crab,
-	{1,1,1,1},//Digger,
 	{1,1,1,1},//Firefly,
 	{1,1,1,0},//Hornet,
-	{1,1,1,0},//Jelly,
-	{1,1,1,1},//Leaper,
-	{1,1,1,1},//Scarab,
-	{1,1,1,1},//Scorpion,
-	{1,1,1,1},//Slime,
-	{1,1,1,1},//Spider,
+	{1,1,1,1},//starfish,
+	{1,1,1,0},//mosquito,
+	{1,1,1,1},//dung,
 
 };
 m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{
@@ -164,13 +182,6 @@ m::Vector2 ALIENS_SIZES[(UINT)ALIENS::END][3]{
 	{ALIENS_IDLE_SIZE[4], ALIENS_DEATH_SIZE[4], ALIENS_EMERGE_SIZE[4]},//Crab,
 	{ALIENS_IDLE_SIZE[5], ALIENS_DEATH_SIZE[5], ALIENS_EMERGE_SIZE[5]},//Digger,
 	{ALIENS_IDLE_SIZE[6], ALIENS_DEATH_SIZE[6], ALIENS_EMERGE_SIZE[6]},//Firefly,
-	{ALIENS_IDLE_SIZE[7], ALIENS_DEATH_SIZE[7], ALIENS_EMERGE_SIZE[7]},//Hornet,
-	{ALIENS_IDLE_SIZE[8], ALIENS_DEATH_SIZE[8], ALIENS_EMERGE_SIZE[8]},//Jelly,
-	{ALIENS_IDLE_SIZE[9], ALIENS_DEATH_SIZE[9], ALIENS_EMERGE_SIZE[9]},//Leaper,
-	{ALIENS_IDLE_SIZE[10], ALIENS_DEATH_SIZE[10], ALIENS_EMERGE_SIZE[10]},//Scarab,
-	{ALIENS_IDLE_SIZE[11], ALIENS_DEATH_SIZE[11], ALIENS_EMERGE_SIZE[11]},//Scorpion,
-	{ALIENS_IDLE_SIZE[12], ALIENS_DEATH_SIZE[12], ALIENS_EMERGE_SIZE[12]},//Slime,
-	{ALIENS_IDLE_SIZE[13], ALIENS_DEATH_SIZE[13], ALIENS_EMERGE_SIZE[13]},//Spider,
 };
 int ALIEN_MOVE_RANGE[(UINT)ALIENS::END]{
 	3,//Beetle,
@@ -180,13 +191,6 @@ int ALIEN_MOVE_RANGE[(UINT)ALIENS::END]{
 	3,//Crab,
 	3,//Digger,
 	3,//Firefly,
-	3,//Hornet,
-	3,//Jelly,
-	3,//Leaper,
-	3,//Scarab,
-	3,//Scorpion,
-	3,//Slime,
-	3,//Spider,
 
 };
 int ALIEN_HP[(UINT)ALIENS::END]{
@@ -197,13 +201,6 @@ int ALIEN_HP[(UINT)ALIENS::END]{
 	3,//Crab,
 	3,//Digger,
 	3,//Firefly,
-	2,//Hornet,
-	3,//Jelly,
-	3,//Leaper,
-	3,//Scarab,
-	3,//Scorpion,
-	3,//Slime,
-	3,//Spider,
 };
 
 wstring MAKE_UNIT_KEY(ALIENS _type, ALIEN_CONDITION _type2)

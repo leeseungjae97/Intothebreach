@@ -9,6 +9,9 @@
 #include "mImage.h"
 #include "mSelectGDI.h"
 #include "mPlayerInfo.h"
+#include "mSound.h"
+#include "mResources.h"
+#include "mCamera.h"
 extern m::Application application;
 namespace m
 {
@@ -22,9 +25,12 @@ namespace m
 	{
 		curItemIndex = 2;
 		Background* b = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
-
+		
 		AddGameObject(b, LAYER_TYPE::BACKGROUND);
 
+		sectionHoverSound = Resources::Load<Sound>(L"mapHoverSound", L"..\\Resources\\sound\\sfx\\ui_map_highlight_region.wav");
+		std::fill_n(sectionHoverPlayed, 8, false);
+		bBossShake = false;
 		Background* b0 = new Background(MAKE_SECTION_KEY(mType, -1), MAKE_SECTION_PATH(mType, -1), 2, false, CENTER);
 		b0->SetPos(Vector2(100.f, 100.f));
 		AddGameObject(b0, LAYER_TYPE::BACKGROUND);
@@ -375,6 +381,9 @@ namespace m
 		}
 		COLORREF color = GetPixel(application.GetHdc(), MOUSE_POS.x, MOUSE_POS.y);
 		int checkFinal = 0;
+
+		boxDragSkill2->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[curMech].weapons[1]]);
+
 		for (int i = 0; i < mSections.size(); i++)
 		{
 			/*if (math::CheckRectPos(mSections[i]->GetPos(), mSections[i]->GetSize() * 2, MOUSE_POS))
@@ -386,6 +395,7 @@ namespace m
 				checkFinal++;
 				mSections[i]->SetTex(MAKE_SECTION_KEY(mType, i, true), MAKE_SECTION_PATH(mType, i, true));
 				mSectionsOL[i]->SetState(GameObject::STATE::Invisible);
+
 				for (int _i = 0; _i < 8; _i++)
 				{
 					if (landAdjacencyMatrix[GameComp::curLand][i][_i] == CLEAR)
@@ -423,6 +433,11 @@ namespace m
 						SceneManager::LoadScene(SCENE_TYPE::COMBAT);
 						return;
 					}
+					if (!sectionHoverPlayed[i])
+					{
+						sectionHoverSound->Play(false);
+						sectionHoverPlayed[i] = true;
+					}
 					// select
 				}
 				else if (color == RGB(70, 92, 61))
@@ -431,6 +446,7 @@ namespace m
 				}
 				else
 				{
+					sectionHoverPlayed[i] = false;
 					if (GameComp::clearLandMatric[GameComp::curLand][i] == NOR
 						&& GameComp::curLandSection != i)
 					{
@@ -455,50 +471,19 @@ namespace m
 		}
 		if (checkFinal > 7)
 		{
-			GameComp::checkClearLand[GameComp::curLand] = CLEAR;
-			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
-		}
-		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
-		{
-			if (GameComp::inventoryItems.size() <= i)
+			if (!bBossShake)
 			{
-				inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-				inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
-				inventoryColumns[i % 3]->SetSize(Vector2::One);
+				//Camera::PushEffect(CAMERA_EFFECT_TYPE::Shake, 6.f, 100);
+				bBossShake = true;
 			}
-			else
+			if (Camera::GetEffectSize() == 0)
 			{
-				inventoryColumns[i % 3]->SetInnerMag(1);
-				inventoryColumns[i % 3]->SetMag(1);
-				inventoryColumns[i % 3]->SetInvenIdx(i);
-				inventoryColumns[i % 3]->SetItem(GameComp::inventoryItems[i].item);
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_PI)
-				{
-					inventoryColumns[i % 3]->ChangeInner(PILOT_PATH[GameComp::inventoryItems[i].item]);
-					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp", L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp");
-					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
-					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
-					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
-					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_PI);
-				}
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_WE)
-				{
-					inventoryColumns[i % 3]->ChangeInner(WEAPON_IMAGES[GameComp::inventoryItems[i].item]);
-					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
-					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
-					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
-					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_WE);
-				}
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::NONE)
-				{
-					//L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", NO_BACK
-					inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-					inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
-					inventoryColumns[i % 3]->SetSize(Vector2::One);
-				}
+				GameComp::checkClearLand[GameComp::curLand] = CLEAR;
+				SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 			}
+			
 		}
+
 
 		if (btnResultClose->GetClicked())
 		{
@@ -508,7 +493,6 @@ namespace m
 			boxBlackFade->SetState(GameObject::STATE::Invisible);
 			text1->SetState(GameObject::STATE::Invisible);
 			text2->SetState(GameObject::STATE::Invisible);
-			GameComp::savedPeople += GameComp::saveTurnPeople;
 			for (int i = 0; i < 2; i++)
 			{
 				stars[i]->SetState(GameObject::STATE::Invisible);
@@ -552,22 +536,6 @@ namespace m
 			{
 				curMech = i;
 
-				boxDragSkill1->SetInner(true);
-				boxDragSkill2->SetInner(true);
-				boxDragPilot->SetInner(true);
-
-
-				boxDragPilot->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[i]]);
-				boxDragPilot->SetItem((int)GameComp::mPilots[i]);
-
-				if (GameComp::mechInfos[i].weapons[0] == WEAPON_T::NONE) boxDragSkill1->SetInner(false);
-				if (GameComp::mechInfos[i].weapons[1] == WEAPON_T::NONE) boxDragSkill2->SetInner(false);
-
-				boxDragSkill1->SetItem((int)GameComp::mechInfos[i].weapons[0]);
-				boxDragSkill2->SetItem((int)GameComp::mechInfos[i].weapons[1]);
-				boxDragSkill1->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[i].weapons[0]]);
-				boxDragSkill2->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[i].weapons[1]]);
-
 				boxDragSkill1->SetState(GameObject::STATE::Visible);
 				boxDragSkill2->SetState(GameObject::STATE::Visible);
 				boxDragPilot->SetState(GameObject::STATE::Visible);
@@ -581,6 +549,20 @@ namespace m
 				clickableMechs[i]->SetClicked(false);
 			}
 		}
+		boxDragSkill1->SetInner(true);
+		boxDragSkill2->SetInner(true);
+		boxDragPilot->SetInner(true);
+
+		boxDragPilot->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[curMech]]);
+		boxDragPilot->SetItem((int)GameComp::mPilots[curMech]);
+
+		if (GameComp::mechInfos[curMech].weapons[0] == WEAPON_T::NONE) boxDragSkill1->SetInner(false);
+		if (GameComp::mechInfos[curMech].weapons[1] == WEAPON_T::NONE) boxDragSkill2->SetInner(false);
+
+		boxDragSkill1->SetItem((int)GameComp::mechInfos[curMech].weapons[0]);
+		boxDragSkill2->SetItem((int)GameComp::mechInfos[curMech].weapons[1]);
+		boxDragSkill1->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[curMech].weapons[0]]);
+
 		if (GameComp::inventoryItems.size() > 3)
 		{
 			btnInvenDown->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\arrow_down_big_on.bmp");
@@ -627,6 +609,9 @@ namespace m
 		{
 			if (mM && boxPilot->GetHover()/*math::CheckRectPos(boxPilot->GetPos(), boxPilot->GetInnerImage()->GetSize(), MOUSE_POS)*/)
 			{
+				//boxPilot->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
+				//boxSkill1->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
+				//boxSkill2->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
 				if (mM->GetButtonType() == BTN_TYPE::DRAG_PI)
 				{
 					GameComp::mPilots[curMech] = (PILOT_T)mM->GetItem();
@@ -645,8 +630,10 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill1->GetPos(), boxSkill1->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
+					GameComp::mechInfos[curMech].weapons[mM->GetSkillBoxNum()] = WEAPON_T::NONE;
+
 					GameComp::mechInfos[curMech].weapons[0] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
 					//mM->SetSkillBoxNum(0);
@@ -664,8 +651,10 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill2->GetPos(), boxSkill2->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
+					GameComp::mechInfos[curMech].weapons[mM->GetSkillBoxNum()] = WEAPON_T::NONE;
+
 					GameComp::mechInfos[curMech].weapons[1] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
 					//mM->SetSkillBoxNum(1);
@@ -705,6 +694,10 @@ namespace m
 					}
 					clickableMechs[curMech]->SetClicked(true);
 				}
+				else
+				{
+					mM->SetPos(mM->GetOriginPos());
+				}
 				//clickableMechs[curMech]->SetClicked(true);
 				//mM->SetInnerMag(1);
 				//if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
@@ -717,44 +710,42 @@ namespace m
 
 			mM = nullptr;
 		}
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+		if (nullptr == mM)
 		{
-			if (boxPilot->GetState() == GameObject::STATE::Visible
-				&& boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial
-				/*&& boxDragPilot->GetClicked()*/
-				&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
+			if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 			{
-				if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+				if (boxPilot->GetState() == GameObject::STATE::Visible
+					&& boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial
+					&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 				{
-					mM = boxDragPilot;
-					mM->SetFromInfos(true);
-				}
+					if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+					{
+						mM = boxDragPilot;
+						mM->SetFromInfos(true);
+					}
 
-			}
-			if (boxSkill1->GetState() == GameObject::STATE::Visible
-				&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
-				//&& boxDragSkill1->GetClicked()
-				&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
-			{
-				if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
-				{
-					mM = boxDragSkill1;
-					mM->SetFromInfos(true);
 				}
-				//boxDragSkill1->SetClicked(false);
-			}
-			if (boxSkill2->GetState() == GameObject::STATE::Visible
-				&& boxDragSkill2->GetItem() != (int)WEAPON_T::NONE
-				//&& boxDragSkill2->GetClicked()
-				&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
-			{
-				if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+				if (boxSkill1->GetState() == GameObject::STATE::Visible
+					&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
+					&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 				{
-					mM = boxDragSkill2;
-					mM->SetFromInfos(true);
+					if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
+					{
+						mM = boxDragSkill1;
+						mM->SetFromInfos(true);
+					}
+				}
+				if (boxSkill2->GetState() == GameObject::STATE::Visible
+					&& boxDragSkill2->GetItem() != (int)WEAPON_T::NONE
+					&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
+				{
+					if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+					{
+						mM = boxDragSkill2;
+						mM->SetFromInfos(true);
+					}
 				}
 			}
-
 		}
 		for (int i = 0; i < 3; i++)
 		{
@@ -764,7 +755,8 @@ namespace m
 				{
 					if (math::CheckRectPos(inventoryColumns[i]->GetPos(), inventoryColumns[i]->GetInnerImage()->GetSize(), MOUSE_POS))
 					{
-						mM = inventoryColumns[i];
+						if (inventoryColumns[i]->GetItem() != 0)
+							mM = inventoryColumns[i];
 						//mM->SetInnerMag(2);
 						//mM->SetTex(NO_BACK, NO_BACK);
 						//mM->SetMag(1);
@@ -773,6 +765,49 @@ namespace m
 			}
 		}
 
+		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
+		{
+			inventoryColumns[i % 3]->SetFromInven(true);
+
+			if (GameComp::inventoryItems.size() <= i)
+			{
+				inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+				inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
+				inventoryColumns[i % 3]->SetSize(Vector2::One);
+			}
+			else
+			{
+				inventoryColumns[i % 3]->SetInnerMag(1);
+				inventoryColumns[i % 3]->SetMag(1);
+				inventoryColumns[i % 3]->SetInvenIdx(i);
+				inventoryColumns[i % 3]->SetItem(GameComp::inventoryItems[i].item);
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_PI)
+				{
+					inventoryColumns[i % 3]->ChangeInner(PILOT_PATH[GameComp::inventoryItems[i].item]);
+					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp", L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp");
+					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
+					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
+					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
+					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_PI);
+				}
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_WE)
+				{
+					inventoryColumns[i % 3]->ChangeInner(WEAPON_IMAGES[GameComp::inventoryItems[i].item]);
+					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
+					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
+					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
+					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_WE);
+				}
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::NONE)
+				{
+					//L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", NO_BACK
+					inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+					inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
+					inventoryColumns[i % 3]->SetSize(Vector2::One);
+				}
+			}
+		}
 	}
 	void InLandScene::Render(HDC hdc)
 	{
@@ -782,6 +817,7 @@ namespace m
 	{}
 	void InLandScene::OnEnter()
 	{
+
 		GameComp::curLand = (int)mType;
 		GameComp::clearLandMatric[GameComp::curLand][0] = 1;
 		if (GameComp::checkClearLand[GameComp::curLand])
@@ -791,8 +827,24 @@ namespace m
 		//GameComp::combatEnd = true;
 		//GameComp::curLandSection = 5;
 		//GameComp::curLand = 2;
+		
+
 		if (GameComp::combatEnd)
 		{
+		
+			Sound* victorySound2 = Resources::Load<Sound>(L"victorysound", L"..\\Resources\\sound\\music\\ui_battle_victory.wav");
+			victorySound2->Play(false);
+
+			if (GameComp::bKillLeader || GameComp::curLandSection == 0)
+			{
+				victorySound3 = Resources::Load<Sound>(L"loopBoss", L"..\\Resources\\sound\\music\\mus_victory_boss_loop.wav");
+				victorySound3->Play(true);
+			}
+			else
+			{
+				inLandTheme = Resources::Load<Sound>(themes[GameComp::curLand], themes[GameComp::curLand]);
+				inLandTheme->Play(true);
+			}
 			for (int i = 0; i < 3; i++)
 			{
 				boxResultPilots[i]->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[i]]);
@@ -808,7 +860,7 @@ namespace m
 					, BOLD_NUM_PATH[ch - 48]);
 				resultPeopleNum[i]->SetState(GameObject::STATE::Visible);
 			}
-			//GameComp::savedPeople += GameComp::saveTurnPeople;
+			GameComp::savedPeople += GameComp::saveTurnPeople;
 			//GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
 			//if (MAX_GRID_POWER >= 8) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
 			//else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
@@ -990,6 +1042,11 @@ namespace m
 			}
 			GameComp::combatEnd = false;
 		}
+		else
+		{
+			inLandTheme = Resources::Load<Sound>(themes[GameComp::curLand], themes[GameComp::curLand]);
+			inLandTheme->Play(true);
+		}
 
 		//for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		//{
@@ -1007,5 +1064,10 @@ namespace m
 	}
 	void InLandScene::OnExit()
 	{
+		if(inLandTheme)
+			inLandTheme->Stop(true);
+		if (victorySound3)
+			victorySound3->Stop(true);
+		bBossShake = false;
 	}
 }

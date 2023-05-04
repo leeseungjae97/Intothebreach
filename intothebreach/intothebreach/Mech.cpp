@@ -12,6 +12,7 @@
 #include "mCamera.h"
 #include "mCollider.h"
 #include "mSkill.h"
+#include "mSound.h"
 namespace m
 {
 	Mech::Mech(int unitName, Vector2 _coord, int _range, int _hp, size_t idx)
@@ -252,6 +253,20 @@ namespace m
 			moveCnt = (int)directQueue.size() - 1;
 		scene->MoveAffectUnit(this, directQueue[moveCnt].coord);
 		
+		int i = 0;
+		wstring randMove = L"";
+		while (randMove == L"")
+		{
+			i = rand() % 3;
+			randMove = MECH_MOVE_SOUNDS[GetUnitName()][i];
+		}
+		randMoveSound = Resources::Load<Sound>(randMove, randMove);
+		if (!randMoveSoundPlayed)
+		{
+			randMoveSound->SetVolume(10.f);
+			randMoveSound->Play(false);
+			randMoveSoundPlayed = true;
+		}
 		moveCnt--;
 		DrawMoveDust();
 		//if (GetCoord() == GetFinalCoord())
@@ -268,6 +283,7 @@ namespace m
 			directQueue.clear();
 			moveCnt = GetMoveRange();
 			SetEndMove(false);
+			randMoveSoundPlayed = false;
 		}
 	}
 	void Mech::idle()

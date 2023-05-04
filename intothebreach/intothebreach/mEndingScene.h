@@ -3,6 +3,8 @@
 namespace m {
 	class Background;
 	class Button;
+
+	class Sound;
     class EndingScene :
         public Scene {
 	public:
@@ -33,6 +35,8 @@ namespace m {
 
 		Background* scrollText;
 		Background* savePeopleNum[6];
+		Sound* endingSound;
+		bool endingSoundPlayed;
 
     };
 }

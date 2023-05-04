@@ -3,6 +3,7 @@
 namespace m
 {
 	class Image;
+	class Sound;
 	class Mech : public Unit
 	{
 	public:
@@ -62,5 +63,7 @@ namespace m
 		bool bDeployed;
 		float fDeployConstant;
 		Image* deployArrow;
+		Sound* randMoveSound;
+		bool randMoveSoundPlayed;
 	};
 }

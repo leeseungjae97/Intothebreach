@@ -46,6 +46,8 @@ namespace m
 		if (endFire)
 		{
 			startFire = false;
+			endFire = false;
+			startRender = false;
 		}
 		if (!startRender) return;
 		if (startFire)
@@ -66,6 +68,7 @@ namespace m
 	}
 	void Skill_St::Active(HDC hdc)
 	{
+		Skill::Active(hdc);
 		Vector2 mPos = GetPos();
 		SKILL_DIR dir = SKILL_DIR::D;
 		//SKILL_DIR opDir = SKILL_DIR::D;
@@ -195,6 +198,7 @@ namespace m
 	}
 	void Skill_St::CheckDirection()
 	{
+		Skill::CheckDirection();
 		Scene* scene = SceneManager::GetActiveScene();
 		Scene::TILES mPosTiles = scene->GetPosTiles();
 		Unit* unit = nullptr;
@@ -226,6 +230,7 @@ namespace m
 					if (scene->SearchAffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x))
 					{
 						scene->HitAffectUnit((int)p->GetCoord().y, (int)p->GetCoord().x, 1);
+						ImpactSound();
 						SetEndFire(false);
 						SetStartFire(false);
 						SetStartRender(false);
@@ -237,6 +242,7 @@ namespace m
 					}
 					if (p->GetCoord() == GetEndCoord())
 					{
+						ImpactSound();
 						SetEndFire(false);
 						SetStartFire(false);
 						SetStartRender(false);
@@ -284,7 +290,13 @@ namespace m
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
 
-		if (mStPos == Vector2::Zero || mFinalEdPos == Vector2::One) endFire = false;
+
+		if (mStPos == Vector2::Minus || mFinalEdPos == Vector2::Minus) endFire = false;
 		else diff <= 0.f ? endFire = true : endFire = false;
+
+		if (absD == absMD)
+		{
+			endFire = true;
+		}
 	}
 }

@@ -26,15 +26,6 @@ namespace m
 	void Skill_RS::Update()
 	{
 		Skill::Update();
-		Vector2 mPos = GetPos();
-		CalEndFire();
-
-		if (startFire)
-		{
-			mPos.x += 500.f * Missile_vec.x * Time::fDeltaTime();
-			mPos.y += 500.f * Missile_vec.y * Time::fDeltaTime();
-		}
-		SetPos(mPos);
 	}
 	void Skill_RS::Render(HDC hdc)
 	{
@@ -42,9 +33,8 @@ namespace m
 		if (endFire)
 		{
 			startFire = false;
-			//endFire = false;
-			//startRender = false;
-			//object::Invisible(this);
+			endFire = false;
+			startRender = false;
 		}
 		if (!startRender) return;
 		if (startFire)
@@ -78,51 +68,6 @@ namespace m
 		if (mStPos.x > mFinalEdPos.x
 			&& mStPos.y < mFinalEdPos.y)
 			dir = SKILL_DIR::D;
-
-		//WEAPON_T nn = mWeaponType;
-
-		//if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)))
-		//{
-		//	Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), MAKE_SKILL_PATH(WEAPON_T::titan_fist, dir));
-		//	float fWid = (float)(im->GetWidth() / WEAPON_LEN[(UINT)WEAPON_T::titan_fist]);
-
-		//	GetAnimator()->CreateAnimation(
-		//		MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir),
-		//		im,
-		//		Vector2::Zero,
-		//		Vector2(fWid, (float)im->GetHeight()),
-		//		Vector2::Zero,
-		//		WEAPON_LEN[(UINT)mType],
-		//		0.5f,
-		//		AC_SRC_OVER
-		//	);
-		//}
-		//if(GetAnimator()->GetStopAnimator())
-		//	GetAnimator()->Play(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), false);
-		//GetAnimator()->SetConstant(255);
-		//if (nullptr == GetAnimator()->FindAnimation(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)))
-		//{
-		//	UINT len = WEAPON_LEN[(UINT)WEAPON_T::titan_fist];
-
-		//	Image* im = Resources::Load<Image>(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)
-		//		, MAKE_SKILL_PATH(WEAPON_T::titan_fist, dir));
-
-		//	float fWid = (float)im->GetWidth() / len;
-		//	float fHei = (float)im->GetHeight();
-
-		//	GetAnimator()->CreateAnimation(
-		//		MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir)
-		//		, im
-		//		, Vector2::Zero
-		//		, Vector2(fWid, fHei)
-		//		, Vector2::Zero
-		//		, len
-		//		, 0.1f
-		//		, AC_SRC_OVER
-		//	);
-		//}
-		//if (GetAnimator()->GetStopAnimator())
-		//	GetAnimator()->Play(MAKE_SKILL_KEY(WEAPON_T::titan_fist, dir), true);
 	}
 	void Skill_RS::GuideWire(HDC hdc)
 	{
@@ -138,6 +83,7 @@ namespace m
 	}
 	void Skill_RS::CheckDirection()
 	{
+		Skill::CheckDirection();
 		HitEffectDir();
 		Scene* scene = SceneManager::GetActiveScene();
 
@@ -157,5 +103,8 @@ namespace m
 		//}else 
 			
 		return;
+	}
+	void Skill_RS::CalEndFire()
+	{
 	}
 }

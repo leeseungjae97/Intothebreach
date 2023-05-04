@@ -6,6 +6,7 @@ namespace m
 	class TileHead;
 	class Button;
 	class Alien;
+	class Sound;
 	class CombatScene : public Scene
 	{
 	public:
@@ -80,8 +81,82 @@ namespace m
 		int mapNum;
 		int mechIdx;
 		int iTurn;
-
+		wstring battleThemes[6][5]{
+			{
+				L"..\\Resources\\sound\\music\\mus_grass_combat_delta.wav",
+				L"..\\Resources\\sound\\music\\mus_grass_combat_gamma.wav",
+				L"..\\Resources\\sound\\music\\mus_grass_combat_new.wav",
+				L"",
+				L"..\\Resources\\sound\\music\\mus_grass_bossmap.wav"
+			},
+			{
+				L"..\\Resources\\sound\\music\\mus_sand_combat_eastwood.wav",
+				L"..\\Resources\\sound\\music\\mus_sand_combat_guitar.wav",
+				L"..\\Resources\\sound\\music\\mus_sand_combat_montage.wav",
+				L"..\\Resources\\sound\\music\\mus_sand_combat_western.wav",
+				L"..\\Resources\\sound\\music\\mus_sand_bossmap.wav"
+			},
+			{
+				L"..\\Resources\\sound\\music\\mus_snow_combat_ice.wav",
+				L"..\\Resources\\sound\\music\\mus_snow_combat_train.wav",
+				L"..\\Resources\\sound\\music\\mus_snow_combat_zimmer.wav",
+				L"",
+				L"..\\Resources\\sound\\music\\mus_snow_bossmap.wav"
+			},
+			{
+				L"..\\Resources\\sound\\music\\mus_acid_combat_detritus.wav",
+				L"..\\Resources\\sound\\music\\mus_acid_combat_new.wav",
+				L"..\\Resources\\sound\\music\\mus_acid_combat_ominous.wav",
+				L"..\\Resources\\sound\\music\\mus_acid_combat_synth.wav",
+				L"..\\Resources\\sound\\music\\mus_acid_bossmap.wav"
+			},
+			{
+				L"..\\Resources\\sound\\music\\mus_finalboss.wav",
+				L"..\\Resources\\sound\\music\\mus_finalboss.wav",
+				L"..\\Resources\\sound\\music\\mus_finalboss.wav",
+				L"..\\Resources\\sound\\music\\mus_finalboss.wav",
+				L"..\\Resources\\sound\\music\\mus_finalboss.wav",
+			},
+			{
+				L"..\\Resources\\sound\\music\\mus_title_B.wav",
+				L"..\\Resources\\sound\\music\\mus_title_B.wav",
+				L"..\\Resources\\sound\\music\\mus_title_B.wav",
+				L"..\\Resources\\sound\\music\\mus_title_B.wav",
+				L"..\\Resources\\sound\\music\\mus_title_B.wav",
+			}
+			
+		};
+		wstring deploySounds[3]{
+			L"..\\Resources\\sound\\sfx\\ui_battle_preplan_place_mech_01.wav",
+			L"..\\Resources\\sound\\sfx\\ui_battle_preplan_place_mech_02.wav",
+			L"..\\Resources\\sound\\sfx\\ui_battle_preplan_place_mech_03.wav",
+		};
+		wstring battleAmbis[5]{
+			L"..\\Resources\\sound\\ambience\\amb_grass_base.wav",
+			L"..\\Resources\\sound\\ambience\\amb_desert_base.wav",
+			L"..\\Resources\\sound\\ambience\\amb_snow_base.wav",
+			L"..\\Resources\\sound\\ambience\\amb_acid_base.wav",
+			L"..\\Resources\\sound\\ambience\\amb_final_base.wav",
+		};
 		Background* explosion;
+		Sound* deploySound;
+		Sound* battleTheme;
+		Sound* battleAmbi;
+		bool battleInFirst;
+		bool battleThemePlayed;
+		bool battleVictory;
+
+		Sound* bombTickingSound;
+		Sound* bombTickingSound2;
+		Sound* bombTickingSound3;
+		Sound* finalTheme;
+		bool bombF2;
+		bool bombF3;
+		bool bombF4;
+		float mT = 1.f;
+		float mTT = 0.f;
+		int prevBlinkCnt;
+
 	};
 }
 

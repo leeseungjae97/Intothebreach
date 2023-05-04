@@ -17,6 +17,7 @@
 #include "mSkill.h"
 #include "mTime.h"
 #include "mCamera.h"
+#include "mSound.h"
 extern m::Application application;
 namespace m
 {
@@ -38,12 +39,14 @@ namespace m
 		Scene::Initialize();
 		mechIdx = 0;
 		iTurn = 4;
+		
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
-
+		battleThemePlayed = false;
+		battleVictory = false;
 		UINT _x = (UINT)(application.GetResolutionWidth() / b0->GetWidth());
 		UINT _y = (UINT)(application.GetResolutionHeight() / b0->GetHeight());
-
+		
 		delete b0;
 
 		for (UINT y = 0; y <= _y; y++)
@@ -72,7 +75,7 @@ namespace m
 			}
 		}
 
-
+		bombTickingSound = Resources::Load<Sound>(L"bombTick", L"..\\Resources\\sound\\sfx\\prop_final_bomb_beep.wav");
 		textDeploy = new Button(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOYING_TEXT], A_BTN_BACK);
 		textDeploy->SetInner(true);
 		textDeploy->SetAlpha(true);
@@ -268,10 +271,10 @@ namespace m
 		AddGameObject(btnUndoMove, LAYER_TYPE::UI);
 		AddGameObject(btnInitTurn, LAYER_TYPE::UI);
 		AddGameObject(playerUnitInfo, LAYER_TYPE::UI);
-		AddGameObject(playerTurnBox, LAYER_TYPE::UI);
-		AddGameObject(endMissionBox, LAYER_TYPE::UI);
-		AddGameObject(alienTurnBox, LAYER_TYPE::UI);
-		AddGameObject(selectUnitBox, LAYER_TYPE::UI);
+		AddGameObject(playerTurnBox, LAYER_TYPE::FRONT_UI);
+		AddGameObject(endMissionBox, LAYER_TYPE::FRONT_UI);
+		AddGameObject(alienTurnBox, LAYER_TYPE::FRONT_UI);
+		AddGameObject(selectUnitBox, LAYER_TYPE::FRONT_UI);
 		AddGameObject(boxWeapon, LAYER_TYPE::UI);
 		AddGameObject(boxWeaponPilot, LAYER_TYPE::UI);
 		AddGameObject(boxPilotBack, LAYER_TYPE::UI);
@@ -312,7 +315,8 @@ namespace m
 
 			randY += 1.f;
 			randX += 5.f;
-			int randAlien[2] = { 6,7 };
+			int randAlien[2] = { 2,3 };
+			int randAlienRank[2] = { 0,1 };
 			int randUnit = rand() % 2;
 
 			bool f = false;
@@ -339,61 +343,10 @@ namespace m
 					else iter2++;
 				}
 			}
-			
-			//for (int i = 0; i < GetStructuresTiles().size(); i++)
-			//{
-			//	if (f) break;
-			//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
-			//	{
-			//		f = true;
-			//		break;
-			//	}
-			//}
 			if (!f)
 			{
-				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[6]);
+				object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
 			}
-
-			//if (GameComp::mAliens.size() == 0)
-			//	object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
-			//else
-			//{
-			//	bool f = false;
-			//	vector<Alien*>::iterator iter = GameComp::mAliens.begin();
-			//	while (iter != GameComp::mAliens.end())
-			//	{
-			//		if ((*iter)->GetCoord() == Vector2(randX, randY))
-			//		{
-			//			f = true;
-			//			break;
-			//		}
-			//		else iter++;
-			//	}
-
-			//	vector<Building*>::iterator iter2 = GetStructures().begin();
-			//	while (iter2 != GetStructures().end())
-			//	{
-			//		if ((*iter2)->GetCoord() == Vector2(randX, randY))
-			//		{
-			//			f = true;
-			//			break;
-			//		}
-			//		else iter2++;
-			//	}
-			//	//for (int i = 0; i < GetStructuresTiles().size(); i++)
-			//	//{
-			//	//	if (f) break;
-			//	//	if (GetStructuresTiles()[i]->GetCoord() == Vector2(randX, randY))
-			//	//	{
-			//	//		f = true;
-			//	//		break;
-			//	//	}
-			//	//}
-			//	if (!f)
-			//	{
-			//		object::Instantiate(Vector2(randX, randY), LAYER_TYPE::MONSTER, UNITS[randAlien[randUnit]]);
-			//	}
-			//}
 		}
 	}
 	void CombatScene::PlayerTurnBackground()
@@ -409,7 +362,10 @@ namespace m
 			if (!combatBack[i]->GetSmoothAppear())
 				combatBack[i]->SmoothDisappear(true);
 		}
+
 		Scene::SetCurTurnEnd(false);
+		Sound* playerTurnSound = Resources::Load<Sound>(L"playerturn" , L"..\\Resources\\sound\\sfx\\ui_battle_enemy_buff_removed.wav");
+		playerTurnSound->Play(false);
 	}
 	void CombatScene::AlienTurnBackground()
 	{
@@ -425,6 +381,18 @@ namespace m
 				combatBack[i]->SmoothAppear(true);
 		}
 		Scene::SetCurTurnEnd(false);
+
+		if (battleInFirst)
+		{
+			Sound* startSound = Resources::Load<Sound>(L"startturn", L"..\\Resources\\sound\\sfx\\ui_battle_mission_start.wav");
+			startSound->Play(false);
+			battleInFirst = false;
+		}
+		else
+		{
+			Sound* enemyTurnSound = Resources::Load<Sound>(L"enemyturn", L"..\\Resources\\sound\\sfx\\ui_battle_enemy_turn.wav");
+			enemyTurnSound->Play(false);
+		}
 	}
 	void CombatScene::PutUnitBeforeCombat()
 	{
@@ -432,9 +400,11 @@ namespace m
 		{
 			for (int x = 1; x < 4; x++)
 			{
+				if (GetAffectUnits(y,x).size() != 0) continue;
 				SetPosTiles(y, x, TILE_T::MOVE_RANGE, MOVE_TILE_T::square_y);
 			}
 		}
+		Scene::DrawOutLineTile((int)MOVE_TILE_T::square_y_l);
 		bool bConfirm = true;
 		for (int i = 0; i < GameComp::mMechs.size(); i++)
 		{
@@ -444,7 +414,7 @@ namespace m
 				bConfirm = false;
 			}
 		}
-
+		Scene::HighlightTile();
 		if (bConfirm)
 		{
 			textDeploy->ChangeInner(COMBAT_UI_TEXT_PATH[(UINT)COMBAT_UI_TEXT::DEPLOY_TEXT]);
@@ -475,6 +445,7 @@ namespace m
 		}
 		else
 		{
+
 			if (nullptr == GetMouseFollower())
 			{
 				for (int i = 0; i < GameComp::mMechs.size(); i++)
@@ -531,7 +502,9 @@ namespace m
 						}
 					}
 					if (nullptr != GetMouseFollower()
-						&& !((y > 0 && y < 7) && (x > 0 && x < 4)))
+						/*&& !((y > 0 && y < 7) && (x > 0 && x < 4)))*/
+						&& GetPosTiles()[GetMouseFollower()->GetCoord().y][GetMouseFollower()->GetCoord().x]->GetTileType()
+							!= TILE_T::MOVE_RANGE)
 					{
 						GetMouseFollower()->SetCancelDeploy(true);
 					}
@@ -576,6 +549,9 @@ namespace m
 								SetMouseFollower(nullptr);
 								mechIdx = -1;
 							}
+							int i = rand() % 3;
+							deploySound = Resources::Load<Sound>(deploySounds[i], deploySounds[i]);
+							deploySound->Play(false);
 						}
 						else // 새로 이동
 						{
@@ -865,6 +841,16 @@ namespace m
 					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Firefly], ALIENS_RANK::BOSS, true);
 				}
 				break;
+				case ELITE_FIREFLY:
+				{
+					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Hornet], ALIENS_RANK::ELITE, true);
+				}
+				break;
+				case ELITE_HORNET:
+				{
+					object::Instantiate(Vector2(x, y), LAYER_TYPE::MONSTER, UNITS[(int)ALIENS::Firefly], ALIENS_RANK::ELITE, true);
+				}
+				break;
 				case BOMB:
 				{
 					object::Instantiate(Vector2(x, y), LAYER_TYPE::STRUCT, STRUCTURES::bomb, mapTileType, 3);
@@ -892,6 +878,9 @@ namespace m
 
 		//object::Instantiate(Vector2(7, 7), LAYER_TYPE::STRUCT, STRUCTURES::tower, TILE_T::GREEN);
 		//object::Instantiate(Vector2(6, 5), LAYER_TYPE::STRUCT, STRUCTURES::airfield, TILE_T::GREEN);
+
+		//prop_final_bomb_explode.wav
+		//prop_final_bomb_beep_end.wav
 	}
 	void CombatScene::ShowMechInfo(Mech* mech, bool show)
 	{
@@ -940,36 +929,156 @@ namespace m
 	void CombatScene::Update()
 	{
 		Scene::Update();
-		//if (KEY_PRESSED(KEYCODE_TYPE::B))
-		//{
-		//	GameComp::bomb->SetBlink(true);
-		//}
+		
+		if (KEY_PRESSED(KEYCODE_TYPE::B))
+		{
+			GameComp::bomb->SetBlink(true);
+			
+		}
 		if (nullptr != GameComp::bomb)
 		{
 			if (GameComp::bomb->GetBombExplosive() || iTurn > 8)
 			{
 				GameComp::bomb->SetBlink(true);
+				gridPowerBox->SetState(GameObject::STATE::Invisible);
+				btnTurnEnd->SetState(GameObject::STATE::Invisible);
+				btnUndoMove->SetState(GameObject::STATE::Invisible);
+				btnInitTurn->SetState(GameObject::STATE::Invisible);
+				playerUnitInfo->SetState(GameObject::STATE::Invisible);
+				playerTurnBox->SetState(GameObject::STATE::Invisible);
+				
+				for (int i = 0; i < infoUnits.size(); i++)
+				{
+					infoUnits[i]->SetVisibleHp(false);
+					infoUnits[i]->SetState(GameObject::STATE::Delete);
+				}
+				for (int i = 0; i < GameComp::mMechs.size(); i++) GameComp::mMechs[i]->SetVisibleHp(false);
+				for (int i = 0; i < GameComp::mAliens.size(); i++)
+				{
+					GameComp::mAliens[i]->GetCurAttackSkill()->SetStartRender(false);
+					GameComp::mAliens[i]->SetVisibleHp(false);
+				}
+				for (int i = 0; i < gridPowers.size(); i++) gridPowers[i]->SetState(GameObject::STATE::Invisible);
+
+				textTurnNum->SetState(GameObject::STATE::Invisible);
+				textTurn->SetState(GameObject::STATE::Invisible);
 			}
 			if (GameComp::bomb->GetBlink())
 			{
-				GameComp::bomb->SetIdVar(GameComp::bomb->GetIdVar() + 0.5f);
+				finalTheme = Resources::Load<Sound>(L"exploe", L"..\\Resources\\sound\\sfx\\ui_battle_final_victory.wav");
+				if (!bombF4)
+				{
+					finalTheme->Play(false);
+					bombF4 = true;
+				}
+				if (battleTheme)
+					battleTheme->Stop(true);
+				if (battleAmbi)
+					battleAmbi->Stop(true);
+
+				if (GameComp::bomb->GetBlinkCnt() > 20)
+				{
+					bombTickingSound3 = Resources::Load<Sound>(L"bombend", L"..\\Resources\\sound\\sfx\\prop_final_bomb_beep_end.wav");
+					if (!bombF2)
+					{
+						bombTickingSound3->Play(false);
+						bombF2 = true;
+					}
+				}
+				if (mT > 0)
+					mTT += Time::fDeltaTime();
+				if (mT <= 0)
+				{
+					bombTickingSound->Stop(true);
+
+				}
+				else if (mT < mTT)
+				{
+					bombTickingSound->Play(false);
+					mT -= 0.1f;
+					mTT = 0;
+				}
+				prevBlinkCnt = GameComp::bomb->GetBlinkCnt();
+				GameComp::bomb->SetIdVar(GameComp::bomb->GetIdVar() + 0.3f);
 				if (GameComp::bomb->GetBlinkCnt() > 40)
 				{
-					explosion->SetSizeUpxUnit(1.05f);
-					explosion->SetSizeUpyUnit(1.05f);
+					
+					bombTickingSound2 = Resources::Load<Sound>(L"exploe", L"..\\Resources\\sound\\sfx\\prop_final_bomb_explode.wav");
+					if (!bombF3)
+					{
+						bombTickingSound2->Play(false);
+						bombF3 = true;
+					}
+					explosion->SetSizeUpxUnit(1.08f);
+					explosion->SetSizeUpyUnit(1.08f);
 					explosion->SetPos(Vector2(GameComp::bomb->GetPos().x - explosion->GetWid() / 2
 						, GameComp::bomb->GetPos().y - explosion->GetHei() / 2));
 					explosion->SetState(GameObject::STATE::Visible);
 					explosion->SetSizeUp(true);
 				}
 			}
+			if (!bSetPosition)
+			{
+				PutUnitBeforeCombat();
+			}
+			else
+			{
+				if (!battleThemePlayed)
+				{
+					battleTheme->Play(true);
+					battleThemePlayed = true;
+				}
+				gridPowerBox->SetState(GameObject::STATE::Visible);
+				btnTurnEnd->SetState(GameObject::STATE::Visible);
+				btnUndoMove->SetState(GameObject::STATE::Visible);
+				btnInitTurn->SetState(GameObject::STATE::Visible);
+				playerUnitInfo->SetState(GameObject::STATE::Visible);
+
+				for (int i = 0; i < infoUnits.size(); i++)
+				{
+					infoUnits[i]->SetState(GameObject::STATE::NoMove);
+				}
+				if (Scene::GetCurTurnEnd())
+				{
+					if (Scene::GetPlayerTurn())
+						PlayerTurnBackground();
+					if (!Scene::GetPlayerTurn())
+						AlienTurnBackground();
+				}
+				else
+				{
+					if (Scene::GetPlayerTurn() && !playerTurnBox->GetApDAp()
+						|| !Scene::GetPlayerTurn() && !alienTurnBox->GetApDAp())
+					{
+						alienTurnBox->ChangeInner(L"..\\Resources\\texture\\ui\\combat\\ey_turn_noti.bmp");
+						alienTurnBox->SetInnerPos(Vector2(alienTurnBox->GetSize().x / 2 - 62 / 2, alienTurnBox->GetSize().y / 2 - 29 / 2));
+						Scene::MoveMech();
+						Scene::MoveSkill();
+						Scene::AlienAlgorithm();
+					}
+				}
+				for (int i = 0; i < infoUnits.size(); i++)
+				{
+					if (nullptr == GetMouseFollower())selectUnitBox->SetState(GameObject::STATE::Invisible);
+					if (GameComp::mMechs[i]->GetSelected())
+					{
+						selectUnitBox->SetPos(Vector2(10.f, btnTurnEnd->GetPos().y + btnTurnEnd->GetSize().y + 5
+							+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * i)));
+						selectUnitBox->SetState(GameObject::STATE::Visible);
+					}
+					infoUnits[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
+				}
+				AlienIndexReSort();
+				ButtonActivationCondition();
+			}
 		}
 		if (explosion->GetWid() / 5 > application.GetResolutionWidth())
 		{
 			SceneManager::LoadScene(SCENE_TYPE::ENDING);
+			bombTickingSound2->Stop(true);
 		}
 
-		if (!endGame)
+		if (!endGame && nullptr == GameComp::bomb)
 		{
 			if (!bSetPosition)
 			{
@@ -977,11 +1086,17 @@ namespace m
 			}
 			else
 			{
+				if (!battleThemePlayed)
+				{
+					battleTheme->Play(true);
+					battleThemePlayed = true;
+				}
 				gridPowerBox->SetState(GameObject::STATE::Visible);
 				btnTurnEnd->SetState(GameObject::STATE::Visible);
 				btnUndoMove->SetState(GameObject::STATE::Visible);
 				btnInitTurn->SetState(GameObject::STATE::Visible);
 				playerUnitInfo->SetState(GameObject::STATE::Visible);
+
 				for (int i = 0; i < infoUnits.size(); i++)
 				{
 					infoUnits[i]->SetState(GameObject::STATE::NoMove);
@@ -1022,7 +1137,6 @@ namespace m
 			if (iTurn == (int)COMBAT_UI_TEXT::TURN_NUM_1 + 1
 				&& nullptr == GameComp::bomb)
 			{
-
 				showEnd = true;
 			}
 		}
@@ -1052,17 +1166,28 @@ namespace m
 
 			endMissionBox->SetState(GameObject::STATE::Visible);
 			endMissionBox->SetApDAp(true);
+			if (battleTheme)
+				battleTheme->Stop(true);
+			if (battleAmbi)
+				battleAmbi->Stop(true);
+
+			Sound* victorySound = Resources::Load<Sound>(L"victorysound", L"..\\Resources\\sound\\music\\mus_victory.wav");
+			victorySound->Play(false);
 
 			endGame = true;
 			showEnd = false;
 		}
-		if (!endMissionBox->GetApDAp() && endGame && !showEnd)
+		if (!endMissionBox->GetApDAp() && endGame && !showEnd && nullptr == GameComp::bomb)
 		{
 			//Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_Out, 1.f);
 			//for (int i = 0; i < GameComp::mMechs.size(); i++)
 			//{
 			//	GameComp::mMechs[i]->SetState(GameObject::STATE::NoMove);
 			//}
+			if (GameComp::curLand == 5)
+			{
+				
+			}
 			GameComp::combatEnd = true;
 			if (GameComp::curLand + (int)SCENE_TYPE::IN_LAND0 == (int)SCENE_TYPE::IN_LAND4)
 			{
@@ -1083,11 +1208,29 @@ namespace m
 	}
 	void CombatScene::OnEnter()
 	{
+		//Camera::PushEffect(CAMERA_EFFECT_TYPE::Shake, 6.f, 100);
 		GameComp::combatEnd = false;
+		battleInFirst = true;
 		GameComp::startGame();
+		int i = 0;
+		prevBlinkCnt = 0;
+		wstring randTheme = L"";
+		while (randTheme == L"")
+		{
+			i = rand() % 5;
+			randTheme = battleThemes[GameComp::curLand][i];
+		}
+		battleTheme = Resources::Load<Sound>(randTheme, randTheme);
+		if (GameComp::curLand != 5)
+		{
+			battleAmbi = Resources::Load<Sound>(battleAmbis[GameComp::curLand], battleAmbis[GameComp::curLand]);
+			battleAmbi->SetVolume(10.f);
+			battleAmbi->Play(true);
+		}
+		
 		//GameComp::curLandSection = 0;
 		//GameComp::curLand = 5;
-
+		 
 		//mapTileType = (TILE_T)TILE_T::GREEN;
 		//mapNum = 4;
 		mapTileType = (TILE_T)GameComp::curLand;
@@ -1198,7 +1341,8 @@ namespace m
 	}
 	void CombatScene::OnExit()
 	{
-
+		battleInFirst = false;
+		battleThemePlayed = false;
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
 			for (int j = 0; j < GameComp::mAliens[i]->GetSkills().size(); j++)
@@ -1234,6 +1378,7 @@ namespace m
 		iTurn = 4;
 		endGame = false;
 		bSetPosition = false;
+		
 		//SceneManager::GetActiveScene()->ClearAffectUnit();
 	}
 

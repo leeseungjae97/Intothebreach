@@ -3,6 +3,7 @@
 namespace m
 {
 	class Animator;
+	class Sound;
 	class Skill :
 		public GameObject
 	{
@@ -57,7 +58,8 @@ namespace m
 		void SetStPos(Vector2 _pos) { mStPos = _pos; }
 		void SetGuideLinePos(Vector2 _glp) { guideLinePos = _glp; }
 		void SetGuideLineCoord(Vector2 _glc) { guideLineCoord = _glc; }
-
+		void LaunchSound();
+		void ImpactSound();
 		//void SetOppsite(bool _b) { bOppsite = _b; }
 		//void SetOppsiteDraw(Vector2 _coord, Vector2 guideCoord);
 		void Clear();
@@ -106,6 +108,11 @@ namespace m
 		Vector2 opEndPos;
 		Vector2 opGuideEndCoord;
 		Vector2 opMissile_vec;
+		
+		Sound* launchSound;
+		bool launchSoundPlayed;
+		Sound* impactSound;
+		bool impactSoundPlayed;
 	};
 }
 

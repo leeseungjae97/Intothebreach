@@ -209,6 +209,7 @@ namespace m
 	}
 	void Skill_Arc::CheckDirection()
 	{
+		Skill::CheckDirection();
 		Vector2 pos = GetPos();
 		Scene* scene = SceneManager::GetActiveScene();
 		//int direct[4][2] = { {0, 1},{-1, 0} ,{1, 0},{0, -1} };
@@ -220,8 +221,9 @@ namespace m
 			//}
 			scene->HitAffectUnit((int)GetEndCoord().y, (int)GetEndCoord().x, 1);
 			
-			//SetEndFire(false);
-			//SetStartFire(false);
+			SetEndFire(false);
+			SetStartFire(false);
+			ImpactSound();
 			if (WEAPON_PUSH_DIR[(UINT)mOwner->GetWeaponType()] != 0)
 			{
 				ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up,
@@ -231,8 +233,9 @@ namespace m
 		}
 		else if (endFire)
 		{
-			//SetEndFire(false);
-			//SetStartFire(false);
+			SetEndFire(false);
+			SetStartFire(false);
+			ImpactSound();
 			ARROW_TILE_T arrows[4] = { ARROW_TILE_T::arrow_right, ARROW_TILE_T::arrow_up,
 			ARROW_TILE_T::arrow_down, ARROW_TILE_T::arrow_left };
 			PushUnit(arrows, 4);

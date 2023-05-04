@@ -28,7 +28,8 @@ namespace m
 		curItemIndex = 2;
 		Background* b1 = new Background(L"selectLandBg1", L"..\\Resources\\texture\\ui\\selectLand\\waterbg.bmp", 0, true, CENTER);
 		AddGameObject(b1, LAYER_TYPE::BACKGROUND);
-
+		mapHoverSound = Resources::Load<Sound>(L"mapHoverSound", L"..\\Resources\\sound\\sfx\\ui_map_highlight_region.wav");
+		std::fill_n(mapHoverPlayed, 5, false);
 		Background* water = new Background(L"water", L"..\\Resources\\texture\\ui\\selectLand\\watertile.bmp", 0, false);
 
 		UINT _x = (UINT)(application.GetResolutionWidth() / water->GetWidth());
@@ -253,6 +254,34 @@ namespace m
 		inventoryParts.push_back(inventory);
 		inventoryParts.push_back(btnInvenUp);
 		inventoryParts.push_back(btnInvenDown);
+
+		//Background* mechHp = new Background(L"",L"",2);
+		//mechHp->SetPos(Vector2(mechInfo->GetPos().x + 430.f
+		//	, mechMove->GetPos().y));
+		//mechHps.push_back(mechHp);
+
+		//Background* mechHpBarBack = new Background(HP_BAR_2, HP_BAR_2);
+		//mechHpBarBack->SetSize(Vector2(mechHpBarBack->GetSize().x + ((MECH_HP[(UINT)GameComp::mechInfos[i].unitNum] - 2) * 2)
+		//	, mechHpBarBack->GetSize().y));
+		//mechHpBarBack->SetPos(Vector2(mechHp->GetPos().x + mechHp->GetSize().x / 2 - mechHpBarBack->GetSize().x / 2
+		//	, mechHp->GetPos().y + mechHp->GetSize().y - mechHpBarBack->GetSize().y / 2));
+		//AddGameObject(mechHpBarBack, LAYER_TYPE::UI);
+		//hpBacks.push_back(mechHpBarBack);
+		//AddGameObject(mechHp, LAYER_TYPE::UI);
+
+		//for (int _i = 0; _i < MECH_HP[(UINT)GameComp::mechInfos[i].unitNum]; _i++)
+		//{
+		//	Background* hpTick = new Background(HP_BAR_BACK, HP_BAR_BACK);
+		//	//hpTick->SetInner(true);
+		//	float fWid = 17 / MECH_HP[(UINT)GameComp::mechInfos[i].unitNum];
+		//	if (MECH_HP[(UINT)GameComp::mechInfos[i].unitNum] == 2) fWid -= 0.5f;
+		//	hpTick->SetSize(Vector2((float)fWid, hpTick->GetSize().y - 2));
+		//	hpTick->SetPos(Vector2(mechHpBarBack->GetPos().x + 2 + (hpTick->GetSize().x + 1) * _i
+		//		, mechHpBarBack->GetPos().y + mechHpBarBack->GetSize().y / 2 - hpTick->GetSize().y / 2));
+		//	hps.push_back(hpTick);
+		//	AddGameObject(hpTick, LAYER_TYPE::UI);
+		//}
+
 	}
 	void SelectLandScene::Update()
 	{
@@ -289,47 +318,6 @@ namespace m
 			starNum[i]->SetState(GameObject::STATE::Visible);
 		}
 
-		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
-		{
-			if (GameComp::inventoryItems.size() <= i)
-			{
-				inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-				inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
-				inventoryColumns[i % 3]->SetSize(Vector2::One);
-			}
-			else
-			{
-				inventoryColumns[i % 3]->SetInnerMag(1);
-				inventoryColumns[i % 3]->SetMag(1);
-				inventoryColumns[i % 3]->SetInvenIdx(i);
-				inventoryColumns[i % 3]->SetItem(GameComp::inventoryItems[i].item);
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_PI)
-				{
-					inventoryColumns[i % 3]->ChangeInner(PILOT_PATH[GameComp::inventoryItems[i].item]);
-					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp", L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp");
-					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
-					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
-					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
-					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_PI);
-				}
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_WE)
-				{
-					inventoryColumns[i % 3]->ChangeInner(WEAPON_IMAGES[GameComp::inventoryItems[i].item]);
-					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
-					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
-					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
-					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_WE);
-				}
-				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::NONE)
-				{
-					//L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", NO_BACK
-					inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
-					inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
-					inventoryColumns[i % 3]->SetSize(Vector2::One);
-				}
-			}
-		}
 		for (int i = 0; i < clickableMechs.size(); i++)
 		{
 			if (clickableMechs[i]->GetHover())
@@ -361,22 +349,6 @@ namespace m
 			{
 				curMech = i;
 
-				boxDragSkill1->SetInner(true);
-				boxDragSkill2->SetInner(true);
-				boxDragPilot->SetInner(true);
-
-
-				boxDragPilot->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[i]]);
-				boxDragPilot->SetItem((int)GameComp::mPilots[i]);
-
-				if (GameComp::mechInfos[i].weapons[0] == WEAPON_T::NONE) boxDragSkill1->SetInner(false);
-				if (GameComp::mechInfos[i].weapons[1] == WEAPON_T::NONE) boxDragSkill2->SetInner(false);
-
-				boxDragSkill1->SetItem((int)GameComp::mechInfos[i].weapons[0]);
-				boxDragSkill2->SetItem((int)GameComp::mechInfos[i].weapons[1]);
-				boxDragSkill1->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[i].weapons[0]]);
-				boxDragSkill2->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[i].weapons[1]]);
-
 				boxDragSkill1->SetState(GameObject::STATE::Visible);
 				boxDragSkill2->SetState(GameObject::STATE::Visible);
 				boxDragPilot->SetState(GameObject::STATE::Visible);
@@ -390,6 +362,23 @@ namespace m
 				clickableMechs[i]->SetClicked(false);
 			}
 		}
+		boxDragSkill1->SetInner(true);
+		boxDragSkill2->SetInner(true);
+		boxDragPilot->SetInner(true);
+
+		boxDragPilot->ChangeInner(PILOT_PATH[(UINT)GameComp::mPilots[curMech]]);
+		boxDragPilot->SetItem((int)GameComp::mPilots[curMech]);
+
+		if (GameComp::mechInfos[curMech].weapons[0] == WEAPON_T::NONE) boxDragSkill1->SetInner(false);
+		if (GameComp::mechInfos[curMech].weapons[1] == WEAPON_T::NONE) boxDragSkill2->SetInner(false);
+
+		boxDragSkill1->SetItem((int)GameComp::mechInfos[curMech].weapons[0]);
+		boxDragSkill2->SetItem((int)GameComp::mechInfos[curMech].weapons[1]);
+		boxDragSkill1->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[curMech].weapons[0]]);
+		boxDragSkill2->ChangeInner(WEAPON_IMAGES[(UINT)GameComp::mechInfos[curMech].weapons[1]]);
+
+
+
 		if (GameComp::inventoryItems.size() > 3)
 		{
 			btnInvenDown->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\arrow_down_big_on.bmp");
@@ -436,6 +425,9 @@ namespace m
 		{
 			if (mM && boxPilot->GetHover()/*math::CheckRectPos(boxPilot->GetPos(), boxPilot->GetInnerImage()->GetSize(), MOUSE_POS)*/)
 			{
+				//boxPilot->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
+				//boxSkill1->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
+				//boxSkill2->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
 				if (mM->GetButtonType() == BTN_TYPE::DRAG_PI)
 				{
 					GameComp::mPilots[curMech] = (PILOT_T)mM->GetItem();
@@ -454,8 +446,10 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill1->GetPos(), boxSkill1->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
+					GameComp::mechInfos[curMech].weapons[mM->GetSkillBoxNum()] = WEAPON_T::NONE;
+
 					GameComp::mechInfos[curMech].weapons[0] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
 					//mM->SetSkillBoxNum(0);
@@ -473,8 +467,10 @@ namespace m
 			}
 			else if (mM && math::CheckRectPos(boxSkill2->GetPos(), boxSkill2->GetInnerImage()->GetSize(), MOUSE_POS))
 			{
-				if (!mM->GetFromInfos() && mM->GetButtonType() == BTN_TYPE::DRAG_WE)
+				if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
 				{
+					GameComp::mechInfos[curMech].weapons[mM->GetSkillBoxNum()] = WEAPON_T::NONE;
+
 					GameComp::mechInfos[curMech].weapons[1] = (WEAPON_T)mM->GetItem();
 					//mM->SetInnerMag(2);
 					//mM->SetSkillBoxNum(1);
@@ -514,6 +510,10 @@ namespace m
 					}
 					clickableMechs[curMech]->SetClicked(true);
 				}
+				else
+				{
+					mM->SetPos(mM->GetOriginPos());
+				}
 				//clickableMechs[curMech]->SetClicked(true);
 				//mM->SetInnerMag(1);
 				//if (mM->GetButtonType() == BTN_TYPE::DRAG_WE)
@@ -526,45 +526,44 @@ namespace m
 
 			mM = nullptr;
 		}
-		if (KEY_DOWN(KEYCODE_TYPE::LBTN))
+		if (nullptr == mM)
 		{
-			if (boxPilot->GetState() == GameObject::STATE::Visible
-				&& boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial
-				/*&& boxDragPilot->GetClicked()*/
-				&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
+			if (KEY_DOWN(KEYCODE_TYPE::LBTN))
 			{
-				if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+				if (boxPilot->GetState() == GameObject::STATE::Visible
+					&& boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial
+					&& math::CheckRectPos(boxDragPilot->GetPos(), boxDragPilot->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 				{
-					mM = boxDragPilot;
-					mM->SetFromInfos(true);
-				}
+					if (boxDragPilot->GetItem() != (int)PILOT_T::Pilot_Artificial)
+					{
+						mM = boxDragPilot;
+						mM->SetFromInfos(true);
+					}
 
-			}
-			if (boxSkill1->GetState() == GameObject::STATE::Visible
-				&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
-				//&& boxDragSkill1->GetClicked()
-				&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
-			{
-				if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
-				{
-					mM = boxDragSkill1;
-					mM->SetFromInfos(true);
 				}
-				//boxDragSkill1->SetClicked(false);
-			}
-			if (boxSkill2->GetState() == GameObject::STATE::Visible
-				&& boxDragSkill2->GetItem() != (int)WEAPON_T::NONE
-				//&& boxDragSkill2->GetClicked()
-				&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
-			{
-				if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+				if (boxSkill1->GetState() == GameObject::STATE::Visible
+					&& boxDragSkill1->GetItem() != (int)WEAPON_T::NONE
+					&& math::CheckRectPos(boxDragSkill1->GetPos(), boxDragSkill1->GetInnerImage()->GetSize() * 2, MOUSE_POS))
 				{
-					mM = boxDragSkill2;
-					mM->SetFromInfos(true);
+					if (boxDragSkill1->GetItem() != (int)WEAPON_T::NONE)
+					{
+						mM = boxDragSkill1;
+						mM->SetFromInfos(true);
+					}
+				}
+				if (boxSkill2->GetState() == GameObject::STATE::Visible
+					&& boxDragSkill2->GetItem() != (int)WEAPON_T::NONE
+					&& math::CheckRectPos(boxDragSkill2->GetPos(), boxDragSkill2->GetInnerImage()->GetSize() * 2, MOUSE_POS))
+				{
+					if (boxDragSkill2->GetItem() != (int)WEAPON_T::NONE)
+					{
+						mM = boxDragSkill2;
+						mM->SetFromInfos(true);
+					}
 				}
 			}
-
 		}
+		
 		for (int i = 0; i < 3; i++)
 		{
 			if (KEY_DOWN(KEYCODE_TYPE::LBTN))
@@ -573,7 +572,8 @@ namespace m
 				{
 					if (math::CheckRectPos(inventoryColumns[i]->GetPos(), inventoryColumns[i]->GetInnerImage()->GetSize(), MOUSE_POS))
 					{
-						mM = inventoryColumns[i];
+						if(inventoryColumns[i]->GetItem() != 0)
+							mM = inventoryColumns[i];
 						//mM->SetInnerMag(2);
 						//mM->SetTex(NO_BACK, NO_BACK);
 						//mM->SetMag(1);
@@ -595,10 +595,16 @@ namespace m
 					Background* p = Islands[i];
 					if (math::CheckRectPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 					{
+						if (!mapHoverPlayed[i])
+						{
+							mapHoverSound->Play(false);
+							mapHoverPlayed[i] = true;
+						}
 						outLine[i]->SetTex(MAKE_ISLAND_OUTLINE_KEY((ISLAND_T)i), MAKE_ISLAND_OUTLINE_PATH((ISLAND_T)i), (ISLAND_T)i);
 					}
 					else
 					{
+						mapHoverPlayed[i] = false;
 						outLine[i]->Clear();
 					}
 				}
@@ -628,7 +634,50 @@ namespace m
 				}
 			}
 		}
-		
+
+		for (int i = curItemIndex - 2; i < curItemIndex + 1; i++)
+		{
+			inventoryColumns[i % 3]->SetFromInven(true);
+
+			if (GameComp::inventoryItems.size() <= i)
+			{
+				inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+				inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
+				inventoryColumns[i % 3]->SetSize(Vector2::One);
+			}
+			else
+			{
+				inventoryColumns[i % 3]->SetInnerMag(1);
+				inventoryColumns[i % 3]->SetMag(1);
+				inventoryColumns[i % 3]->SetInvenIdx(i);
+				inventoryColumns[i % 3]->SetItem(GameComp::inventoryItems[i].item);
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_PI)
+				{
+					inventoryColumns[i % 3]->ChangeInner(PILOT_PATH[GameComp::inventoryItems[i].item]);
+					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp", L"..\\Resources\\texture\\ui\\inventory\\inven_pilot_b.bmp");
+					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
+					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
+					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
+					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_PI);
+				}
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::DRAG_WE)
+				{
+					inventoryColumns[i % 3]->ChangeInner(WEAPON_IMAGES[GameComp::inventoryItems[i].item]);
+					inventoryColumns[i % 3]->SetTex(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+					//inventoryColumns[i % 3]->SetSize(Vector2(inventoryColumns[i % 3]->GetInnerImage()->GetSize().x + 3, inventoryColumns[i % 3]->GetInnerImage()->GetSize().y + 3));
+					inventoryColumns[i % 3]->SetSize(inventoryColumns[i % 3]->GetInnerImage()->GetSize() + 3.f);
+					inventoryColumns[i % 3]->SetInnerPos(Vector2::One);
+					inventoryColumns[i % 3]->SetButtonType(BTN_TYPE::DRAG_WE);
+				}
+				if (GameComp::inventoryItems[i].type == (int)BTN_TYPE::NONE)
+				{
+					//L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp", NO_BACK
+					inventoryColumns[i % 3]->ChangeInner(L"..\\Resources\\texture\\ui\\inventory\\inventory_empty_space.bmp");
+					inventoryColumns[i % 3]->SetTex(NO_BACK, NO_BACK);
+					inventoryColumns[i % 3]->SetSize(Vector2::One);
+				}
+			}
+		}
 	}
 	void SelectLandScene::Render(HDC hdc)
 	{
@@ -640,8 +689,14 @@ namespace m
 	}
 	void SelectLandScene::OnEnter()
 	{
-		//GlobalSound::titleTheme->Stop(true);
+		GlobalSound::titleTheme->Stop(true);
+		selectLandAmbi = Resources::Load<Sound>(L"selectLandAmbi", L"..\\Resources\\sound\\ambience\\amb_map.wav");
+		selectLandAmbi->SetVolume(10.f);
+		selectLandAmbi->Play(true);
 	}
 	void SelectLandScene::OnExit()
-	{}
+	{
+		if (selectLandAmbi)
+			selectLandAmbi->Stop(true);
+	}
 }

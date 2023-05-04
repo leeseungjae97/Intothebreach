@@ -26,10 +26,14 @@ enum class WEAPON_T
 	rock_launcher,
 	janus_cannon,
 
-	stinging,				// scorpion
-	fangs,					// leaper
-	stinger,				// hornet
+	pincers,				// beetle
+	spike,					// burrower
 	accelerating_thorax,	// firefly
+	stinger,				// hornet
+	appendages,				// starfish
+	tentacles,				// mosquito
+	prize,					// dung
+
 	END,
 };
 //int WEAPON_TYPE[(UINT)WEAPON_T::END]{
@@ -49,10 +53,11 @@ wstring WEAPON_PATH[(UINT)WEAPON_T::END]{
 	L"shot_mechtank_",
 
 	L"",
-	L"",
-	L"hornet_",
+	L"sword_",
 	L"shot_firefly_",
+	L"hornet_",
 };
+
 wstring WEAPON_IMAGES[(UINT)WEAPON_T::END]{
 	L"..\\Resources\\texture\\ui\\inventory\\inven_skill_box_.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\prime_punchmech.bmp",
@@ -65,8 +70,44 @@ wstring WEAPON_IMAGES[(UINT)WEAPON_T::END]{
 
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\",
-	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\enemy_hornet1.bmp",
 	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\enemy_firefly1.bmp",
+	L"..\\Resources\\texture\\weapons\\PlayerWeapons\\enemy_hornet1.bmp",
+};
+wstring WEAPON_LAUNCH_SOUNDS[(UINT)WEAPON_T::END]{
+	L"",
+	L"..\\Resources\\sound\\sfx\\mech_prime_skill_titanfist_flesh.wav",
+	L"..\\Resources\\sound\\sfx\\mech_distance_skill_artillery_volley.wav",
+	L"..\\Resources\\sound\\sfx\\mech_brute_skill_modified_cannons.wav",
+	L"..\\Resources\\sound\\sfx\\mech_prime_skill_flamespreader.wav",
+	L"..\\Resources\\sound\\sfx\\mech_prime_skill_prismbeam.wav",
+	L"..\\Resources\\sound\\sfx\\mech_distance_skill_rock_throw.wav",
+	L"..\\Resources\\sound\\sfx\\mech_brute_skill_mirror_shot.wav",
+
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_attack_charge.wav",
+	L"..\\Resources\\sound\\sfx\\mech_prime_skill_sword.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_attack_spit.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_hornet_1_attack_metal.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_starfish_1_attack_launch.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_mosquito_1_attack_launch.wav",
+	L"..\\Resources\\sound\\sfx\\enemy_dungbeetle_1_attack_launch.wav",
+};
+wstring WEAPON_IMPACT_SOUNDS[(UINT)WEAPON_T::END]{
+	L"",
+	L"",
+	L"..\\Resources\\sound\\sfx\\impact_generic_explosion.wav",
+	L"..\\Resources\\sound\\sfx\\impact_generic_explosion.wav",
+	L"",
+	L"",
+	L"..\\Resources\\sound\\sfx\\impact_rock.wav",
+	L"..\\Resources\\sound\\sfx\\mech_brute_skill_mirror_shot.wav",
+
+	L"..\\Resources\\sound\\sfx\\enemy_beetle_1_impact.wav",
+	L"",
+	L"..\\Resources\\sound\\sfx\\enemy_firefly_sold_1_attack_impact.wav",
+	L"",
+	L"",
+	L"",
+	L"",
 };
 enum class SKILL_DIR
 {
@@ -107,10 +148,10 @@ int WEAPON_RANGE[(UINT)WEAPON_T::END]{
 	99,
 	99,
 
-	1,
-	1,
+	99,
 	1,
 	99,
+	1,
 };
 WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//electrice,
@@ -141,20 +182,13 @@ WEAPON_T BASIC_WEAPON_TYPE[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	WEAPON_T::NONE,//science,
 	WEAPON_T::NONE,//tele,
 
-	WEAPON_T::NONE,//Beetle,
-	WEAPON_T::NONE,//Blobber,
-	WEAPON_T::NONE,//Burrower,
-	WEAPON_T::NONE,//Centipede,
-	WEAPON_T::NONE,//Crab,
-	WEAPON_T::NONE,//Digger,
+	WEAPON_T::pincers,//Beetle,
+	WEAPON_T::spike,//Burrower,
 	WEAPON_T::accelerating_thorax,//Firefly,
 	WEAPON_T::stinger,//Hornet,
-	WEAPON_T::NONE,//Jelly,
-	WEAPON_T::fangs,//Leaper,
-	WEAPON_T::NONE,//Scarab,
-	WEAPON_T::stinging,//Scorpion,
-	WEAPON_T::NONE,//Slime,
-	WEAPON_T::NONE,//Spider,
+	WEAPON_T::appendages,//starfish,
+	WEAPON_T::tentacles,//mosquito,
+	WEAPON_T::prize,//dung,
 };
 int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	0,
@@ -166,10 +200,13 @@ int WEAPON_PUSH_DIR[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 	4,//rock
 	1,//mirror
 
-	0,//stinging,				// scorpion
+	1,//stinging,				// scorpion
 	0,//fangs,					// leaper
-	0,//stinger,				// hornet
 	0,//accelerating_thorax,	// firefly
+	0,//stinger,				// hornet
+	0,//accelerating_thorax,	// star
+	0,//accelerating_thorax,	// ms
+	0,//accelerating_thorax,	// dug
 	//NONE,
 };
 int WEAPON_SKILL[(UINT)WEAPON_T::END]{
@@ -182,10 +219,21 @@ int WEAPON_SKILL[(UINT)WEAPON_T::END]{
 	(int)SKILL_T::ARC,//rock,
 	(int)SKILL_T::MULTI_ST,//mirror,
 
-	(int)SKILL_T::RANGE_ST,//stinging,				
-	(int)SKILL_T::RANGE_ST,//fangs,				
+	//pincers
+	//spike
+	//stinger
+	//accelerating_thorax
+	//appendages
+	//tentacles
+	//prize
+
+	(int)SKILL_T::RANGE_ST,//pincers,				
+	(int)SKILL_T::RANGE_ST,//spike,				
+	(int)SKILL_T::ST,//accelerating_thorax,
 	(int)SKILL_T::RANGE_ST,//stinger,				
-	(int)SKILL_T::ST,//accelerating_thorax,	
+	(int)SKILL_T::RANGE_ST, //apped
+	(int)SKILL_T::RANGE_ST,
+	(int)SKILL_T::RANGE_ST
 	//NONE,
 	//END,
 };

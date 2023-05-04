@@ -8,6 +8,7 @@
 #include "mImage.h"
 #include "mUnit.h"
 #include "mResources.h"
+#include "mSound.h"
 #include "mSceneManager.h"
 extern m::Application application;
 namespace m
@@ -30,14 +31,18 @@ namespace m
 		, velocityX(0)
 		, gravityAccel(0)
 		, arcTheta(0)
-		, Missile_vec(Vector2::One)
-		, endCoord(Vector2::One)
-		, mStPos(Vector2::Zero)
-		, mFinalEdPos(Vector2::One)
+		, Missile_vec(Vector2::Minus)
+		, endCoord(Vector2::Minus)
+		, mStPos(Vector2::Minus)
+		, mFinalEdPos(Vector2::Minus)
 	{
 		AddComponent(new Transform);
 		AddComponent(new Animator);
 		mAnimator = GetComponent<Animator>();
+		if(WEAPON_LAUNCH_SOUNDS[(UINT)_type] != L"")
+			launchSound = Resources::Load<Sound>(WEAPON_LAUNCH_SOUNDS[(UINT)_type], WEAPON_LAUNCH_SOUNDS[(UINT)_type]);
+		if (WEAPON_IMPACT_SOUNDS[(UINT)_type] != L"")
+			impactSound = Resources::Load<Sound>(WEAPON_IMPACT_SOUNDS[(UINT)_type], WEAPON_IMPACT_SOUNDS[(UINT)_type]);
 	}
 	Skill::Skill(Skill& _origin)
 		: mType(_origin.mType)
@@ -64,7 +69,8 @@ namespace m
 	Skill::~Skill()
 	{}
 	void Skill::Initialize()
-	{}
+	{
+	}
 	void Skill::CalEndFire()
 	{
 		Vector2 vec = GetPos();
@@ -74,9 +80,8 @@ namespace m
 		float absMD = abs(vec.x - mStPos.x);
 		float diff = absD - absMD;
 
-		if (mStPos == Vector2::Zero || mFinalEdPos == Vector2::One) endFire = false;
+		if (mStPos == Vector2::Minus || mFinalEdPos == Vector2::Minus) endFire = false;
 		else diff <= 0.f ? endFire = true : endFire = false;
-
 		//if (bOppsite)
 		//{
 		//	Vector2 vec2 = opPos;
@@ -90,7 +95,13 @@ namespace m
 	}
 	void Skill::CheckDirection()
 	{
-
+		//impactSoundPlayed = false;
+		//if (!impactSoundPlayed)
+		//{
+		//	if (impactSound)
+		//		impactSound->Play(false);
+		//	impactSoundPlayed = true;
+		//}
 	}
 	void Skill::HitEffectDir()
 	{
@@ -120,10 +131,28 @@ namespace m
 	}
 	bool Skill::CheckSkillFiring()
 	{
-		if (endFire && startFire) return false;
+		//impactSoundPlayed = false;
+		if (endFire && startFire)
+		{
+			//if (!impactSoundPlayed)
+			//{
+			//	if (impactSound)
+			//		impactSound->Play(false);
+			//	launchSoundPlayed = false;
+			//	impactSoundPlayed = true;
+			//}
+			return false;
+		}
 		if (!endFire && !startFire) return false;
 		if (!endFire && startFire)
 		{
+			//if (!launchSoundPlayed)
+			//{
+			//	if (launchSound)
+			//		launchSound->Play(false);
+			//	launchSoundPlayed = true;
+			//	impactSoundPlayed = false;
+			//}
 			//ClearPushTile();
 			return true;
 		}
@@ -140,6 +169,26 @@ namespace m
 	//	opPos = mStPos;
 	//	opMissile_vec.Normalize();
 	//}
+
+	void Skill::LaunchSound()
+	{
+		if (!launchSoundPlayed)
+		{
+			launchSound->Play(false);
+			impactSoundPlayed = false;
+			launchSoundPlayed = true;
+		}
+	}
+
+	void Skill::ImpactSound()
+	{
+		if (!impactSoundPlayed)
+		{
+			impactSound->Play(false);
+			impactSoundPlayed = true;
+			launchSoundPlayed = false;
+		}
+	}
 
 	void Skill::Clear()
 	{
@@ -203,7 +252,7 @@ namespace m
 		}
 	}
 	void Skill::Active(HDC hdc)
-	{}
+	{	}
 	void Skill::GuideWire(HDC hdc)
 	{}
 	void Skill::DrawPushTile(ARROW_TILE_T* arrows, int size)
@@ -324,16 +373,6 @@ namespace m
 			blow->SetTileAnimator(IMMO_EFFECT_T::ep_ar1);
 		}
 		break;
-		case WEAPON_T::stinging:
-		{
-	
-		}
-		break;
-		case WEAPON_T::fangs:
-		{
-
-		}
-		break;
 		case WEAPON_T::stinger:
 		{
 			blow->SetTileAnimator((DIR_EFFECT_T)(iDir + (int)DIR_EFFECT_T::hornet1_r));
@@ -388,6 +427,7 @@ namespace m
 
 			if (!scene->SearchAffectUnit(dy, dx)) continue;
 			if (scene->SearchAffectUnit(dy, dx, LAYER_TYPE::STRUCT)) continue;
+			if (scene->SearchAffectUnit(dy, dx, LAYER_TYPE::TERRAIN)) continue;
 
 			vector<Unit*> units = scene->GetAffectUnits(dy, dx);
 

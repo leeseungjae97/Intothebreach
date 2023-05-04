@@ -8,6 +8,7 @@
 #include "mTime.h"
 #include "mTile.h"
 #include "mPlayerInfo.h"
+#include "mSound.h"
 extern m::Application application;
 namespace m {
 	EndingScene::EndingScene() {
@@ -17,6 +18,7 @@ namespace m {
 	void EndingScene::Initialize() {
 		Scene::Initialize();
 
+		endingSound = Resources::Load<Sound>(L"endingTheme", L"..\\Resources\\sound\\music\\mus_ending.wav");
 		stars = new Background(L"space_star", L"..\\Resources\\texture\\ui\\end\\space_stars.bmp", 1, true);
 		stars->SetEC(true);
 		stars->SetCutPos(true);
@@ -92,7 +94,7 @@ namespace m {
 		AddGameObject(explsion, LAYER_TYPE::UI);
 		AddGameObject(scrollText, LAYER_TYPE::UI);
 		timer = 0;
-		//GameComp::savedPeople = 500;
+		GameComp::savedPeople = 5000;
 		wstring wstr2 = std::to_wstring(GameComp::savedPeople);
 		for (int i = 0; i < wstr2.size(); i++)
 		{
@@ -116,6 +118,7 @@ namespace m {
 			, 340 - spaceglow->GetHei() / 2));
 		//Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
 		timer += Time::fDeltaTime();
+
 		if (explsion->GetWid() > explsion->GetSize().x * 4 && explsion->GetSizeUp())
 		{
 			timer = 0;
@@ -124,6 +127,14 @@ namespace m {
 			Camera::SetMoveTime(3.f);
 			Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2.f
 				, application.GetResolutionHeight() * 2));
+		}
+		if (timer > 4.f)
+		{
+			if (!endingSoundPlayed)
+			{
+				endingSound->Play(true);
+				endingSoundPlayed = true;
+			}
 		}
 		if (explsion->GetWid() > explsion->GetSize().x * 4 
 			&& timer > 3.f 

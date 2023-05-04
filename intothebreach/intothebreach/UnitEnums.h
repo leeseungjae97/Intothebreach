@@ -30,19 +30,12 @@ int UNITS[(UINT)((int)MECHS::END + (int)ALIENS::END)]
 	(int)MECHS::tele,
 
 	(int)ALIENS::Beetle + (int)MECHS::tele + 1,
-	(int)ALIENS::Blobber + (int)MECHS::tele + 1,
 	(int)ALIENS::Burrower + (int)MECHS::tele + 1,
-	(int)ALIENS::Centipede + (int)MECHS::tele + 1,
-	(int)ALIENS::Crab + (int)MECHS::tele + 1,
-	(int)ALIENS::Digger + (int)MECHS::tele + 1,
 	(int)ALIENS::Firefly + (int)MECHS::tele + 1,
 	(int)ALIENS::Hornet + (int)MECHS::tele + 1,
-	(int)ALIENS::Jelly + (int)MECHS::tele + 1,
-	(int)ALIENS::Leaper + (int)MECHS::tele + 1,
-	(int)ALIENS::Scarab + (int)MECHS::tele + 1,
-	(int)ALIENS::Scorpion + (int)MECHS::tele + 1,
-	(int)ALIENS::Slime + (int)MECHS::tele + 1,
-	(int)ALIENS::Spider + (int)MECHS::tele + 1,
+	(int)ALIENS::StarFish + (int)MECHS::tele + 1,
+	(int)ALIENS::Mosquito + (int)MECHS::tele + 1,
+	(int)ALIENS::Dung + (int)MECHS::tele + 1,
 };
 //int UNITS_WEAPONS[(UINT)((int)MECHS::END + (int)ALIENS::END)]{
 //	(int)WEAPON_T::NONE,//electrice,

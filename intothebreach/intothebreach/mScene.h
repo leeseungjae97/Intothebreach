@@ -7,6 +7,7 @@ namespace m
 	class Mech;
 	class Layer;
 	class Tile;
+	class Sound;
 	class Building;
 	class Background;
 	class GameObject;
@@ -44,6 +45,7 @@ namespace m
 		void ClearMap();
 		void ClearBackTiles();
 		void DrawFootTile();
+		void DrawOutLineTile(int _type);
 		void CheckNumInput();
 
 		void UndoMove();
@@ -141,5 +143,13 @@ namespace m
 		bool curTurnEnd;
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// ¿Ãµø BFS ∏ 
+		bool tileHoverSoundPlayed[TILE_Y][TILE_X];
+		bool objectSelectSoundPlayed;
+		bool objectUnSelectSoundPlayed;
+		Sound* tileHoverSound;
+		Sound* terrainHoverSound;
+		Sound* objectHoverSound;
+		Sound* objectSelectSound;
+		Sound* objectUnSelectSound;
 	};
 }

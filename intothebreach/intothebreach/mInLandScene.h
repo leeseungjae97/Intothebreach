@@ -72,6 +72,18 @@ namespace m {
 
 		bool bMouseDrag;
 		vector<Button*> dragBack;
+		wstring themes[4]{
+			L"..\\Resources\\sound\\music\\mus_grass_map.wav",
+			L"..\\Resources\\sound\\music\\mus_sand_map.wav",
+			L"..\\Resources\\sound\\music\\mus_snow_map.wav",
+			L"..\\Resources\\sound\\music\\mus_acid_map.wav",
+
+		};
+		Sound* inLandTheme;
+		Sound* sectionHoverSound;
+		bool sectionHoverPlayed[8];
+		bool bBossShake;
+		Sound* victorySound3;
     };
 }
 

@@ -279,6 +279,14 @@ namespace m
 			//	}
 			//}
 		}
+		else
+		{
+			mechHpBarBack->SetState(GameObject::STATE::Invisible);
+			for (int i = 0; i < hpBar.size(); i++)
+			{
+				hpBar[i]->SetState(GameObject::STATE::Invisible);
+			}
+		}
 	}
 	void Unit::Release()
 	{

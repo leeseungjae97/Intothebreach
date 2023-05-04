@@ -15,6 +15,7 @@
 #include "mButton.h"
 #include "func.h"
 #include "mInput.h"
+#include "mSound.h"
 extern m::Application application;
 namespace m
 {
@@ -28,6 +29,16 @@ namespace m
 	{
 		//mLayers.reserve((UINT)LAYER_TYPE::END);
 		mLayers.resize((UINT)LAYER_TYPE::END);
+		//ui_battle_enemy_activity_warning.wav
+		//ui_battle_end_turn_notification.wav
+		//ui_battle_end_turn.wav
+		objectSelectSoundPlayed = false;
+		objectUnSelectSoundPlayed = false;
+
+		objectHoverSound = Resources::Load<Sound>(L"ui_battle_highlight_character", L"..\\Resources\\sound\\sfx\\ui_battle_highlight_character.wav");
+		objectSelectSound = Resources::Load<Sound>(L"ui_battle_select_unit", L"..\\Resources\\sound\\sfx\\ui_battle_select_unit.wav");
+		objectUnSelectSound = Resources::Load<Sound>(L"ui_battle_unhighlight_character", L"..\\Resources\\sound\\sfx\\ui_battle_unhighlight_character.wav");
+		terrainHoverSound = Resources::Load<Sound>(L"ui_battle_highlight_terrain", L"..\\Resources\\sound\\sfx\\ui_battle_highlight_terrain.wav");
 	}
 	Scene::~Scene()
 	{
@@ -116,6 +127,7 @@ namespace m
 	/// <param name="_type2">전체 타일의 타입</param>
 	void Scene::MakeTile(int iX, int iY, TILE_T _type, TILE_HEAD_T _type2)
 	{
+		
 		mTiles.resize(iY, vector<Tile*>());
 		mPosTiles.resize(iY, vector<Tile*>());
 		mPosOutLineTiles.resize(iY, vector<Tile*>());
@@ -142,6 +154,7 @@ namespace m
 		{
 			for (int x = 0; x < iX; x++)
 			{
+				tileHoverSoundPlayed[iY][iX] = false;
 				if (nullptr == mTiles[y][x])
 				{
 					Tile* tile = new Tile(Vector2((float)x, (float)y));
@@ -187,6 +200,7 @@ namespace m
 					Tile* posTile = new Tile(mTiles[y][x]->GetCoord());
 					posTile->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
 					posTile->SetPos(mTiles[y][x]->GetPos());
+					posTile->SetTileType(TILE_T::COMMON);
 					mPosTiles[y][x] = posTile;
 					AddGameObject(posTile, LAYER_TYPE::TILE);
 				}
@@ -347,13 +361,21 @@ namespace m
 						{
 							if (GameComp::mMechs[_i]->GetState() == GameObject::STATE::Broken) continue;
 							//PlayerInfo::mMechs[_i]->SetMove(true);
+							if (!objectSelectSoundPlayed)
+							{
+								if (nullptr == objectSelectSound)
+									objectSelectSound = Resources::Load<Sound>(L"ui_battle_select_unit", L"..\\Resources\\sound\\sfx\\ui_battle_select_unit.wav");
+								objectSelectSound->Play(false);
+								objectSelectSoundPlayed = true;
+							}
+							//
 							GameComp::mMechs[_i]->SetSelected(true);
 							SetMouseFollower(GameComp::mMechs[_i]);
 							SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
 							break;
 						}
 					}
-				}
+				}else objectSelectSoundPlayed = false;
 			}
 		}
 	}
@@ -375,6 +397,9 @@ namespace m
 			Vector2 mp = mStrutures[i]->GetFinalCoord();
 			if (mStrutures[i]->GetState() != GameObject::STATE::Explo)
 				map[(int)mp.y][(int)mp.x] = BUILDING;
+			if (mStrutures[i]->GetButtonType() == LAYER_TYPE::TERRAIN
+				&& mStrutures[i]->GetState() != GameObject::STATE::Explo)
+				map[(int)mp.y][(int)mp.x] = MOUNTAIN;
 		}
 		for (int i = 0; i < GameComp::mAliens.size(); i++)
 		{
@@ -419,6 +444,39 @@ namespace m
 				, MAKE_TILE_PATH(MOVE_TILE_T::square_b));
 		}
 	}
+	void Scene::DrawOutLineTile(int _type)
+	{
+		for (int y = 0; y < TILE_Y; y++)
+		{
+			for (int x = 0; x < TILE_X; x++)
+			{
+				if (GetPosTiles()[y][x]->GetTileType() == TILE_T::MOVE_RANGE)
+				{
+					// x,y 타일 주변 4방향으로 검사해서 MOVE tile이 아니면 외곽선 추가.
+					if (x - 1 >= 0
+						&& GetPosTiles()[y][x - 1]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type));
+					}
+					if (x + 1 < GetPosTiles()[y].size()
+						&& GetPosTiles()[y][x + 1]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 1));
+					}
+					if (y - 1 >= 0
+						&& GetPosTiles()[y - 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 2));
+					}
+					if (y + 1 < GetPosTiles().size()
+						&& GetPosTiles()[y + 1][x]->GetTileType() != TILE_T::MOVE_RANGE)
+					{
+						SetBoundaryTiles(y, x, (MOVE_TILE_T)(_type + 3));
+					}
+				}
+			}
+		}
+	}
 	/// <summary>
 	/// 전체 타일 초기화.
 	/// 나중에 맵위에 다른 타일의 정보에 대한 분기가 필요함
@@ -456,9 +514,20 @@ namespace m
 				Tile* p = mPosTiles[y][x];
 				if (math::CheckRhombusPos(p->GetPos(), p->GetScale(), MOUSE_POS))
 				{
+					if (!tileHoverSoundPlayed[y][x])
+					{
+						tileHoverSound = nullptr;
+						tileHoverSound = Resources::Load<Sound>(L"ui_battle_highlight_map", L"..\\Resources\\sound\\sfx\\ui_battle_highlight_map.wav");
+						tileHoverSound->Play(false);
+						tileHoverSoundPlayed[y][x] = true;
+					}
 					if (map[y][x] != MOVE) mPosOutLineTiles[y][x]->SetTileTexture(SQUARE_Y_LINE__KEY, SQUARE_Y_LINE__PATH);
 				}
-				else mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				else
+				{
+					tileHoverSoundPlayed[y][x] = false;
+					mPosOutLineTiles[y][x]->SetTileTexture(SQUARE__KEY, SQUARE__PATH);
+				}
 			}
 		}
 	}
@@ -557,6 +626,7 @@ namespace m
 		{
 			curAlien->SetEndAttack(true);
 			curAlien->GetCurAttackSkill()->SetStartFire(true);
+			curAlien->GetCurAttackSkill()->LaunchSound();
 			//curAlien->GetCurAttackSkill()->SetEndFire(false);
 		}
 		if (nullptr != curAlien->GetCurAttackSkill()
@@ -615,7 +685,6 @@ namespace m
 			mMouseFollower->GetCurAttackSkill()->CheckDirection();
 		}
 		
-
 		if (mMouseFollower->CheckSkillFiring()) return;
 
 		mMouseFollower->ActiveSkill(MOUSE_POS);
@@ -638,6 +707,7 @@ namespace m
 			{
 				if (mMouseFollower->GetCurAttackSkill()->GetEndCoord() != Vector2::Zero)
 				{
+					mMouseFollower->GetCurAttackSkill()->LaunchSound();
 					// 공격.
 					mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
 					//mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
@@ -859,6 +929,14 @@ namespace m
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& nullptr != mMouseFollower)
 		{
+
+			if (objectUnSelectSound) objectUnSelectSound = Resources::Load<Sound>(L"ui_battle_unhighlight_character", L"..\\Resources\\sound\\sfx\\ui_battle_unhighlight_character.wav");
+			objectUnSelectSound->Play(false);
+
+			if (!objectUnSelectSoundPlayed)
+			{
+				objectUnSelectSoundPlayed = true;
+			}
 			mMouseFollower->SetPos(mMouseFollower->GetFinalPos());
 			mMouseFollower->SetCoord(mMouseFollower->GetFinalCoord());
 			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);

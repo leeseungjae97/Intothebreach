@@ -1,5 +1,6 @@
 #pragma once
-enum class MECH_T {
+enum class MECH_T
+{
 	Prime,
 	Brute,
 	Range,
@@ -12,13 +13,15 @@ wstring MECH_T_NAME_PATH[(UINT)MECH_T::END]{
 	L"..\\Resources\\texture\\ui\\selectRobot\\mech_class_text_brute.bmp",
 	L"..\\Resources\\texture\\ui\\selectRobot\\mech_class_text_range.bmp",
 };
-enum class COMMON_CONDITION_T {
+enum class COMMON_CONDITION_T
+{
 	NONE,
 	HOLO,
 	NO_S,
 	END
 };
-enum class COMBAT_CONDITION_T {
+enum class COMBAT_CONDITION_T
+{
 	S_SIZE,
 	IDLE,
 	BROKEN,
@@ -28,7 +31,8 @@ enum class COMBAT_CONDITION_T {
 	HOLO,
 	END
 };
-enum class MECHS {
+enum class MECHS
+{
 	electrice,
 	flame,
 	guard,
@@ -175,6 +179,106 @@ int MECHS_T_HT[(UINT)MECHS::END]{
 	(int)MECH_T::Science,
 	(int)MECH_T::Science,
 };
+wstring MECH_MOVE_SOUNDS[(UINT)::MECHS::END][3]{
+	{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+	{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_prime_punch_move.wav",
+		L"",
+		L"",
+	},
+
+	{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+	{
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_01.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_02.wav",
+		L"..\\Resources\\sound\\sfx\\mech_brute_bulk_move_03.wav"
+	},
+
+
+	{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+	{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+		{
+		L"..\\Resources\\sound\\sfx\\mech_distance_artillery_move.wav",
+		L"",L""
+	},
+
+	{},
+	{},
+	{},
+	{},
+	{},
+};
 m::Vector2 MECHS_HANGAR_OFFSET[(UINT)MECHS::END]{
 	// S_SIZE, IDLE, BROKEN, WATER, WATER_BROKEN, NO_SHADOW, HOLO,
 	//x, y
@@ -282,7 +386,8 @@ wstring COMMON_MECH_T[(UINT)COMMON_CONDITION_T::END]{
    L"_ns",
    L"_h"
 };
-enum class PRIME_T {
+enum class PRIME_T
+{
 	electrice,
 	flame,
 	guard,
@@ -301,7 +406,8 @@ wstring PRIME_MECH_NAMES[(UINT)PRIME_T::END]{
    L"mech_leap",
    L"mech_punch"
 };
-enum class BRUTE_T {
+enum class BRUTE_T
+{
 	charge,
 	jet,
 	mirror,
@@ -318,7 +424,8 @@ wstring BRUTE_MECH_NAMES[(UINT)BRUTE_T::END]{
    L"mech_unstable",
    L"mech_wall"
 };
-enum class RANGE_T {
+enum class RANGE_T
+{
 	artillery,
 	dstrike,
 	ice,
@@ -335,7 +442,8 @@ wstring RANGE_MECH_NAMES[(UINT)RANGE_T::END]{
    L"mech_rockart",
    L"mech_rocket"
 };
-enum class SCIENCE_T {
+enum class SCIENCE_T
+{
 	grav,
 	nano,
 	pulse,
@@ -385,10 +493,11 @@ wstring MECH_NAMES_PATH[(UINT)MECHS::END]{
    L"",//L"mech_science",
    L"",//L"mech_tele",
 };
-wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
+wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond)
+{
 	wstring key = L"";
 	int _type = MECHS_T_HT[(UINT)_mech];
-	
+
 	wstring path_1 = MECH_S_PATH[_type];
 	wstring path_2 = MECHS_RESOURCES_PATH[(UINT)_mech];
 	wstring path_3 = MECH_CONDITION[(UINT)_cond];
@@ -399,7 +508,8 @@ wstring MAKE_UNIT_KEY(MECHS _mech, COMBAT_CONDITION_T _cond) {
 
 	return key;
 };
-wstring MAKE_UNIT_PATH(MECHS _mech, COMBAT_CONDITION_T _cond) {
+wstring MAKE_UNIT_PATH(MECHS _mech, COMBAT_CONDITION_T _cond)
+{
 	wstring path = L"..\\Resources\\texture\\player\\";
 	int _type = MECHS_T_HT[(UINT)_mech];
 
