@@ -333,13 +333,13 @@ namespace m
 	{
 		for (int i = 0; i < mechs.size(); i++)
 		{
-			mechs[i]->SetState(GameObject::STATE::Delete);
-			skills[i]->SetState(GameObject::STATE::Delete);
-			mechNames[i]->SetState(GameObject::STATE::Delete);
-			mechMoves[i]->SetState(GameObject::STATE::Delete);
-			mechHps[i]->SetState(GameObject::STATE::Delete);
-			classNames[i]->SetState(GameObject::STATE::Delete);
-			hpBacks[i]->SetState(GameObject::STATE::Delete);
+			//mechs[i]->SetState(GameObject::STATE::Delete);
+			//skills[i]->SetState(GameObject::STATE::Delete);
+			//mechNames[i]->SetState(GameObject::STATE::Delete);
+			//mechMoves[i]->SetState(GameObject::STATE::Delete);
+			//mechHps[i]->SetState(GameObject::STATE::Delete);
+			//classNames[i]->SetState(GameObject::STATE::Delete);
+			//hpBacks[i]->SetState(GameObject::STATE::Delete);
 		}
 		for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
 		mechs.clear();

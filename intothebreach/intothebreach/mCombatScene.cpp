@@ -1375,7 +1375,7 @@ namespace m
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 4;
+		iTurn = 8;
 		endGame = false;
 		bSetPosition = false;
 		
