@@ -327,35 +327,45 @@ namespace m
 			previewMechs.push_back(mechImage);
 			AddGameObject(mechImage, LAYER_TYPE::FRONT_UI3);
 		}
+		//for (int i = 0; i < 3; i++)
+		//{
+
+		//	mechs.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	skills.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	mechNames.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	mechMoves.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	mechHps.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	classNames.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	hpBacks.push_back(new Background(NO_BACK, NO_BACK, 2));
+		//	AddGameObject(mechs.back(), LAYER_TYPE::UI);
+		//	AddGameObject(skills.back(), LAYER_TYPE::UI);
+		//	AddGameObject(mechNames.back(), LAYER_TYPE::UI);
+		//	AddGameObject(mechMoves.back(), LAYER_TYPE::UI);
+		//	AddGameObject(mechHps.back(), LAYER_TYPE::UI);
+		//	AddGameObject(classNames.back(), LAYER_TYPE::UI);
+		//	AddGameObject(hpBacks.back(), LAYER_TYPE::UI);
+		//}
 
 	}
 	void SelectRobotScene::DrawMechInfos()
 	{
-		for (int i = 0; i < mechs.size(); i++)
-		{
-			//mechs[i]->SetState(GameObject::STATE::Delete);
-			//skills[i]->SetState(GameObject::STATE::Delete);
-			//mechNames[i]->SetState(GameObject::STATE::Delete);
-			//mechMoves[i]->SetState(GameObject::STATE::Delete);
-			//mechHps[i]->SetState(GameObject::STATE::Delete);
-			//classNames[i]->SetState(GameObject::STATE::Delete);
-			//hpBacks[i]->SetState(GameObject::STATE::Delete);
-		}
+		for (int i = 0; i < skills.size(); i++)skills[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < mechNames.size(); i++)mechNames[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < mechMoves.size(); i++)mechMoves[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < mechHps.size(); i++)mechHps[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < classNames.size(); i++)classNames[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < hpBacks.size(); i++)hpBacks[i]->SetState(GameObject::STATE::Delete);
+		for (int i = 0; i < mechs.size(); i++) mechs[i]->SetState(GameObject::STATE::Delete);
 		for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
-		mechs.clear();
-		skills.clear();
-		//mechClass.clear();
-		mechNames.clear();
-		mechMoves.clear();
-		mechHps.clear();
-		classNames.clear();
-		hpBacks.clear();
-		hps.clear();
-		//for (int i = 0; i < 3; i++)
-		//{
-		//	hangarMechs[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 
-		//		MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
-		//}
+		//mechs.clear();
+		//skills.clear();
+		//mechNames.clear();
+		//mechMoves.clear();
+		//mechHps.clear();
+		//classNames.clear();
+		//hpBacks.clear();
+		//hps.clear();
+
 		for (int i = 0; i < 3; i++)
 		{
 			hangarMechs[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
@@ -374,6 +384,7 @@ namespace m
 		{
 			Background* mechImage = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
 				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
+
 			mechImage->SetPos(Vector2(boxSquadInfo->GetPos().x + 10.f
 				, boxSquadInfo->GetPos().y + 15.f + (i * 105.f)));
 			mechs.push_back(mechImage);
@@ -404,12 +415,12 @@ namespace m
 			mechHp->SetPos(Vector2(mechMove->GetPos().x - 25.f
 				, mechMove->GetPos().y));
 			mechHps.push_back(mechHp);
-
 			Background* mechHpBarBack = new Background(HP_BAR_2, HP_BAR_2);
 			mechHpBarBack->SetSize(Vector2(mechHpBarBack->GetSize().x + ((MECH_HP[(UINT)GameComp::mechInfos[i].unitNum] - 2) * 2)
 				, mechHpBarBack->GetSize().y));
 			mechHpBarBack->SetPos(Vector2(mechHp->GetPos().x + mechHp->GetSize().x / 2 - mechHpBarBack->GetSize().x / 2
 				, mechHp->GetPos().y + mechHp->GetSize().y - mechHpBarBack->GetSize().y / 2));
+
 			AddGameObject(mechHpBarBack, LAYER_TYPE::UI);
 			hpBacks.push_back(mechHpBarBack);
 			AddGameObject(mechHp, LAYER_TYPE::UI);
@@ -438,7 +449,7 @@ namespace m
 	void SelectRobotScene::Update()
 	{
 		Scene::Update();
-		
+
 		//if (btnStart->GetClicked())
 		//{
 		//	
@@ -521,16 +532,13 @@ namespace m
 				startSound->Play(false);
 				startSoundPlayed = true;
 			}
-			for (int i = 0; i < mechs.size(); i++)
-			{
-				mechs[i]->SetState(GameObject::STATE::Delete);
-				skills[i]->SetState(GameObject::STATE::Delete);
-				mechNames[i]->SetState(GameObject::STATE::Delete);
-				mechMoves[i]->SetState(GameObject::STATE::Delete);
-				mechHps[i]->SetState(GameObject::STATE::Delete);
-				classNames[i]->SetState(GameObject::STATE::Delete);
-				hpBacks[i]->SetState(GameObject::STATE::Delete);
-			}
+			for (int i = 0; i < skills.size(); i++)skills[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < mechNames.size(); i++)mechNames[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < mechMoves.size(); i++)mechMoves[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < mechHps.size(); i++)mechHps[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < classNames.size(); i++)classNames[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < hpBacks.size(); i++)hpBacks[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < mechs.size(); i++) mechs[i]->SetState(GameObject::STATE::Delete);
 			for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
 
 			for (int i = 0; i < 3; i++)
@@ -724,7 +732,7 @@ namespace m
 					previewMechs[i]->SetInner(false);
 					previewMechs[i]->SetItem(-1);
 				}
-					
+
 				else
 				{
 					for (int _i = i; _i < 2; _i++)
@@ -745,7 +753,7 @@ namespace m
 
 				previewMechs[i]->SetClicked(false);
 			}
-			 
+
 			/*	if (previewMechs[i]->GetClicked())
 			{
 				if (i + 1 < 3)
@@ -796,7 +804,7 @@ namespace m
 	}
 	void SelectRobotScene::OnExit()
 	{
-		if(ambiousHangar)
+		if (ambiousHangar)
 			ambiousHangar->Stop(true);
 		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() / 2));
 	}

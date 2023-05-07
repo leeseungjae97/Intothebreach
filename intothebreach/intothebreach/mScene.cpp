@@ -368,11 +368,14 @@ namespace m
 								objectSelectSound->Play(false);
 								objectSelectSoundPlayed = true;
 							}
-							//
-							GameComp::mMechs[_i]->SetSelected(true);
-							SetMouseFollower(GameComp::mMechs[_i]);
-							SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
-							break;
+							if (!GameComp::mMechs[_i]->GetEndAttack())
+							{
+								GameComp::mMechs[_i]->SetSelected(true);
+								SetMouseFollower(GameComp::mMechs[_i]);
+								SetAlphaFollower((Mech*)object::Instantiate(mMouseFollower->GetFinalCoord(), LAYER_TYPE::CLONE, mMouseFollower->GetUnitName()));
+								break;
+							}
+						
 						}
 					}
 				}else objectSelectSoundPlayed = false;
@@ -381,16 +384,6 @@ namespace m
 	}
 	void Scene::SetMap()
 	{
-		//for (int y = 0; y < mStruturesTiles.size(); y++)
-		//{
-		//	for (int x = 0; x < mStruturesTiles[y].size(); x++)
-		//	{
-		//		if (mStruturesTiles[y][x]->GetType() == STRUCTURES_T::Mountain)
-		//		{
-		//			map[y][x] = BUILDING;
-		//		}
-		//	}
-		//}
 		ClearMap();
 		for (int i = 0; i < mStrutures.size(); i++)
 		{
@@ -709,6 +702,7 @@ namespace m
 				{
 					mMouseFollower->GetCurAttackSkill()->LaunchSound();
 					// АјАн.
+					mMouseFollower->SetEndAttack(true);
 					mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
 					//mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
 					moveSave.clear();

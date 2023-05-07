@@ -38,8 +38,8 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::TITLE];
-		//LoadScene(SCENE_TYPE::TITLE);
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::COMBAT];
+		LoadScene(SCENE_TYPE::COMBAT);
 	}
 
 	void SceneManager::Update()
