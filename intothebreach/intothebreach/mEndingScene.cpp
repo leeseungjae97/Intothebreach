@@ -94,7 +94,10 @@ namespace m {
 		AddGameObject(explsion, LAYER_TYPE::UI);
 		AddGameObject(scrollText, LAYER_TYPE::UI);
 		timer = 0;
-		GameComp::savedPeople = 5000;
+		//GameComp::savedPeople = 5000;
+	}
+	void EndingScene::Update() {
+		Scene::Update();
 		wstring wstr2 = std::to_wstring(GameComp::savedPeople);
 		for (int i = 0; i < wstr2.size(); i++)
 		{
@@ -107,9 +110,7 @@ namespace m {
 			savePeopleNum[i]->SetEC(true);
 			AddGameObject(savePeopleNum[i], LAYER_TYPE::UI);
 		}
-	}
-	void EndingScene::Update() {
-		Scene::Update();
+
 		if (mx != 690) mx++;
 		if (my != 390) my++;
 		explsion->SetPos(Vector2(mx - explsion->GetWid() / 2

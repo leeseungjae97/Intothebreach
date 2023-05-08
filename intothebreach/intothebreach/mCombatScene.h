@@ -75,7 +75,7 @@ namespace m
 		Button* boxWeapon;
 
 		Button* endMissionBox;
-		vector<Mech*> infoUnits;
+		vector<Mech*> boxPreviewHp;
 		//vector<Alien*> mAliens;
 		TILE_T mapTileType;
 		int mapNum;

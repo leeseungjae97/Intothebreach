@@ -38,7 +38,7 @@ namespace m
 	{
 		Scene::Initialize();
 		mechIdx = 0;
-		iTurn = 4;
+		iTurn = 7;
 		
 		Background* b0 = new Background(L"combatBackground1"
 			, L"..\\Resources\\texture\\ui\\combat\\bg.bmp", 0, false, DEFAULT);
@@ -947,10 +947,10 @@ namespace m
 				playerUnitInfo->SetState(GameObject::STATE::Invisible);
 				playerTurnBox->SetState(GameObject::STATE::Invisible);
 				
-				for (int i = 0; i < infoUnits.size(); i++)
+				for (int i = 0; i < boxPreviewHp.size(); i++)
 				{
-					infoUnits[i]->SetVisibleHp(false);
-					infoUnits[i]->SetState(GameObject::STATE::Delete);
+					boxPreviewHp[i]->SetVisibleHp(false);
+					boxPreviewHp[i]->SetState(GameObject::STATE::Delete);
 				}
 				for (int i = 0; i < GameComp::mMechs.size(); i++) GameComp::mMechs[i]->SetVisibleHp(false);
 				for (int i = 0; i < GameComp::mAliens.size(); i++)
@@ -1034,9 +1034,9 @@ namespace m
 				btnInitTurn->SetState(GameObject::STATE::Visible);
 				playerUnitInfo->SetState(GameObject::STATE::Visible);
 
-				for (int i = 0; i < infoUnits.size(); i++)
+				for (int i = 0; i < boxPreviewHp.size(); i++)
 				{
-					infoUnits[i]->SetState(GameObject::STATE::NoMove);
+					boxPreviewHp[i]->SetState(GameObject::STATE::NoMove);
 				}
 				if (Scene::GetCurTurnEnd())
 				{
@@ -1057,7 +1057,7 @@ namespace m
 						Scene::AlienAlgorithm();
 					}
 				}
-				for (int i = 0; i < infoUnits.size(); i++)
+				for (int i = 0; i < boxPreviewHp.size(); i++)
 				{
 					if (nullptr == GetMouseFollower())selectUnitBox->SetState(GameObject::STATE::Invisible);
 					if (GameComp::mMechs[i]->GetSelected())
@@ -1066,7 +1066,7 @@ namespace m
 							+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * i)));
 						selectUnitBox->SetState(GameObject::STATE::Visible);
 					}
-					infoUnits[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
+					boxPreviewHp[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
 				}
 				AlienIndexReSort();
 				ButtonActivationCondition();
@@ -1097,9 +1097,9 @@ namespace m
 				btnInitTurn->SetState(GameObject::STATE::Visible);
 				playerUnitInfo->SetState(GameObject::STATE::Visible);
 
-				for (int i = 0; i < infoUnits.size(); i++)
+				for (int i = 0; i < boxPreviewHp.size(); i++)
 				{
-					infoUnits[i]->SetState(GameObject::STATE::NoMove);
+					boxPreviewHp[i]->SetState(GameObject::STATE::NoMove);
 				}
 				if (Scene::GetCurTurnEnd())
 				{
@@ -1120,7 +1120,7 @@ namespace m
 						Scene::AlienAlgorithm();
 					}
 				}
-				for (int i = 0; i < infoUnits.size(); i++)
+				for (int i = 0; i < boxPreviewHp.size(); i++)
 				{
 					if (nullptr == GetMouseFollower())selectUnitBox->SetState(GameObject::STATE::Invisible);
 					if (GameComp::mMechs[i]->GetSelected())
@@ -1129,7 +1129,7 @@ namespace m
 							+ ((selectUnitBox->GetInnerImage()->GetHeight() + 3) * i)));
 						selectUnitBox->SetState(GameObject::STATE::Visible);
 					}
-					infoUnits[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
+					boxPreviewHp[i]->SetCurHp(GameComp::mMechs[i]->GetCurHp());
 				}
 				AlienIndexReSort();
 				ButtonActivationCondition();
@@ -1154,8 +1154,8 @@ namespace m
 			btnInitTurn->SetState(GameObject::STATE::Invisible);
 			playerUnitInfo->SetState(GameObject::STATE::Invisible);
 
-			for (int i = 0; i < infoUnits.size(); i++)
-				infoUnits[i]->SetState(GameObject::STATE::Delete);
+			for (int i = 0; i < boxPreviewHp.size(); i++)
+				boxPreviewHp[i]->SetState(GameObject::STATE::Delete);
 			for (int i = 0; i < gridPowers.size(); i++)
 				gridPowers[i]->SetState(GameObject::STATE::Invisible);
 			for (int i = 0; i < GameComp::mAliens.size(); i++)
@@ -1274,6 +1274,7 @@ namespace m
 				if (GameComp::mechInfos[i].weapons[j] != WEAPON_T::NONE)
 				{
 					mech->SetSkill(j, GameComp::mechInfos[i].weapons[j]);
+					//mech->SetWeaponType(GameComp::mechInfos[i].weapons[j]);
 				}
 			}
 			GameComp::mMechs.push_back(mech);
@@ -1306,7 +1307,7 @@ namespace m
 		btnConfirm->SetState(GameObject::STATE::Visible);
 
 		Scene::ClearMTiles(mapTileType, TILE_HEAD_T::ground);
-		infoUnits.clear();
+		boxPreviewHp.clear();
 		for (int i = 0; i < GameComp::mMechs.size(); i++)
 		{
 			//GameComp::mMechs[i]->SetCoord(Vector2::Minus);
@@ -1333,7 +1334,7 @@ namespace m
 			mech->SetVisibleHp(true);
 			mech->SetState(GameObject::STATE::Invisible);
 			AddGameObject(mech, LAYER_TYPE::UI);
-			infoUnits.push_back(mech);
+			boxPreviewHp.push_back(mech);
 		}
 
 		LoadMap();
@@ -1375,7 +1376,7 @@ namespace m
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 8;
+		iTurn = 7;
 		endGame = false;
 		bSetPosition = false;
 		

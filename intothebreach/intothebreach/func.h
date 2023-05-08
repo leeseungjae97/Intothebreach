@@ -204,6 +204,7 @@ namespace m::object
 			break;
 		}
 		vS[idx] = gameObj;
+		unit->SetWeaponType(_type);
 		Scene* scene = SceneManager::GetActiveScene();
 		scene->AddGameObject(gameObj, LAYER_TYPE::SKILL);
 	}

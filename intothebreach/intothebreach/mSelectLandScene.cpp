@@ -123,19 +123,20 @@ namespace m
 			back->SetSize(Vector2(110, 45));
 			back->SetPos(Vector2(45, 205 + 130 * i));
 			back->SetState(GameObject::STATE::Visible);
-			back->SetOSize(Vector2(110, 45));
-			back->SetResize(Vector2(110, 110));
-			back->SetResizeUnit(Vector2(30, 30));
 			AddGameObject(back, LAYER_TYPE::UI);
 			clickableMechs.push_back(back);
 		}
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
-			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
-				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
-			bM->SetEC(false);
-			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
-				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
+			Button* bM = new Button(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				NO_BACK);
+			bM->SetInnerMag(2);
+			bM->SetSize(bM->GetInnerImage()->GetSize());
+			bM->SetInnerPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetInnerImage()->GetSize().x
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetInnerImage()->GetSize().y));
+			//bM->SetPos(Vector2(10, 10));
+			//bM->SetCutPos(true);
+			bM->SetInner(true);
 			infoUnits.push_back(bM);
 			AddGameObject(bM, LAYER_TYPE::UI);
 		}
@@ -285,7 +286,6 @@ namespace m
 	}
 	void SelectLandScene::Update()
 	{
-
 		Scene::Update();
 		wstring wstr1 = std::to_wstring(GameComp::defence);
 		for (int i = 0; i < wstr1.size(); i++)
@@ -317,7 +317,14 @@ namespace m
 			starNum[i]->SetTex(BOLD_NUM_PATH[ch - 48], BOLD_NUM_PATH[ch - 48]);
 			starNum[i]->SetState(GameObject::STATE::Visible);
 		}
-
+		for (int i = 0; i < MAX_GRID_POWER; i++)
+		{
+			wstring gridImageStr = L"";
+			if (i < GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on.bmp";
+			if (i == GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_on_front.bmp";
+			if (i > GameComp::gridPower - 1) gridImageStr = L"..\\Resources\\texture\\ui\\combat\\grid_power_off.bmp";
+			gridPowers[i]->ChangeInner(gridImageStr);
+		}
 		for (int i = 0; i < clickableMechs.size(); i++)
 		{
 			if (clickableMechs[i]->GetHover())

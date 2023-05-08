@@ -141,11 +141,11 @@ namespace m
 
 			clickableMechs.push_back(back);
 		}
-		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		for (int i = 0; i < 3; i++)
 		{
 			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
 				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
-			bM->SetEC(false);
+			bM->SetUseOffset(false);
 			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
 				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
 			infoUnits.push_back(bM);
@@ -338,6 +338,7 @@ namespace m
 		Scene::Update();
 		if (KEY_PRESSED(KEYCODE_TYPE::RBTN))
 		{
+			GameComp::curLandSection = 0;
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_LAND);
 		}
 		//int n1 = 10;
@@ -507,14 +508,14 @@ namespace m
 		}
 		for (int i = 0; i < clickableMechs.size(); i++)
 		{
-			if (clickableMechs[i]->GetHover())
-			{
-				clickableMechs[i]->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
-			}
-			else
-			{
-				clickableMechs[i]->SetTex(A_BTN_BACK, A_BTN_BACK);
-			}
+			//if (clickableMechs[i]->GetHover())
+			//{
+			//	clickableMechs[i]->SetTex(A_BTN_SELECT_BACK, A_BTN_SELECT_BACK);
+			//}
+			//else
+			//{
+			//	clickableMechs[i]->SetTex(A_BTN_BACK, A_BTN_BACK);
+			//}
 			if (KEY_PRESSED(KEYCODE_TYPE::LBTN))
 			{
 				if (nullptr == mM && !mechInfo->GetHover() && !inventory->GetHover())
@@ -831,7 +832,7 @@ namespace m
 
 		if (GameComp::combatEnd)
 		{
-		
+			GameComp::savedPeople += GameComp::saveTurnPeople;
 			Sound* victorySound2 = Resources::Load<Sound>(L"victorysound", L"..\\Resources\\sound\\music\\ui_battle_victory.wav");
 			victorySound2->Play(false);
 
@@ -860,7 +861,6 @@ namespace m
 					, BOLD_NUM_PATH[ch - 48]);
 				resultPeopleNum[i]->SetState(GameObject::STATE::Visible);
 			}
-			GameComp::savedPeople += GameComp::saveTurnPeople;
 			//GameComp::star += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][0];
 			//if (MAX_GRID_POWER >= 8) GameComp::defence += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
 			//else  GameComp::gridPower += MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1];
@@ -950,7 +950,7 @@ namespace m
 				int size = MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1] - 1;
 				bool questClear = false;
 				bool p2 = false;
-				switch ((MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+				switch ((MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][1])
 				{
 				case MISSIONS::LEADER:
 				{
@@ -966,6 +966,7 @@ namespace m
 				{
 					if (GameComp::bStructureAlive) questClear = true;
 				}
+				break;
 				case MISSIONS::PROTECT_2:
 				{
 					if (GameComp::iStructDesCnt < 2) questClear = true;
@@ -1001,7 +1002,7 @@ namespace m
 
 				for (int i = 0; i < MISSION_REWARD[GameComp::curLand][GameComp::curLandSection][1]; i++)
 				{
-					if (MISSIONS::PROTECT_2 == (MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][0])
+					if (MISSIONS::PROTECT_2 == (MISSIONS)MISSION_HASH_VALUE[GameComp::curLand][GameComp::curLandSection][1])
 					{
 						if (i <= GameComp::iStructDesCnt) gridPowers[i]->SetTex(L"mission_grid_off", L"..\\Resources\\texture\\ui\\inLand\\mission\\overlayMission\\power_off.bmp");
 						else
@@ -1025,8 +1026,8 @@ namespace m
 					gridPowers[i]->SetPos(Vector2(boxBattleResult->GetPos().x + 160 + (i * gridPowers[i]->GetSize().x), boxBattleResult->GetPos().y + 120));
 					gridPowers[i]->SetState(GameObject::STATE::Visible);
 				}
-				text2->SetTex(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0],
-					MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][0]);
+				text2->SetTex(MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][1],
+					MISSION_TEXT[GameComp::curLand][GameComp::curLandSection][1]);
 				text2->SetPos(Vector2(gridPowers[size]->GetPos().x + gridPowers[size]->GetSize().x + 15
 					, gridPowers[size]->GetPos().y + gridPowers[size]->GetSize().y / 2 - text2->GetSize().y / 2));
 				text2->SetState(GameObject::STATE::Visible);

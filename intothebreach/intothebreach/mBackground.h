@@ -30,6 +30,7 @@ namespace m {
         void SetSizeUp(bool _b) { bSizeUp = _b; }
         void SetSizeUpxUnit(float _sizeup) { sizeUpUnitx = _sizeup; }
         void SetSizeUpyUnit(float _sizeup) { sizeUpUnity = _sizeup; }
+        void SetUseOffset(bool _b) { bUseOffset = _b; }
         float GetWid() { return iWid; }
         float GetHei() { return iHei; }
         bool GetSmoothAppear() { return bSmoothAppear; }
@@ -56,6 +57,7 @@ namespace m {
         Vector2 vMovement;
         Vector2 originPos;
         bool bHover;
+        bool bUseOffset;
 
     };
 

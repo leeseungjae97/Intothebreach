@@ -33,6 +33,7 @@ namespace m {
 		bSmoothDisappear = false;
 		bSmoothAppear = false;
 		bSizeUp = false;
+		bUseOffset = true;
 		sizeUpUnity = 1;
 		sizeUpUnitx = 1;
 		iWid = 0;
@@ -148,7 +149,9 @@ namespace m {
 
 				mPos.x += 50;
 			}
-			mPos += mImage->GetOffset();
+			if(bUseOffset)
+				mPos += mImage->GetOffset();
+
 			SetScale(Vector2((float)iWidth, (float)iHeight));
 			if (effectCamera)
 				mPos = Camera::CalculatePos(mPos);
