@@ -46,7 +46,7 @@ namespace m
 		void ClearBackTiles();
 		void DrawFootTile();
 		void DrawOutLineTile(int _type);
-		void CheckNumInput();
+		void CheckInput();
 
 		void UndoMove();
 

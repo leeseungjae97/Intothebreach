@@ -22,7 +22,7 @@ namespace m
 		void noMove();
 
 		void MechMove();
-		void CheckNumInput();
+		void CheckInput();
 		void SetSelected(bool _b) { bSelected = _b; }
 		void EndDeploy()
 		{
@@ -46,7 +46,8 @@ namespace m
 		void SetMakeDeployAlpha(bool _b) { bMakeDeployAlpha = _b; }
 		void SetDeployConstant(float _c) { fDeployConstant = _c; }
 		void SetDeployed(bool _b) { bDeployed = _b; }
-
+		void SetRepairOverlay(bool _b) { bOverlayRepair = _b; }
+		bool GetReapirOverlay() { return bOverlayRepair; }
 		bool GetSelected() { return bSelected; }
 		bool GetDeployed() { return bDeployed; }
 		bool GetMakeDeployAlpha() { return bMakeDeployAlpha; }
@@ -61,6 +62,7 @@ namespace m
 		bool bCancelDeploy;
 		bool bMakeDeployAlpha;
 		bool bDeployed;
+		bool bOverlayRepair;
 		float fDeployConstant;
 		Image* deployArrow;
 		Sound* randMoveSound;

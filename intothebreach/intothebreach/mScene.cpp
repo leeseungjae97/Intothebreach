@@ -538,7 +538,7 @@ namespace m
 		//Safe_Delete_Y_Vec(mEnemyEmerge);
 		//Safe_Delete_Y_Vec(mEffectedTiles);
 	}
-	void Scene::CheckNumInput()
+	void Scene::CheckInput()
 	{
 		//if (nullptr == mMouseFollower) return;
 		//if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { mMouseFollower->SetSkillIdx(0); }
@@ -685,6 +685,10 @@ namespace m
 
 		Scene::OutOfMapRange();
 
+		if (!mMouseFollower->GetCurAttackSkill()->GetStartFire())
+		{
+			SetMouseFollower(nullptr);
+		}
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& !mMouseFollower->GetCurAttackSkill()->GetStartFire())
 		{

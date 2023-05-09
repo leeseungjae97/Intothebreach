@@ -73,7 +73,7 @@ namespace m
 	void Mech::Update()
 	{
 		Unit::Update();
-		CheckNumInput();
+		CheckInput();
 
 		if (GetEndMove())
 		{
@@ -89,11 +89,6 @@ namespace m
 		//{
 		//	SetState(STATE::Idle);
 		//}
-		if (KEY_PRESSED(KEYCODE_TYPE::R))
-		{
-			((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
-			Repair(1);
-		}
 		if (Unit::GetCurHp() == 0 && GetButtonType() == LAYER_TYPE::PLAYER)
 		{
 			SetState(STATE::Broken);
@@ -127,7 +122,6 @@ namespace m
 		func.BlendFlags = 0;
 		func.AlphaFormat = AC_SRC_ALPHA;
 		func.SourceConstantAlpha = (BYTE)fDeployConstant;
-
 		if (bCancelDeploy && nullptr != GetCurImage())
 		{
 			deployArrow = Resources::Load<Image>(L"deploy_x", L"..\\Resources\\texture\\combat\\deployment_x.bmp");
@@ -191,16 +185,56 @@ namespace m
 			//	, RGB(255, 0, 255));
 		}
 		Unit::Render(hdc);
+
+		if (bOverlayRepair)
+		{
+			Image* repairImage = Resources::Load<Image>(L"repairImage"
+				, L"..\\Resources\\texture\\combat\\overlay\\icon_heal_glow.bmp");
+			Vector2 mPos = GetPos();
+			TransparentBlt(hdc
+				, (int)(mPos.x) + 10
+				, (int)(mPos.y)
+				, (int)(repairImage->GetWidth() * 2)
+				, (int)(repairImage->GetHeight() * 2)
+				, repairImage->GetHdc()
+				, 0
+				, 0
+				, (int)(repairImage->GetWidth())
+				, (int)(repairImage->GetHeight())
+				, RGB(255, 0, 255)
+			);
+		}
 	}
 	void Mech::Release()
 	{
 		Unit::Release();
 	}
-	void Mech::CheckNumInput()
+	void Mech::CheckInput()
 	{
 		Scene* scene = SceneManager::GetActiveScene();
 		if (nullptr == scene->GetMouseFollower()) return;
 		if (scene->GetMouseFollower()->GetMIdx() != GetMIdx()) return;
+		if (KEY_UP(KEYCODE_TYPE::LBTN))
+		{
+			if (bOverlayRepair)
+			{
+				Repair(1);
+			}
+		}
+		if (KEY_UP(KEYCODE_TYPE::R))
+		{
+			if (bOverlayRepair)
+			{
+				bOverlayRepair = false;
+				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(2);
+			}
+			else
+			{
+				bOverlayRepair = true;
+				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
+			}
+			
+		}
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { SetSkillIdx(0); }
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { SetSkillIdx(1); }
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_3)) { SetSkillIdx(2); }
