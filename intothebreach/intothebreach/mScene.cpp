@@ -685,10 +685,10 @@ namespace m
 
 		Scene::OutOfMapRange();
 
-		if (!mMouseFollower->GetCurAttackSkill()->GetStartFire())
-		{
-			SetMouseFollower(nullptr);
-		}
+		//if (!mMouseFollower->GetCurAttackSkill()->GetStartFire())
+		//{
+		//	SetMouseFollower(nullptr);
+		//}
 		if (KEY_DOWN(KEYCODE_TYPE::RBTN)
 			&& !mMouseFollower->GetCurAttackSkill()->GetStartFire())
 		{
@@ -706,7 +706,7 @@ namespace m
 				{
 					mMouseFollower->GetCurAttackSkill()->LaunchSound();
 					// АјАн.
-					mMouseFollower->SetEndAttack(true);
+					//mMouseFollower->SetEndAttack(true);
 					mMouseFollower->GetCurAttackSkill()->SetStartFire(true);
 					//mMouseFollower->GetCurAttackSkill()->SetEndFire(false);
 					moveSave.clear();

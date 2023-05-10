@@ -188,7 +188,7 @@ namespace m
 
 		if (bOverlayRepair)
 		{
-			Image* repairImage = Resources::Load<Image>(L"repairImage"
+			repairImage = Resources::Load<Image>(L"repairImage"
 				, L"..\\Resources\\texture\\combat\\overlay\\icon_heal_glow.bmp");
 			Vector2 mPos = GetPos();
 			TransparentBlt(hdc
@@ -204,6 +204,10 @@ namespace m
 				, RGB(255, 0, 255)
 			);
 		}
+		else
+		{
+			repairImage = nullptr;
+		}
 	}
 	void Mech::Release()
 	{
@@ -214,13 +218,13 @@ namespace m
 		Scene* scene = SceneManager::GetActiveScene();
 		if (nullptr == scene->GetMouseFollower()) return;
 		if (scene->GetMouseFollower()->GetMIdx() != GetMIdx()) return;
-		if (KEY_UP(KEYCODE_TYPE::LBTN))
+		
+		if (bOverlayRepair)
 		{
-			if (bOverlayRepair)
-			{
-				Repair(1);
-			}
+			bOverlayRepair = false;
+			Repair(1);
 		}
+
 		if (KEY_UP(KEYCODE_TYPE::R))
 		{
 			if (bOverlayRepair)

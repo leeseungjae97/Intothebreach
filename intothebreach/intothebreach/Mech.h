@@ -63,8 +63,10 @@ namespace m
 		bool bMakeDeployAlpha;
 		bool bDeployed;
 		bool bOverlayRepair;
+		bool 
 		float fDeployConstant;
 		Image* deployArrow;
+		Image* repairImage;
 		Sound* randMoveSound;
 		bool randMoveSoundPlayed;
 	};
