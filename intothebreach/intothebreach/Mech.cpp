@@ -74,12 +74,6 @@ namespace m
 	{
 		Unit::Update();
 		CheckInput();
-
-		if (GetEndMove())
-		{
-			SceneManager::GetActiveScene()->SetMouseFollower(nullptr);
-			MechMove();
-		}
 		//else object::DestoryUnitVector<Background*>(GetMoveDusts());
 		//if (KEY_PRESSED(KEYCODE_TYPE::Q))
 		//{
@@ -113,6 +107,11 @@ namespace m
 			break;
 		default:
 			break;
+		}
+		if (GetEndMove())
+		{
+			SceneManager::GetActiveScene()->SetMouseFollower(nullptr);
+			MechMove();
 		}
 	}
 	void Mech::Render(HDC hdc)
@@ -218,12 +217,6 @@ namespace m
 		Scene* scene = SceneManager::GetActiveScene();
 		if (nullptr == scene->GetMouseFollower()) return;
 		if (scene->GetMouseFollower()->GetMIdx() != GetMIdx()) return;
-		
-		if (bOverlayRepair)
-		{
-			bOverlayRepair = false;
-			Repair(1);
-		}
 
 		if (KEY_UP(KEYCODE_TYPE::R))
 		{
@@ -238,6 +231,14 @@ namespace m
 				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
 			}
 			
+		}
+		if (bOverlayRepair)
+		{
+			if (KEY_UP(KEYCODE_TYPE::LBTN))
+			{
+				bOverlayRepair = false;
+				Repair(1);
+			}
 		}
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { SetSkillIdx(0); }
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { SetSkillIdx(1); }

@@ -46,6 +46,7 @@ namespace m
 		void SetMakeDeployAlpha(bool _b) { bMakeDeployAlpha = _b; }
 		void SetDeployConstant(float _c) { fDeployConstant = _c; }
 		void SetDeployed(bool _b) { bDeployed = _b; }
+		void SetClicked(bool _b) { bClicked = _b; }
 		void SetRepairOverlay(bool _b) { bOverlayRepair = _b; }
 		bool GetReapirOverlay() { return bOverlayRepair; }
 		bool GetSelected() { return bSelected; }
@@ -63,7 +64,7 @@ namespace m
 		bool bMakeDeployAlpha;
 		bool bDeployed;
 		bool bOverlayRepair;
-		bool 
+		bool bClicked;
 		float fDeployConstant;
 		Image* deployArrow;
 		Image* repairImage;
