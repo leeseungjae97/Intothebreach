@@ -1049,19 +1049,14 @@ namespace m
 			inLandTheme->Play(true);
 		}
 
-		//for (int i = 0; i < GameComp::mechInfos.size(); i++)
-		//{
-		//	//Background* getSizeback = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
-		//	//	, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
-		//	//infoUnits[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
-		//	//	, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
-		//	//float fwid = clickableMechs[i]->GetPos().x + (clickableMechs[i]->GetSize().x / 2) - abs(getSizeback->GetWidth());
-		//	//float fhei = clickableMechs[i]->GetPos().y + (clickableMechs[i]->GetSize().y / 2) - abs(getSizeback->GetHeight());
-		//	//infoUnits[i]->SetState(GameObject::STATE::Visible);
-		//	//infoUnits[i]->SetPos(Vector2::Zero);
-		//	//infoUnits[i]->SetPos(Vector2(fwid, fhei));
-		//	//delete getSizeback;
-		//}
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		{
+			infoUnits[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
+				, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
+			infoUnits[i]->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - infoUnits[i]->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - infoUnits[i]->GetHeight()));
+			infoUnits[i]->SetState(GameObject::STATE::Visible);
+		}
 	}
 	void InLandScene::OnExit()
 	{

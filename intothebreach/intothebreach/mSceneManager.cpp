@@ -16,7 +16,6 @@ namespace m
 	SCENE_TYPE SceneManager::selectedLand = SCENE_TYPE::IN_LAND0;
 	void SceneManager::Initialize()
 	{
-
 		mScenes.resize((UINT)SCENE_TYPE::END);
 
 		mScenes[(UINT)SCENE_TYPE::TITLE] = new TitleScene();
@@ -38,8 +37,8 @@ namespace m
 			scene->Initialize();
 		}
 
-		mActiveScene = mScenes[(UINT)SCENE_TYPE::COMBAT];
-		LoadScene(SCENE_TYPE::COMBAT);
+		mActiveScene = mScenes[(UINT)SCENE_TYPE::INTRO];
+		//LoadScene(SCENE_TYPE::TITLE);
 	}
 
 	void SceneManager::Update()

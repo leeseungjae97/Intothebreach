@@ -23,7 +23,7 @@ namespace m {
 		vector<Background*> outLine;
 		Button* upUiBox;
 		vector<Button*> gridPowers;
-		vector<Button*> infoUnits;
+		vector<Background*> infoUnits;
 		vector<Button*> clickableMechs;
 		Background* boxBlackFade;
 

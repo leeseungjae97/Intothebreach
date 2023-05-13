@@ -205,7 +205,6 @@ namespace m
 			float fMoveDist = (mLookPosition - mPrevLookPosition).Length();
 			speed = fMoveDist / m_fTime;
 		}
-
 		if (m_fAcctime > m_fTime) return true;
 		else return false;
 	}

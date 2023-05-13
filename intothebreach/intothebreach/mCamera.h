@@ -33,6 +33,11 @@ namespace m {
 			m_fAcctime = 0;
 			m_fTime = _time; 
 		}
+		static bool CheckCurPos(Vector2 pos)
+		{
+			if (pos == mCurLookPosition) return true;
+			else return false;
+		}
 		static Vector2 GetCurPos() { return mCurLookPosition; }
 		static void Release();
 		static float GetShakeTime(){return lmfT;}

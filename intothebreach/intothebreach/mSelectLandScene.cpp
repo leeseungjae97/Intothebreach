@@ -128,15 +128,11 @@ namespace m
 		}
 		for (int i = 0; i < GameComp::mechInfos.size(); i++)
 		{
-			Button* bM = new Button(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
-				NO_BACK);
-			bM->SetInnerMag(2);
-			bM->SetSize(bM->GetInnerImage()->GetSize());
-			bM->SetInnerPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetInnerImage()->GetSize().x
-				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetInnerImage()->GetSize().y));
-			//bM->SetPos(Vector2(10, 10));
-			//bM->SetCutPos(true);
-			bM->SetInner(true);
+			Background* bM = new Background(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW),
+				MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW), 2);
+			bM->SetUseOffset(false);
+			bM->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - bM->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - bM->GetHeight()));
 			infoUnits.push_back(bM);
 			AddGameObject(bM, LAYER_TYPE::UI);
 		}
@@ -700,6 +696,15 @@ namespace m
 		selectLandAmbi = Resources::Load<Sound>(L"selectLandAmbi", L"..\\Resources\\sound\\ambience\\amb_map.wav");
 		selectLandAmbi->SetVolume(10.f);
 		selectLandAmbi->Play(true);
+
+		for (int i = 0; i < GameComp::mechInfos.size(); i++)
+		{
+			infoUnits[i]->SetTex(MAKE_UNIT_KEY((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW)
+				, MAKE_UNIT_PATH((MECHS)GameComp::mechInfos[i].unitNum, COMBAT_CONDITION_T::NO_SHADOW));
+			infoUnits[i]->SetPos(Vector2(clickableMechs[i]->GetPos().x + clickableMechs[i]->GetSize().x / 2 - infoUnits[i]->GetWidth()
+				, clickableMechs[i]->GetPos().y + clickableMechs[i]->GetSize().y / 2 - infoUnits[i]->GetHeight()));
+			infoUnits[i]->SetState(GameObject::STATE::Visible);
+		}
 	}
 	void SelectLandScene::OnExit()
 	{

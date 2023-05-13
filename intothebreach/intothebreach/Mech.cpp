@@ -110,6 +110,11 @@ namespace m
 		}
 		if (GetEndMove())
 		{
+			if (bOverlayRepair)
+			{
+				bOverlayRepair = false;
+				Repair(1);
+			}
 			SceneManager::GetActiveScene()->SetMouseFollower(nullptr);
 			MechMove();
 		}
@@ -230,16 +235,8 @@ namespace m
 				bOverlayRepair = true;
 				((CombatScene*)SceneManager::GetActiveScene())->SetWPBow(0);
 			}
-			
 		}
-		if (bOverlayRepair)
-		{
-			if (KEY_UP(KEYCODE_TYPE::LBTN))
-			{
-				bOverlayRepair = false;
-				Repair(1);
-			}
-		}
+	
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_1)) { SetSkillIdx(0); }
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_2)) { SetSkillIdx(1); }
 		if (KEY_DOWN(KEYCODE_TYPE::NUM_3)) { SetSkillIdx(2); }

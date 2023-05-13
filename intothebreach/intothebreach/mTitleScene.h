@@ -19,6 +19,7 @@ namespace m {
 	private:
 		float scrollSpeed;
 		vector<Button*> btns;
+		bool bStartBtn;
 		//vector<Background*> mBacks;
 	};
 }

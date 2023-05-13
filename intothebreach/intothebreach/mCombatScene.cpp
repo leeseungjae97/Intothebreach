@@ -929,7 +929,10 @@ namespace m
 	void CombatScene::Update()
 	{
 		Scene::Update();
-		
+		if (KEY_PRESSED(KEYCODE_TYPE::U))
+		{
+			iTurn = 8;
+		}
 		if (KEY_PRESSED(KEYCODE_TYPE::B))
 		{
 			GameComp::bomb->SetBlink(true);
