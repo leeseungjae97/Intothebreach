@@ -81,15 +81,15 @@ int MISSION_HASH_VALUE[4][8][2]{
 		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_2
 		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_3
 		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_4
-		{(int)MISSIONS::PROTECT},// mission_5
-		{(int)MISSIONS::PROTECT},// mission_6
+		{0, (int)MISSIONS::PROTECT},// mission_5
+		{0, (int)MISSIONS::PROTECT},// mission_6
 		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_7
 	},
 
 	{
 		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
-		{(int)MISSIONS::PROTECT},// mission_1
-		{(int)MISSIONS::PROTECT},// mission_2
+		{0, (int)MISSIONS::PROTECT},// mission_1
+		{0, (int)MISSIONS::PROTECT},// mission_2
 		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_3
 		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_4
 		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_5
@@ -100,8 +100,8 @@ int MISSION_HASH_VALUE[4][8][2]{
 	{
 		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
 		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_1
-		{(int)MISSIONS::PROTECT_2},// mission_2
-		{(int)MISSIONS::KILLCNT},// mission_3
+		{0, (int)MISSIONS::PROTECT_2},// mission_2
+		{(int)MISSIONS::KILLCNT, 0},// mission_3
 		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_4
 		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_5
 		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_6
@@ -110,12 +110,12 @@ int MISSION_HASH_VALUE[4][8][2]{
 
 	{
 		{(int)MISSIONS::LEADER, (int)MISSIONS::PROTECT},// mission_final
-		{(int)MISSIONS::MECH_D4},// mission_1
+		{(int)MISSIONS::MECH_D4, 0},// mission_1
 		{(int)MISSIONS::BLOCKCNT, (int)MISSIONS::PROTECT},// mission_2
 		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT},// mission_3
 		{(int)MISSIONS::MECH_D4, (int)MISSIONS::PROTECT_2},// mission_4
 		{(int)MISSIONS::NO_D, (int)MISSIONS::PROTECT},// mission_5
-		{(int)MISSIONS::PROTECT},// mission_6
+		{0, (int)MISSIONS::PROTECT},// mission_6
 		{(int)MISSIONS::MECH_D3, (int)MISSIONS::PROTECT},// mission_7
 	},
 };
@@ -142,9 +142,11 @@ wstring MISSION_TEXT[4][8][2]{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_ESF],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_ESF],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_COAL],
 		},
 		{
@@ -158,9 +160,11 @@ wstring MISSION_TEXT[4][8][2]{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_HQ],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_ESF],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_COAL],
 		},
 		{
@@ -194,10 +198,12 @@ wstring MISSION_TEXT[4][8][2]{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_COAL],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_RF],
 		},
 		{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::KILL_5_EN],
+			L"",
 		},
 		{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::UNDER_4_MECH_DAMAGE],
@@ -223,6 +229,7 @@ wstring MISSION_TEXT[4][8][2]{
 		},
 		{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::UNDER_4_MECH_DAMAGE],
+			L"",
 		},
 		{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::BLOCK_3],
@@ -241,6 +248,7 @@ wstring MISSION_TEXT[4][8][2]{
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_RESE],
 		},
 		{
+			L"",
 			MISSION_TEXT_PATH[(UINT)MISSION_T::PROTECT_COAL],
 		},
 		{

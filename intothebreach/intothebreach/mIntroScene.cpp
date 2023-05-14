@@ -22,6 +22,7 @@ namespace m {
 	void IntroScene::Release() {
 	}
 	void IntroScene::OnEnter() {
+		Camera::SetLookAt(Vector2(0, application.GetResolutionHeight() / 2));
 	}
 	void IntroScene::OnExit() {
 		

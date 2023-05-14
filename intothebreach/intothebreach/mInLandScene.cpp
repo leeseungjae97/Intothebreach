@@ -1031,6 +1031,7 @@ namespace m
 				text2->SetPos(Vector2(gridPowers[size]->GetPos().x + gridPowers[size]->GetSize().x + 15
 					, gridPowers[size]->GetPos().y + gridPowers[size]->GetSize().y / 2 - text2->GetSize().y / 2));
 				text2->SetState(GameObject::STATE::Visible);
+				
 			}
 
 

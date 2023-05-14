@@ -141,6 +141,8 @@ namespace m
 		bool firstUpdate;
 		bool playerTurn;
 		bool curTurnEnd;
+		bool bAliensAttack;
+		bool bAliensMove;
 		int curAttackAlien;
 		int map[TILE_Y][TILE_X]{};				// ¿Ãµø BFS ∏ 
 		bool tileHoverSoundPlayed[TILE_Y][TILE_X];

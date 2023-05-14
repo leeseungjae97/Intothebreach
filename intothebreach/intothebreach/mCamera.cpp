@@ -202,6 +202,7 @@ namespace m
 		{
 			mLookPosition = pos;
 			mOriginPos = pos;
+			//m_fAcctime = 0.f;
 			float fMoveDist = (mLookPosition - mPrevLookPosition).Length();
 			speed = fMoveDist / m_fTime;
 		}

@@ -33,7 +33,7 @@ namespace m {
 			m_fAcctime = 0;
 			m_fTime = _time; 
 		}
-		static bool CheckCurPos(Vector2 pos)
+		static bool CompareCurPos(Vector2 pos)
 		{
 			if (pos == mCurLookPosition) return true;
 			else return false;

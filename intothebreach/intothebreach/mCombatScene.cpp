@@ -1215,6 +1215,8 @@ namespace m
 		GameComp::combatEnd = false;
 		battleInFirst = true;
 		GameComp::startGame();
+		iTurn = 4;
+		SetTextTurnNumber(iTurn);
 		int i = 0;
 		prevBlinkCnt = 0;
 		wstring randTheme = L"";
@@ -1379,7 +1381,6 @@ namespace m
 			GetStructures()[i]->SetState(GameObject::STATE::Delete);
 
 		GetStructures().clear();
-		iTurn = 4;
 		endGame = false;
 		bSetPosition = false;
 		

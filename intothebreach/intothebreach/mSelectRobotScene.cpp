@@ -357,6 +357,16 @@ namespace m
 		for (int i = 0; i < hpBacks.size(); i++)hpBacks[i]->SetState(GameObject::STATE::Delete);
 		for (int i = 0; i < mechs.size(); i++) mechs[i]->SetState(GameObject::STATE::Delete);
 		for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
+
+		skills.clear();
+		mechNames.clear();
+		mechMoves.clear();
+		mechHps.clear();
+		classNames.clear();
+		hpBacks.clear();
+		mechs.clear();
+		hps.clear();
+
 		//mechs.clear();
 		//skills.clear();
 		//mechNames.clear();
@@ -540,6 +550,15 @@ namespace m
 			for (int i = 0; i < hpBacks.size(); i++)hpBacks[i]->SetState(GameObject::STATE::Delete);
 			for (int i = 0; i < mechs.size(); i++) mechs[i]->SetState(GameObject::STATE::Delete);
 			for (int i = 0; i < hps.size(); i++) hps[i]->SetState(GameObject::STATE::Delete);
+
+			skills.clear();
+			mechNames.clear();
+			mechMoves.clear();
+			mechHps.clear();
+			classNames.clear();
+			hpBacks.clear();
+			mechs.clear();
+			hps.clear();
 
 			for (int i = 0; i < 3; i++)
 			{

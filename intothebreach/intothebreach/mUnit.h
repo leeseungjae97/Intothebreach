@@ -67,7 +67,7 @@ namespace m
 		}
 		void Repair(int repair)
 		{
-			if (curHp + repair < mHp) curHp = mHp;
+			if (curHp + repair >= mHp) curHp = mHp;
 			else curHp += repair;
 		}
 

@@ -25,6 +25,8 @@ namespace m
 		, playerTurn(false)
 		, curTurnEnd(true)
 		, firstUpdate(true)
+		, bAliensAttack(true)
+		, bAliensMove(false)
 		, curAttackAlien(0)
 	{
 		//mLayers.reserve((UINT)LAYER_TYPE::END);
@@ -58,6 +60,7 @@ namespace m
 		{
 			layer.Update();
 		}
+		firstUpdate = false;
 	}
 	void Scene::Destroy()
 	{
@@ -591,6 +594,8 @@ namespace m
 			);
 			playerTurn = true;
 			curTurnEnd = true;
+			bAliensAttack = true;
+			bAliensMove = false;
 			SaveTurn();
 			curAttackAlien = 0;
 			((CombatScene*)SceneManager::GetActiveScene())->RandSpawnAlien(1);
@@ -614,34 +619,46 @@ namespace m
 		}
 		if (curAlien->GetState() == GameObject::STATE::Emerge) return;
 
-		if (nullptr != curAlien->GetCurAttackSkill()
-			&& curAlien->GetCurAttackSkill()->GetStartRender())
+		if (bAliensAttack)
 		{
-			curAlien->SetEndAttack(true);
-			curAlien->GetCurAttackSkill()->SetStartFire(true);
-			curAlien->GetCurAttackSkill()->LaunchSound();
-			//curAlien->GetCurAttackSkill()->SetEndFire(false);
+			if (nullptr != curAlien->GetCurAttackSkill()
+				&& curAlien->GetCurAttackSkill()->GetStartRender())
+			{
+				curAlien->SetEndAttack(true);
+				curAlien->GetCurAttackSkill()->SetStartFire(true);
+				curAlien->GetCurAttackSkill()->LaunchSound();
+				//curAlien->GetCurAttackSkill()->SetEndFire(false);
+			}
+			if (nullptr != curAlien->GetCurAttackSkill()
+				&& curAlien->GetCurAttackSkill()->GetStartFire())
+			{
+				curAlien->GetCurAttackSkill()->CheckDirection();
+			}
+
+			if (!curAlien->GetCurAttackSkill()->CheckSkillFiring()) curAttackAlien++;
+
+			//curAlien->SetEndAttack(false);
+			
+			if (GameComp::mAliens.size() <= curAttackAlien)
+			{
+				curAttackAlien = 0;
+				bAliensAttack = false;
+				bAliensMove = true;
+			}
 		}
-		if (nullptr != curAlien->GetCurAttackSkill()
-			&& curAlien->GetCurAttackSkill()->GetStartFire())
+		else if (bAliensMove)
 		{
-			curAlien->GetCurAttackSkill()->CheckDirection();
+			curAlien->AlienMapCheck(curAttackAlien);
+			curAlien->AlienMoveCheck(curAttackAlien);
 		}
-
-		if (curAlien->GetCurAttackSkill()->CheckSkillFiring()) return;
-
 		//if (curAlien->GetEndAttack())
-		//{
-		//	curAlien->GetCurAttackSkill()->SetStartRender(false);
-		//	curAlien->GetCurAttackSkill()->SetStartFire(false);
-		//	curAlien->GetCurAttackSkill()->SetEndFire(false);
-		//	curAlien->SetEndAttack(false);
-		//	return;
+		//{	
+		//	
 		//}
+		//else
+		//{
 
-		curAlien->AlienMapCheck(curAttackAlien);
-		curAlien->AlienMoveCheck(curAttackAlien);
-
+		//}
 		//curAttackAlien++;
 	}
 	void Scene::MoveSkill()

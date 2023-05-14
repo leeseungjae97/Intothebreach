@@ -131,29 +131,14 @@ namespace m
 	}
 	bool Skill::CheckSkillFiring()
 	{
-		//impactSoundPlayed = false;
 		if (endFire && startFire)
 		{
-			//if (!impactSoundPlayed)
-			//{
-			//	if (impactSound)
-			//		impactSound->Play(false);
-			//	launchSoundPlayed = false;
-			//	impactSoundPlayed = true;
-			//}
 			return false;
 		}
 		if (!endFire && !startFire) return false;
 		if (!endFire && startFire)
 		{
-			//if (!launchSoundPlayed)
-			//{
-			//	if (launchSound)
-			//		launchSound->Play(false);
-			//	launchSoundPlayed = true;
-			//	impactSoundPlayed = false;
-			//}
-			//ClearPushTile();
+
 			return true;
 		}
 		return false;

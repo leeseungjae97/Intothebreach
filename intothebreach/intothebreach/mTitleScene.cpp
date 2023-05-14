@@ -17,6 +17,7 @@ namespace m {
 
 	}
 	void TitleScene::Initialize() {
+		Scene::Initialize();
 		Background* b1 = new Background(L"title1", L"..\\Resources\\texture\\ui\\title\\bg0.bmp", 2, false, BOTTOM);
 		Background* b2 = new Background(L"title2", L"..\\Resources\\texture\\ui\\title\\bg1.bmp", 2, false, BOTTOM);
 		Background* b3 = new Background(L"title3", L"..\\Resources\\texture\\ui\\title\\bg2.bmp", 2, false, BOTTOM);
@@ -43,6 +44,9 @@ namespace m {
 			AddGameObject(btn, LAYER_TYPE::UI);
 			btns.push_back(btn);
 		}
+		//b1->SetEC(true);
+		//b2->SetEC(true);
+		//b3->SetEC(true);
 		b4->SetCutPos(true);
 		b4->SetEC(true);
 		b4->SetPos(Vector2((float)application.GetResolutionWidth() * 2 
@@ -59,19 +63,17 @@ namespace m {
 		AddGameObject(b6, LAYER_TYPE::BACKGROUND);
 
 		scrollSpeed = 100.f;
-		mBacks[5]->SetState(GameObject::STATE::Visible);
+		
 		//Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() * 2, (float)application.GetResolutionHeight() / 2));
-		Scene::Initialize();
 	}
-	void TitleScene::Update() {
-		Scene::Update();
+	void TitleScene::Update() {		
 		if (btns[1]->GetClicked())
 		{
 			Camera::PushEffect(CAMERA_EFFECT_TYPE::Fade_In, 0.5f);
 			SceneManager::LoadScene(SCENE_TYPE::SELECT_ROBOT);
 			btns[1]->SetClicked(false);
 		}
-		if (!Camera::SetLookAt(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight() / 2)))
+		if (!Camera::CompareCurPos(Vector2(application.GetResolutionWidth() * 2, application.GetResolutionHeight() / 2)))
 		{
 			mBacks[0]->SetPos(Vector2(mBacks[0]->GetPos().x - scrollSpeed * Time::fDeltaTime(), mBacks[0]->GetPos().y));
 			mBacks[1]->SetPos(Vector2(mBacks[1]->GetPos().x - (scrollSpeed + 150.f) * Time::fDeltaTime(), mBacks[1]->GetPos().y));
@@ -101,6 +103,19 @@ namespace m {
 				}
 			}
 		}
+		if (GetFirstUpdate())
+		{
+			Camera::SetMoveTime(2.5f);
+			Camera::SetLookAt(Vector2(application.GetResolutionWidth() * 2, application.GetResolutionHeight() / 2));
+		}
+
+		//if (Camera::CompareCurPos(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight() / 2)))
+		//{
+		//	int a = 0;
+		//}
+		//if (!Camera::SetLookAt(Vector2(application.GetResolutionWidth(), application.GetResolutionHeight() / 2)))
+
+		
 		//if (GetFirstUpdate())
 		//{
 		//	
@@ -109,6 +124,7 @@ namespace m {
 		//{
 		//	
 		//}
+		Scene::Update();
 	}
 	void TitleScene::Render(HDC hdc) {
 		Scene::Render(hdc);
@@ -118,7 +134,7 @@ namespace m {
 	}
 	void TitleScene::OnEnter() {
 		GlobalSound::titleTheme->Play(true);
-		Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() /2));
+		//Camera::SetLookAt(Vector2((float)application.GetResolutionWidth() / 2, (float)application.GetResolutionHeight() /2));
 	}
 	void TitleScene::OnExit() {
 		for (int i = 0; i < btns.size(); i++)
