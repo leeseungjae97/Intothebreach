@@ -460,7 +460,8 @@ namespace m
 					mM->SetItem(0);
 					mM->SetPos(mM->GetOriginPos());
 					//mM->SetPos(Vector2(boxSkill1->GetPos().x, boxSkill1->GetPos().y + boxSkill1->GetInnerImage()->GetHeight() - boxDragSkill1->GetInnerImage()->GetHeight() * 2));
-					if (mM->GetFromInven()) GameComp::inventoryItems.erase(GameComp::inventoryItems.begin() + mM->GetInvenIdx());
+					if (mM->GetFromInven()) 
+						GameComp::inventoryItems.erase(GameComp::inventoryItems.begin() + mM->GetInvenIdx());
 				}
 				else
 				{

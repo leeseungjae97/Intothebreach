@@ -741,6 +741,13 @@ namespace m
 	void Scene::SaveTurn()
 	{
 		saveGridPower = GameComp::gridPower;
+		for (Alien* al : GameComp::mAliens)
+		{
+			if (al->GetState() == GameObject::STATE::Invisible)
+			{
+				al->SetState(GameObject::STATE::Death);
+			}
+		}
 		turnSave.clear();
 		for (int i = 0; i < GameComp::mMechs.size(); i++)
 		{
@@ -812,6 +819,13 @@ namespace m
 				GameComp::mAliens[info.idx]->SetCurHp(info.curHp);
 				GameComp::mAliens[info.idx]->SetEndMove(false);
 				GameComp::mAliens[info.idx]->SetEndAttack(false);
+
+				//vector<Alien*>::iterator iter = GameComp::mAliens.begin();
+				//while (iter != GameComp::mAliens.end())
+				//{
+				//	if ((*iter) == this) iter = GameComp::mAliens.erase(iter);
+				//	else iter++;
+				//}
 			}
 			if (info.bType == (int)LAYER_TYPE::STRUCT)
 			{

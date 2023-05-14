@@ -18,6 +18,7 @@ namespace m
 			Explo,
 			Water,
 			Death,
+			SaveDeath,
 			Emerge,		
 			Emerge_loop,
 			Retreat,
